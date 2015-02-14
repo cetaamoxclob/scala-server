@@ -1,0 +1,10 @@
+{
+  "name": "tantalim-ide",
+  "version": "0.0.1",
+  "dependencies": {
+    "tantalim-client": "latest"
+  },
+  "resolutions": {
+    "angular": ">= 1.3"
+  }
+}
