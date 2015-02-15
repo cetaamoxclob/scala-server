@@ -5,6 +5,7 @@
 # Home page
 GET        /                    controllers.Application.index
 GET        /page/:name          controllers.Application.desktop(name)
+GET        /data/:name          controllers.Application.readData(name)
 GET        /page/:name/         controllers.Application.desktop(name)
 
 # Map static resources from the /public folder to the /assets URL path

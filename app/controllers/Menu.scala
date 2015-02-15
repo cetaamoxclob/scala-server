@@ -1,14 +1,10 @@
 package controllers
 
-case class Menu(appTitle: String, content: List[MenuContent]) {
-}
+import play.api.libs.json._
+import play.api.libs.json.Reads._
+import play.api.libs.functional.syntax._
 
-case class MenuContent(title: String, items: List[MenuItem]) {
-
-}
-
-case class MenuItem(title: String, href: Option[String], page: Option[String]) {
-
+case class MenuItem(title: Option[String], href: Option[String], page: Option[String]) {
   def toHref(): String = {
     if (page.isDefined)
       "/page/Hello/"
@@ -16,3 +12,35 @@ case class MenuItem(title: String, href: Option[String], page: Option[String]) {
       href.toString
   }
 }
+
+case class MenuContent(title: String, items: Seq[MenuItem])
+
+case class Menu(appTitle: String, content: Seq[MenuContent])
+
+object Menu {
+  implicit def menuItemReads: Reads[MenuItem] = (
+    (JsPath \ "title").readNullable[String] and
+      (JsPath \ "href").readNullable[String] and
+      (JsPath \ "page").readNullable[String]
+    ).apply(MenuItem.apply _)
+
+  implicit def menuContentReads: Reads[MenuContent] = (
+    (JsPath \ "title").read[String] and
+      (JsPath \ "items").read[Seq[MenuItem]]
+    ).apply(MenuContent.apply _)
+
+  implicit def menuReads: Reads[Menu] = (
+    (JsPath \ "appTitle").read[String] and
+      (JsPath \ "content").read[Seq[MenuContent]]
+    ).apply(Menu.apply _)
+
+}
+
+//  implicit def searchResultsWrites[T](implicit fmt: Writes[T]): Writes[SearchResults[T]] = new Writes[SearchResults[T]] {
+//    def writes(ts: SearchResults[T]) = JsObject(Seq(
+//      "page" -> JsNumber(ts.page),
+//      "pageSize" -> JsNumber(ts.pageSize),
+//      "total" -> JsNumber(ts.total),
+//      "elements" -> JsArray(ts.elements.map(toJson(_)))
+//    ))
+//  }
