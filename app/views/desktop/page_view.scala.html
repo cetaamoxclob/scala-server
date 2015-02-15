@@ -1,0 +1,130 @@
+<div id="{{name}}">
+    <h2>{{title}}</h2>
+    <div class="well text-center" data-ng-hide="action.length('{{model.name}}')">
+        <button type="button" class="btn btn-primary " data-ng-click="action.insert('{{model.name}}')">
+            <span class="glyphicon glyphicon-plus"></span>
+            Insert New {{title}}
+        </button>
+    </div>
+    <div data-ng-show="action.length('{{model.name}}')">
+        <div class="form-group">
+            <button type="button" class="btn btn-primary btn-xs"
+            data-ng-click="action.insert('{{model.name}}')"
+            data-ng-disabled="TopPageForm.$invalid">
+                <span class="glyphicon glyphicon-plus"></span>
+                Insert
+            </button>
+            <button type="button" class="btn btn-danger btn-xs"
+            data-ng-click="action.delete('{{model.name}}')"
+            data-ng-disabled="!action.deleteEnabled('{{model.name}}')">
+                <span class="glyphicon glyphicon-trash"></span>
+                Delete
+            </button>
+            <button type="button" class="btn btn-xs"
+            data-ng-click="action.previous('{{model.name}}')"
+            data-ng-disabled="current.sets.{{model.name}}.currentIndex == 0 || TopPageForm.$invalid">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+                Previous
+            </button>
+            <button type="button" class="btn btn-xs"
+            data-ng-click="action.next('{{model.name}}')"
+            data-ng-disabled="current.sets.{{model.name}}.currentIndex == current.sets.{{model.name}}.rows.length - 1 || TopPageForm.$invalid">
+                Next
+                <span class="glyphicon glyphicon-chevron-right"></span>
+            </button>
+            {{#if hasBothViews}}
+            <button type="button" class="btn btn-default btn-xs" data-ng-click="PageCursor.sections.{{name}}.viewMode = 'table'"
+            data-ng-show="PageCursor.sections.{{name}}.viewMode !== 'table'">
+                <span class="glyphicon glyphicon-th"></span>
+                Table View
+            </button>
+            <button type="button" class="btn btn-default btn-xs" data-ng-click="PageCursor.sections.{{name}}.viewMode = 'form'"
+            data-ng-show="PageCursor.sections.{{name}}.viewMode !== 'form'">
+                <span class="glyphicon glyphicon-file"></span>
+                Form View
+            </button>
+            {{/if}}
+            <span class="instance-count" data-ng-show="current.sets.{{model.name}}.rows.length > 0">
+                <span data-ng-bind="current.sets.{{model.name}}.currentIndex + 1"></span> of <span
+            data-ng-bind="current.sets.{{model.name}}.rows.length"></span>
+            </span>
+        </div>
+
+        <div class="" data-ng-if="PageCursor.sections.{{name}}.viewMode === 'table'" data-ng-click="chooseModel('{{model.name}}')">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                        {{#fields}}
+                            {{#if showInTableView}}
+                            <th>{{label}}</th>
+                            {{/if}}
+                            {{/fields}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-ng-repeat="row in current.sets.{{model.name}}.rows"
+                        data-ng-click="action.select('{{model.name}}', $index)"
+                        data-ng-dblclick="PageCursor.sections.{{name}}.viewMode = 'form'"
+                        data-ng-class="{success: row.id === current.instances.{{model.name}}.id}">
+                        {{#fields}}
+                            {{#if showInTableView}}
+                            <td class="text-display">
+                                <span class="text-view" data-ng-bind="row.data.{{name}}{{#if filter}} | {{filter}}{{/if}}"></span>
+                            </td>
+                            {{/if}}
+                            {{/fields}}
+                        </tr>
+                        <tr data-ng-hide="current.sets.{{model.name}}.rows.length">
+                            <td colspan="{{fields.length}}">No Data Found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row" data-ng-if="PageCursor.sections.{{name}}.viewMode === 'form'" data-ng-click="chooseModel('{{model.name}}')">
+                {{#if hasNavigation}}
+            <div class="col-sm-3 hidden-xs">
+                <table class="table table-bordered col-sm-4">
+                    <thead>
+                        <tr>
+                            {{#fields}}
+                            {{#if showInNavigation}}
+                            <th>{{label}}</th>
+                            {{/if}}
+                            {{/fields}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-ng-repeat="row in current.sets.{{model.name}}.rows"
+                        data-ng-click="action.select('{{model.name}}', $index)"
+                        data-ng-class="{success: row.id === current.instances.{{model.name}}.id}">
+                            {{#fields}}
+                            {{#if showInNavigation}}
+                            <td data-ng-bind="row.data.{{name}}" class="nav"/>
+                            {{/if}}
+                            {{/fields}}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-9">
+            @desktop.form_view()
+            </div>
+
+            {{else}}
+            <div class="col-xs-12">
+            @desktop.form_view()
+            </div>
+            {{/if}}
+
+        </div>
+
+        {{#children}}
+        <div style="padding-left: 15px">
+            {{> html_view}}
+        </div>
+        {{/children}}
+    </div>
+</div>
