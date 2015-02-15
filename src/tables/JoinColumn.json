@@ -1,0 +1,55 @@
+{
+  "dbName": "db_join_column",
+  "primaryKey": "JoinColumnID",
+  "columns": [
+    {
+      "name": "JoinColumnID",
+      "dbName": "joinColumnID",
+      "updateable": false,
+      "required": true,
+      "columnDefault": "GUID"
+    },
+    {
+      "name": "JoinID",
+      "required": true,
+      "dbName": "joinID"
+    },
+    {
+      "name": "FromColumnID",
+      "dbName": "fromColumnID"
+    },
+    {
+      "name": "FromText",
+      "dbName": "fromText",
+      "label": "From Text"
+    },
+    {
+      "name": "ToColumnID",
+      "required": true,
+      "dbName": "toColumnID"
+    }
+  ],
+  "joins": [
+    {
+      "name": "FromColumn",
+      "table": "Column",
+      "columns": [
+        {
+          "from": "FromColumnID",
+          "to": "ColumnID"
+        }
+      ]
+    },
+    {
+      "name": "ToColumn",
+      "table": "Column",
+      "required": true,
+      "columns": [
+        {
+          "from": "ToColumnID",
+          "to": "ColumnID"
+        }
+      ]
+    }
+  ]
+}

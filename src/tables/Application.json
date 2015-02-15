@@ -1,0 +1,53 @@
+{
+  "dbName": "app_application",
+  "primaryKey": "ApplicationID",
+  "columns": [
+    {
+      "name": "ApplicationID",
+      "dbName": "appID",
+      "updateable": false,
+      "columnDefault": "GUID"
+    },
+    {
+      "name": "Code",
+      "dbName": "appCode"
+    },
+    {
+      "name": "Name",
+      "dbName": "name"
+    },
+    {
+      "name": "Description",
+      "dbName": "description"
+    },
+    {
+      "name": "DisplayOrder",
+      "dbName": "displayOrder"
+    },
+    {
+      "name": "DataType",
+      "dbName": "dataType"
+    },
+    {
+      "name": "SQL",
+      "dbName": "dbName"
+    },
+    {
+      "name": "Label",
+      "dbName": "label"
+    }
+  ],
+  "joins": [
+    {
+      "name": "Table",
+      "table": "Table",
+      "required": true,
+      "columns": [
+        {
+          "from": "TableID",
+          "to": "TableID"
+        }
+      ]
+    }
+  ]
+}

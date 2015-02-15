@@ -1,0 +1,35 @@
+{
+  "title": "List Tables",
+  "icon": "glyphicon-th-list",
+  "model": "ListTables",
+  "fields": [
+    {
+      "name": "TableName",
+      "showInNavigation": true,
+      "links": [
+        {
+          "title": "Build Table",
+          "page": "BuildTable",
+          "filter": "TableTableID Equals [TableTableID]"
+        }
+      ]
+    },
+    {
+      "name": "TableSQL",
+      "showInNavigation": true
+    },
+    {
+      "name": "TableModule",
+      "fieldType": "select",
+      "select": {
+        "model": "ListModules",
+        "targetID": "TableModule",
+        "sourceValue": "ModuleModuleName",
+        "where": []
+      }
+    },
+    {
+      "name": "TableDatabase"
+    }
+  ]
+}

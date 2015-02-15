@@ -1,0 +1,36 @@
+{
+  "appTitle": "Test Me Scala",
+  "content": [
+    {
+      "title": "Tables",
+      "items": [
+        {
+          "page": "ListTables"
+        },
+        {
+          "page": "BuildTable"
+        },
+        {
+          "page": "TableReport"
+        }
+      ]
+    },
+    {
+      "title": "Manage",
+      "items": [
+        {
+          "page": "ManageUsers",
+          "title": "Users"
+        },
+        {
+          "title": "Import",
+          "href": "/importAll"
+        },
+        {
+          "title": "Export",
+          "href": "/exportAll"
+        }
+      ]
+    }
+  ]
+}

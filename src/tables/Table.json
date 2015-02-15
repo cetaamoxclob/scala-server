@@ -1,0 +1,61 @@
+{
+  "dbName": "db_table",
+  "primaryKey": "TableID",
+  "columns": [
+    {
+      "name": "TableID",
+      "dbName": "tableID",
+      "updateable": false,
+      "disabled": true
+    },
+    {
+      "name": "Name",
+      "dbName": "name",
+      "required": true,
+      "label": "Table Name",
+      "placeholder": "Enter a table name",
+      "help": "Enter the name of the table"
+    },
+    {
+      "name": "SQL",
+      "dbName": "dbName",
+      "required": true
+    },
+    {
+      "name": "Database",
+      "dbName": "databaseName"
+    },
+    {
+      "name": "Module",
+      "dbName": "moduleName"
+    },
+    {
+      "name": "PrimaryKey",
+      "dbName": "primaryKey"
+    }
+  ],
+  "joins": [
+    {
+      "name": "Module",
+      "table": "Module",
+      "required": false,
+      "columns": [
+        {
+          "from": "Module",
+          "to": "ModuleID"
+        }
+      ]
+    },
+    {
+      "name": "Database",
+      "table": "Database",
+      "required": false,
+      "columns": [
+        {
+          "from": "Database",
+          "to": "DatabaseID"
+        }
+      ]
+    }
+  ]
+}

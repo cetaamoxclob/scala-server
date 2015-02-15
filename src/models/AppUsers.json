@@ -1,0 +1,33 @@
+{
+  "basisTable": "User",
+  "limit": 100,
+  "orderBy": [
+    {
+      "fieldName": "displayName",
+      "direction": "ASC"
+    }
+  ],
+  "fields": [
+    {
+      "name": "id",
+      "updateable": false,
+      "basisColumn": "UserID"
+    },
+    {
+      "name": "username",
+      "basisColumn": "Username"
+    },
+    {
+      "name": "displayName",
+      "basisColumn": "Name"
+    },
+    {
+      "name": "registered",
+      "basisColumn": "Registered"
+    },
+    {
+      "name": "lastLogin",
+      "basisColumn": "LastLogin"
+    }
+  ]
+}

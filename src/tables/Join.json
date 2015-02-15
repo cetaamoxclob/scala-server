@@ -1,0 +1,55 @@
+{
+  "dbName": "db_join",
+  "primaryKey": "JoinID",
+  "columns": [
+    {
+      "name": "JoinID",
+      "dbName": "joinID",
+      "updateable": false,
+      "required": true,
+      "columnDefault": "GUID"
+    },
+    {
+      "name": "Name",
+      "required": true,
+      "dbName": "name",
+      "label": "Join Name"
+    },
+    {
+      "name": "FromTableID",
+      "required": true,
+      "dbName": "fromTableID"
+    },
+    {
+      "name": "ToTableName",
+      "required": true,
+      "dbName": "ToTableName"
+    },
+    {
+      "name": "JoinType",
+      "required": true,
+      "dbName": "joinType",
+      "label": "Join Type"
+    },
+    {
+      "name": "Required",
+      "dbName": "required",
+      "required": true,
+      "dataType": "Boolean",
+      "fieldType": "checkbox"
+    }
+  ],
+  "joins": [
+    {
+      "name": "FromTable",
+      "table": "Table",
+      "required": true,
+      "columns": [
+        {
+          "from": "FromTableID",
+          "to": "TableID"
+        }
+      ]
+    }
+  ]
+}

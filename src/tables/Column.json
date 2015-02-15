@@ -1,0 +1,63 @@
+{
+  "dbName": "db_column",
+  "module": "Tables",
+  "database": "TantalimMeta",
+  "primaryKey": "ColumnID",
+  "columns": [
+    {
+      "name": "ColumnID",
+      "dataType": "Integer",
+      "dbName": "columnID",
+      "updateable": false
+    },
+    {
+      "name": "TableID",
+      "dataType": "Integer",
+      "dbName": "tableID"
+    },
+    {
+      "name": "Name",
+      "dbName": "name",
+      "required": true,
+      "label": "Column Name"
+    },
+    {
+      "name": "Required",
+      "dataType": "Boolean",
+      "dbName": "required",
+      "fieldType": "checkbox"
+    },
+    {
+      "name": "DataType",
+      "dbName": "dataType",
+      "label": "Data Type"
+    },
+    {
+      "name": "DisplayOrder",
+      "dataType": "Integer",
+      "dbName": "displayOrder",
+      "label": "Order"
+    },
+    {
+      "name": "SQL",
+      "dbName": "dbName"
+    },
+    {
+      "name": "Label",
+      "dbName": "label"
+    }
+  ],
+  "joins": [
+    {
+      "name": "Table",
+      "table": "Table",
+      "required": true,
+      "columns": [
+        {
+          "from": "TableID",
+          "to": "TableID"
+        }
+      ]
+    }
+  ]
+}

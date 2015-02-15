@@ -1,0 +1,37 @@
+{
+  "dbName": "app_module",
+  "primaryKey": "ModuleID",
+  "columns": [
+    {
+      "name": "ModuleID",
+      "dbName": "moduleID",
+      "updateable": false,
+      "columnDefault": "GUID"
+    },
+    {
+      "name": "Name",
+      "dbName": "name"
+    },
+    {
+      "name": "Code",
+      "dbName": "moduleCode"
+    },
+    {
+      "name": "ApplicationID",
+      "dbName": "appID"
+    }
+  ],
+  "joins": [
+    {
+      "name": "Application",
+      "table": "Application",
+      "required": true,
+      "columns": [
+        {
+          "from": "ApplicationID",
+          "to": "ApplicationID"
+        }
+      ]
+    }
+  ]
+}

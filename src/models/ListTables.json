@@ -1,0 +1,36 @@
+{
+  "basisTable": "Table",
+  "limit": 50,
+  "orderBy": [
+    {
+      "fieldName": "TableModule",
+      "direction": "ASC"
+    },
+    {
+      "fieldName": "TableName",
+      "direction": "ASC"
+    }
+  ],
+  "fields": [
+    {
+      "name": "TableTableID",
+      "basisColumn": "TableID"
+    },
+    {
+      "name": "TableName",
+      "basisColumn": "Name"
+    },
+    {
+      "name": "TableSQL",
+      "basisColumn": "SQL"
+    },
+    {
+      "name": "TableDatabase",
+      "basisColumn": "Database"
+    },
+    {
+      "name": "TableModule",
+      "basisColumn": "Module"
+    }
+  ]
+}

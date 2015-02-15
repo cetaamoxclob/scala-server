@@ -1,0 +1,76 @@
+{
+  "basisTable": "Table",
+  "fields": [
+    {
+      "name": "tableID",
+      "basisColumn": "TableID"
+    },
+    {
+      "name": "name",
+      "basisColumn": "Name"
+    },
+    {
+      "name": "database",
+      "basisColumn": "Database"
+    },
+    {
+      "name": "module",
+      "basisColumn": "Module"
+    },
+    {
+      "name": "dbName",
+      "basisColumn": "SQL"
+    },
+    {
+      "name": "primaryKey",
+      "basisColumn": "PrimaryKey"
+    }
+  ],
+  "children": [
+    {
+      "name": "columns",
+      "basisTable": "Column",
+      "parentLink": {
+        "parentField": "tableID",
+        "childField": "tableID"
+      },
+      "fields": [
+        {
+          "name": "columnID",
+          "basisColumn": "ColumnID"
+        },
+        {
+          "name": "tableID",
+          "basisColumn": "TableID"
+        },
+        {
+          "name": "name",
+          "basisColumn": "Name"
+        },
+        {
+          "name": "required",
+          "basisColumn": "Required",
+          "fieldDefault": {
+            "value": true
+          }
+        },
+        {
+          "name": "dataType",
+          "basisColumn": "DataType"
+        },
+        {
+          "name": "displayOrder",
+          "basisColumn": "DisplayOrder"
+        },
+        {
+          "name": "dbName",
+          "basisColumn": "SQL"
+        },
+        {
+          "name": "label",
+          "basisColumn": "Label"
+        }
+      ]
+    }
+  ]
+}

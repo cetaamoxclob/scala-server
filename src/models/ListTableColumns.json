@@ -1,0 +1,43 @@
+{
+  "basisTable": "Column",
+  "limit": 10,
+  "orderBy": [
+    {
+      "fieldName": "ColumnTableName",
+      "direction": "ASC"
+    },
+    {
+      "fieldName": "ColumnName",
+      "direction": "ASC"
+    }
+  ],
+  "fields": [
+    {
+      "name": "ColumnColumnID",
+      "basisColumn": "ColumnID"
+    },
+    {
+      "name": "ColumnName",
+      "basisColumn": "Name"
+    },
+    {
+      "name": "ColumnSQL",
+      "basisColumn": "SQL"
+    },
+    {
+      "name": "ColumnTableID",
+      "basisColumn": "TableID"
+    },
+    {
+      "name": "ColumnTableName",
+      "fieldStepID": "t",
+      "basisColumn": "Name"
+    }
+  ],
+  "steps": [
+    {
+      "name": "t",
+      "join": "Table"
+    }
+  ]
+}

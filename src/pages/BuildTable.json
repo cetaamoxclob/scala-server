@@ -1,0 +1,126 @@
+{
+  "title": "Build Table",
+  "icon": "glyphicon-modal-window",
+  "fields": [
+    {
+      "name": "TableName",
+      "showInNavigation": true
+    },
+    {
+      "name": "TableSQL"
+    },
+    {
+      "name": "TableModule",
+      "showInFormView": false
+    },
+    {
+      "name": "TableDatabase",
+      "showInFormView": false
+    }
+  ],
+  "children": [
+    {
+      "name": "TableColumns",
+      "title": "Columns",
+      "parentModel": "BuildTable",
+      "fields": [
+        {
+          "name": "TableColumnDisplayOrder"
+        },
+        {
+          "name": "TableColumnName"
+        },
+        {
+          "name": "TableColumnRequired",
+          "fieldType": "checkbox"
+        },
+        {
+          "name": "TableColumnDataType"
+        },
+        {
+          "name": "TableColumnSQL"
+        },
+        {
+          "name": "TableColumnLabel",
+          "label": "Label"
+        }
+      ]
+    },
+    {
+      "name": "TableJoins",
+      "title": "Joins",
+      "parentModel": "BuildTable",
+      "fields": [
+        {
+          "name": "TableJoinName",
+          "showInNavigation": true
+        },
+        {
+          "name": "TableJoinToTableName",
+          "label": "To Table",
+          "fieldType": "select",
+          "select": {
+            "model": "ListTables",
+            "targetID": "TableJoinToTableID",
+            "sourceValue": "TableName",
+            "otherMappings": [
+            ],
+            "where": []
+          }
+        },
+        {
+          "name": "TableJoinJoinType"
+        },
+        {
+          "name": "TableJoinRequired"
+        }
+      ],
+      "children": [
+        {
+          "name": "TableJoinColumns",
+          "title": "Join Columns",
+          "parentModel": "TableJoins",
+          "fields": [
+            {
+              "name": "TableJoinJoinColumnFromColumnName",
+              "label": "From Column",
+              "fieldType": "select",
+              "select": {
+                "model": "ListTableColumns",
+                "targetID": "TableJoinJoinColumnFromColumnID",
+                "sourceValue": "ColumnName",
+                "where": [
+                  {
+                    "sourceField": "ColumnTableID",
+                    "operator": "=",
+                    "valueField": "TableTableID"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "TableJoinJoinColumnToColumnName",
+              "label": "To Column",
+              "fieldType": "select",
+              "select": {
+                "model": "ListTableColumns",
+                "targetID": "TableJoinJoinColumnToColumnID",
+                "sourceValue": "ColumnName",
+                "where": [
+                  {
+                    "sourceField": "ColumnTableID",
+                    "operator": "=",
+                    "valueField": "TableJoinToTableID"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "TableJoinJoinColumnFromText"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

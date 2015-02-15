@@ -1,0 +1,27 @@
+{
+  "title": "Table Report",
+  "model": "ListTables",
+  "icon": "glyphicon-th",
+  "viewMode": "table",
+  "fields": [
+    {
+      "name": "TableName",
+      "links": [
+        {
+          "title": "Build Table",
+          "page": "BuildTable",
+          "filter": "TableTableID Equals [TableTableID]"
+        }
+      ]
+    },
+    {
+      "name": "TableSQL"
+    },
+    {
+      "name": "TableModule"
+    },
+    {
+      "name": "TableDatabase"
+    }
+  ]
+}

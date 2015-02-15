@@ -1,0 +1,25 @@
+{
+  "title": "Manage Users",
+  "icon": "glyphicon-user",
+  "model": "AppUsers",
+  "viewMode": "table",
+  "fields": [
+    {
+      "name": "id",
+      "showInTableView": false,
+      "disabled": true
+    },
+    {
+      "name": "username"
+    },
+    {
+      "name": "displayName"
+    },
+    {
+      "name": "registered"
+    },
+    {
+      "name": "lastLogin"
+    }
+  ]
+}

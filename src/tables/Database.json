@@ -1,0 +1,22 @@
+{
+  "dbName": "db_database",
+  "primaryKey": "DatabaseID",
+  "columns": [
+    {
+      "name": "DatabaseID",
+      "dbName": "databaseID",
+      "updateable": false,
+      "columnDefault": "GUID"
+    },
+    {
+      "name": "Name",
+      "dbName": "name"
+    },
+    {
+      "name": "AppID",
+      "dbName": "appID"
+    }
+  ],
+  "joins": [
+  ]
+}
