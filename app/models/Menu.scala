@@ -1,10 +1,11 @@
-package controllers
+package models
 
-import play.api.libs.json._
-import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
+import play.api.libs.json.Reads._
+import play.api.libs.json._
 
 case class MenuItem(title: Option[String], href: Option[String], page: Option[String]) {
+  val pageArtifact: Page = null
   def toHref(): String = {
     if (page.isDefined)
       "/page/Hello/"
