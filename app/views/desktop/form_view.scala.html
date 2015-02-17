@@ -1,3 +1,5 @@
+@(page: Page)
+@import models.Page
 {{#fields}}
 {{#if showInFormView}}
 <div class="form-group" ng-class="{'has-error': TopPageForm.{{name}}.$invalid}">

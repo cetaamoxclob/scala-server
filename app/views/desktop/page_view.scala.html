@@ -1,130 +1,131 @@
-<div id="{{name}}">
-    <h2>{{title}}</h2>
-    <div class="well text-center" data-ng-hide="action.length('{{model.name}}')">
-        <button type="button" class="btn btn-primary " data-ng-click="action.insert('{{model.name}}')">
+@(page: Page)
+@import models.Page
+<div id="@page.name">
+    <h2>@page.title</h2>
+    <div class="well text-center" data-ng-hide="action.length('@page.model.name')">
+        <button type="button" class="btn btn-primary " data-ng-click="action.insert('@page.model.name')">
             <span class="glyphicon glyphicon-plus"></span>
-            Insert New {{title}}
+            Insert New @page.title
         </button>
     </div>
-    <div data-ng-show="action.length('{{model.name}}')">
+    <div data-ng-show="action.length('@page.model.name')">
         <div class="form-group">
             <button type="button" class="btn btn-primary btn-xs"
-            data-ng-click="action.insert('{{model.name}}')"
+            data-ng-click="action.insert('@page.model.name')"
             data-ng-disabled="TopPageForm.$invalid">
                 <span class="glyphicon glyphicon-plus"></span>
                 Insert
             </button>
             <button type="button" class="btn btn-danger btn-xs"
-            data-ng-click="action.delete('{{model.name}}')"
-            data-ng-disabled="!action.deleteEnabled('{{model.name}}')">
+            data-ng-click="action.delete('@page.model.name')"
+            data-ng-disabled="!action.deleteEnabled('@page.model.name')">
                 <span class="glyphicon glyphicon-trash"></span>
                 Delete
             </button>
             <button type="button" class="btn btn-xs"
-            data-ng-click="action.previous('{{model.name}}')"
-            data-ng-disabled="current.sets.{{model.name}}.currentIndex == 0 || TopPageForm.$invalid">
+            data-ng-click="action.previous('@page.model.name')"
+            data-ng-disabled="current.sets.(@page.model.name).currentIndex == 0 || TopPageForm.$invalid">
                 <span class="glyphicon glyphicon-chevron-left"></span>
                 Previous
             </button>
             <button type="button" class="btn btn-xs"
-            data-ng-click="action.next('{{model.name}}')"
-            data-ng-disabled="current.sets.{{model.name}}.currentIndex == current.sets.{{model.name}}.rows.length - 1 || TopPageForm.$invalid">
+            data-ng-click="action.next('@page.model.name')"
+            data-ng-disabled="current.sets.(@page.model.name).currentIndex == current.sets.(@page.model.name).rows.length - 1 || TopPageForm.$invalid">
                 Next
                 <span class="glyphicon glyphicon-chevron-right"></span>
             </button>
-            {{#if hasBothViews}}
-            <button type="button" class="btn btn-default btn-xs" data-ng-click="PageCursor.sections.{{name}}.viewMode = 'table'"
-            data-ng-show="PageCursor.sections.{{name}}.viewMode !== 'table'">
-                <span class="glyphicon glyphicon-th"></span>
-                Table View
-            </button>
-            <button type="button" class="btn btn-default btn-xs" data-ng-click="PageCursor.sections.{{name}}.viewMode = 'form'"
-            data-ng-show="PageCursor.sections.{{name}}.viewMode !== 'form'">
-                <span class="glyphicon glyphicon-file"></span>
-                Form View
-            </button>
-            {{/if}}
-            <span class="instance-count" data-ng-show="current.sets.{{model.name}}.rows.length > 0">
-                <span data-ng-bind="current.sets.{{model.name}}.currentIndex + 1"></span> of <span
-            data-ng-bind="current.sets.{{model.name}}.rows.length"></span>
+            @if(page.hasFormView || page.hasTableView) {
+                <button type="button" class="btn btn-default btn-xs" data-ng-click="PageCursor.sections.(@page.name).viewMode = 'table'"
+                data-ng-show="PageCursor.sections.(@page.name).viewMode !== 'table'">
+                    <span class="glyphicon glyphicon-th"></span>
+                    Table View
+                </button>
+                <button type="button" class="btn btn-default btn-xs" data-ng-click="PageCursor.sections.(@page.name).viewMode = 'form'"
+                data-ng-show="PageCursor.sections.(@page.name).viewMode !== 'form'">
+                    <span class="glyphicon glyphicon-file"></span>
+                    Form View
+                </button>
+            }
+            <span class="instance-count" data-ng-show="current.sets.(@page.model.name).rows.length > 0">
+                <span data-ng-bind="current.sets.(@page.model.name).currentIndex + 1"></span> of <span
+            data-ng-bind="current.sets.(@page.model.name).rows.length"></span>
             </span>
         </div>
 
-        <div class="" data-ng-if="PageCursor.sections.{{name}}.viewMode === 'table'" data-ng-click="chooseModel('{{model.name}}')">
+        <div class="" data-ng-if="PageCursor.sections.(@page.name).viewMode === 'table'" data-ng-click="chooseModel('@page.model.name')">
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                        {{#fields}}
-                            {{#if showInTableView}}
-                            <th>{{label}}</th>
-                            {{/if}}
-                            {{/fields}}
+                            @for(field <- page.fields) {
+                                @if(field.showInTableView) {
+                                    <th>@field.label</th>
+                                }
+                            }
                         </tr>
                     </thead>
                     <tbody>
-                        <tr data-ng-repeat="row in current.sets.{{model.name}}.rows"
-                        data-ng-click="action.select('{{model.name}}', $index)"
-                        data-ng-dblclick="PageCursor.sections.{{name}}.viewMode = 'form'"
-                        data-ng-class="{success: row.id === current.instances.{{model.name}}.id}">
-                        {{#fields}}
-                            {{#if showInTableView}}
-                            <td class="text-display">
-                                <span class="text-view" data-ng-bind="row.data.{{name}}{{#if filter}} | {{filter}}{{/if}}"></span>
-                            </td>
-                            {{/if}}
-                            {{/fields}}
+                        <tr data-ng-repeat="row in current.sets.(@page.model.name).rows"
+                        data-ng-click="action.select('@page.model.name', $index)"
+                        data-ng-dblclick="PageCursor.sections.(@page.name).viewMode = 'form'"
+                        data-ng-class="{success: row.id === current.instances.(@page.model.name).id}">
+                            @for(field <- page.fields) {
+                                @if(field.showInTableView) {
+                                    <td class="text-display">
+                                        <span class="text-view" data-ng-bind="row.data.(@field.name) @if(field.filter.isDefined){ | @field.filter}"></span>
+                                    </td>
+                                }
+                            }
                         </tr>
-                        <tr data-ng-hide="current.sets.{{model.name}}.rows.length">
-                            <td colspan="{{fields.length}}">No Data Found</td>
+                        <tr data-ng-hide="current.sets.(@page.model.name).rows.length">
+                            <td colspan="@page.fieldLengthInTableView">No Data Found</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <div class="row" data-ng-if="PageCursor.sections.{{name}}.viewMode === 'form'" data-ng-click="chooseModel('{{model.name}}')">
-                {{#if hasNavigation}}
+        <div class="row" data-ng-if="PageCursor.sections.(@page.name).viewMode === 'form'" data-ng-click="chooseModel('@page.model.name')">
+        @if(page.hasNavigation) {
             <div class="col-sm-3 hidden-xs">
                 <table class="table table-bordered col-sm-4">
                     <thead>
                         <tr>
-                            {{#fields}}
-                            {{#if showInNavigation}}
-                            <th>{{label}}</th>
-                            {{/if}}
-                            {{/fields}}
+                            @for(field <- page.fields) {
+                                @if(field.showInNavigation) {
+                                    <th>@field.label</th>
+                                }
+                            }
                         </tr>
                     </thead>
                     <tbody>
-                        <tr data-ng-repeat="row in current.sets.{{model.name}}.rows"
-                        data-ng-click="action.select('{{model.name}}', $index)"
-                        data-ng-class="{success: row.id === current.instances.{{model.name}}.id}">
-                            {{#fields}}
-                            {{#if showInNavigation}}
-                            <td data-ng-bind="row.data.{{name}}" class="nav"/>
-                            {{/if}}
-                            {{/fields}}
+                        <tr data-ng-repeat="row in current.sets.(@page.model.name).rows"
+                        data-ng-click="action.select('@page.model.name', $index)"
+                        data-ng-class="{success: row.id === current.instances.(@page.model.name).id}">
+                            @for(field <- page.fields) {
+                                @if(field.showInNavigation) {
+                                    <td data-ng-bind="row.data.(@field.name) @if(field.filter.isDefined){ | @field.filter}" class="nav"/>
+                                }
+                            }
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="col-sm-9">
-            @desktop.form_view()
+            @desktop.form_view(page)
             </div>
-
-            {{else}}
+        } else {
             <div class="col-xs-12">
-            @desktop.form_view()
+            @desktop.form_view(page)
             </div>
-            {{/if}}
+        }
 
         </div>
 
-        {{#children}}
-        <div style="padding-left: 15px">
-            {{> html_view}}
-        </div>
-        {{/children}}
+        @for(childPage <- page.children) {
+            <div class="childSection">
+            @desktop.page_view
+            </div>
+        }
     </div>
 </div>

@@ -3,12 +3,10 @@
   "limit": 50,
   "orderBy": [
     {
-      "fieldName": "TableModule",
-      "direction": "ASC"
+      "fieldName": "TableModule"
     },
     {
-      "fieldName": "TableName",
-      "direction": "ASC"
+      "fieldName": "TableName"
     }
   ],
   "fields": [

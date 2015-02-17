@@ -2,7 +2,7 @@ package controllers
 
 import models.User
 import play.api.mvc._
-import services.{ArtifactService, DataReader}
+import services.{ArtifactCompiler, ArtifactService, DataReader}
 
 object Application extends Controller {
 
@@ -17,8 +17,8 @@ object Application extends Controller {
   }
 
   def desktop(name: String) = Action {
-    val menu = ArtifactService.getMenu
-    val page = ArtifactService.getPage(name)
+    val menu = ArtifactCompiler.compileMenu("Default")
+    val page = ArtifactCompiler.compilePage(name)
     val user = new User("12345", "trevorallred", "Trevor Allred")
     Ok(views.html.desktop.index(page, menu, user))
   }

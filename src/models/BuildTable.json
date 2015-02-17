@@ -3,8 +3,7 @@
   "limit": 5,
   "orderBy": [
     {
-      "fieldName": "TableName",
-      "direction": "ASC"
+      "fieldName": "TableName"
     }
   ],
   "fields": [
@@ -40,8 +39,7 @@
       },
       "orderBy": [
         {
-          "fieldName": "TableColumnDisplayOrder",
-          "direction": "ASC"
+          "fieldName": "TableColumnDisplayOrder"
         }
       ],
       "fields": [

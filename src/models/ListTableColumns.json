@@ -3,12 +3,10 @@
   "limit": 10,
   "orderBy": [
     {
-      "fieldName": "ColumnTableName",
-      "direction": "ASC"
+      "fieldName": "ColumnTableName"
     },
     {
-      "fieldName": "ColumnName",
-      "direction": "ASC"
+      "fieldName": "ColumnName"
     }
   ],
   "fields": [

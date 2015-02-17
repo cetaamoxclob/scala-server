@@ -1,3 +1,5 @@
+@(page: Page)
+@import models.Page
 <form id="form-view" role="form" name="TopPageForm" data-ng-hide="searchController.showSearch">
     <div class="page-nav navbar navbar-inverse navbar-fixed-bottom">
         <button data-ng-click="searchController.turnSearchOn()" class="btn btn-default">
@@ -13,5 +15,5 @@
             Save
         </button>
     </div>
-    @desktop.page_view()
+    @desktop.page_view(page)
 </form>

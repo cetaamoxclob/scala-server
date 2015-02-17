@@ -20,7 +20,7 @@
                 <ul class="dropdown-menu">
                 @for(item <- content.items) {
                     <li>
-                        <a href="@item.toHref">@item.title</a>
+                        <a href="@item.href.getOrElse("#unknown")">@item.title</a>
                     </li>
                 }
                 </ul>
