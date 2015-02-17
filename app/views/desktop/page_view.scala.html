@@ -24,35 +24,35 @@
             </button>
             <button type="button" class="btn btn-xs"
             data-ng-click="action.previous('@page.model.name')"
-            data-ng-disabled="current.sets.(@page.model.name).currentIndex == 0 || TopPageForm.$invalid">
+            data-ng-disabled="current.sets.@(page.model.name).currentIndex == 0 || TopPageForm.$invalid">
                 <span class="glyphicon glyphicon-chevron-left"></span>
                 Previous
             </button>
             <button type="button" class="btn btn-xs"
             data-ng-click="action.next('@page.model.name')"
-            data-ng-disabled="current.sets.(@page.model.name).currentIndex == current.sets.(@page.model.name).rows.length - 1 || TopPageForm.$invalid">
+            data-ng-disabled="current.sets.@(page.model.name).currentIndex == current.sets.@(page.model.name).rows.length - 1 || TopPageForm.$invalid">
                 Next
                 <span class="glyphicon glyphicon-chevron-right"></span>
             </button>
             @if(page.hasFormView || page.hasTableView) {
-                <button type="button" class="btn btn-default btn-xs" data-ng-click="PageCursor.sections.(@page.name).viewMode = 'table'"
-                data-ng-show="PageCursor.sections.(@page.name).viewMode !== 'table'">
+                <button type="button" class="btn btn-default btn-xs" data-ng-click="PageCursor.sections.@(page.name).viewMode = 'table'"
+                data-ng-show="PageCursor.sections.@(page.name).viewMode !== 'table'">
                     <span class="glyphicon glyphicon-th"></span>
                     Table View
                 </button>
-                <button type="button" class="btn btn-default btn-xs" data-ng-click="PageCursor.sections.(@page.name).viewMode = 'form'"
-                data-ng-show="PageCursor.sections.(@page.name).viewMode !== 'form'">
+                <button type="button" class="btn btn-default btn-xs" data-ng-click="PageCursor.sections.@(page.name).viewMode = 'form'"
+                data-ng-show="PageCursor.sections.@(page.name).viewMode !== 'form'">
                     <span class="glyphicon glyphicon-file"></span>
                     Form View
                 </button>
             }
-            <span class="instance-count" data-ng-show="current.sets.(@page.model.name).rows.length > 0">
-                <span data-ng-bind="current.sets.(@page.model.name).currentIndex + 1"></span> of <span
-            data-ng-bind="current.sets.(@page.model.name).rows.length"></span>
+            <span class="instance-count" data-ng-show="current.sets.@(page.model.name).rows.length > 0">
+                <span data-ng-bind="current.sets.@(page.model.name).currentIndex + 1"></span> of <span
+            data-ng-bind="current.sets.@(page.model.name).rows.length"></span>
             </span>
         </div>
 
-        <div class="" data-ng-if="PageCursor.sections.(@page.name).viewMode === 'table'" data-ng-click="chooseModel('@page.model.name')">
+        <div class="" data-ng-if="PageCursor.sections.@(page.name).viewMode === 'table'" data-ng-click="chooseModel('@page.model.name')">
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>
@@ -65,10 +65,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr data-ng-repeat="row in current.sets.(@page.model.name).rows"
+                        <tr data-ng-repeat="row in current.sets.@(page.model.name).rows"
                         data-ng-click="action.select('@page.model.name', $index)"
-                        data-ng-dblclick="PageCursor.sections.(@page.name).viewMode = 'form'"
-                        data-ng-class="{success: row.id === current.instances.(@page.model.name).id}">
+                        data-ng-dblclick="PageCursor.sections.@(page.name).viewMode = 'form'"
+                        data-ng-class="{success: row.id === current.instances.@(page.model.name).id}">
                             @for(field <- page.fields) {
                                 @if(field.showInTableView) {
                                     <td class="text-display">
@@ -77,7 +77,7 @@
                                 }
                             }
                         </tr>
-                        <tr data-ng-hide="current.sets.(@page.model.name).rows.length">
+                        <tr data-ng-hide="current.sets.@(page.model.name).rows.length">
                             <td colspan="@page.fieldLengthInTableView">No Data Found</td>
                         </tr>
                     </tbody>
@@ -85,7 +85,7 @@
             </div>
         </div>
 
-        <div class="row" data-ng-if="PageCursor.sections.(@page.name).viewMode === 'form'" data-ng-click="chooseModel('@page.model.name')">
+        <div class="row" data-ng-if="PageCursor.sections.@(page.name).viewMode === 'form'" data-ng-click="chooseModel('@page.model.name')">
         @if(page.hasNavigation) {
             <div class="col-sm-3 hidden-xs">
                 <table class="table table-bordered col-sm-4">
@@ -99,9 +99,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr data-ng-repeat="row in current.sets.(@page.model.name).rows"
+                        <tr data-ng-repeat="row in current.sets.@(page.model.name).rows"
                         data-ng-click="action.select('@page.model.name', $index)"
-                        data-ng-class="{success: row.id === current.instances.(@page.model.name).id}">
+                        data-ng-class="{success: row.id === current.instances.@(page.model.name).id}">
                             @for(field <- page.fields) {
                                 @if(field.showInNavigation) {
                                     <td data-ng-bind="row.data.(@field.name) @if(field.filter.isDefined){ | @field.filter}" class="nav"/>

@@ -1,5 +1,9 @@
 package models
 
+import play.api.libs.functional.syntax._
+import play.api.libs.json.Writes._
+import play.api.libs.json._
+
 case class Page(
                  name: String,
                  title: String,
@@ -18,6 +22,12 @@ case class Page(
         field.showInTableView
     }.length
   }
+
+  def toClientJson = JsObject(Seq(
+    "name" -> JsString(name),
+    "model" -> model.toClientJson
+  ))
+
 }
 
 case class PageField(
@@ -28,3 +38,6 @@ case class PageField(
                       showInNavigation: Boolean,
                       filter: Option[String]
                       )
+
+object Page {
+}
