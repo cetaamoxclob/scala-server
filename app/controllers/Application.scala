@@ -7,7 +7,7 @@ import services.{ArtifactCompilerService, DataReader, ArtifactCompiler}
 object Application extends Controller {
 
   def index = {
-    desktop("Home")
+    desktop("ListTables") // TODO Get the default from the menu
   }
 
   def readData(name: String, page: Int, filter: Option[String]) = Action { request =>
