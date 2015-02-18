@@ -13,6 +13,7 @@ case class ModelJson(basisTable: String,
 
 case class ModelFieldJson(name: String,
                           basisColumn: String,
+                          required: Option[Boolean],
                           updateable: Option[Boolean])
 
 case class OrderBy(fieldName: String,
@@ -31,6 +32,7 @@ object ModelJson {
   implicit def pageFieldReads: Reads[ModelFieldJson] = (
     (JsPath \ "name").read[String] and
       (JsPath \ "basisColumn").read[String] and
+      (JsPath \ "required").readNullable[Boolean] and
       (JsPath \ "updateable").readNullable[Boolean]
     ).apply(ModelFieldJson.apply _)
 

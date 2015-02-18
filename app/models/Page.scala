@@ -12,8 +12,10 @@ case class Page(
                  hasFormView: Boolean,
                  hasTableView: Boolean,
                  hasNavigation: Boolean,
+                 viewMode: String,
                  children: Seq[Page]
                  ) {
+
   def fieldLengthInTableView: Int = {
     fields.count {
       field =>
@@ -23,7 +25,8 @@ case class Page(
 
   def toClientJson = JsObject(Seq(
     "name" -> JsString(name),
-    "model" -> model.toClientJson
+    "model" -> model.toClientJson,
+    "viewMode" -> JsString(viewMode)
   ))
 
 }

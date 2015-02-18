@@ -8,6 +8,7 @@ case class PageJson(title: String,
                     model: Option[String],
                     icon: Option[String],
                     css: Option[String],
+                    viewMode: Option[String],
                     fields: Option[Seq[PageFieldJson]],
                     children: Option[Seq[PageJson]])
 
@@ -18,7 +19,7 @@ case class PageFieldJson(name: String,
 
 object PageJson {
   def empty = {
-    new PageJson("", None, None, None, None, None)
+    new PageJson("", None, None, None, None, None, None)
   }
 
   implicit def pageReads: Reads[PageJson] = (
@@ -26,6 +27,7 @@ object PageJson {
       (JsPath \ "model").readNullable[String] and
       (JsPath \ "icon").readNullable[String] and
       (JsPath \ "css").readNullable[String] and
+      (JsPath \ "viewMode").readNullable[String] and
       (JsPath \ "fields").readNullable[Seq[PageFieldJson]] and
       (JsPath \ "children").lazyReadNullable(Reads.seq[PageJson](pageReads))
     ).apply(PageJson.apply _)

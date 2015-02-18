@@ -18,7 +18,8 @@ case class TableColumnJson(name: String,
                            updateable: Option[Boolean],
                            required: Option[Boolean],
                            label: Option[String],
-                           fieldType: Option[String]
+                           fieldType: Option[String],
+                           columnDefault: Option[String]
                             )
 
 case class TableJoinJson(name: String,
@@ -47,7 +48,8 @@ object TableJson {
       (JsPath \ "updateable").readNullable[Boolean] and
       (JsPath \ "required").readNullable[Boolean] and
       (JsPath \ "label").readNullable[String] and
-      (JsPath \ "fieldType").readNullable[String]
+      (JsPath \ "fieldType").readNullable[String] and
+      (JsPath \ "columnDefault").readNullable[String]
     ).apply(TableColumnJson.apply _)
 
   implicit def tableJoinReads: Reads[TableJoinJson] = (
