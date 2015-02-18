@@ -8,7 +8,7 @@ import models._
 import play.api.Play
 import play.api.libs.json._
 
-object ArtifactService {
+trait ArtifactService {
 
   def getArtifactContentAndParseJson(artifactType: ArtifactType, name: String): JsValue = {
     val directoryName = "src/" + artifactType.getDirectory + "/" + name + ".json"

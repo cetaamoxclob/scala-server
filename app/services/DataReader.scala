@@ -1,17 +1,18 @@
 package services
 
 import java.sql.ResultSet
-import models.{DataType, ModelField, Model}
-import play.api.db.DB
-import play.api.Play.current
-import play.api.libs.json._
-import play.api.libs.json.Json._
 
-object DataReader {
+import models.Model
+import play.api.Play.current
+import play.api.db.DB
+import play.api.libs.json.Json._
+import play.api.libs.json._
+
+class DataReader extends ArtifactCompiler {
 
   def getData(modelName: String, page: Int, filter: Option[String]): JsValue = {
     try {
-      val model = ArtifactCompiler.compileModel(modelName)
+      val model = compileModel(modelName)
       val jsArray = queryModelData(model)
       toJson(jsArray)
     } catch {

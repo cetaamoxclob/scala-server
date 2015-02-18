@@ -72,7 +72,7 @@
                             @for(field <- page.fields) {
                                 @if(field.showInTableView) {
                                     <td class="text-display">
-                                        <span class="text-view" data-ng-bind="row.data.(@field.name) @if(field.filter.isDefined){ | @field.filter}"></span>
+                                        <span class="text-view" data-ng-bind="row.data.@(field.name) @if(field.filter.isDefined){ | @field.filter}"></span>
                                     </td>
                                 }
                             }
@@ -104,7 +104,7 @@
                         data-ng-class="{success: row.id === current.instances.@(page.model.name).id}">
                             @for(field <- page.fields) {
                                 @if(field.showInNavigation) {
-                                    <td data-ng-bind="row.data.(@field.name) @if(field.filter.isDefined){ | @field.filter}" class="nav"/>
+                                    <td data-ng-bind="row.data.@(field.name) @if(field.filter.isDefined){ | @field.filter}" class="nav"/>
                                 }
                             }
                         </tr>

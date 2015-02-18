@@ -4,20 +4,18 @@ import models.src._
 import models._
 import play.api.libs.json.{JsError, JsSuccess}
 import scala.collection._
-import play.api.cache.Cache
-import play.api.Play.current
 
-object ArtifactCompiler {
+trait ArtifactCompiler extends ArtifactService with TableCache {
 
   def compileMenu(name: String): Menu = {
-    ArtifactService.getMenu match {
+    getMenu match {
       case s: JsSuccess[Menu] => {
         val menu = s.get
         menu.copy(content = menu.content.map(content =>
           content.copy(items = content.items.map(item => {
             if (item.page.isDefined) {
               val pageName = item.page.get
-              val json: PageJson = ArtifactService.getPage(pageName).getOrElse {
+              val json: PageJson = getPage(pageName).getOrElse {
                 PageJson.empty.copy(title = "Error: " + pageName)
               }
               item.copy(
@@ -38,7 +36,7 @@ object ArtifactCompiler {
   }
 
   def compilePage(name: String): Page = {
-    val json = ArtifactService.getArtifactContentAndParseJson(ArtifactType.Page, name)
+    val json = getArtifactContentAndParseJson(ArtifactType.Page, name)
     json.validate[PageJson] match {
       case JsSuccess(page, _) => {
         val fields = page.fields.getOrElse(Seq.empty).map(compilePageField)
@@ -81,10 +79,14 @@ object ArtifactCompiler {
   }
 
   def compileModel(name: String): Model = {
-    val json = ArtifactService.getArtifactContentAndParseJson(ArtifactType.Model, name)
+    val json = getArtifactContentAndParseJson(ArtifactType.Model, name)
     json.validate[ModelJson] match {
       case JsSuccess(model, _) => {
-        val basisTable = getTable(model.basisTable)
+        val basisTable = getTableFromCache(model.basisTable).getOrElse{
+          val newTable = compileTable(name)
+          addTableToCache(name, newTable)
+          newTable
+        }
         val instanceIdField = if (basisTable.primaryKey.isDefined) {
           model.fields.find(f =>
             f.basisColumn == basisTable.primaryKey.get.name // && f.step
@@ -116,18 +118,9 @@ object ArtifactCompiler {
     )
   }
 
-  private def getTable(name: String): DeepTable = {
-    Cache.getAs[DeepTable](name).getOrElse {
-      println("Getting table " + name + " from cache")
-      val newTable = compileTable(name)
-      Cache.set(name, newTable)
-      Cache.getAs[DeepTable](name).get
-    }
-  }
-
   private def compileTable(name: String): DeepTable = {
     println("Compiling table " + name)
-    val json = ArtifactService.getArtifactContentAndParseJson(ArtifactType.Table, name)
+    val json = getArtifactContentAndParseJson(ArtifactType.Table, name)
     json.validate[TableJson] match {
       case JsSuccess(table, _) => {
         val columns = table.columns.map(column => column.name -> compileTableColumn(column)).toMap
@@ -149,7 +142,7 @@ object ArtifactCompiler {
 
   private def compileShallowTable(name: String): ShallowTable = {
     println("Compiling shallow table " + name)
-    val json = ArtifactService.getArtifactContentAndParseJson(ArtifactType.Table, name)
+    val json = getArtifactContentAndParseJson(ArtifactType.Table, name)
     json.validate[TableJson] match {
       case JsSuccess(table, _) => {
         val columns = table.columns.map(column => column.name -> compileTableColumn(column)).toMap
@@ -200,3 +193,5 @@ object ArtifactCompiler {
   }
 
 }
+
+class ArtifactCompilerService extends ArtifactCompiler
