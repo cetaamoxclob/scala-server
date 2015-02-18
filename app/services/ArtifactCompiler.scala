@@ -83,7 +83,7 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
     json.validate[ModelJson] match {
       case JsSuccess(model, _) => {
         val basisTable = getTableFromCache(model.basisTable).getOrElse{
-          val newTable = compileTable(name)
+          val newTable = compileTable(model.basisTable)
           addTableToCache(name, newTable)
           newTable
         }
@@ -97,7 +97,10 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
           basisTable,
           instanceID = if (instanceIdField.isDefined) Option(instanceIdField.get.name) else None,
           fields = model.fields.map(f => {
-            val basisColumn = basisTable.columns.getOrElse(f.basisColumn, throw new Exception("failed to find column in table"))
+            val basisColumn = basisTable.columns.getOrElse(
+              f.basisColumn,
+              throw new Exception(f"failed to find column named `${f.basisColumn}` in table `${basisTable.name}`")
+            )
             f.name -> compileModelField(f, basisColumn)
           }).toMap
         )

@@ -1,6 +1,6 @@
 package services
 
-import models.{ArtifactType, DeepTable}
+import models._
 import org.junit.runner._
 import org.specs2.mock._
 import org.specs2.mutable._
@@ -41,14 +41,19 @@ class ArtifactCompilerSpec extends Specification with Mockito {
             case ArtifactType.Table => Json.parse( """
 {
   "dbName": "tbl_person",
-  "columns": []
+  "columns": [{
+    "name": "PersonID", "dbName": "person_id"
+  }]
 }
                                                    """)
 
             case ArtifactType.Model => Json.parse( """
 {
   "basisTable": "Person",
-  "fields": []
+  "fields": [{
+    "name": "PersonID",
+    "basisColumn": "PersonID"
+  }]
 }
                                                    """)
 
@@ -56,9 +61,36 @@ class ArtifactCompilerSpec extends Specification with Mockito {
         }
       }
 
+      val expected = new Model(
+        "ListPeople",
+        basisTable = new DeepTable(
+          "Person",
+          "tbl_person",
+          primaryKey = None,
+          columns = Map("PersonID" -> new TableColumn(
+            "PersonID",
+            "person_id",
+            dataType = "String",
+            updateable = true,
+            required = false,
+            label = "PersonID",
+            fieldType = "text"
+          )),
+          joins = Map()
+        ),
+        instanceID = None,
+        fields = Map("PersonID" -> new ModelField(
+          "PersonID",
+          "person_id",
+          dataType = "String",
+          updateable = true,
+          required = false
+        ))
+      )
+
       val compilerService = new ArtifactCompilerService with ArtifactServiceMock with TableCacheMock
-      val menu = compilerService.compileModel("ListPeople")
-      menu.name must be equalTo "ListPeople"
+      val model = compilerService.compileModel("ListPeople")
+      model must be equalTo expected
     }
   }
 }
