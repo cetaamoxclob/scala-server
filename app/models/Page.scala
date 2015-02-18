@@ -1,7 +1,5 @@
 package models
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.Writes._
 import play.api.libs.json._
 
 case class Page(
@@ -17,10 +15,10 @@ case class Page(
                  children: Seq[Page]
                  ) {
   def fieldLengthInTableView: Int = {
-    fields.filter {
+    fields.count {
       field =>
         field.showInTableView
-    }.length
+    }
   }
 
   def toClientJson = JsObject(Seq(
@@ -32,12 +30,26 @@ case class Page(
 
 case class PageField(
                       name: String,
+                      fieldType: String,
                       label: String,
+                      required: Boolean,
+                      disabled: Boolean,
                       showInFormView: Boolean,
                       showInTableView: Boolean,
                       showInNavigation: Boolean,
-                      filter: Option[String]
+                      placeholder: Option[String],
+                      help: Option[String],
+                      filter: Option[String],
+                      blurFunction: Option[String],
+                      select: Option[String],
+                      links: Option[Seq[PageFieldLinks]]
                       )
 
-object Page {
-}
+case class PageFieldLinks(page: String, filter: String)
+
+case class PageFieldSelect(model: String,
+                           sourceValue: String,
+                           targetID: String,
+                           where: String,
+                           otherMappings: Option[Seq[String]]
+                            )

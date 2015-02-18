@@ -1,7 +1,7 @@
 package services
 
-import models.src.{ModelJson, PageJson}
-import models.{Model, ArtifactType, Page, Menu}
+import models.src.{PageFieldJson, ModelJson, PageJson}
+import models._
 import play.api.libs.json.{JsError, JsSuccess}
 
 object ArtifactCompiler {
@@ -34,20 +34,40 @@ object ArtifactCompiler {
     }
   }
 
+  private def compilePageField(field: PageFieldJson): PageField = {
+    new PageField(
+      name = field.name,
+      fieldType = "text",
+      required = false,
+      disabled = false,
+      label = field.name,
+      showInFormView = field.showInFormView.getOrElse(true),
+      showInTableView = field.showInTableView.getOrElse(true),
+      showInNavigation = field.showInNavigation.getOrElse(false),
+      placeholder = None,
+      help = None,
+      filter = None, // field.filter
+      blurFunction = None,
+      select = None,
+      links = None
+    )
+  }
+
   def compilePage(name: String): Page = {
     val pageJson = ArtifactService.getArtifactContentAndParseJson(ArtifactType.Page, name)
     pageJson.validate[PageJson] match {
       case JsSuccess(page, _) => {
+        val fields = page.fields.getOrElse(Seq.empty).map(compilePageField)
         new Page(
           name,
           page.title,
           page.icon,
           page.css,
           model = compileModel(page.model.getOrElse(name)),
-          fields = Seq.empty,
-          hasFormView = false,
-          hasTableView = false,
-          hasNavigation = false,
+          fields = fields,
+          hasFormView = fields.find(field => field.showInFormView).isDefined,
+          hasTableView = fields.find(field => field.showInTableView).isDefined,
+          hasNavigation = fields.find(field => field.showInNavigation).isDefined,
           children = Seq.empty)
       }
       case JsError(err) => {
