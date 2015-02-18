@@ -2,7 +2,7 @@ package controllers
 
 import models.User
 import play.api.mvc._
-import services.{ArtifactCompiler, ArtifactService, DataReader}
+import services.{DataReader, ArtifactCompiler}
 
 object Application extends Controller {
 
@@ -10,9 +10,8 @@ object Application extends Controller {
     desktop("Home")
   }
 
-  def readData(name: String) = Action { request =>
-    val dataReader = new DataReader
-    val response = dataReader.read(name)
+  def readData(name: String, page: Int, filter: Option[String]) = Action { request =>
+    val response = DataReader.getData(name, page, filter)
     Ok(response)
   }
 

@@ -34,7 +34,7 @@ case class TableColumn(
 
 case class TableJoin(
                       name: String,
-                      table: Table,
+                      table: ShallowTable,
                       required: Boolean,
                       columns: Seq[TableJoinColumn]
                       )

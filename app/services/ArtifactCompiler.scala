@@ -116,22 +116,22 @@ object ArtifactCompiler {
     )
   }
 
-  private def getTable(name: String): Table = {
-    Cache.getAs[Table](name).getOrElse {
+  private def getTable(name: String): DeepTable = {
+    Cache.getAs[DeepTable](name).getOrElse {
       println("Getting table " + name + " from cache")
       val newTable = compileTable(name)
       Cache.set(name, newTable)
-      Cache.getAs[Table](name).get
+      Cache.getAs[DeepTable](name).get
     }
   }
 
-  private def compileTable(name: String): Table = {
+  private def compileTable(name: String): DeepTable = {
     println("Compiling table " + name)
     val json = ArtifactService.getArtifactContentAndParseJson(ArtifactType.Table, name)
     json.validate[TableJson] match {
       case JsSuccess(table, _) => {
         val columns = table.columns.map(column => column.name -> compileTableColumn(column)).toMap
-        new Table(
+        new DeepTable(
           name,
           table.dbName,
           primaryKey = if (table.primaryKey.isDefined) columns.get(table.primaryKey.get) else None,
@@ -143,6 +143,24 @@ object ArtifactCompiler {
       }
       case JsError(err) => {
         throw new Exception("Failed to compile table " + name + " due to the following error:" + err.toString)
+      }
+    }
+  }
+
+  private def compileShallowTable(name: String): ShallowTable = {
+    println("Compiling shallow table " + name)
+    val json = ArtifactService.getArtifactContentAndParseJson(ArtifactType.Table, name)
+    json.validate[TableJson] match {
+      case JsSuccess(table, _) => {
+        val columns = table.columns.map(column => column.name -> compileTableColumn(column)).toMap
+        new ShallowTable(
+          name,
+          table.dbName,
+          columns = columns
+        )
+      }
+      case JsError(err) => {
+        throw new Exception("Failed to compile shallow table " + name + " due to the following error:" + err.toString)
       }
     }
   }
@@ -160,11 +178,12 @@ object ArtifactCompiler {
   }
 
   private def compileTableJoin(fromColumns: Map[String, TableColumn], join: TableJoinJson): TableJoin = {
+    val toTable = compileShallowTable(join.table)
     new TableJoin(
       name = join.name,
-      table = Table.stub(join.table),
+      table = toTable,
       required = join.required.getOrElse(false),
-      columns = None
+      columns = join.columns.map(c => compileTableJoinColumn(fromColumns, toTable.columns, c))
     )
   }
 
