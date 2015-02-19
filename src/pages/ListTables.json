@@ -24,8 +24,7 @@
       "select": {
         "model": "ListModules",
         "targetID": "TableModule",
-        "sourceValue": "ModuleModuleName",
-        "where": []
+        "sourceValue": "ModuleModuleName"
       }
     },
     {

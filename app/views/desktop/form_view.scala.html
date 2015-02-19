@@ -36,13 +36,13 @@
                 <label class="control-label" for="@(page.model.name)-@field.name">@field.label</label>
                 <ui-select
                 current="current.instances.@(page.model.name).data"
-                item-model="{{select.model}}"
-                item-value="{{select.sourceValue}}"
-                item-where="{{json select.where}}"
-                instance-model="@(page.model.name)"
-                instance-key="{{select.targetID}}"
+                item-model="@field.select.get.model"
+                item-value="@field.select.get.sourceValue"
+                item-where="@field.select.get.where"
+                instance-model="@page.model.name"
+                instance-key="@field.select.get.targetID"
                 instance-value="@(field.name)"
-                other-mappings="{{json this.select.otherMappings}}"
+                other-mappings="@Html(field.select.get.otherMappings.toString)"
                 ></ui-select>
             }
             @if(field.fieldType == "checkbox") {

@@ -169,18 +169,8 @@
               "basisColumn": "FromColumnID"
             },
             {
-              "name": "TableJoinJoinColumnFromColumnName",
-              "step": "fc",
-              "basisColumn": "Name"
-            },
-            {
               "name": "TableJoinJoinColumnToColumnID",
               "basisColumn": "ToColumnID"
-            },
-            {
-              "name": "TableJoinJoinColumnToColumnName",
-              "step": "tc",
-              "basisColumn": "Name"
             },
             {
               "name": "TableJoinJoinColumnFromText",
@@ -189,12 +179,22 @@
           ],
           "steps": [
             {
-              "name": "fc",
-              "join": "FromColumn"
+              "join": "FromColumn",
+              "fields": [
+                {
+                  "name": "TableJoinJoinColumnFromColumnName",
+                  "basisColumn": "Name"
+                }
+              ]
             },
             {
-              "name": "tc",
-              "join": "ToColumn"
+              "join": "ToColumn",
+              "fields": [
+                {
+                  "name": "TableJoinJoinColumnToColumnName",
+                  "basisColumn": "Name"
+                }
+              ]
             }
           ]
         }

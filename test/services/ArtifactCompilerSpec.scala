@@ -78,6 +78,7 @@ class ArtifactCompilerSpec extends Specification with Mockito {
           )),
           joins = Map()
         ),
+        limit = 0,
         instanceID = None,
         fields = Map("PersonID" -> new ModelField(
           "PersonID",
@@ -85,8 +86,13 @@ class ArtifactCompilerSpec extends Specification with Mockito {
           dataType = "String",
           updateable = true,
           required = false
-        ))
+        )),
+        children = Map.empty,
+        steps = Map.empty,
+        orderBy = Seq.empty
       )
+
+
 
       val compilerService = new ArtifactCompilerService with ArtifactServiceMock with TableCacheMock
       val model = compilerService.compileModel("ListPeople")

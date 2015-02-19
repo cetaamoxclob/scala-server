@@ -36,22 +36,16 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
   }
 
   def compilePage(name: String): Page = {
+    println("Compiling page " + name)
     val json = getArtifactContentAndParseJson(ArtifactType.Page, name)
     json.validate[PageJson] match {
-      case JsSuccess(page, _) => {
-        val fields = page.fields.getOrElse(Seq.empty).map(compilePageField)
-        new Page(
-          name,
-          page.title,
-          page.icon,
-          page.css,
-          viewMode = page.viewMode.getOrElse("form"),
-          model = compileModel(page.model.getOrElse(name)),
-          fields = fields,
-          hasFormView = fields.find(field => field.showInFormView).isDefined,
-          hasTableView = fields.find(field => field.showInTableView).isDefined,
-          hasNavigation = fields.find(field => field.showInNavigation).isDefined,
-          children = Seq.empty)
+      case JsSuccess(pageJson, _) => {
+        val page = pageJson.copy(name = Option(name))
+        val modelName: String = page.model.getOrElse(page.name.getOrElse {
+          throw new Exception("Neither the model nor the page has a name: " + page.toString)
+        })
+        val model = compileModel(modelName)
+        compilePageView(page, model)
       }
       case JsError(err) => {
         throw new Exception("Failed to compile page " + name + " due to the following error:" + err.toString)
@@ -59,55 +53,165 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
     }
   }
 
-  private def compilePageField(field: PageFieldJson): PageField = {
+  private def findField(fieldName: String, model: Model): Option[ModelField] = {
+    model.fields.get(fieldName) match {
+      case Some(field) => Option(field)
+      case None => findField(fieldName, model.steps.values.toSeq)
+    }
+  }
+
+  private def findField(fieldName: String, steps: Seq[ModelStep]): Option[ModelField] = {
+    steps.map { step =>
+      findField(fieldName, step)
+    }.flatMap(fields => fields).headOption
+  }
+
+  private def findField(fieldName: String, step: ModelStep): Option[ModelField] = {
+    step.fields.get(fieldName) match {
+      case Some(field) => Option(field)
+      case None => findField(fieldName, step.steps.values.toSeq)
+    }
+  }
+
+  private def compilePageView(pageJson: PageJson, model: Model): Page = {
+    val fields = pageJson.fields.getOrElse(Seq.empty).map { f =>
+      val modelField = findField(f.name, model).getOrElse {
+        throw new Exception(f"Failed to find field named `${f.name}` in Model `${model.name}` but found these: \n${model.fields.keys} \n${model.steps.values}")
+      }
+      compilePageField(f, modelField)
+    }
+    new Page(
+      pageJson.name.get,
+      pageJson.title,
+      pageJson.icon,
+      pageJson.css,
+      viewMode = pageJson.viewMode.getOrElse("form"),
+      model = model,
+      fields = fields,
+      hasFormView = fields.find(field => field.showInFormView).isDefined,
+      hasTableView = fields.find(field => field.showInTableView).isDefined,
+      hasNavigation = fields.find(field => field.showInNavigation).isDefined,
+      children = pageJson.children match {
+        case Some(childViews) => childViews.map { childView =>
+          val childModelName = childView.model.getOrElse(childView.name.get)
+          val childModel = model.children.get(childModelName).get
+          compilePageView(childView, childModel)
+        }
+        case None => Seq.empty
+      }
+    )
+  }
+
+  private def compilePageField(field: PageFieldJson, modelField: ModelField): PageField = {
     new PageField(
       name = field.name,
-      fieldType = "text",
-      required = false,
-      disabled = false,
-      label = field.name,
+      fieldType = field.fieldType.getOrElse("text"), // Need to inherit from basisColumn
+      required = modelField.required,
+      disabled = field.disabled.getOrElse(false), // Need to inherit from basisColumn
+      label = field.label.getOrElse(modelField.name), // Need to inherit from basisColumn
       showInFormView = field.showInFormView.getOrElse(true),
       showInTableView = field.showInTableView.getOrElse(true),
       showInNavigation = field.showInNavigation.getOrElse(false),
-      placeholder = None,
-      help = None,
-      filter = None, // field.filter
-      blurFunction = None,
-      select = None,
-      links = None
+      placeholder = field.placeholder,
+      help = field.help,
+      filter = field.filter,
+      blurFunction = field.blurFunction,
+      select = field.select match {
+        case Some(s) => Option(compileFieldSelect(s))
+        case None => None
+      },
+      links = None // TODO
+    )
+  }
+
+  private def compileFieldSelect(selectJson: PageFieldSelectJson): PageFieldSelect = {
+    new PageFieldSelect(
+      model = selectJson.model,
+      sourceValue = selectJson.sourceValue,
+      targetID = selectJson.targetID,
+      where = selectJson.where,
+      otherMappings = selectJson.otherMappings
     )
   }
 
   def compileModel(name: String): Model = {
+    println("Compiling model " + name)
     val json = getArtifactContentAndParseJson(ArtifactType.Model, name)
     json.validate[ModelJson] match {
-      case JsSuccess(model, _) => {
-        val basisTable = getTableFromCache(model.basisTable).getOrElse{
-          val newTable = compileTable(model.basisTable)
-          addTableToCache(name, newTable)
-          newTable
-        }
-        val instanceIdField = if (basisTable.primaryKey.isDefined) {
-          model.fields.find(f =>
-            f.basisColumn == basisTable.primaryKey.get.name // && f.step
-          )
-        } else None
-        new Model(
-          name,
-          basisTable,
-          instanceID = if (instanceIdField.isDefined) Option(instanceIdField.get.name) else None,
-          fields = model.fields.map(f => {
-            val basisColumn = basisTable.columns.getOrElse(
-              f.basisColumn,
-              throw new Exception(f"failed to find column named `${f.basisColumn}` in table `${basisTable.name}`")
-            )
-            f.name -> compileModelField(f, basisColumn)
-          }).toMap
-        )
+      case JsSuccess(modelJson, _) => {
+        compileModelView(modelJson.copy(name = Option(name)))
       }
       case JsError(err) => {
         throw new Exception("Failed to compile model " + name + " due to the following error:" + err.toString)
       }
+    }
+  }
+
+  private def compileModelView(model: ModelJson): Model = {
+    println("Compiling model view " + model.name.getOrElse("unknown"))
+    val basisTable = getTableFromCache(model.basisTable).getOrElse {
+      val newTable = compileTable(model.basisTable)
+      addTableToCache(model.name.get, newTable)
+      newTable
+    }
+    val instanceIdField = if (basisTable.primaryKey.isDefined) {
+      model.fields.find(f =>
+        f.basisColumn == basisTable.primaryKey.get.name // && f.step
+      )
+    } else None
+    new Model(
+      model.name.get,
+      basisTable,
+      model.limit.getOrElse(0),
+      instanceID = if (instanceIdField.isDefined) Option(instanceIdField.get.name) else None,
+      fields = model.fields.map(f => {
+        //        if (f.step )
+        val basisColumn = basisTable.columns.getOrElse(
+          f.basisColumn,
+          throw new Exception(f"failed to find column for `${f.name}` named `${f.basisColumn}` in table `${basisTable.name}` but found: ${basisTable.columns.keys}")
+        )
+        f.name -> compileModelField(f, basisColumn)
+      }).toMap,
+      children = model.children match {
+        case Some(modelChildren) => modelChildren.map(childModel => {
+          childModel.name.get -> compileModelView(childModel)
+        }).toMap
+        case None => Map.empty
+      },
+      steps = compileSteps(basisTable.joins, model.steps),
+      orderBy = compileOrderBy(model.orderBy)
+    )
+  }
+
+  private def compileSteps(fromTableJoins: Map[String, TableJoin], steps: Option[Seq[ModelStepJson]]): collection.immutable.Map[Int, ModelStep] = {
+    if (steps.isEmpty) Map.empty
+    else {
+      steps.get.zipWithIndex.map {
+        case (step, counter) => {
+          val toTable = fromTableJoins.getOrElse(
+            step.join,
+            throw new Exception(f"Failed to find table named `${step.join}` in join clause")
+          ).table
+          val fields = step.fields.map(field => {
+            field.name -> compileModelField(field, toTable.columns.get(field.basisColumn).getOrElse {
+              throw new Exception("field.name ${field.name}")
+            })
+          }).toMap
+          counter -> new ModelStep(
+            table = toTable,
+            step.required.getOrElse(true),
+            fields = fields,
+            steps = Map.empty
+          )
+        }
+      }.toMap
+    }
+  }
+
+  private def compileOrderBy(orderBy: Option[Seq[OrderByJson]]): Seq[ModelOrderBy] = {
+    if (orderBy.isEmpty) Seq.empty
+    else {
+      orderBy.get.map(o => new ModelOrderBy(o.fieldName, o.ascending))
     }
   }
 

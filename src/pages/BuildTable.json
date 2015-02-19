@@ -62,10 +62,7 @@
           "select": {
             "model": "ListTables",
             "targetID": "TableJoinToTableID",
-            "sourceValue": "TableName",
-            "otherMappings": [
-            ],
-            "where": []
+            "sourceValue": "TableName"
           }
         },
         {
@@ -89,13 +86,7 @@
                 "model": "ListTableColumns",
                 "targetID": "TableJoinJoinColumnFromColumnID",
                 "sourceValue": "ColumnName",
-                "where": [
-                  {
-                    "sourceField": "ColumnTableID",
-                    "operator": "=",
-                    "valueField": "TableTableID"
-                  }
-                ]
+                "where": "ColumnTableID = TableTableID"
               }
             },
             {
@@ -106,13 +97,7 @@
                 "model": "ListTableColumns",
                 "targetID": "TableJoinJoinColumnToColumnID",
                 "sourceValue": "ColumnName",
-                "where": [
-                  {
-                    "sourceField": "ColumnTableID",
-                    "operator": "=",
-                    "valueField": "TableJoinToTableID"
-                  }
-                ]
+                "where": "ColumnTableID = TableJoinToTableID"
               }
             },
             {

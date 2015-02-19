@@ -2,6 +2,10 @@ package models
 
 import play.api.libs.json._
 
+case class ShallowPage(name: String,
+                       title: String,
+                       icon: Option[String])
+
 case class Page(
                  name: String,
                  title: String,
@@ -23,10 +27,13 @@ case class Page(
     }
   }
 
-  def toClientJson = JsObject(Seq(
+  def toClientJson: JsObject = JsObject(Seq(
     "name" -> JsString(name),
     "model" -> model.toClientJson,
-    "viewMode" -> JsString(viewMode)
+    "viewMode" -> JsString(viewMode),
+    "children" -> JsArray(children.toSeq.map(childPage => {
+      childPage.toClientJson
+    }))
   ))
 
 }
@@ -44,15 +51,16 @@ case class PageField(
                       help: Option[String],
                       filter: Option[String],
                       blurFunction: Option[String],
-                      select: Option[String],
+                      select: Option[PageFieldSelect],
                       links: Option[Seq[PageFieldLinks]]
                       )
-
-case class PageFieldLinks(page: String, filter: String)
 
 case class PageFieldSelect(model: String,
                            sourceValue: String,
                            targetID: String,
-                           where: String,
-                           otherMappings: Option[Seq[String]]
+                           where: Option[String],
+                           otherMappings: Option[String]
                             )
+
+case class PageFieldLinks(page: ShallowPage, filter: String)
+
