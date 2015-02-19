@@ -3,11 +3,20 @@
 # ~~~~
 
 # Home page
-GET        /                    controllers.Application.index
-GET        /page/:name          controllers.Application.desktop(name)
-GET        /page/:name/         controllers.Application.desktop(name)
+GET         /                    controllers.Application.index
+GET         /m/:name             controllers.Application.mobile(name)
+GET         /m/:name/            controllers.Application.mobile(name)
+GET         /page/:name          controllers.Application.desktop(name)
+GET         /page/:name/         controllers.Application.desktop(name)
 
-GET        /data/:name          controllers.Application.readData(name, page: Int ?= 1, filter: Option[String])
+GET         /login               controllers.Application.login
+GET         /logout              controllers.Application.logout
+
+GET         /data/:name          controllers.Application.readData(name, page: Int ?= 1, filter: Option[String])
+POST        /data/:name          controllers.Application.saveData(name)
+
+GET         /importAll           controllers.Application.importAll
+GET         /exportAll           controllers.Application.exportAll
 
 # Map static resources from the /public folder to the /assets URL path
-GET        /assets/*file        controllers.Assets.at(path="/public", file)
+GET         /assets/*file        controllers.Assets.at(path="/public", file)
