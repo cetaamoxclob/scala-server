@@ -1,21 +1,20 @@
 package services
 
-import data.DataState
+import java.sql._
+
+import data.{DataState, Database}
+import mock.FakeResultSet
 import models._
 import org.junit.runner.RunWith
 import org.specs2.mock._
 import org.specs2.mutable._
 import org.specs2.runner._
-import play.api.libs.json.{Json, JsArray}
+import play.api.libs.json.{JsArray, Json}
 
-trait ArtifactCompilerMock extends ArtifactCompiler {
-}
 
 @RunWith(classOf[JUnitRunner])
 class DataSaverSpec extends Specification with Mockito {
   "DataSaver" should {
-    val saver = new DataSaver
-
     val model = new Model(
       "PersonTest",
       basisTable = new ShallowTable(
@@ -37,12 +36,27 @@ class DataSaverSpec extends Specification with Mockito {
       orderBy = Seq.empty
     )
 
+
     "do nothing" in {
+      val saver = new DataSaver
       saver.saveAll(model, None) must be equalTo JsArray()
     }
 
     "insert one row" in {
-      val _fakeID = 1
+      val saver = new DataSaver with Database {
+        override def insert(sql: String): ResultSet = {
+          new FakeResultSet {
+            override def next(): Boolean = {
+              return true
+            }
+            override def getLong(columnIndex: Int): Long = {
+              return 1
+            }
+          }
+        }
+      }
+
+      val _fakeID = "1"
       val saving = Json.arr(
         Json.obj(
           "state" -> DataState.Inserted.toString,
