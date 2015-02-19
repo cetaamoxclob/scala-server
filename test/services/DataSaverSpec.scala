@@ -27,7 +27,7 @@ class DataSaverSpec extends Specification with Mockito {
           "PersonID",
           "person_id",
           dataType = "Integer",
-          updateable = true,
+          updateable = false,
           required = false
         ),
         "PersonName" -> new ModelField(
@@ -43,7 +43,6 @@ class DataSaverSpec extends Specification with Mockito {
       orderBy = Seq.empty
     )
 
-
     "do nothing" in {
       val saver = new DataSaver
       saver.saveAll(model, None) must be equalTo JsArray()
@@ -57,6 +56,7 @@ class DataSaverSpec extends Specification with Mockito {
             override def next(): Boolean = {
               return true
             }
+
             override def getLong(columnIndex: Int): Long = {
               return 1
             }
@@ -84,6 +84,29 @@ class DataSaverSpec extends Specification with Mockito {
           )
         )
       )
+    }
+
+    "update one row" in {
+      val saver = new DataSaver with Database {
+        override def query(sql: String): ResultSet = {
+          sql must be equalTo "UPDATE `person` SET `name` = 'Foo' WHERE `person_id` = '12'"
+          new FakeResultSet {
+          }
+        }
+      }
+
+      val sampleRow = Json.obj(
+        "state" -> DataState.Updated.toString,
+        "id" -> "12",
+        "data" -> Json.obj(
+          "PersonID" -> "12",
+          "PersonName" -> "Foo"
+        )
+      )
+
+      val saving = Json.arr(sampleRow)
+      val result = saver.saveAll(model, Option(saving))
+      result must be equalTo Json.arr(sampleRow - "state")
     }
 
   }
