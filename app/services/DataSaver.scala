@@ -1,5 +1,6 @@
 package services
 
+import com.fasterxml.jackson.annotation.JsonValue
 import data.{DataState, Database}
 import models.Model
 import play.api.libs.json._
@@ -71,7 +72,8 @@ class DataSaver extends Database {
   }
 
   private def insertRow(model: Model, row: DataRow): JsValue = {
-    val sql = "INSERT INTO "
+    val sql = createSqlForInsert(model, row.data)
+
     val rsKeys = insert(sql)
     if (rsKeys.next()) {
       val insertedID = rsKeys.getLong(1).toString
@@ -86,6 +88,31 @@ class DataSaver extends Database {
     }
   }
 
+  private def createSqlForInsert(model: Model, row: JsObject) = {
+    import collection.mutable.ListBuffer
+
+    val fields = ListBuffer.empty[String]
+    val values = ListBuffer.empty[String]
+
+    model.fields.values.foreach{field =>
+      row \ field.name match {
+        case JsString(value) => {
+          println("adding field and value" + field.dbName + value)
+          fields += "`" + field.dbName + "`"
+          values += "'" + value.toString + "'"
+        }
+        case JsArray(_) | JsObject(_) => {
+          throw new Exception("Found data in an incorrect format on field " + field.name)
+        }
+        case JsUndefined() | JsNull => {
+          println("INFO: Did not find value for field = " + field.name)
+        }
+      }
+    }
+
+    f"INSERT INTO `${model.basisTable.dbName}` (${fields.mkString(",")}) VALUES (${values.mkString(",")})"
+  }
+
   private def deleteRow(model: Model, row: DataRow): JsValue = {
     ???
   }
@@ -93,5 +120,10 @@ class DataSaver extends Database {
   private def updateRow(model: Model, row: DataRow): JsValue = {
     ???
   }
+
+  private def childUpdate(model: Model, row: DataRow): JsValue = {
+    ???
+  }
+
 
 }

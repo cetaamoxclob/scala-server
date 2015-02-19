@@ -26,9 +26,16 @@ class DataSaverSpec extends Specification with Mockito {
         "PersonID" -> new ModelField(
           "PersonID",
           "person_id",
-          dataType = "",
+          dataType = "Integer",
           updateable = true,
           required = false
+        ),
+        "PersonName" -> new ModelField(
+          "PersonName",
+          "name",
+          dataType = "String",
+          updateable = true,
+          required = true
         )
       ),
       children = Map.empty,
@@ -45,6 +52,7 @@ class DataSaverSpec extends Specification with Mockito {
     "insert one row" in {
       val saver = new DataSaver with Database {
         override def insert(sql: String): ResultSet = {
+          sql must be equalTo "INSERT INTO `person` (`name`) VALUES ('Foo')"
           new FakeResultSet {
             override def next(): Boolean = {
               return true
