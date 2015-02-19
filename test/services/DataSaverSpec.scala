@@ -88,10 +88,9 @@ class DataSaverSpec extends Specification with Mockito {
 
     "update one row" in {
       val saver = new DataSaver with Database {
-        override def query(sql: String): ResultSet = {
+        override def update(sql: String): Int = {
           sql must be equalTo "UPDATE `person` SET `name` = 'Foo' WHERE `person_id` = '12'"
-          new FakeResultSet {
-          }
+          1
         }
       }
 

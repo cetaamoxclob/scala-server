@@ -89,7 +89,10 @@ class DataSaver extends Database {
 
   private def updateRow(model: Model, row: DataRow): JsValue = {
     val sql = createSqlForUpdate(model, row.data)
-    query(sql)
+    val rowCountModified = update(sql)
+    if (rowCountModified != 1) {
+      throw new Exception(f"Update ${rowCountModified} rows: $sql")
+    }
     Json.obj(
       "id" -> row.id,
       "data" -> row.data

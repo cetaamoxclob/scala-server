@@ -1,6 +1,6 @@
 package data
 
-import java.sql.ResultSet
+import java.sql.{Statement, Connection, ResultSet}
 
 import play.api.Play.current
 import play.api.db.DB
@@ -8,35 +8,37 @@ import play.api.db.DB
 trait Database {
 
   // This is a work in progress. Still experimenting
-  def connect[R](block: => R): R = {
-    val conn = DB.getConnection()
+  def connect[T](f: Connection => T): T = {
+    val connection = DB.getConnection()
     try {
-      block
+      f(connection)
     } finally {
-      conn.close
+      connection.close
     }
   }
 
   def query(sql: String): ResultSet = {
-    val conn = DB.getConnection()
-    val stmt = conn.createStatement
-    try {
-      stmt.executeQuery(sql)
-    } finally {
-      stmt.close
-      conn.close
+    connect {
+      connection =>
+        val stmt = connection.createStatement
+        stmt.executeQuery(sql)
+    }
+  }
+
+  def update(sql: String): Int = {
+    connect {
+      conn =>
+        val stmt = conn.createStatement
+        stmt.executeUpdate(sql)
     }
   }
 
   def insert(sql: String): ResultSet = {
-    val conn = DB.getConnection()
-    val stmt = conn.createStatement
-    try {
-      stmt.executeQuery(sql)
-      stmt.getGeneratedKeys
-    } finally {
-      stmt.close
-      conn.close
+    connect {
+      conn =>
+        val stmt = conn.createStatement
+        stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS)
+        stmt.getGeneratedKeys
     }
   }
 
