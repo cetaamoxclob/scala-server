@@ -1,17 +1,11 @@
 package data
 
-import java.util.Calendar
-
 import models.ModelField
 import org.joda.time.DateTime
 
 object DataFilter {
 
   def parse(filter: String, fields: Map[String, ModelField]): (String, List[Any]) = {
-    parse(filter, fields, 0)
-  }
-
-  def parse(filter: String, fields: Map[String, ModelField], startingParameterIndex: Int): (String, List[Any]) = {
 
     if (filter.isEmpty)
       return ("", List.empty)
@@ -20,8 +14,8 @@ object DataFilter {
       val patternAndOr = """(.+) (AND|OR) (.+)""".r
       val patternAndOr(leftPhrase, andOr, rightPhrase) = filter
 
-      val (leftPhraseParsed, leftPhraseParams) = parse(leftPhrase, fields, startingParameterIndex)
-      val (rightPhraseParsed, rightPhraseParams) = parse(rightPhrase, fields, startingParameterIndex + leftPhraseParams.length)
+      val (leftPhraseParsed, leftPhraseParams) = parse(leftPhrase, fields)
+      val (rightPhraseParsed, rightPhraseParams) = parse(rightPhrase, fields)
 
       return (f"$leftPhraseParsed $andOr $rightPhraseParsed", leftPhraseParams ::: rightPhraseParams)
     } catch {
@@ -55,16 +49,14 @@ object DataFilter {
 
       val (rightSide, params): (String, List[Any]) = comparator match {
         case Comparator.IsEmpty => (f"IS NULL", List.empty)
-        case Comparator.BeginsWith => (s"LIKE :" + startingParameterIndex, List(right + "%"))
-        case Comparator.EndsWith => (s"LIKE :" + startingParameterIndex, List("%" + right))
-        case Comparator.Contains => (s"LIKE :" + startingParameterIndex, List("%" + right + "%"))
+        case Comparator.BeginsWith => (s"LIKE ?", List(right + "%"))
+        case Comparator.EndsWith => (s"LIKE ?", List("%" + right))
+        case Comparator.Contains => (s"LIKE ?", List("%" + right + "%"))
         case Comparator.In => {
           val valueListAsString = if (right.charAt(0) == '(' && right.last == ')') right.substring(1, right.length - 1)
           else right
           val values = valueListAsString.split(",").toList
-          val bindings = values.zipWithIndex.map { case (value, index) =>
-            ":" + (index + startingParameterIndex)
-          }.mkString(",")
+          val bindings = values.map { value => "?"}.mkString(",")
           (f"IN ($bindings)", values.map(value => value.toInt))
         }
         case _ => {
@@ -73,12 +65,12 @@ object DataFilter {
             if (formattedDate.isDefined)
               (comparatorToSql(comparator) + " " + formattedDate.get, List())
             else
-              (comparatorToSql(comparator) + " :" + startingParameterIndex, List(DateTime.parse(right)))
+              (comparatorToSql(comparator) + " ?", List(DateTime.parse(right)))
           } else {
             val parameter = if (fieldLeft.get.dataType == "Integer") {
               right.toInt
             } else right.toString
-            (comparatorToSql(comparator) + " :" + startingParameterIndex, List(parameter))
+            (comparatorToSql(comparator) + " ?", List(parameter))
           }
         }
       }

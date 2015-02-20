@@ -1,6 +1,6 @@
 {
   "basisTable": "Table",
-  "limit": 2,
+  "limit": 10,
   "orderBy": [
     {
       "fieldName": "TableModule"

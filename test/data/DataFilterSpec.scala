@@ -34,35 +34,35 @@ class DataFilterSpec extends Specification {
   "DataFilter" should {
     "filter strings" in {
       "=" in {
-        mustBeEqual("TableName = Person", "`t0`.`name` = :0", List("Person"))
+        mustBeEqual("TableName = Person", "`t0`.`name` = ?", List("Person"))
       }
 
       "Equals" in {
-        mustBeEqual("TableName Equals Person", "`t0`.`name` = :0", List("Person"))
+        mustBeEqual("TableName Equals Person", "`t0`.`name` = ?", List("Person"))
       }
 
       "BeginsWith" in {
-        mustBeEqual("TableName BeginsWith Person", "`t0`.`name` LIKE :0", List("Person%"))
+        mustBeEqual("TableName BeginsWith Person", "`t0`.`name` LIKE ?", List("Person%"))
       }
 
       "EndsWith" in {
-        mustBeEqual("TableName EndsWith Person", "`t0`.`name` LIKE :0", List("%Person"))
+        mustBeEqual("TableName EndsWith Person", "`t0`.`name` LIKE ?", List("%Person"))
       }
 
       "Contains" in {
-        mustBeEqual("TableName Contains Person", "`t0`.`name` LIKE :0", List("%Person%"))
+        mustBeEqual("TableName Contains Person", "`t0`.`name` LIKE ?", List("%Person%"))
       }
     }
 
     "filter numbers" in {
       "In" in {
-        mustBeEqual("TableID In (1,2)", "`t0`.`id` IN (:0,:1)", List(1, 2))
+        mustBeEqual("TableID In (1,2)", "`t0`.`id` IN (?,?)", List(1, 2))
       }
     }
 
     "filter dates" in {
       "on or after date" in {
-        mustBeEqual("CreatedDate OnOrAfter 2000-01-01", "`t0`.`created_date` >= :0", List(DateTime.parse("2000-01-01")))
+        mustBeEqual("CreatedDate OnOrAfter 2000-01-01", "`t0`.`created_date` >= ?", List(DateTime.parse("2000-01-01")))
       }
       "before" in {
         mustBeEqual("CreatedDate Before NOW", "`t0`.`created_date` < NOW()", List.empty)
@@ -76,7 +76,7 @@ class DataFilterSpec extends Specification {
     }
 
     "filter complex phrases" in {
-      mustBeEqual("TableName = Person AND TableID > 2", "`t0`.`name` = :0 AND `t0`.`id` > :1", List("Person", 2))
+      mustBeEqual("TableName = Person AND TableID > 2", "`t0`.`name` = ? AND `t0`.`id` > ?", List("Person", 2))
     }
 
   }

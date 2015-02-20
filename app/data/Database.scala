@@ -21,16 +21,19 @@ trait Database {
     connect {
       connection =>
         val stmt = connection.prepareStatement(sql)
-        if (numberedParameters.isEmpty) {
+        if (!numberedParameters.isEmpty) {
           numberedParameters.zipWithIndex.foreach {
-            case (value, index) => value match {
-              case _: String => stmt.setString(index, value.asInstanceOf[String])
-              case Long => stmt.setLong(index, value.asInstanceOf[Long])
-              case Boolean => stmt.setBoolean(index, value.asInstanceOf[Boolean])
-              case Int => stmt.setInt(index, value.asInstanceOf[Int])
-              case Float => stmt.setFloat(index, value.asInstanceOf[Float])
-              case _: java.util.Date => stmt.setDate(index, value.asInstanceOf[java.sql.Date])
-              case _ => throw new Exception(s"Parameters of type ${value.getClass} is not supported for value ${value}")
+            case (value, zipIndex) => {
+              val index = zipIndex + 1
+              value match {
+                case _: String => stmt.setString(index, value.asInstanceOf[String])
+                case Long => stmt.setLong(index, value.asInstanceOf[Long])
+                case Boolean => stmt.setBoolean(index, value.asInstanceOf[Boolean])
+                case Int => stmt.setInt(index, value.asInstanceOf[Int])
+                case Float => stmt.setFloat(index, value.asInstanceOf[Float])
+                case _: java.util.Date => stmt.setDate(index, value.asInstanceOf[java.sql.Date])
+                case _ => throw new Exception(s"Parameters of type ${value.getClass} is not supported for value ${value}")
+              }
             }
           }
         }
