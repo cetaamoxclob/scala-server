@@ -1,7 +1,9 @@
 package services
 
-import data.Database
-import models.Model
+import java.sql.ResultSet
+
+import data.{SqlBuilder, DataFilter, Database}
+import models.{ModelField, Model}
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
@@ -37,14 +39,31 @@ trait DataReader extends ArtifactCompiler with Database {
   }
 
   def queryModelData(model: Model, page: Int, filter: Option[String]): Seq[SelectDataRow] = {
-    val sqlString = convertModelToSql(model)
-    val rs = query(sqlString)
+    var sqlBuilder = new SqlBuilder(
+      from = model.basisTable.dbName,
+      fields = model.fields,
+      page = page,
+      limit = model.limit)
+
+    if (filter.isDefined) {
+      val parseResults = DataFilter.parse(filter.get, model.fields)
+      sqlBuilder = sqlBuilder.copy(
+        where = Option(parseResults._1),
+        parameters = parseResults._2
+      )
+    }
+
+    val rs = query(sqlBuilder.toPreparedStatement, sqlBuilder.parameters)
+    convertResultSetToDataRows(model.instanceID, model.fields, rs)
+  }
+
+  private def convertResultSetToDataRows(instanceID: Option[String], fields: Map[String, ModelField], rs: ResultSet) = {
     val resultBuilder = Seq.newBuilder[SelectDataRow]
 
     while (rs.next()) {
       resultBuilder += new SelectDataRow(
-        id = if (model.instanceID.isDefined) Some(rs.getString(model.instanceID.get)) else None,
-        data = model.fields.map {
+        id = if (instanceID.isDefined) Some(rs.getString(instanceID.get)) else None,
+        data = fields.map {
           case (fieldName, f) => {
             val columnValue: JsValue = f.dataType match {
               case "Int" | "Integer" => JsNumber(rs.getInt(fieldName))
@@ -58,18 +77,7 @@ trait DataReader extends ArtifactCompiler with Database {
       )
     }
     resultBuilder.result
-  }
 
-  def convertModelToSql(model: Model): String = {
-    val sql = new StringBuilder
-    sql append "SELECT "
-    sql append model.fields.map {
-      case (fieldName, f) => {
-        f.dbName + " AS " + fieldName
-      }
-    }.toSeq.mkString(", ")
-    sql append " FROM `" append model.basisTable.dbName append "` "
-    sql.toString
   }
 }
 

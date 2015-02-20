@@ -1,28 +1,36 @@
 package data
 
-import models.ModelField
+import java.util.Calendar
 
-import scala.util.matching.Regex
+import models.ModelField
+import org.joda.time.DateTime
 
 object DataFilter {
 
-  def parse(filter: String, fields: Map[String, ModelField]): String = {
+  def parse(filter: String, fields: Map[String, ModelField]): (String, List[Any]) = {
+    parse(filter, fields, 0)
+  }
+
+  def parse(filter: String, fields: Map[String, ModelField], startingParameterIndex: Int): (String, List[Any]) = {
+
     if (filter.isEmpty)
-      return ""
+      return ("", List.empty)
 
     try {
       val patternAndOr = """(.+) (AND|OR) (.+)""".r
       val patternAndOr(leftPhrase, andOr, rightPhrase) = filter
-      println(s"parsing left `$leftPhrase` and right `$rightPhrase`")
-      return f"${parse(leftPhrase, fields)} $andOr ${parse(rightPhrase, fields)}"
+
+      val (leftPhraseParsed, leftPhraseParams) = parse(leftPhrase, fields, startingParameterIndex)
+      val (rightPhraseParsed, rightPhraseParams) = parse(rightPhrase, fields, startingParameterIndex + leftPhraseParams.length)
+
+      return (f"$leftPhraseParsed $andOr $rightPhraseParsed", leftPhraseParams ::: rightPhraseParams)
     } catch {
       case err: MatchError =>
     }
 
     try {
-      val patternEquals = """(.+) (=|>|<|Equals|In|Contains|BeginsWith|EndsWith|Before|After|GreaterThan|GreaterThanOrEqual|LessThan|LessThanOrEqual) (.+)""".r
+      val patternEquals = """(.+) (=|>|<|Equals|In|Contains|BeginsWith|EndsWith|Before|OnOrBefore|After|OnOrAfter|GreaterThan|GreaterThanOrEqual|LessThan|LessThanOrEqual|IsEmpty) (.+)""".r
       val patternEquals(left, comparatorCandidate, right) = filter
-      println(s"parsing single phrase left `$left` `$comparatorCandidate` right `$right`")
 
       val fieldLeft = fields.get(left)
       val fieldRight = fields.get(right)
@@ -42,24 +50,39 @@ object DataFilter {
       if (fieldRight.isDefined) {
         // We might want to consider warning if they choose and option that won't work here
         // For example dateField = stringField or field1 BeginsWith field2 or field1 = field1
-        return f"${fieldToSql(fieldLeft.get)} ${comparatorToSql(comparator)} ${fieldToSql(fieldRight.get)}"
+        return (f"${fieldToSql(fieldLeft.get)} ${comparatorToSql(comparator)} ${fieldToSql(fieldRight.get)}", List.empty)
       }
 
-      val rightSide = comparator match {
-        case Comparator.IsEmpty => f"IS NULL"
-        case Comparator.BeginsWith => s"LIKE '${right}%'"
-        case Comparator.EndsWith => s"LIKE '%${right}'"
-        case Comparator.Contains => s"LIKE '%${right}%'"
-        case Comparator.In => f"IN ${right}"
+      val (rightSide, params): (String, List[Any]) = comparator match {
+        case Comparator.IsEmpty => (f"IS NULL", List.empty)
+        case Comparator.BeginsWith => (s"LIKE :" + startingParameterIndex, List(right + "%"))
+        case Comparator.EndsWith => (s"LIKE :" + startingParameterIndex, List("%" + right))
+        case Comparator.Contains => (s"LIKE :" + startingParameterIndex, List("%" + right + "%"))
+        case Comparator.In => {
+          val valueListAsString = if (right.charAt(0) == '(' && right.last == ')') right.substring(1, right.length - 1)
+          else right
+          val values = valueListAsString.split(",").toList
+          val bindings = values.zipWithIndex.map { case (value, index) =>
+            ":" + (index + startingParameterIndex)
+          }.mkString(",")
+          (f"IN ($bindings)", values.map(value => value.toInt))
+        }
         case _ => {
-          if (fieldLeft.get.dataType == "Integer") {
-            comparatorToSql(comparator) + " " + right
-          } else if (fieldLeft.get.dataType == "Date") {
-            comparatorToSql(comparator) + " " + formatDate(right)
-          } else f"${comparatorToSql(comparator)} '${right}'"
+          if (fieldLeft.get.dataType == "Date") {
+            val formattedDate = formatDate(right)
+            if (formattedDate.isDefined)
+              (comparatorToSql(comparator) + " " + formattedDate.get, List())
+            else
+              (comparatorToSql(comparator) + " :" + startingParameterIndex, List(DateTime.parse(right)))
+          } else {
+            val parameter = if (fieldLeft.get.dataType == "Integer") {
+              right.toInt
+            } else right.toString
+            (comparatorToSql(comparator) + " :" + startingParameterIndex, List(parameter))
+          }
         }
       }
-      fieldToSql(fieldLeft.get) + " " + rightSide
+      (fieldToSql(fieldLeft.get) + " " + rightSide, params)
 
     } catch {
       case err: MatchError => throw new Exception("Failed to match filter on " + filter)
@@ -83,18 +106,17 @@ object DataFilter {
     f"`t0`.`${field.dbName}`"
   }
 
-  private def formatDate(dateMatcherCandidate: String): String = {
+  private def formatDate(dateMatcherCandidate: String): Option[String] = {
     val datePattern = dateMatcherCandidate.trim
-    if (datePattern == "NOW") return "NOW()"
+    if (datePattern == "NOW") return Some("NOW()")
 
     try {
-
       val patternDateInterval = """(-?)(\d+)(\w+)""".r
       val patternDateInterval(negate, digit, date) = dateMatcherCandidate
       val dateAddFxn = if (negate == "-") "DATE_SUB" else "DATE_ADD"
-      f"$dateAddFxn(NOW(), INTERVAL $digit ${toIntervalType(date)})"
+      Some(f"$dateAddFxn(NOW(), INTERVAL $digit ${toIntervalType(date)})")
     } catch {
-      case err: MatchError => datePattern
+      case err: MatchError => None
     }
   }
 
@@ -108,3 +130,11 @@ object DataFilter {
     }
   }
 }
+
+//object DateParser {
+//  def apply(value: String): java.util.Date = {
+//
+//    val cal = Calendar.getInstance()
+//    cal.getTime
+//  }
+//}

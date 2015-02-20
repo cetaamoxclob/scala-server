@@ -114,7 +114,7 @@ class DataSaverSpec extends Specification with Mockito {
           sql must be equalTo "DELETE FROM `person` WHERE `person_id` = 12"
           1
         }
-        override def query(sql: String): ResultSet = {
+        override def query(sql: String, numberedParameters: List[Any]): ResultSet = {
           new FakeResultSet {
             var counter = 0
             override def next(): Boolean = {

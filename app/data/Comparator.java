@@ -2,11 +2,11 @@ package data;
 
 public enum Comparator {
     Equals,
+    In,
+    BeginsWith, EndsWith, Contains,
     LessThan, LessThanOrEquals,
     GreaterThan, GreaterThanOrEquals,
-    BeginsWith, EndsWith, Contains,
     Before, OnOrBefore,
     After, OnOrAfter,
-    In,
     IsEmpty
 }

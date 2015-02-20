@@ -1,6 +1,10 @@
 package data
 
+import java.sql.Date
+import java.util.Calendar
+
 import models.ModelField
+import org.joda.time.DateTime
 import org.junit.runner.RunWith
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -23,51 +27,56 @@ class DataFilterSpec extends Specification {
     sampleField("TableName", "name", "String")
   )
 
-  private def parseFilter(filter: String) = DataFilter.parse(filter, modelColumnSample)
+  private def mustBeEqual(filter: String, whereClause: String, parameters: List[Any]) = {
+    DataFilter.parse(filter, modelColumnSample) must be equalTo(whereClause, parameters)
+  }
 
   "DataFilter" should {
     "filter strings" in {
       "=" in {
-        parseFilter("TableName = Person") must be equalTo "`t0`.`name` = 'Person'"
+        mustBeEqual("TableName = Person", "`t0`.`name` = :0", List("Person"))
       }
 
       "Equals" in {
-        parseFilter("TableName Equals Person") must be equalTo "`t0`.`name` = 'Person'"
+        mustBeEqual("TableName Equals Person", "`t0`.`name` = :0", List("Person"))
       }
 
       "BeginsWith" in {
-        parseFilter("TableName BeginsWith Person") must be equalTo "`t0`.`name` LIKE 'Person%'"
+        mustBeEqual("TableName BeginsWith Person", "`t0`.`name` LIKE :0", List("Person%"))
       }
 
       "EndsWith" in {
-        parseFilter("TableName EndsWith Person") must be equalTo "`t0`.`name` LIKE '%Person'"
+        mustBeEqual("TableName EndsWith Person", "`t0`.`name` LIKE :0", List("%Person"))
       }
 
       "Contains" in {
-        parseFilter("TableName Contains Person") must be equalTo "`t0`.`name` LIKE '%Person%'"
+        mustBeEqual("TableName Contains Person", "`t0`.`name` LIKE :0", List("%Person%"))
       }
     }
 
     "filter numbers" in {
       "In" in {
-        parseFilter("TableID In (1,2)") must be equalTo "`t0`.`id` IN (1,2)"
+        mustBeEqual("TableID In (1,2)", "`t0`.`id` IN (:0,:1)", List(1, 2))
       }
     }
 
     "filter dates" in {
+      "on or after date" in {
+        mustBeEqual("CreatedDate OnOrAfter 2000-01-01", "`t0`.`created_date` >= :0", List(DateTime.parse("2000-01-01")))
+      }
       "before" in {
-        parseFilter("CreatedDate Before NOW") must be equalTo "`t0`.`created_date` < NOW()"
+        mustBeEqual("CreatedDate Before NOW", "`t0`.`created_date` < NOW()", List.empty)
       }
       "more than 2 days from now" in {
-        parseFilter("CreatedDate After 2d") must be equalTo "`t0`.`created_date` > DATE_ADD(NOW(), INTERVAL 2 DAY)"
+        mustBeEqual("CreatedDate After 2d", "`t0`.`created_date` > DATE_ADD(NOW(), INTERVAL 2 DAY)", List.empty)
       }
       "after 12 months ago" in {
-        parseFilter("CreatedDate After -12MONTHS") must be equalTo "`t0`.`created_date` > DATE_SUB(NOW(), INTERVAL 12 MONTH)"
+        mustBeEqual("CreatedDate After -12MONTHS", "`t0`.`created_date` > DATE_SUB(NOW(), INTERVAL 12 MONTH)", List.empty)
       }
     }
 
     "filter complex phrases" in {
-      parseFilter("TableName = Person AND TableID > 2") must be equalTo "`t0`.`name` = 'Person' AND `t0`.`id` > 2"
+      mustBeEqual("TableName = Person AND TableID > 2", "`t0`.`name` = :0 AND `t0`.`id` > :1", List("Person", 2))
     }
 
   }
