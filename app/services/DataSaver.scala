@@ -6,10 +6,10 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 case class DataRow(state: DataState,
-                   data: Map[String, JsValue],
+                   data: Option[Map[String, JsValue]],
                    id: Option[String],
                    tempID: Option[String],
-                   children: Option[JsObject])
+                   children: Option[Map[String, DataRow]])
 
 object DataSaver {
 
@@ -30,14 +30,14 @@ object DataSaver {
 
   def dataRowReads: Reads[DataRow] = (
     (JsPath \ "state").read[DataState] and
-      (JsPath \ "data").read[Map[String, JsValue]] and
+      (JsPath \ "data").readNullable[Map[String, JsValue]] and
       (JsPath \ "id").readNullable[String] and
       (JsPath \ "tempID").readNullable[String] and
-      (JsPath \ "children").readNullable[JsObject]
+      (JsPath \ "children").lazyReadNullable(Reads.map[DataRow](dataRowReads))
     ).apply(DataRow.apply _)
 }
 
-class DataSaver extends Database {
+class DataSaver extends DataReader with Database {
   def saveAll(model: Model, dataToSave: Option[JsValue]): JsArray = {
     dataToSave match {
       case None => return JsArray()
@@ -56,9 +56,9 @@ class DataSaver extends Database {
       DataSaver.dataRowReads.reads(jsValue) match {
         case JsSuccess(dataRow, _) => {
           dataRow.state match {
-            case DataState.Inserted => insertRow(model, dataRow)
-            case DataState.Deleted => deleteRow(model, dataRow)
-            case DataState.Updated => updateRow(model, dataRow)
+            case DataState.Inserted => insertSingleRow(model, dataRow)
+            case DataState.Deleted => deleteSingleRow(model, dataRow)
+            case DataState.Updated => updateSingleRow(model, dataRow)
             case DataState.ChildUpdated => ???
           }
         }
@@ -70,15 +70,15 @@ class DataSaver extends Database {
     JsArray(results)
   }
 
-  private def insertRow(model: Model, row: DataRow): JsValue = {
-    val sql = createSqlForInsert(model, row.data)
+  private def insertSingleRow(model: Model, row: DataRow): JsValue = {
+    val sql = createSqlForInsert(model, row.data.get)
 
     val rsKeys = insert(sql)
     if (rsKeys.next()) {
       val insertedID = rsKeys.getLong(1).toString
       Json.obj(
         "id" -> insertedID,
-        "data" -> (row.data + (model.instanceID.get -> JsString(insertedID)))
+        "data" -> (row.data.get + (model.instanceID.get -> JsString(insertedID)))
       )
     } else {
       Json.obj(
@@ -87,8 +87,8 @@ class DataSaver extends Database {
     }
   }
 
-  private def updateRow(model: Model, row: DataRow): JsValue = {
-    val sql = createSqlForUpdate(model, row.data)
+  private def updateSingleRow(model: Model, row: DataRow): JsValue = {
+    val sql = createSqlForUpdate(model, row.data.get)
     val rowCountModified = update(sql)
     if (rowCountModified != 1) {
       throw new Exception(f"Update ${rowCountModified} rows: $sql")
@@ -97,6 +97,34 @@ class DataSaver extends Database {
       "id" -> row.id,
       "data" -> row.data
     )
+  }
+
+  private def deleteSingleRow(model: Model, rowToDelete: DataRow): JsValue = {
+    val row: DataRow = if (rowToDelete.data.isDefined) rowToDelete
+    else {
+      val existingRows = queryModelData(model, 1, Some("id = 1"))
+      val existingRow = existingRows.headOption.getOrElse {
+        throw new Exception("Failed to find existing record in the database")
+      }
+      new DataRow(DataState.Deleted,
+        data = Option(existingRow.data),
+        id = existingRow.id,
+        tempID = None,
+        children = None
+      )
+    }
+    val sql = createSqlForDelete(model, row.data.get)
+    val rowCountModified = update(sql)
+    if (rowCountModified != 1) {
+      throw new Exception(f"Deleted ${rowCountModified} rows: $sql")
+    }
+    Json.obj(
+      "id" -> row.id
+    )
+  }
+
+  private def childUpdate(model: Model, row: DataRow): JsValue = {
+    ???
   }
 
   private def createSqlForInsert(model: Model, row: Map[String, JsValue]) = {
@@ -153,13 +181,16 @@ class DataSaver extends Database {
     f"UPDATE `${model.basisTable.dbName}` SET ${setColumnPhrase} WHERE `${primaryKey.dbName}` = '${primaryKeyValue}'"
   }
 
-  private def deleteRow(model: Model, row: DataRow): JsValue = {
-    ???
-  }
+  private def createSqlForDelete(model: Model, row: Map[String, JsValue]) = {
 
-  private def childUpdate(model: Model, row: DataRow): JsValue = {
-    ???
-  }
+    val primaryKey = model.fields.getOrElse(model.instanceID.get, {
+      throw new Exception("Model does not include primary key for update")
+    })
+    val primaryKeyValue = row.getOrElse(primaryKey.name, {
+      throw new Exception("Data must include the table's primary key value")
+    }).as[String]
 
+    f"DELETE FROM `${model.basisTable.dbName}` WHERE `${primaryKey.dbName}` = '${primaryKeyValue}'"
+  }
 
 }

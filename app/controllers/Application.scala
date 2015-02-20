@@ -1,8 +1,9 @@
 package controllers
 
 import models.User
+import play.api.libs.json.Json
 import play.api.mvc._
-import services.{DataSaver, ArtifactCompilerService, DataReader}
+import services._
 
 object Application extends Controller with util.Timer {
   val compiler = new ArtifactCompilerService
@@ -12,9 +13,9 @@ object Application extends Controller with util.Timer {
   }
 
   def readData(name: String, page: Int, filter: Option[String]) = Action {
-    val reader = new DataReader
-    val response = reader.getData(name, page, filter)
-    Ok(response)
+    val reader = new DataReaderService
+    val response: Seq[SelectDataRow] = reader.getData(name, page, filter)
+    Ok(Json.toJson(response))
   }
 
   def saveData(name: String) = Action { request =>

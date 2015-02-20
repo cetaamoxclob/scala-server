@@ -108,5 +108,34 @@ class DataSaverSpec extends Specification with Mockito {
       result must be equalTo Json.arr(sampleRow - "state")
     }
 
+    "delete one row" in {
+      val saver = new DataSaver with Database {
+        override def update(sql: String): Int = {
+          sql must be equalTo "DELETE FROM `person` WHERE `person_id` = '12'"
+          1
+        }
+        override def query(sql: String): ResultSet = {
+          println("running fake query2 " + sql)
+          new FakeResultSet {
+            override def next(): Boolean = {
+              return true
+            }
+
+            override def getLong(columnIndex: Int): Long = {
+              return 1
+            }
+          }
+        }
+      }
+
+      val sampleRow = Json.obj(
+        "state" -> DataState.Deleted.toString,
+        "id" -> "12"
+      )
+
+      val saving = Json.arr(sampleRow)
+      val result = saver.saveAll(model, Option(saving))
+      result must be equalTo Json.arr(sampleRow - "state")
+    }
   }
 }
