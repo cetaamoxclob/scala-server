@@ -102,10 +102,7 @@ class DataSaver extends DataReader with Database {
   private def deleteSingleRow(model: Model, rowToDelete: DataRow): JsValue = {
     val row: DataRow = if (rowToDelete.data.isDefined) rowToDelete
     else {
-      val existingRows = queryModelData(model, 1, Some("id = 1"))
-      val existingRow = existingRows.headOption.getOrElse {
-        throw new Exception("Failed to find existing record in the database")
-      }
+      val existingRow = queryOneRow(model, rowToDelete.id.get.toInt)
       new DataRow(DataState.Deleted,
         data = Option(existingRow.data),
         id = existingRow.id,

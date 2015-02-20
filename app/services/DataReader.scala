@@ -24,6 +24,18 @@ trait DataReader extends ArtifactCompiler with Database {
     queryModelData(model, page, filter)
   }
 
+  def queryOneRow(model: Model, id: Int): SelectDataRow = {
+    queryOneRow(model, Some(f"${model.instanceID.get} = $id"))
+  }
+
+  def queryOneRow(model: Model, filter: Option[String]): SelectDataRow = {
+    val existingRows = queryModelData(model, 1, filter)
+    if (existingRows.size != 1) {
+      throw new Exception(f"Failed to find exactly 1 record for ${model.name} where ${filter}")
+    }
+    existingRows.head
+  }
+
   def queryModelData(model: Model, page: Int, filter: Option[String]): Seq[SelectDataRow] = {
     val sqlString = convertModelToSql(model)
     val rs = query(sqlString)
