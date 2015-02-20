@@ -28,14 +28,16 @@ trait DataReader extends ArtifactCompiler with Database {
     val sqlString = convertModelToSql(model)
     val rs = query(sqlString)
     val resultBuilder = Seq.newBuilder[SelectDataRow]
-    if (rs.next()) {
+
+    while (rs.next()) {
       resultBuilder += new SelectDataRow(
         id = if (model.instanceID.isDefined) Some(rs.getString(model.instanceID.get)) else None,
         data = model.fields.map {
           case (fieldName, f) => {
             val columnValue: JsValue = f.dataType match {
-              case "Int" => JsNumber(rs.getInt(fieldName))
+              case "Int" | "Integer" => JsNumber(rs.getInt(fieldName))
               case "String" => JsString(rs.getString(fieldName))
+              case _ => throw new MatchError(f"field.dataType of `${f.dataType}` is not String or Integer")
             }
             fieldName -> columnValue
           }

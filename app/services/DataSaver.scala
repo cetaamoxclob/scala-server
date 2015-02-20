@@ -188,9 +188,13 @@ class DataSaver extends DataReader with Database {
     })
     val primaryKeyValue = row.getOrElse(primaryKey.name, {
       throw new Exception("Data must include the table's primary key value")
-    }).as[String]
+    }) match {
+      case JsNumber(value) => value.toLong
+      case JsString(value) => value.toString
+      case _ => throw new Exception("Invalid JsValue type: Must be JsNumber of JsString for " + row.get(primaryKey.name))
+    }
 
-    f"DELETE FROM `${model.basisTable.dbName}` WHERE `${primaryKey.dbName}` = '${primaryKeyValue}'"
+    f"DELETE FROM `${model.basisTable.dbName}` WHERE `${primaryKey.dbName}` = ${primaryKeyValue}"
   }
 
 }

@@ -111,18 +111,19 @@ class DataSaverSpec extends Specification with Mockito {
     "delete one row" in {
       val saver = new DataSaver with Database {
         override def update(sql: String): Int = {
-          sql must be equalTo "DELETE FROM `person` WHERE `person_id` = '12'"
+          sql must be equalTo "DELETE FROM `person` WHERE `person_id` = 12"
           1
         }
         override def query(sql: String): ResultSet = {
-          println("running fake query2 " + sql)
           new FakeResultSet {
+            var counter = 0
             override def next(): Boolean = {
-              return true
+              counter += 1
+              return counter <= 1
             }
 
-            override def getLong(columnIndex: Int): Long = {
-              return 1
+            override def getInt(columnName: String): Int = {
+              return 12
             }
           }
         }
