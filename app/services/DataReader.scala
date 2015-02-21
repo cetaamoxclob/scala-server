@@ -3,19 +3,19 @@ package services
 import java.sql.ResultSet
 
 import data.{SqlBuilder, DataFilter, Database}
-import models.{ModelOrderBy, ModelField, Model}
+import models.{ModelParentLink, ModelOrderBy, ModelField, Model}
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
 case class SelectDataRow(id: Option[String],
                          data: Map[String, JsValue],
-                         children: Option[Map[String, SelectDataRow]])
+                         var children: Option[Map[String, Seq[SelectDataRow]]])
 
 object SelectDataRow {
   implicit def selectDataWrites: Writes[SelectDataRow] = (
     (JsPath \ "id").writeNullable[String] and
       (JsPath \ "data").write[Map[String, JsValue]] and
-      (JsPath \ "children").lazyWriteNullable(Writes.map[SelectDataRow](selectDataWrites))
+      (JsPath \ "children").lazyWriteNullable(Writes.map[Seq[SelectDataRow]])
     )(unlift(SelectDataRow.unapply))
 }
 
@@ -53,11 +53,11 @@ trait DataReader extends ArtifactCompiler with Database {
     val dataRows = convertResultSetToDataRows(model.instanceID, model.fields, rs)
     if (dataRows.length > 0 && model.children.size > 0) {
       model.children.map { childModelResult =>
-        println(s"Get child data for ${childModelResult._1}")
         val childModel = childModelResult._2
         val parentIDs = getValues(dataRows, childModel.parentLink.get.parentField)
         val childFilter = childModel.parentLink.get.childField + " In " + parentIDs.mkString(",")
-        queryModelData(childModel, 1, Some(childFilter), childModel.orderBy)
+        val childRows = queryModelData(childModel, 1, Some(childFilter), childModel.orderBy)
+        addChildRowsToParent(dataRows, childModel.name, childModel.parentLink.get, childRows)
       }
       dataRows
     } else dataRows
@@ -88,9 +88,30 @@ trait DataReader extends ArtifactCompiler with Database {
   }
 
   private def getValues(dataRows: Seq[SelectDataRow], fieldName: String) = {
-    dataRows.map{ row =>
+    dataRows.map { row =>
       row.data(fieldName)
     }
+  }
+
+  private def addChildRowsToParent(
+                                    parentRows: Seq[SelectDataRow],
+                                    childModelName: String,
+                                    parentLink: ModelParentLink,
+                                    childRows: Seq[SelectDataRow]): Unit = {
+
+    var remainingChildRows = childRows
+    parentRows.foreach { parentRow =>
+      val parentID = parentRow.data.get(parentLink.parentField).get
+      val (matching, nonMatching) = childRows.partition{ childRow =>
+        parentID == childRow.data.get(parentLink.childField).get
+      }
+      remainingChildRows = nonMatching
+      parentRow.children = Some(parentRow.children.getOrElse(Map.empty) + (childModelName -> matching))
+    }
+    if (remainingChildRows.length > 0) {
+      throw new Exception(s"Failed to match ${remainingChildRows.length} $childModelName records. Check datatypes of $parentLink")
+    }
+
   }
 
 }
