@@ -5,18 +5,20 @@
     {
       "name": "JoinColumnID",
       "dbName": "joinColumnID",
+      "dataType": "Integer",
       "updateable": false,
-      "required": true,
-      "columnDefault": "GUID"
+      "required": true
     },
     {
       "name": "JoinID",
       "required": true,
-      "dbName": "joinID"
+      "dataType": "Integer",
+      "dbName": "joinID",
+      "updateable": false
     },
     {
-      "name": "FromColumnID",
-      "dbName": "fromColumnID"
+      "name": "FromColumn",
+      "dbName": "fromColumn"
     },
     {
       "name": "FromText",
@@ -24,30 +26,19 @@
       "label": "From Text"
     },
     {
-      "name": "ToColumnID",
+      "name": "ToColumn",
       "required": true,
-      "dbName": "toColumnID"
+      "dbName": "toColumn"
     }
   ],
   "joins": [
     {
-      "name": "FromColumn",
-      "table": "Column",
+      "name": "Join",
+      "table": "Join",
       "columns": [
         {
-          "from": "FromColumnID",
-          "to": "ColumnID"
-        }
-      ]
-    },
-    {
-      "name": "ToColumn",
-      "table": "Column",
-      "required": true,
-      "columns": [
-        {
-          "from": "ToColumnID",
-          "to": "ColumnID"
+          "from": "JoinID",
+          "to": "JoinID"
         }
       ]
     }

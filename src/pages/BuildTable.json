@@ -79,23 +79,23 @@
           "parentModel": "TableJoins",
           "fields": [
             {
-              "name": "TableJoinJoinColumnFromColumnName",
+              "name": "TableJoinJoinColumnFromColumn",
               "label": "From Column",
               "fieldType": "select",
               "select": {
                 "model": "ListTableColumns",
-                "targetID": "TableJoinJoinColumnFromColumnID",
+                "targetID": "TableJoinJoinColumnFromColumn",
                 "sourceValue": "ColumnName",
                 "where": "ColumnTableID = TableTableID"
               }
             },
             {
-              "name": "TableJoinJoinColumnToColumnName",
+              "name": "TableJoinJoinColumnToColumn",
               "label": "To Column",
               "fieldType": "select",
               "select": {
                 "model": "ListTableColumns",
-                "targetID": "TableJoinJoinColumnToColumnID",
+                "targetID": "TableJoinJoinColumnToColumn",
                 "sourceValue": "ColumnName",
                 "where": "ColumnTableID = TableJoinToTableID"
               }

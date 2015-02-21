@@ -5,6 +5,7 @@
     {
       "name": "DatabaseID",
       "dbName": "databaseID",
+      "dataType": "Integer",
       "updateable": false,
       "columnDefault": "GUID"
     },
@@ -14,6 +15,7 @@
     },
     {
       "name": "AppID",
+      "dataType": "Integer",
       "dbName": "appID"
     }
   ],

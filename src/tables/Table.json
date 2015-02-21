@@ -5,6 +5,7 @@
     {
       "name": "TableID",
       "dbName": "tableID",
+      "dataType": "Integer",
       "updateable": false,
       "disabled": true
     },

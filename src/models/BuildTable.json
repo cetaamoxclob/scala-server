@@ -157,7 +157,6 @@
           "fields": [
             {
               "name": "TableJoinJoinColumnJoinColumnID",
-              "updateable": false,
               "basisColumn": "JoinColumnID"
             },
             {
@@ -165,36 +164,16 @@
               "basisColumn": "JoinID"
             },
             {
-              "name": "TableJoinJoinColumnFromColumnID",
-              "basisColumn": "FromColumnID"
+              "name": "TableJoinJoinColumnFromColumn",
+              "basisColumn": "FromColumn"
             },
             {
-              "name": "TableJoinJoinColumnToColumnID",
-              "basisColumn": "ToColumnID"
+              "name": "TableJoinJoinColumnToColumn",
+              "basisColumn": "ToColumn"
             },
             {
               "name": "TableJoinJoinColumnFromText",
               "basisColumn": "FromText"
-            }
-          ],
-          "steps": [
-            {
-              "join": "FromColumn",
-              "fields": [
-                {
-                  "name": "TableJoinJoinColumnFromColumnName",
-                  "basisColumn": "Name"
-                }
-              ]
-            },
-            {
-              "join": "ToColumn",
-              "fields": [
-                {
-                  "name": "TableJoinJoinColumnToColumnName",
-                  "basisColumn": "Name"
-                }
-              ]
             }
           ]
         }
