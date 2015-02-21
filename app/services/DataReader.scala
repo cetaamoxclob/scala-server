@@ -3,7 +3,7 @@ package services
 import java.sql.ResultSet
 
 import data.{SqlBuilder, DataFilter, Database}
-import models.{ModelField, Model}
+import models.{ModelOrderBy, ModelField, Model}
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
@@ -21,28 +21,24 @@ object SelectDataRow {
 
 trait DataReader extends ArtifactCompiler with Database {
 
-  def getData(modelName: String, page: Int, filter: Option[String]): Seq[SelectDataRow] = {
-    val model = compileModel(modelName)
-    queryModelData(model, page, filter)
-  }
-
   def queryOneRow(model: Model, id: Int): SelectDataRow = {
     queryOneRow(model, Some(f"${model.instanceID.get} = $id"))
   }
 
   def queryOneRow(model: Model, filter: Option[String]): SelectDataRow = {
-    val existingRows = queryModelData(model, 1, filter)
+    val existingRows = queryModelData(model, 1, filter, Seq.empty)
     if (existingRows.size != 1) {
       throw new Exception(f"Failed to find exactly 1 record for ${model.name} where ${filter}")
     }
     existingRows.head
   }
 
-  def queryModelData(model: Model, page: Int, filter: Option[String]): Seq[SelectDataRow] = {
+  def queryModelData(model: Model, page: Int, filter: Option[String], orderBy: Seq[ModelOrderBy]): Seq[SelectDataRow] = {
     var sqlBuilder = new SqlBuilder(
       from = model.basisTable.dbName,
       fields = model.fields,
       page = page,
+      orderBy = orderBy,
       limit = model.limit)
 
     if (filter.isDefined) {

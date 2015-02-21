@@ -1,6 +1,7 @@
 package models
 
 import play.api.libs.json.{JsArray, JsString, JsObject}
+import play.api.mvc.QueryStringBindable
 
 case class Model(name: String,
                  basisTable: Table,
@@ -45,3 +46,23 @@ case class ModelStep(table: Table,
 
 case class ModelOrderBy(fieldName: String,
                         ascending: Option[Boolean])
+
+object ModelOrderBy {
+  implicit def orderByBindable(implicit stringBinder: QueryStringBindable[String]) = new QueryStringBindable[ModelOrderBy] {
+    override def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, ModelOrderBy]] = {
+      println(params)
+      for {
+        fieldName <- stringBinder.bind(key, params)
+      } yield {
+        fieldName match {
+          case Right(fieldName) => Right(ModelOrderBy(fieldName, None))
+          case _ => Left("")
+        }
+      }
+    }
+
+    override def unbind(key: String, pager: ModelOrderBy): String = {
+      ""
+    }
+  }
+}

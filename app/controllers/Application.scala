@@ -1,6 +1,6 @@
 package controllers
 
-import models.User
+import models.{ModelOrderBy, User}
 import play.api.libs.json.Json
 import play.api.mvc._
 import services._
@@ -12,9 +12,10 @@ object Application extends Controller with util.Timer {
     desktop("ListTables") // TODO Get the default from the menu
   }
 
-  def readData(name: String, page: Int, filter: Option[String]) = Action {
+  def readData(name: String, page: Int, filter: Option[String], orderBy: Option[ModelOrderBy]) = Action {
+    val model = compiler.compileModel(name)
     val reader = new DataReaderService
-    val response: Seq[SelectDataRow] = reader.getData(name, page, filter)
+    val response: Seq[SelectDataRow] = reader.queryModelData(model, page, filter, if (orderBy.isDefined) Seq(orderBy.get) else model.orderBy)
     Ok(Json.toJson(response))
   }
 
