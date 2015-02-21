@@ -57,7 +57,9 @@ object DataFilter {
           else right
           val values = valueListAsString.split(",").toList
           val bindings = values.map { value => "?"}.mkString(",")
-          (f"IN ($bindings)", values.map(value => value.toInt))
+          (f"IN ($bindings)", values.map(value => {
+            value.replaceAll("\"", "").toInt
+          }))
         }
         case _ => {
           if (fieldLeft.get.dataType == "Date") {

@@ -10,6 +10,7 @@ case class Model(name: String,
                  fields: Map[String, ModelField],
                  children: Map[String, Model],
                  steps: Map[Int, ModelStep],
+                 parentLink: Option[ModelParentLink],
                  orderBy: Seq[ModelOrderBy]
                   ) {
   def toClientJson(): JsObject = {
@@ -46,6 +47,8 @@ case class ModelStep(table: Table,
 
 case class ModelOrderBy(fieldName: String,
                         ascending: Option[Boolean])
+
+case class ModelParentLink(parentField: String, childField: String)
 
 object ModelOrderBy {
   implicit def orderByBindable(implicit stringBinder: QueryStringBindable[String]) = new QueryStringBindable[ModelOrderBy] {

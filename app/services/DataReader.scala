@@ -50,7 +50,17 @@ trait DataReader extends ArtifactCompiler with Database {
     }
 
     val rs = query(sqlBuilder.toPreparedStatement, sqlBuilder.parameters)
-    convertResultSetToDataRows(model.instanceID, model.fields, rs)
+    val dataRows = convertResultSetToDataRows(model.instanceID, model.fields, rs)
+    if (dataRows.length > 0 && model.children.size > 0) {
+      model.children.map { childModelResult =>
+        println(s"Get child data for ${childModelResult._1}")
+        val childModel = childModelResult._2
+        val parentIDs = getValues(dataRows, childModel.parentLink.get.parentField)
+        val childFilter = childModel.parentLink.get.childField + " In " + parentIDs.mkString(",")
+        queryModelData(childModel, 1, Some(childFilter), childModel.orderBy)
+      }
+      dataRows
+    } else dataRows
   }
 
   private def convertResultSetToDataRows(instanceID: Option[String], fields: Map[String, ModelField], rs: ResultSet) = {
@@ -64,6 +74,7 @@ trait DataReader extends ArtifactCompiler with Database {
             val columnValue: JsValue = f.dataType match {
               case "Int" | "Integer" => JsNumber(rs.getInt(fieldName))
               case "String" => JsString(rs.getString(fieldName))
+              case "Boolean" => JsBoolean(rs.getBoolean(fieldName))
               case _ => throw new MatchError(f"field.dataType of `${f.dataType}` is not String or Integer")
             }
             fieldName -> columnValue
@@ -75,6 +86,13 @@ trait DataReader extends ArtifactCompiler with Database {
     resultBuilder.result
 
   }
+
+  private def getValues(dataRows: Seq[SelectDataRow], fieldName: String) = {
+    dataRows.map{ row =>
+      row.data(fieldName)
+    }
+  }
+
 }
 
 class DataReaderService extends DataReader

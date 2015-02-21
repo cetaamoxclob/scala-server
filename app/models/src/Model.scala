@@ -1,5 +1,6 @@
 package models.src
 
+import models.{ModelOrderBy, ModelParentLink}
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
@@ -9,7 +10,8 @@ case class ModelJson(basisTable: String,
                      limit: Option[Int],
                      name: Option[String],
                      children: Option[Seq[ModelJson]],
-                     orderBy: Option[Seq[OrderByJson]],
+                     orderBy: Option[Seq[ModelOrderBy]],
+                     parentLink: Option[ModelParentLink],
                      steps: Option[Seq[ModelStepJson]]
                       )
 
@@ -26,10 +28,6 @@ case class ModelFieldJson(name: String,
                           updateable: Option[Boolean]
                            )
 
-case class OrderByJson(fieldName: String,
-                       ascending: Option[Boolean]
-                        )
-
 object ModelJson {
   implicit def modelReads: Reads[ModelJson] = (
     (JsPath \ "basisTable").read[String] and
@@ -37,7 +35,8 @@ object ModelJson {
       (JsPath \ "limit").readNullable[Int] and
       (JsPath \ "name").readNullable[String] and
       (JsPath \ "children").lazyReadNullable(Reads.seq[ModelJson](modelReads)) and
-      (JsPath \ "orderBy").readNullable[Seq[OrderByJson]] and
+      (JsPath \ "orderBy").readNullable[Seq[ModelOrderBy]] and
+      (JsPath \ "parentLink").readNullable[ModelParentLink] and
       (JsPath \ "steps").readNullable[Seq[ModelStepJson]]
     ).apply(ModelJson.apply _)
 
@@ -55,8 +54,13 @@ object ModelJson {
       (JsPath \ "required").readNullable[Boolean]
     ).apply(ModelStepJson.apply _)
 
-  implicit def orderByReads: Reads[OrderByJson] = (
+  implicit def parentLinkReads: Reads[ModelParentLink] = (
+    (JsPath \ "parentField").read[String] and
+      (JsPath \ "childField").read[String]
+    ).apply(ModelParentLink.apply _)
+
+  implicit def orderByReads: Reads[ModelOrderBy] = (
     (JsPath \ "fieldName").read[String] and
       (JsPath \ "direction").readNullable[Boolean]
-    ).apply(OrderByJson.apply _)
+    ).apply(ModelOrderBy.apply _)
 }

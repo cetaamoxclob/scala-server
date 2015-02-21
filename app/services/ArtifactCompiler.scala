@@ -178,6 +178,7 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
         }).toMap
         case None => Map.empty
       },
+      parentLink = model.parentLink,
       steps = compileSteps(basisTable.joins, model.steps),
       orderBy = compileOrderBy(model.orderBy)
     )
@@ -208,7 +209,7 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
     }
   }
 
-  private def compileOrderBy(orderBy: Option[Seq[OrderByJson]]): Seq[ModelOrderBy] = {
+  private def compileOrderBy(orderBy: Option[Seq[ModelOrderBy]]): Seq[ModelOrderBy] = {
     if (orderBy.isEmpty) Seq.empty
     else {
       orderBy.get.map(o => new ModelOrderBy(o.fieldName, o.ascending))
