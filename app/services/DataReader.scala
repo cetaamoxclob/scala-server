@@ -102,7 +102,7 @@ trait DataReader extends ArtifactCompiler with Database {
     var remainingChildRows = childRows
     parentRows.foreach { parentRow =>
       val parentID = parentRow.data.get(parentLink.parentField).get
-      val (matching, nonMatching) = childRows.partition{ childRow =>
+      val (matching, nonMatching) = remainingChildRows.partition{ childRow =>
         parentID == childRow.data.get(parentLink.childField).get
       }
       remainingChildRows = nonMatching
