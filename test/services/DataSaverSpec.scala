@@ -22,6 +22,7 @@ class DataSaverSpec extends Specification with Mockito {
       ),
       limit = 100,
       instanceID = Option("PersonID"),
+      parentLink = None,
       fields = Map(
         "PersonID" -> new ModelField(
           "PersonID",
@@ -50,7 +51,7 @@ class DataSaverSpec extends Specification with Mockito {
 
     "insert one row" in {
       val saver = new DataSaver with Database {
-        override def insert(sql: String): ResultSet = {
+        override def insert(sql: String, numberedParameters: List[Any]): ResultSet = {
           sql must be equalTo "INSERT INTO `person` (`name`) VALUES ('Foo')"
           new FakeResultSet {
             override def next(): Boolean = {
@@ -88,7 +89,7 @@ class DataSaverSpec extends Specification with Mockito {
 
     "update one row" in {
       val saver = new DataSaver with Database {
-        override def update(sql: String): Int = {
+        override def update(sql: String, numberedParameters: List[Any]): Int = {
           sql must be equalTo "UPDATE `person` SET `name` = 'Foo' WHERE `person_id` = '12'"
           1
         }
@@ -110,7 +111,7 @@ class DataSaverSpec extends Specification with Mockito {
 
     "delete one row" in pending {
       val saver = new DataSaver with Database {
-        override def update(sql: String): Int = {
+        override def update(sql: String, numberedParameters: List[Any]): Int = {
           sql must be equalTo "DELETE FROM `person` WHERE `person_id` = 12"
           1
         }

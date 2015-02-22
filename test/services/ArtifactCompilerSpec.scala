@@ -79,6 +79,7 @@ class ArtifactCompilerSpec extends Specification with Mockito {
           joins = Map()
         ),
         limit = 0,
+        parentLink = None,
         instanceID = None,
         fields = Map("PersonID" -> new ModelField(
           "PersonID",
