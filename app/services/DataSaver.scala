@@ -1,7 +1,7 @@
 package services
 
 import data.{DataState, Database}
-import models.Model
+import models.{ModelField, Model}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
@@ -71,9 +71,9 @@ class DataSaver extends DataReader with Database {
   }
 
   private def insertSingleRow(model: Model, row: DataRow): JsValue = {
-    val sql = createSqlForInsert(model, row.data.get)
+    val (sql, params) = createSqlForInsert(model, row.data.get)
 
-    val rsKeys = insert(sql)
+    val rsKeys = insert(sql, params)
     if (rsKeys.next()) {
       val insertedID = rsKeys.getLong(1).toString
       Json.obj(
@@ -88,8 +88,8 @@ class DataSaver extends DataReader with Database {
   }
 
   private def updateSingleRow(model: Model, row: DataRow): JsValue = {
-    val sql = createSqlForUpdate(model, row.data.get)
-    val rowCountModified = update(sql)
+    val (sql, params) = createSqlForUpdate(model, row.data.get)
+    val rowCountModified = update(sql, params)
     if (rowCountModified != 1) {
       throw new Exception(f"Update ${rowCountModified} rows: $sql")
     }
@@ -110,8 +110,8 @@ class DataSaver extends DataReader with Database {
         children = None
       )
     }
-    val sql = createSqlForDelete(model, row.data.get)
-    val rowCountModified = update(sql)
+    val (sql, params) = createSqlForDelete(model, row.data.get)
+    val rowCountModified = update(sql, params)
     if (rowCountModified != 1) {
       throw new Exception(f"Deleted ${rowCountModified} rows: $sql")
     }
@@ -124,74 +124,94 @@ class DataSaver extends DataReader with Database {
     ???
   }
 
-  private def createSqlForInsert(model: Model, row: Map[String, JsValue]) = {
-    import scala.collection.mutable.ListBuffer
-
-    val fields = ListBuffer.empty[String]
-    val values = ListBuffer.empty[String]
-
-    model.fields.values.foreach { field =>
-      row.get(field.name) match {
-        case Some(value) => {
-          println("adding field and value" + field.dbName + value)
-          fields += "`" + field.dbName + "`"
-          values += "'" + value.as[String] + "'"
-        }
-        case None => {
-          println("Missing data for " + field.name)
+  private def createSqlForInsert(model: Model, row: Map[String, JsValue]): (String, List[Any]) = {
+    def getColumnValues = {
+      val columns = Map.newBuilder[String, Any]
+      model.fields.values.foreach { field =>
+        val value = row.get(field.name)
+        if (value.isDefined) {
+          columns += ((field.dbName, value.get))
         }
       }
+      columns.result
     }
+    val columnValues = getColumnValues
 
-    f"INSERT INTO `${model.basisTable.dbName}` (${fields.mkString(",")}) VALUES (${values.mkString(",")})"
+    val setColumnPhrase = columnValues.keys.map { fieldName =>
+      f"`$fieldName`"
+    }.mkString(", ")
+    val boundVars = columnValues.keys.map { _ => "?"}.mkString(", ")
+
+    (f"INSERT INTO `${model.basisTable.dbName}` " +
+      f"($setColumnPhrase) " +
+      f"VALUES ($boundVars)", columnValues.values.toList)
   }
 
-  private def createSqlForUpdate(model: Model, row: Map[String, JsValue]) = {
+  private def createSqlForUpdate(model: Model, row: Map[String, JsValue]): (String, List[Any]) = {
+    val primaryKey = getPrimaryKey(model)
+    val primaryKeyValue = getPrimaryKeyValue(primaryKey.name, row)
 
-    val primaryKey = model.fields.getOrElse(model.instanceID.get, {
-      throw new Exception("Model does not include primary key for update")
-    })
-    val primaryKeyValue = row.getOrElse(primaryKey.name, {
-      throw new Exception("Data must include the table's primary key value")
-    }).as[String]
-
-    val columns = Map.newBuilder[String, String]
-    model.fields.values.foreach { field =>
-      val value = row.get(field.name) match {
-        case Some(value) => {
-          Some("'" + value.as[String] + "'")
-        }
-        case None => {
-          println("Missing data for " + field.name)
-          None
+    def getColumnValues = {
+      val columns = Map.newBuilder[String, Any]
+      model.fields.values.foreach { field =>
+        if (field.updateable) {
+          val value = convertFromJsonToScala(row, field)
+          if (value.isDefined) {
+            columns += ((field.dbName, value.get))
+          }
         }
       }
-      if (value.isDefined && field.updateable) {
-        columns += ((field.dbName, value.get))
-      }
+      columns.result
     }
+    val columnValues = getColumnValues
 
-    val setColumnPhrase = columns.result.map { value =>
-      f"`${value._1}` = ${value._2}"
+    val setColumnPhrase = columnValues.keys.map { fieldName =>
+      f"`$fieldName` = ?"
     }.mkString(", ")
 
-    f"UPDATE `${model.basisTable.dbName}` SET ${setColumnPhrase} WHERE `${primaryKey.dbName}` = '${primaryKeyValue}'"
+    (f"UPDATE `${model.basisTable.dbName}` " +
+      f"SET $setColumnPhrase " +
+      f"WHERE `${primaryKey.dbName}` = ?", columnValues.values.toList :+ primaryKeyValue)
   }
 
-  private def createSqlForDelete(model: Model, row: Map[String, JsValue]) = {
+  private def convertFromJsonToScala(row: Map[String, JsValue], field: ModelField): Option[Any] = {
+    row.get(field.name) match {
+      case Some(jsValue) => {
+        field.dataType match {
+          // convert JsValue based on field.type
+          case _ => Some(jsValue.as[String])
+        }
+      }
+      case None => {
+        println("Missing data for " + field.name)
+        None
+      }
+    }
 
-    val primaryKey = model.fields.getOrElse(model.instanceID.get, {
-      throw new Exception("Model does not include primary key for update")
-    })
-    val primaryKeyValue = row.getOrElse(primaryKey.name, {
+  }
+
+  private def createSqlForDelete(model: Model, row: Map[String, JsValue]): (String, List[Any]) = {
+    val primaryKey = getPrimaryKey(model)
+    val primaryKeyValue = getPrimaryKeyValue(primaryKey.name, row)
+
+    (f"DELETE FROM `${model.basisTable.dbName}` " +
+      f"WHERE `${primaryKey.dbName}` = ?", List(primaryKeyValue))
+  }
+
+  private def getPrimaryKeyValue(primaryKeyName: String, row: Map[String, JsValue]) = {
+    row.getOrElse(primaryKeyName, {
       throw new Exception("Data must include the table's primary key value")
     }) match {
       case JsNumber(value) => value.toLong
       case JsString(value) => value.toString
-      case _ => throw new Exception("Invalid JsValue type: Must be JsNumber of JsString for " + row.get(primaryKey.name))
+      case _ => throw new Exception("Invalid JsValue type: Must be JsNumber or JsString for " + row.get(primaryKeyName))
     }
+  }
 
-    f"DELETE FROM `${model.basisTable.dbName}` WHERE `${primaryKey.dbName}` = ${primaryKeyValue}"
+  private def getPrimaryKey(model: Model) = {
+    model.fields.getOrElse(model.instanceID.get, {
+      throw new Exception("Model does not include primary key for update")
+    })
   }
 
 }
