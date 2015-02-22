@@ -67,19 +67,20 @@ trait DataReader extends ArtifactCompiler with Database {
     val resultBuilder = Seq.newBuilder[SelectDataRow]
 
     while (rs.next()) {
-      resultBuilder += new SelectDataRow(
-        id = if (instanceID.isDefined) Some(rs.getString(instanceID.get)) else None,
-        data = fields.map {
-          case (fieldName, f) => {
-            val columnValue: JsValue = f.dataType match {
-              case "Int" | "Integer" => JsNumber(rs.getInt(fieldName))
-              case "String" => JsString(rs.getString(fieldName))
-              case "Boolean" => JsBoolean(rs.getBoolean(fieldName))
-              case _ => throw new MatchError(f"field.dataType of `${f.dataType}` is not String or Integer")
-            }
-            fieldName -> columnValue
+      val fieldResults = fields.map {
+        case (fieldName, f) => {
+          val columnValue: JsValue = f.dataType match {
+            case "Int" | "Integer" => JsNumber(rs.getInt(fieldName))
+            case "String" => JsString(rs.getString(fieldName))
+            case "Boolean" => JsBoolean(rs.getBoolean(fieldName))
+            case _ => throw new MatchError(f"field.dataType of `${f.dataType}` is not String or Integer")
           }
-        },
+          fieldName -> columnValue
+        }
+      }
+      resultBuilder += new SelectDataRow(
+        id = if (instanceID.isDefined) Some(fieldResults(instanceID.get).toString) else None,
+        data = fieldResults,
         children = None
       )
     }
@@ -102,7 +103,7 @@ trait DataReader extends ArtifactCompiler with Database {
     var remainingChildRows = childRows
     parentRows.foreach { parentRow =>
       val parentID = parentRow.data.get(parentLink.parentField).get
-      val (matching, nonMatching) = remainingChildRows.partition{ childRow =>
+      val (matching, nonMatching) = remainingChildRows.partition { childRow =>
         parentID == childRow.data.get(parentLink.childField).get
       }
       remainingChildRows = nonMatching

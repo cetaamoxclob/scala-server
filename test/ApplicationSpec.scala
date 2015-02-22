@@ -23,11 +23,12 @@ class ApplicationSpec extends Specification {
     }
 
     "get data" in new WithApplication {
-      val home = route(FakeRequest(GET, "/data/ListTables")).get
+      val home = route(FakeRequest(GET, "/data/ListTables?filter=TableName%20Equals%20Table")).get
 
       status(home) must equalTo(OK)
       contentType(home) must beSome.which(_ == "application/json")
-      contentAsString(home) must contain( """{"id":"1","data":{"TableDatabase":"1"""")
+      // This keeps breaking so I'm not sure how much longer we should use it for testing
+      contentAsString(home) must contain( ""","TableTableID":1,""")
     }
   }
 }

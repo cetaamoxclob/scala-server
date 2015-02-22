@@ -52,7 +52,8 @@ class DataSaverSpec extends Specification with Mockito {
     "insert one row" in {
       val saver = new DataSaver with Database {
         override def insert(sql: String, numberedParameters: List[Any]): ResultSet = {
-          sql must be equalTo "INSERT INTO `person` (`name`) VALUES ('Foo')"
+          sql must be equalTo "INSERT INTO `person` (`name`) VALUES (?)"
+          numberedParameters must be equalTo List("Foo")
           new FakeResultSet {
             override def next(): Boolean = {
               return true
@@ -90,7 +91,8 @@ class DataSaverSpec extends Specification with Mockito {
     "update one row" in {
       val saver = new DataSaver with Database {
         override def update(sql: String, numberedParameters: List[Any]): Int = {
-          sql must be equalTo "UPDATE `person` SET `name` = 'Foo' WHERE `person_id` = '12'"
+          sql must be equalTo "UPDATE `person` SET `name` = ? WHERE `person_id` = ?"
+          numberedParameters must be equalTo List("Foo", 12)
           1
         }
       }
@@ -99,7 +101,7 @@ class DataSaverSpec extends Specification with Mockito {
         "state" -> DataState.Updated.toString,
         "id" -> "12",
         "data" -> Json.obj(
-          "PersonID" -> "12",
+          "PersonID" -> 12,
           "PersonName" -> "Foo"
         )
       )
@@ -109,13 +111,16 @@ class DataSaverSpec extends Specification with Mockito {
       result must be equalTo Json.arr(sampleRow - "state")
     }
 
-    "delete one row" in pending {
+    "delete one row" in {
       val saver = new DataSaver with Database {
         override def update(sql: String, numberedParameters: List[Any]): Int = {
-          sql must be equalTo "DELETE FROM `person` WHERE `person_id` = 12"
+          sql must be equalTo "DELETE FROM `person` WHERE `person_id` = ?"
+          numberedParameters must be equalTo List(12)
           1
         }
         override def query(sql: String, numberedParameters: List[Any]): ResultSet = {
+          sql must be contain "FROM `person` AS `t0`  WHERE `t0`.`person_id` = ? "
+          numberedParameters must be equalTo List(12)
           new FakeResultSet {
             var counter = 0
             override def next(): Boolean = {
@@ -138,7 +143,7 @@ class DataSaverSpec extends Specification with Mockito {
       val saving = Json.arr(sampleRow)
       val result = saver.saveAll(model, Option(saving))
       result must be equalTo Json.arr(Json.obj(
-        "id" -> JsNull // TODO Fix this to show 12
+        "id" -> "12"
       ))
     }
   }

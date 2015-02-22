@@ -128,7 +128,7 @@ class DataSaver extends DataReader with Database {
     def getColumnValues = {
       val columns = Map.newBuilder[String, Any]
       model.fields.values.foreach { field =>
-        val value = row.get(field.name)
+        val value = convertFromJsonToScala(row, field)
         if (value.isDefined) {
           columns += ((field.dbName, value.get))
         }
