@@ -39,7 +39,41 @@ class DataSaverSpec extends Specification with Mockito {
           required = true
         )
       ),
-      children = Map.empty,
+      children = Map("PersonPhone" -> new Model(
+        "PersonPhone",
+        basisTable = new ShallowTable(
+          "Phone", "phone", columns = Map.empty
+        ),
+        limit = 100,
+        instanceID = Option("PersonPhoneID"),
+        parentLink = Some(new ModelParentLink("PersonID", "PersonPhonePersonID")),
+        fields = Map(
+          "PersonPhoneID" -> new ModelField(
+            "PersonPhoneID",
+            "phone_id",
+            dataType = "Integer",
+            updateable = false,
+            required = false
+          ),
+          "PersonPhonePersonID" -> new ModelField(
+            "PersonPhonePersonID",
+            "person_id",
+            dataType = "Integer",
+            updateable = false,
+            required = false
+          ),
+          "PersonPhoneNumber" -> new ModelField(
+            "PersonPhoneNumber",
+            "phone_number",
+            dataType = "String",
+            updateable = true,
+            required = true
+          )
+        ),
+        children = Map.empty,
+        steps = Map.empty,
+        orderBy = Seq.empty
+      )),
       steps = Map.empty,
       orderBy = Seq.empty
     )
@@ -49,7 +83,7 @@ class DataSaverSpec extends Specification with Mockito {
       saver.saveAll(model, None) must be equalTo JsArray()
     }
 
-    "insert one row" in {
+    "insert one parent row" in {
       val saver = new DataSaver with Database {
         override def insert(sql: String, numberedParameters: List[Any]): ResultSet = {
           sql must be equalTo "INSERT INTO `person` (`name`) VALUES (?)"
@@ -88,7 +122,7 @@ class DataSaverSpec extends Specification with Mockito {
       )
     }
 
-    "update one row" in {
+    "update one parent row" in {
       val saver = new DataSaver with Database {
         override def update(sql: String, numberedParameters: List[Any]): Int = {
           sql must be equalTo "UPDATE `person` SET `name` = ? WHERE `person_id` = ?"
@@ -111,18 +145,19 @@ class DataSaverSpec extends Specification with Mockito {
       result must be equalTo Json.arr(sampleRow - "state")
     }
 
-    "delete one row" in {
+    "delete one parent row" in {
       val saver = new DataSaver with Database {
         override def update(sql: String, numberedParameters: List[Any]): Int = {
           sql must be equalTo "DELETE FROM `person` WHERE `person_id` = ?"
           numberedParameters must be equalTo List(12)
           1
         }
+
         override def query(sql: String, numberedParameters: List[Any]): ResultSet = {
-          sql must be contain "FROM `person` AS `t0`  WHERE `t0`.`person_id` = ? "
           numberedParameters must be equalTo List(12)
           new FakeResultSet {
             var counter = 0
+
             override def next(): Boolean = {
               counter += 1
               return counter <= 1
@@ -146,5 +181,42 @@ class DataSaverSpec extends Specification with Mockito {
         "id" -> "12"
       ))
     }
+
+    "update one child row" in {
+      val saver = new DataSaver with Database {
+        override def update(sql: String, numberedParameters: List[Any]): Int = {
+          sql must be equalTo "UPDATE `phone` SET `phone_number` = ? WHERE `phone_id` = ?"
+          numberedParameters must be equalTo List("(123) 456-7890", 34)
+          1
+        }
+      }
+
+      val sampleRow = Json.obj(
+        "state" -> DataState.ChildUpdated.toString,
+        "id" -> "12",
+        "data" -> Json.obj(
+          "PersonID" -> 12,
+          "PersonName" -> "Foo"
+        ),
+        "children" -> Json.obj(
+          "PersonPhone" -> Json.arr(
+            Json.obj(
+              "state" -> DataState.Updated.toString,
+              "id" -> "12",
+              "data" -> Json.obj(
+                "PersonPhoneID" -> 34,
+                "PersonPhonePersonID" -> 12,
+                "PersonPhoneNumber" -> "(123) 456-7890"
+              )
+            )
+          )
+        )
+      )
+
+      val saving = Json.arr(sampleRow)
+      val result = saver.saveAll(model, Option(saving))
+      result must be equalTo Json.arr(sampleRow - "state")
+    }
+
   }
 }

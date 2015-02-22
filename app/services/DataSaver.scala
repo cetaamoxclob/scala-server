@@ -9,7 +9,7 @@ case class DataRow(state: DataState,
                    data: Option[Map[String, JsValue]],
                    id: Option[String],
                    tempID: Option[String],
-                   children: Option[Map[String, DataRow]])
+                   children: Option[Map[String, Seq[DataRow]]])
 
 object DataSaver {
 
@@ -33,7 +33,7 @@ object DataSaver {
       (JsPath \ "data").readNullable[Map[String, JsValue]] and
       (JsPath \ "id").readNullable[String] and
       (JsPath \ "tempID").readNullable[String] and
-      (JsPath \ "children").lazyReadNullable(Reads.map[DataRow](dataRowReads))
+      (JsPath \ "children").lazyReadNullable(Reads.map(Reads.seq[DataRow](dataRowReads)))
     ).apply(DataRow.apply _)
 }
 
@@ -49,22 +49,29 @@ class DataSaver extends DataReader with Database {
   }
 
   private def savesAll(model: Model, dataToSave: Seq[JsValue]): JsArray = {
-    if (dataToSave.isEmpty) return JsArray()
-    if (model.instanceID.isEmpty) throw new Exception("Cannot insert/update/delete an instance without an instanceID for " + model.name)
-
-    val results: Seq[JsValue] = dataToSave.map { jsValue =>
+    val results: Seq[DataRow] = dataToSave.map { jsValue =>
       DataSaver.dataRowReads.reads(jsValue) match {
         case JsSuccess(dataRow, _) => {
-          dataRow.state match {
-            case DataState.Inserted => insertSingleRow(model, dataRow)
-            case DataState.Deleted => deleteSingleRow(model, dataRow)
-            case DataState.Updated => updateSingleRow(model, dataRow)
-            case DataState.ChildUpdated => ???
-          }
+          dataRow
         }
         case JsError(err) => {
           throw new Exception("Data should be in object format " + err)
         }
+      }
+    }
+    saveAllDataRows(model, results)
+  }
+
+  private def saveAllDataRows(model: Model, dataToSave: Seq[DataRow]): JsArray = {
+    if (dataToSave.isEmpty) return JsArray()
+    if (model.instanceID.isEmpty) throw new Exception("Cannot insert/update/delete an instance without an instanceID for " + model.name)
+
+    val results: Seq[JsValue] = dataToSave.map { dataRow =>
+      dataRow.state match {
+        case DataState.Inserted => insertSingleRow(model, dataRow)
+        case DataState.Deleted => deleteSingleRow(model, dataRow)
+        case DataState.Updated => updateSingleRow(model, dataRow)
+        case DataState.ChildUpdated => childUpdate(model, dataRow)
       }
     }
     JsArray(results)
@@ -121,7 +128,27 @@ class DataSaver extends DataReader with Database {
   }
 
   private def childUpdate(model: Model, row: DataRow): JsValue = {
-    ???
+    //    println(model)
+    val allChildJson: JsObject = row.children match {
+      case Some(childData) => {
+        def updateChildForModel(remainingMap: Map[String, Seq[DataRow]], acc: JsObject): JsObject = {
+          if (remainingMap.isEmpty) acc
+          else {
+            val childModelName = remainingMap.head._1
+            val childData = remainingMap.head._2
+            val childResults = saveAllDataRows(model.children.get(childModelName).get, childData)
+            updateChildForModel(remainingMap.tail, acc + (childModelName -> childResults))
+          }
+        }
+        updateChildForModel(childData, Json.obj())
+      }
+      case None => Json.obj()
+    }
+    Json.obj(
+      "id" -> row.id,
+      "data" -> row.data,
+      "children" -> allChildJson
+    )
   }
 
   private def createSqlForInsert(model: Model, row: Map[String, JsValue]): (String, List[Any]) = {
