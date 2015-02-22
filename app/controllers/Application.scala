@@ -4,6 +4,7 @@ import models.{ModelOrderBy, User}
 import play.api.libs.json.Json
 import play.api.mvc._
 import services._
+import util.LoginStrategyType
 
 object Application extends Controller with util.Timer {
   val compiler = new ArtifactCompilerService
@@ -41,9 +42,17 @@ object Application extends Controller with util.Timer {
 
   def exportAll = TODO
 
-  def login = TODO
+  def login = Action {
+    val message = None // Some("Message here")
+    val loginStrategies = List(LoginStrategyType.Github)
+    Ok(views.html.login("Scala Test", message, loginStrategies))
+  }
 
   def logout = Action {
+    Redirect("/login")
+  }
+
+  def auth(strategy: String) = Action {
     Redirect("/")
   }
 

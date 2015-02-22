@@ -13,6 +13,7 @@ trait ArtifactService {
   def getArtifactContentAndParseJson(artifactType: ArtifactType, name: String): JsValue = {
     val directoryName = "src/" + artifactType.getDirectory + "/" + name + ".json"
     val artifactContent = Files.toString(Play.getFile(directoryName), Charsets.UTF_8)
+
     Json.parse(artifactContent)
   }
 

@@ -11,6 +11,7 @@ GET         /page/:name/         controllers.Application.desktop(name)
 
 GET         /login               controllers.Application.login
 GET         /logout              controllers.Application.logout
+GET         /auth/:strategy              controllers.Application.auth(strategy)
 
 GET         /data/:name          controllers.Application.readData(name, page: Int ?= 1, filter: Option[String], orderBy: Option[models.ModelOrderBy])
 #GET         /data/:name/         controllers.Application.readData(name, page: Int ?= 1, filter: Option[String])
