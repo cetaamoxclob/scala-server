@@ -87,6 +87,16 @@ trait DataSaver extends DataReader with Database {
         children = None
       )
     }
+
+    if (row.children.isDefined && !model.children.isEmpty) {
+      row.children.get.keys.foreach { childModelName: String =>
+        val childModel = model.children.get(childModelName).get
+        row.children.get(childModelName).foreach { childDataInstance: DataInstance =>
+          deleteSingleRow(childModel, childDataInstance)
+        }
+      }
+    }
+
     val (sql, params) = createSqlForDelete(model, row.data.get)
     val rowCountModified = update(sql, params)
     if (rowCountModified != 1) {
