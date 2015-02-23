@@ -27,36 +27,8 @@
       "dbName": "databaseName"
     },
     {
-      "name": "Module",
-      "dbName": "moduleName"
-    },
-    {
       "name": "PrimaryKey",
       "dbName": "primaryKey"
-    }
-  ],
-  "joins": [
-    {
-      "name": "Module",
-      "table": "Module",
-      "required": false,
-      "columns": [
-        {
-          "from": "Module",
-          "to": "ModuleID"
-        }
-      ]
-    },
-    {
-      "name": "Database",
-      "table": "Database",
-      "required": false,
-      "columns": [
-        {
-          "from": "Database",
-          "to": "DatabaseID"
-        }
-      ]
     }
   ]
 }

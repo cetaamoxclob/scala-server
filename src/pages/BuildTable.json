@@ -10,10 +10,6 @@
       "name": "TableSQL"
     },
     {
-      "name": "TableModule",
-      "showInFormView": false
-    },
-    {
       "name": "TableDatabase",
       "showInFormView": false
     }

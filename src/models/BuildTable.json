@@ -23,10 +23,6 @@
     {
       "name": "TableDatabase",
       "basisColumn": "Database"
-    },
-    {
-      "name": "TableModule",
-      "basisColumn": "Module"
     }
   ],
   "children": [

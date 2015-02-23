@@ -3,9 +3,6 @@
   "limit": 10,
   "orderBy": [
     {
-      "fieldName": "TableModule"
-    },
-    {
       "fieldName": "TableName"
     }
   ],
@@ -25,10 +22,6 @@
     {
       "name": "TableDatabase",
       "basisColumn": "Database"
-    },
-    {
-      "name": "TableModule",
-      "basisColumn": "Module"
     }
   ]
 }
