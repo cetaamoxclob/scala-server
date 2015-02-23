@@ -2,42 +2,9 @@ package services
 
 import data.{DataState, Database}
 import models.{ModelField, Model}
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class DataRow(state: DataState,
-                   data: Option[Map[String, JsValue]],
-                   id: Option[String],
-                   tempID: Option[String],
-                   children: Option[Map[String, Seq[DataRow]]])
-
-object DataSaver {
-
-  implicit def dataStateReads: Reads[DataState] = new Reads[DataState] {
-    override def reads(json: JsValue): JsResult[DataState] = {
-      json match {
-        case JsString(s) => {
-          try {
-            JsSuccess(DataState.fromString(s))
-          } catch {
-            case _: IllegalArgumentException => JsError(s"Failed to convert DataState value from $s")
-          }
-        }
-        case _ => JsError("String value expected")
-      }
-    }
-  }
-
-  def dataRowReads: Reads[DataRow] = (
-    (JsPath \ "state").read[DataState] and
-      (JsPath \ "data").readNullable[Map[String, JsValue]] and
-      (JsPath \ "id").readNullable[String] and
-      (JsPath \ "tempID").readNullable[String] and
-      (JsPath \ "children").lazyReadNullable(Reads.map(Reads.seq[DataRow](dataRowReads)))
-    ).apply(DataRow.apply _)
-}
-
-class DataSaver extends DataReader with Database {
+trait DataSaver extends DataReader with Database {
   def saveAll(model: Model, dataToSave: Option[JsValue]): JsArray = {
     dataToSave match {
       case None => return JsArray()
@@ -50,7 +17,7 @@ class DataSaver extends DataReader with Database {
 
   private def savesAll(model: Model, dataToSave: Seq[JsValue]): JsArray = {
     val results: Seq[DataRow] = dataToSave.map { jsValue =>
-      DataSaver.dataRowReads.reads(jsValue) match {
+      DataRow.dataRowReads.reads(jsValue) match {
         case JsSuccess(dataRow, _) => {
           dataRow
         }
@@ -106,10 +73,13 @@ class DataSaver extends DataReader with Database {
     )
   }
 
-  private def deleteSingleRow(model: Model, rowToDelete: DataRow): JsValue = {
+  def deleteSingleRow(model: Model, rowToDelete: DataRow): JsValue = {
     val row: DataRow = if (rowToDelete.data.isDefined) rowToDelete
     else {
-      val existingRow = queryOneRow(model, rowToDelete.id.get.toInt)
+      val existingRow = queryOneRow(model, rowToDelete.id.get.toInt).getOrElse(
+        // Maybe we should just exit and not worry about this
+        throw new Exception("Failed find data. Maybe the row was already deleted")
+      )
       new DataRow(DataState.Deleted,
         data = Option(existingRow.data),
         id = existingRow.id,
@@ -242,3 +212,5 @@ class DataSaver extends DataReader with Database {
   }
 
 }
+
+class DataSaverService extends DataSaver

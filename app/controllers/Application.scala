@@ -1,10 +1,12 @@
 package controllers
 
-import models.{ModelOrderBy, User}
+import models.{ArtifactType, ModelOrderBy, User}
 import play.api.libs.json.Json
 import play.api.mvc._
 import services._
 import util.LoginStrategyType
+
+import scala.util.Success
 
 object Application extends Controller with util.Timer {
   val compiler = new ArtifactCompilerService
@@ -21,7 +23,7 @@ object Application extends Controller with util.Timer {
   }
 
   def saveData(name: String) = Action { request =>
-    val saver = new DataSaver
+    val saver = new DataSaverService
     val model = compiler.compileModel(name)
     val response = saver.saveAll(model, request.body.asJson)
     Ok(response)
@@ -38,7 +40,14 @@ object Application extends Controller with util.Timer {
 
   def mobile(name: String) = TODO
 
-  def importAll = TODO
+  def importAll = Action {
+    val tableImport = new ArtifactImport(ArtifactType.Table)
+    val output = tableImport.readFromSourceAndWriteToDatabase("Column")
+    output match {
+      case Success(outputString) => Ok(outputString)
+      case _ => BadRequest("too badd")
+    }
+  }
 
   def exportAll = TODO
 

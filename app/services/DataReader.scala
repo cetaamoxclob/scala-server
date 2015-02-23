@@ -7,30 +7,18 @@ import models.{ModelParentLink, ModelOrderBy, ModelField, Model}
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
-case class SelectDataRow(id: Option[String],
-                         data: Map[String, JsValue],
-                         var children: Option[Map[String, Seq[SelectDataRow]]])
-
-object SelectDataRow {
-  implicit def selectDataWrites: Writes[SelectDataRow] = (
-    (JsPath \ "id").writeNullable[String] and
-      (JsPath \ "data").write[Map[String, JsValue]] and
-      (JsPath \ "children").lazyWriteNullable(Writes.map[Seq[SelectDataRow]])
-    )(unlift(SelectDataRow.unapply))
-}
-
 trait DataReader extends ArtifactCompiler with Database {
 
-  def queryOneRow(model: Model, id: Int): SelectDataRow = {
+  def queryOneRow(model: Model, id: Int): Option[SelectDataRow] = {
     queryOneRow(model, Some(f"${model.instanceID.get} = $id"))
   }
 
-  def queryOneRow(model: Model, filter: Option[String]): SelectDataRow = {
+  def queryOneRow(model: Model, filter: Option[String]): Option[SelectDataRow] = {
     val existingRows = queryModelData(model, 1, filter, Seq.empty)
     if (existingRows.size != 1) {
       throw new Exception(f"Failed to find exactly 1 record for ${model.name} where ${filter}")
     }
-    existingRows.head
+    existingRows.headOption
   }
 
   def queryModelData(model: Model, page: Int, filter: Option[String], orderBy: Seq[ModelOrderBy]): Seq[SelectDataRow] = {

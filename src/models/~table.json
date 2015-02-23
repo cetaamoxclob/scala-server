@@ -14,10 +14,6 @@
       "basisColumn": "Database"
     },
     {
-      "name": "module",
-      "basisColumn": "Module"
-    },
-    {
       "name": "dbName",
       "basisColumn": "SQL"
     },

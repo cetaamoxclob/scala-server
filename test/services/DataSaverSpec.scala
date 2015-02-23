@@ -49,7 +49,7 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
     )
 
     "do nothing" in {
-      val saver = new DataSaver
+      val saver = new DataSaverService
       saver.saveAll(model, None) must be equalTo JsArray()
     }
 
