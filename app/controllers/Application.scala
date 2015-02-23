@@ -1,5 +1,6 @@
 package controllers
 
+import data.DataInstance
 import models.{ArtifactType, ModelOrderBy, User}
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -18,7 +19,7 @@ object Application extends Controller with util.Timer {
   def readData(name: String, page: Int, filter: Option[String], orderBy: Option[ModelOrderBy]) = Action {
     val model = compiler.compileModel(name)
     val reader = new DataReaderService
-    val response: Seq[SelectDataRow] = reader.queryModelData(model, page, filter, if (orderBy.isDefined) Seq(orderBy.get) else model.orderBy)
+    val response: Seq[DataInstance] = reader.queryModelData(model, page, filter, if (orderBy.isDefined) Seq(orderBy.get) else model.orderBy)
     Ok(Json.toJson(response))
   }
 

@@ -2,18 +2,17 @@ package services
 
 import java.sql.ResultSet
 
-import data.{SqlBuilder, DataFilter, Database}
+import data._
 import models.{ModelParentLink, ModelOrderBy, ModelField, Model}
 import play.api.libs.json._
-import play.api.libs.functional.syntax._
 
 trait DataReader extends ArtifactCompiler with Database {
 
-  def queryOneRow(model: Model, id: Int): Option[SelectDataRow] = {
+  def queryOneRow(model: Model, id: Int): Option[DataInstance] = {
     queryOneRow(model, Some(f"${model.instanceID.get} = $id"))
   }
 
-  def queryOneRow(model: Model, filter: Option[String]): Option[SelectDataRow] = {
+  def queryOneRow(model: Model, filter: Option[String]): Option[DataInstance] = {
     val existingRows = queryModelData(model, 1, filter, Seq.empty)
     if (existingRows.size != 1) {
       throw new Exception(f"Failed to find exactly 1 record for ${model.name} where ${filter}")
@@ -21,7 +20,7 @@ trait DataReader extends ArtifactCompiler with Database {
     existingRows.headOption
   }
 
-  def queryModelData(model: Model, page: Int, filter: Option[String], orderBy: Seq[ModelOrderBy]): Seq[SelectDataRow] = {
+  def queryModelData(model: Model, page: Int, filter: Option[String], orderBy: Seq[ModelOrderBy]): Seq[DataInstance] = {
     var sqlBuilder = new SqlBuilder(
       from = model.basisTable.dbName,
       fields = model.fields,
@@ -52,7 +51,7 @@ trait DataReader extends ArtifactCompiler with Database {
   }
 
   private def convertResultSetToDataRows(instanceID: Option[String], fields: Map[String, ModelField], rs: ResultSet) = {
-    val resultBuilder = Seq.newBuilder[SelectDataRow]
+    val resultBuilder = Seq.newBuilder[DataInstance]
 
     while (rs.next()) {
       val fieldResults = fields.map {
@@ -66,9 +65,9 @@ trait DataReader extends ArtifactCompiler with Database {
           fieldName -> columnValue
         }
       }
-      resultBuilder += new SelectDataRow(
+      resultBuilder += new DataInstance(
         id = if (instanceID.isDefined) Some(fieldResults(instanceID.get).toString) else None,
-        data = fieldResults,
+        data = Some(fieldResults),
         children = None
       )
     }
@@ -76,23 +75,23 @@ trait DataReader extends ArtifactCompiler with Database {
 
   }
 
-  private def getValues(dataRows: Seq[SelectDataRow], fieldName: String) = {
+  private def getValues(dataRows: Seq[DataInstance], fieldName: String) = {
     dataRows.map { row =>
-      row.data(fieldName)
+      row.data.get(fieldName)
     }
   }
 
   private def addChildRowsToParent(
-                                    parentRows: Seq[SelectDataRow],
+                                    parentRows: Seq[DataInstance],
                                     childModelName: String,
                                     parentLink: ModelParentLink,
-                                    childRows: Seq[SelectDataRow]): Unit = {
+                                    childRows: Seq[DataInstance]): Unit = {
 
     var remainingChildRows = childRows
     parentRows.foreach { parentRow =>
-      val parentID = parentRow.data.get(parentLink.parentField).get
+      val parentID = parentRow.data.get.get(parentLink.parentField).get
       val (matching, nonMatching) = remainingChildRows.partition { childRow =>
-        parentID == childRow.data.get(parentLink.childField).get
+        parentID == childRow.data.get.get(parentLink.childField).get
       }
       remainingChildRows = nonMatching
       parentRow.children = Some(parentRow.children.getOrElse(Map.empty) + (childModelName -> matching))

@@ -1,6 +1,6 @@
 package services
 
-import data.{DataState, Database}
+import data._
 import models.{ModelField, Model}
 import play.api.libs.json._
 
@@ -16,8 +16,8 @@ trait DataSaver extends DataReader with Database {
   }
 
   private def savesAll(model: Model, dataToSave: Seq[JsValue]): JsArray = {
-    val results: Seq[DataRow] = dataToSave.map { jsValue =>
-      DataRow.dataRowReads.reads(jsValue) match {
+    val results: Seq[DataInstance] = dataToSave.map { jsValue =>
+      DataInstance.dataRowReads.reads(jsValue) match {
         case JsSuccess(dataRow, _) => {
           dataRow
         }
@@ -29,7 +29,7 @@ trait DataSaver extends DataReader with Database {
     saveAllDataRows(model, results)
   }
 
-  private def saveAllDataRows(model: Model, dataToSave: Seq[DataRow]): JsArray = {
+  private def saveAllDataRows(model: Model, dataToSave: Seq[DataInstance]): JsArray = {
     if (dataToSave.isEmpty) return JsArray()
     if (model.instanceID.isEmpty) throw new Exception("Cannot insert/update/delete an instance without an instanceID for " + model.name)
 
@@ -38,13 +38,13 @@ trait DataSaver extends DataReader with Database {
         case DataState.Inserted => insertSingleRow(model, dataRow)
         case DataState.Deleted => deleteSingleRow(model, dataRow)
         case DataState.Updated => updateSingleRow(model, dataRow)
-        case DataState.ChildUpdated => childUpdate(model, dataRow)
+        case DataState.ChildUpdated | DataState.Done => childUpdate(model, dataRow)
       }
     }
     JsArray(results)
   }
 
-  private def insertSingleRow(model: Model, row: DataRow): JsValue = {
+  private def insertSingleRow(model: Model, row: DataInstance): JsValue = {
     val (sql, params) = createSqlForInsert(model, row.data.get)
 
     val rsKeys = insert(sql, params)
@@ -61,7 +61,7 @@ trait DataSaver extends DataReader with Database {
     }
   }
 
-  private def updateSingleRow(model: Model, row: DataRow): JsValue = {
+  private def updateSingleRow(model: Model, row: DataInstance): JsValue = {
     val (sql, params) = createSqlForUpdate(model, row.data.get)
     val rowCountModified = update(sql, params)
     if (rowCountModified != 1) {
@@ -73,15 +73,15 @@ trait DataSaver extends DataReader with Database {
     )
   }
 
-  def deleteSingleRow(model: Model, rowToDelete: DataRow): JsValue = {
-    val row: DataRow = if (rowToDelete.data.isDefined) rowToDelete
+  def deleteSingleRow(model: Model, rowToDelete: DataInstance): JsValue = {
+    val row: DataInstance = if (rowToDelete.data.isDefined) rowToDelete
     else {
       val existingRow = queryOneRow(model, rowToDelete.id.get.toInt).getOrElse(
         // Maybe we should just exit and not worry about this
         throw new Exception("Failed find data. Maybe the row was already deleted")
       )
-      new DataRow(DataState.Deleted,
-        data = Option(existingRow.data),
+      new DataInstance(DataState.Deleted,
+        data = existingRow.data,
         id = existingRow.id,
         tempID = None,
         children = None
@@ -97,11 +97,11 @@ trait DataSaver extends DataReader with Database {
     )
   }
 
-  private def childUpdate(model: Model, row: DataRow): JsValue = {
+  private def childUpdate(model: Model, row: DataInstance): JsValue = {
     //    println(model)
     val allChildJson: JsObject = row.children match {
       case Some(childData) => {
-        def updateChildForModel(remainingMap: Map[String, Seq[DataRow]], acc: JsObject): JsObject = {
+        def updateChildForModel(remainingMap: Map[String, Seq[DataInstance]], acc: JsObject): JsObject = {
           if (remainingMap.isEmpty) acc
           else {
             val childModelName = remainingMap.head._1
