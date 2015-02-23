@@ -1,5 +1,6 @@
 package services
 
+import mock.FakeArtifacts
 import models._
 import org.junit.runner._
 import org.specs2.mock._
@@ -14,7 +15,7 @@ trait TableCacheMock extends TableCache {
 }
 
 @RunWith(classOf[JUnitRunner])
-class ArtifactCompilerSpec extends Specification with Mockito {
+class ArtifactCompilerSpec extends Specification with Mockito with FakeArtifacts {
   "ArtifactCompiler" should {
     "compile the Default menu" in {
       trait ArtifactServiceMock extends ArtifactService {
@@ -81,13 +82,7 @@ class ArtifactCompilerSpec extends Specification with Mockito {
         limit = 0,
         parentLink = None,
         instanceID = None,
-        fields = Map("PersonID" -> new ModelField(
-          "PersonID",
-          "person_id",
-          dataType = "String",
-          updateable = true,
-          required = false
-        )),
+        fields = Map(fakeModelFieldMap("PersonID", "person_id", "String")),
         children = Map.empty,
         steps = Map.empty,
         orderBy = Seq.empty

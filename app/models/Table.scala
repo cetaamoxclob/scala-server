@@ -25,11 +25,13 @@ case class DeepTable(
 case class TableColumn(
                         name: String,
                         dbName: String,
-                        dataType: String,
-                        updateable: Boolean,
-                        required: Boolean,
+                        dataType: String = "String",
+                        updateable: Boolean = true,
+                        required: Boolean = false,
                         label: String,
-                        fieldType: String
+                        help: Option[String] = None,
+                        placeholder: Option[String] = None,
+                        fieldType: String = "text"
                         )
 
 case class TableJoin(

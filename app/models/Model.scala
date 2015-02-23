@@ -34,10 +34,10 @@ case class Model(name: String,
 }
 
 case class ModelField(name: String,
-                      dbName: String,
-                      dataType: String,
-                      updateable: Boolean,
-                      required: Boolean
+                      basisColumn: TableColumn,
+                      step: Option[String] = None,
+                      updateable: Boolean = true,
+                      required: Boolean = false
                        )
 
 case class ModelStep(table: Table,

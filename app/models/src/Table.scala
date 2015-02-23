@@ -18,6 +18,8 @@ case class TableColumnJson(name: String,
                            updateable: Option[Boolean],
                            required: Option[Boolean],
                            label: Option[String],
+                           help: Option[String],
+                           placeholder: Option[String],
                            fieldType: Option[String],
                            columnDefault: Option[String]
                             )
@@ -48,6 +50,8 @@ object TableJson {
       (JsPath \ "updateable").readNullable[Boolean] and
       (JsPath \ "required").readNullable[Boolean] and
       (JsPath \ "label").readNullable[String] and
+      (JsPath \ "help").readNullable[String] and
+      (JsPath \ "placeholder").readNullable[String] and
       (JsPath \ "fieldType").readNullable[String] and
       (JsPath \ "columnDefault").readNullable[String]
     ).apply(TableColumnJson.apply _)

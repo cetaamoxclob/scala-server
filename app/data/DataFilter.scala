@@ -62,14 +62,14 @@ object DataFilter {
           }))
         }
         case _ => {
-          if (fieldLeft.get.dataType == "Date") {
+          if (fieldLeft.get.basisColumn.dataType == "Date") {
             val formattedDate = formatDate(right)
             if (formattedDate.isDefined)
               (comparatorToSql(comparator) + " " + formattedDate.get, List())
             else
               (comparatorToSql(comparator) + " ?", List(DateTime.parse(right)))
           } else {
-            val parameter = if (fieldLeft.get.dataType == "Integer") {
+            val parameter = if (fieldLeft.get.basisColumn.dataType == "Integer") {
               right.toInt
             } else right.toString
             (comparatorToSql(comparator) + " ?", List(parameter))
@@ -97,7 +97,7 @@ object DataFilter {
   }
 
   private def fieldToSql(field: ModelField): String = {
-    f"`t0`.`${field.dbName}`"
+    f"`t0`.`${field.basisColumn.dbName}`"
   }
 
   private def formatDate(dateMatcherCandidate: String): Option[String] = {
@@ -124,11 +124,3 @@ object DataFilter {
     }
   }
 }
-
-//object DateParser {
-//  def apply(value: String): java.util.Date = {
-//
-//    val cal = Calendar.getInstance()
-//    cal.getTime
-//  }
-//}

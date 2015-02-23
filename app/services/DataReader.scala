@@ -69,11 +69,11 @@ trait DataReader extends ArtifactCompiler with Database {
     while (rs.next()) {
       val fieldResults = fields.map {
         case (fieldName, f) => {
-          val columnValue: JsValue = f.dataType match {
+          val columnValue: JsValue = f.basisColumn.dataType match {
             case "Int" | "Integer" => JsNumber(rs.getInt(fieldName))
             case "String" => JsString(rs.getString(fieldName))
             case "Boolean" => JsBoolean(rs.getBoolean(fieldName))
-            case _ => throw new MatchError(f"field.dataType of `${f.dataType}` is not String or Integer")
+            case _ => throw new MatchError(f"field.dataType of `${f.basisColumn.dataType}` is not String or Integer")
           }
           fieldName -> columnValue
         }

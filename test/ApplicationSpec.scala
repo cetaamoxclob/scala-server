@@ -28,7 +28,7 @@ class ApplicationSpec extends Specification {
       status(home) must equalTo(OK)
       contentType(home) must beSome.which(_ == "application/json")
       // This keeps breaking so I'm not sure how much longer we should use it for testing
-      contentAsString(home) must contain( ""","TableTableID":1,""")
+      contentAsString(home) must contain( """"TableTableID":1,""")
     }
   }
 }

@@ -20,7 +20,7 @@ case class SqlBuilder(
     if (fields.isEmpty) "*"
     else fields.map {
       case (fieldName, f) => {
-        s"`t0`.`${f.dbName}` AS `${fieldName}`"
+        s"`t0`.`${f.basisColumn.dbName}` AS `${fieldName}`"
       }
     }.toSeq.mkString(", ")
   }

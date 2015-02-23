@@ -3,28 +3,20 @@ package data
 import java.sql.Date
 import java.util.Calendar
 
-import models.ModelField
+import mock.FakeArtifacts
+import models.{TableColumn, ModelField}
 import org.joda.time.DateTime
 import org.junit.runner.RunWith
 import org.specs2.mutable._
 import org.specs2.runner._
 
 @RunWith(classOf[JUnitRunner])
-class DataFilterSpec extends Specification {
-  private def sampleField(name: String, dbName: String, dataType: String) = {
-    name -> new ModelField(
-      name,
-      dbName,
-      dataType,
-      updateable = true,
-      required = false
-    )
-  }
+class DataFilterSpec extends Specification with FakeArtifacts {
 
   val modelColumnSample: Map[String, ModelField] = Map(
-    sampleField("TableID", "id", "Integer"),
-    sampleField("CreatedDate", "created_date", "Date"),
-    sampleField("TableName", "name", "String")
+    fakeModelFieldMap("TableID", "id", "Integer", None, false, true),
+    fakeModelFieldMap("CreatedDate", "created_date", "Date"),
+    fakeModelFieldMap("TableName", "name", "String")
   )
 
   private def mustBeEqual(filter: String, whereClause: String, parameters: List[Any]) = {

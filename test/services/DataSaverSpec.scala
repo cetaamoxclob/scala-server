@@ -3,7 +3,7 @@ package services
 import java.sql._
 
 import data.{DataState, Database}
-import mock.FakeResultSet
+import mock.{FakeArtifacts, FakeResultSet}
 import models._
 import org.junit.runner.RunWith
 import org.specs2.mock._
@@ -13,7 +13,7 @@ import play.api.libs.json.{JsNull, JsArray, Json}
 
 
 @RunWith(classOf[JUnitRunner])
-class DataSaverSpec extends Specification with Mockito {
+class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
   "DataSaver" should {
     val model = new Model(
       "PersonTest",
@@ -24,20 +24,8 @@ class DataSaverSpec extends Specification with Mockito {
       instanceID = Option("PersonID"),
       parentLink = None,
       fields = Map(
-        "PersonID" -> new ModelField(
-          "PersonID",
-          "person_id",
-          dataType = "Integer",
-          updateable = false,
-          required = false
-        ),
-        "PersonName" -> new ModelField(
-          "PersonName",
-          "name",
-          dataType = "String",
-          updateable = true,
-          required = true
-        )
+        fakeModelFieldMap("PersonID", "person_id", "Integer", updateable = false),
+        fakeModelFieldMap("PersonName", "name", "String", required = true)
       ),
       children = Map("PersonPhone" -> new Model(
         "PersonPhone",
@@ -48,27 +36,9 @@ class DataSaverSpec extends Specification with Mockito {
         instanceID = Option("PersonPhoneID"),
         parentLink = Some(new ModelParentLink("PersonID", "PersonPhonePersonID")),
         fields = Map(
-          "PersonPhoneID" -> new ModelField(
-            "PersonPhoneID",
-            "phone_id",
-            dataType = "Integer",
-            updateable = false,
-            required = false
-          ),
-          "PersonPhonePersonID" -> new ModelField(
-            "PersonPhonePersonID",
-            "person_id",
-            dataType = "Integer",
-            updateable = false,
-            required = false
-          ),
-          "PersonPhoneNumber" -> new ModelField(
-            "PersonPhoneNumber",
-            "phone_number",
-            dataType = "String",
-            updateable = true,
-            required = true
-          )
+          fakeModelFieldMap("PersonPhoneID", "phone_id", "Integer", updateable = false),
+          fakeModelFieldMap("PersonPhonePersonID", "person_id", "Integer", updateable = false),
+          fakeModelFieldMap("PersonPhoneNumber", "phone_number", "String", required = true)
         ),
         children = Map.empty,
         steps = Map.empty,
@@ -213,9 +183,29 @@ class DataSaverSpec extends Specification with Mockito {
         )
       )
 
-      val saving = Json.arr(sampleRow)
-      val result = saver.saveAll(model, Option(saving))
-      result must be equalTo Json.arr(sampleRow - "state")
+      val expectedRow = Json.obj(
+        "id" -> "12",
+        "data" -> Json.obj(
+          "PersonID" -> 12,
+          "PersonName" -> "Foo"
+        ),
+        "children" -> Json.obj(
+          "PersonPhone" -> Json.arr(
+            Json.obj(
+              "id" -> "12",
+              "data" -> Json.obj(
+                "PersonPhoneID" -> 34,
+                "PersonPhonePersonID" -> 12,
+                "PersonPhoneNumber" -> "(123) 456-7890"
+              )
+            )
+          )
+        )
+      )
+
+
+      val result = saver.saveAll(model, Option(Json.arr(sampleRow)))
+      result must be equalTo Json.arr(expectedRow)
     }
 
   }

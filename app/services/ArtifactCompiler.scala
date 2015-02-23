@@ -103,17 +103,18 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
   }
 
   private def compilePageField(field: PageFieldJson, modelField: ModelField): PageField = {
+    val column = modelField.basisColumn
     new PageField(
       name = field.name,
-      fieldType = field.fieldType.getOrElse("text"), // Need to inherit from basisColumn
+      fieldType = field.fieldType.getOrElse(column.fieldType),
       required = modelField.required,
-      disabled = field.disabled.getOrElse(false), // Need to inherit from basisColumn
-      label = field.label.getOrElse(modelField.name), // Need to inherit from basisColumn
+      disabled = field.disabled.getOrElse(!column.updateable),
+      label = field.label.getOrElse(column.label),
       showInFormView = field.showInFormView.getOrElse(true),
       showInTableView = field.showInTableView.getOrElse(true),
       showInNavigation = field.showInNavigation.getOrElse(false),
-      placeholder = field.placeholder,
-      help = field.help,
+      placeholder = if (field.placeholder.isDefined) field.placeholder else column.placeholder,
+      help = if (field.help.isDefined) field.help else column.help,
       filter = field.filter,
       blurFunction = field.blurFunction,
       select = field.select match {
@@ -219,8 +220,8 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
   private def compileModelField(field: ModelFieldJson, basisColumn: TableColumn): ModelField = {
     new ModelField(
       name = field.name,
-      dbName = basisColumn.dbName,
-      dataType = basisColumn.dataType,
+      basisColumn = basisColumn,
+      step = field.step,
       required = field.required.getOrElse(basisColumn.required),
       updateable = field.updateable.getOrElse(basisColumn.updateable)
     )
@@ -274,7 +275,9 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
       fieldType = column.fieldType.getOrElse("text"),
       required = column.required.getOrElse(false),
       updateable = column.updateable.getOrElse(true),
-      label = column.label.getOrElse(column.name)
+      label = column.label.getOrElse(column.name),
+      help = column.help,
+      placeholder = column.placeholder
     )
   }
 

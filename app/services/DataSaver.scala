@@ -157,7 +157,7 @@ class DataSaver extends DataReader with Database {
       model.fields.values.foreach { field =>
         val value = convertFromJsonToScala(row, field)
         if (value.isDefined) {
-          columns += ((field.dbName, value.get))
+          columns += ((field.basisColumn.dbName, value.get))
         }
       }
       columns.result
@@ -184,7 +184,7 @@ class DataSaver extends DataReader with Database {
         if (field.updateable) {
           val value = convertFromJsonToScala(row, field)
           if (value.isDefined) {
-            columns += ((field.dbName, value.get))
+            columns += ((field.basisColumn.dbName, value.get))
           }
         }
       }
@@ -198,13 +198,13 @@ class DataSaver extends DataReader with Database {
 
     (f"UPDATE `${model.basisTable.dbName}` " +
       f"SET $setColumnPhrase " +
-      f"WHERE `${primaryKey.dbName}` = ?", columnValues.values.toList :+ primaryKeyValue)
+      f"WHERE `${primaryKey.basisColumn.dbName}` = ?", columnValues.values.toList :+ primaryKeyValue)
   }
 
   private def convertFromJsonToScala(row: Map[String, JsValue], field: ModelField): Option[Any] = {
     row.get(field.name) match {
       case Some(jsValue) => {
-        field.dataType match {
+        field.basisColumn.dataType match {
           // convert JsValue based on field.type
           case _ => Some(jsValue.as[String])
         }
@@ -222,7 +222,7 @@ class DataSaver extends DataReader with Database {
     val primaryKeyValue = getPrimaryKeyValue(primaryKey.name, row)
 
     (f"DELETE FROM `${model.basisTable.dbName}` " +
-      f"WHERE `${primaryKey.dbName}` = ?", List(primaryKeyValue))
+      f"WHERE `${primaryKey.basisColumn.dbName}` = ?", List(primaryKeyValue))
   }
 
   private def getPrimaryKeyValue(primaryKeyName: String, row: Map[String, JsValue]) = {
