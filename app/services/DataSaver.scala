@@ -1,6 +1,6 @@
 package services
 
-import data._
+import data.{DataState, DataInstance, Database}
 import models.{ModelField, Model}
 import play.api.libs.json._
 
@@ -48,17 +48,17 @@ trait DataSaver extends DataReader with Database {
     val (sql, params) = createSqlForInsert(model, row.data.get)
 
     val rsKeys = insert(sql, params)
-    val insertResults = if (rsKeys.next()) {
+    val insertedRow = if (rsKeys.next()) {
       val insertedID = rsKeys.getLong(1).toString
-      Json.obj(
-        "id" -> insertedID,
-        "data" -> (row.data.get + (model.instanceID.get -> JsString(insertedID)))
+      row.copy(
+        id = Some(insertedID),
+        data = Some(row.data.get + (model.instanceID.get -> JsString(insertedID)))
       )
-    } else {
-      Json.obj(
-        "data" -> row.data
-      )
-    }
+    } else row
+    val insertResults = Json.obj(
+      "id" -> insertedRow.id,
+      "data" -> insertedRow.data.get
+    )
 
     if (row.children.isDefined && !model.children.isEmpty) {
       var childrenResults = Json.obj()

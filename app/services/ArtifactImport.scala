@@ -1,10 +1,10 @@
 package services
 
 import data._
-import models.{Model, ArtifactType}
+import models.{ArtifactType, Model}
 import play.api.libs.json._
 
-import scala.util.{Try, Success}
+import scala.util.Success
 
 class ArtifactImport(artifactType: ArtifactType) extends ArtifactCompilerService with DataReader with DataSaver {
 
@@ -24,37 +24,42 @@ class ArtifactImport(artifactType: ArtifactType) extends ArtifactCompilerService
     Success(result)
   }
 
-  def convertSourceToInsertData(model: Model, artifactName: String, artifactSource: JsObject): DataInstance = {
-    var dataMap = artifactSource.value.toMap
-    dataMap += ("name" -> JsString(artifactName))
-    val childDataInstances = if (model.children.isEmpty) None
+  def convertSourceToInsertData(model: Model, modelName: String, artifactSource: JsObject): DataInstance = {
+    val instanceData = artifactSource.value.toMap
+    new DataInstance(
+      state = DataState.Inserted,
+      data = getInstanceData(model, modelName: String, instanceData),
+      children = getChildData(model, instanceData))
+  }
+
+  private def getInstanceData(model: Model, modelName: String, dataMap: Map[String, JsValue]) = {
+    var fixedInstanceData = dataMap + (("name", JsString(modelName)))
+    model.children.keys.foreach(childModelName => fixedInstanceData -= childModelName)
+    Some(fixedInstanceData)
+  }
+
+  private def getChildData(model: Model, dataMap: Map[String, JsValue]) = {
+    if (model.children.isEmpty) None
     else {
+      // TODO Super messy! Need to cleanup. Can we use a reader and apply method here?
       val childDataJson: Map[String, Seq[DataInstance]] = model.children.transform {
-        case (childModelName, childModel) => {
-          val dataResult: Seq[DataInstance] = dataMap.get(childModelName) match {
-            case Some(JsArray(childData)) => {
+        case (childModelName, childModel) =>
+          val dataResult = dataMap.get(childModelName) match {
+            case Some(JsArray(childData)) =>
               childData.map { childRow: JsValue =>
                 childRow match {
-                  case JsObject(childRowObject) => {
+                  case JsObject(childRowObject) =>
                     convertSourceToInsertData(model.children.get(childModelName).get, childModelName, JsObject(childRowObject))
-                  }
                   case _ => throw new Exception("Got something other than an JsObject")
                 }
               }
-            }
-            case Some(_) | None => throw new Exception("Got something other than an JsArray for " + dataMap.get(childModelName))
+            // None might be a valid option if the child data is optional (like Joins in Table)
+            case None => Seq.empty[DataInstance]
           }
-          dataMap -= childModelName
           dataResult
-        }
       }
-      //      dataMap += ("children" -> JsObject(childDataJson.toSeq))
       Some(childDataJson)
     }
-    new DataInstance(
-      state = DataState.Inserted,
-      data = Some(dataMap),
-      children = childDataInstances)
   }
 
 }
