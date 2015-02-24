@@ -8,7 +8,7 @@ import play.api.libs.json._
 
 trait DataReader extends ArtifactCompiler with Database {
 
-  def queryOneRow(model: Model, id: Int) = {
+  def queryOneRow(model: Model, id: TntValue): Option[SmartNodeInstance] = {
     queryOneRow(model, Some(f"${model.instanceID.get} = $id"))
   }
 
@@ -51,15 +51,17 @@ trait DataReader extends ArtifactCompiler with Database {
   private def convertResultSetToDataRows(model: Model, rs: ResultSet) = {
     val resultBuilder = new SmartNodeSet(model)
     while (rs.next()) {
-      val newInstance: SmartNodeInstance = resultBuilder.insert
+      val newInstance = resultBuilder.insert
       model.fields.foreach {
         case (fieldName, f) =>
-          newInstance.data + fieldName -> f.basisColumn.dataType match {
-            case "Int" | "Integer" => TntInt(rs.getInt(fieldName))
-            case "String" => TntString(rs.getString(fieldName))
-            case "Boolean" => TntBoolean(rs.getBoolean(fieldName))
-            case "Boolean" => TntDate(rs.getDate(fieldName))
-            case _ => throw new MatchError(f"field.dataType of `${f.basisColumn.dataType}` is not String or Integer")
+          newInstance.data + fieldName -> {
+            f.basisColumn.dataType match {
+              case "Int" | "Integer" => TntInt(rs.getInt(fieldName))
+              case "String" => TntString(rs.getString(fieldName))
+              case "Boolean" => TntBoolean(rs.getBoolean(fieldName))
+              case "Boolean" => TntDate(rs.getDate(fieldName))
+              case _ => throw new MatchError(f"field.dataType of `${f.basisColumn.dataType}` is not String or Integer")
+            }
           }
       }
       newInstance.id = if (model.instanceID.isDefined) newInstance.data.get(model.instanceID.get) else None
@@ -84,7 +86,7 @@ trait DataReader extends ArtifactCompiler with Database {
         parentID == childRow.get(parentLink.childField).get
       }
       remainingChildRows = nonMatching
-      parentRow.children += (childRows.model.name -> matching)
+      parentRow.children + (childRows.model.name -> matching)
     }
     if (remainingChildRows.length > 0) {
       throw new Exception(s"Failed to match ${remainingChildRows.length} ${childRows.model.name} records. Check datatypes of $parentLink")

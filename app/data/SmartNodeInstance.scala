@@ -1,5 +1,7 @@
 package data
 
+import models.Model
+
 import scala.collection.mutable
 
 case class SmartNodeInstance(
@@ -47,6 +49,30 @@ case class SmartNodeInstance(
   }
 
   def get(fieldName: String) = data.get(fieldName)
+
+  def set(fieldName: String, value: TntValue) = data + (fieldName -> value)
+
+  def model = nodeSet.model
+
+  def setId(value: TntValue) = {
+    nodeSet.model.instanceID match {
+      case Some(instanceID) => {
+        id = Some(value)
+        set(instanceID, value)
+      }
+      case None => throw new Exception("InstanceID isn't defined for " + this)
+    }
+  }
+
+  def foreachChild(f: (SmartNodeSet) => Unit) = {
+    nodeSet.model.children.foreach {
+      case (childModelName: String, childModel: Model) =>
+        children.get(childModelName) match {
+          case Some(childSet) => f(childSet)
+          case None =>
+        }
+    }
+  }
 
   def setupChildSets = {
     nodeSet.model.children.foreach { childModel =>

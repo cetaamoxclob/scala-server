@@ -1,158 +1,78 @@
 package services
 
-import data.{DataState, DataInstance, Database}
-import models.{ModelField, Model}
-import play.api.libs.json._
+import data._
+import models.Model
 
 trait DataSaver extends DataReader with Database {
-  def saveAll(model: Model, dataToSave: Option[JsValue]): JsArray = {
-    dataToSave match {
-      case None => return JsArray()
-      case Some(jsValue) => jsValue match {
-        case JsArray(jsArray) => this.savesAll(model, jsArray)
-        case _ => throw new Exception("data to save should be in array format")
-      }
-    }
-  }
+  def saveAll(dataToSave: SmartNodeSet): Unit = {
+    if (dataToSave.model.instanceID.isEmpty)
+      throw new Exception("Cannot insert/update/delete an instance without an instanceID for " + dataToSave.model.name)
 
-  private def savesAll(model: Model, dataToSave: Seq[JsValue]): JsArray = {
-    val results: Seq[DataInstance] = dataToSave.map { jsValue =>
-      DataInstance.dataRowReads.reads(jsValue) match {
-        case JsSuccess(dataRow, _) => {
-          dataRow
-        }
-        case JsError(err) => {
-          throw new Exception("Data should be in object format " + err)
-        }
-      }
-    }
-    saveAllDataRows(model, results)
-  }
-
-  private def saveAllDataRows(model: Model, dataToSave: Seq[DataInstance]): JsArray = {
-    if (dataToSave.isEmpty) return JsArray()
-    if (model.instanceID.isEmpty) throw new Exception("Cannot insert/update/delete an instance without an instanceID for " + model.name)
-
-    val results: Seq[JsObject] = dataToSave.map { dataRow =>
+    dataToSave.rows.foreach { dataRow =>
       dataRow.state match {
-        case DataState.Inserted => insertSingleRow(model, dataRow)
-        case DataState.Deleted => deleteSingleRow(model, dataRow)
-        case DataState.Updated => updateSingleRow(model, dataRow)
-        case DataState.ChildUpdated | DataState.Done => childUpdate(model, dataRow)
+        case DataState.Inserted => insertSingleRow(dataRow)
+        case DataState.Deleted => deleteSingleRow(dataRow)
+        case DataState.Updated => updateSingleRow(dataRow)
+        case DataState.ChildUpdated | DataState.Done => childUpdate(dataRow)
       }
     }
-    JsArray(results)
   }
 
-  def insertSingleRow(model: Model, row: DataInstance): JsObject = {
-    val (sql, params) = createSqlForInsert(model, row.data.get)
+  def insertSingleRow(row: SmartNodeInstance): Unit = {
+    val (sql, params) = createSqlForInsert(row)
 
     val rsKeys = insert(sql, params)
-    val insertedRow = if (rsKeys.next()) {
-      val insertedID = rsKeys.getLong(1).toString
-      row.copy(
-        id = Some(insertedID),
-        data = Some(row.data.get + (model.instanceID.get -> JsString(insertedID)))
-      )
-    } else row
-    val insertResults = Json.obj(
-      "id" -> insertedRow.id,
-      "data" -> insertedRow.data.get
-    )
+    if (rsKeys.next()) row.setId(TntInt(rsKeys.getInt(1)))
 
-    if (row.children.isDefined && !model.children.isEmpty) {
-      var childrenResults = Json.obj()
-      row.children.get.keys.foreach { childModelName: String =>
-        val childModel = model.children.get(childModelName).get
-        val childResults = row.children.get(childModelName).map { childDataInstance: DataInstance =>
-          insertSingleRow(childModel, childDataInstance)
-        }
-        childrenResults += (childModelName, JsArray(childResults))
-      }
-      insertResults + ("children", childrenResults)
-    } else insertResults
+    // Insert all child records now regardless of DataState
+    row.foreachChild(childSet => childSet.foreach(childRow => insertSingleRow(childRow)))
   }
 
-  private def updateSingleRow(model: Model, row: DataInstance): JsObject = {
-    val (sql, params) = createSqlForUpdate(model, row.data.get)
+  def updateSingleRow(row: SmartNodeInstance): Unit = {
+    val (sql, params) = createSqlForUpdate(row)
+
     val rowCountModified = update(sql, params)
     if (rowCountModified != 1) {
-      throw new Exception(f"Update ${rowCountModified} rows: $sql")
+      throw new Exception(f"Update $rowCountModified rows: $sql")
     }
-    Json.obj(
-      "id" -> row.id,
-      "data" -> row.data
-    )
+
+    childUpdate(row)
   }
 
-  def deleteSingleRow(model: Model, rowToDelete: DataInstance): JsObject = {
-    val row: DataInstance = if (rowToDelete.data.isDefined) rowToDelete
-    else {
-      val existingRow = queryOneRow(model, rowToDelete.id.get.toInt).getOrElse(
+  def deleteSingleRow(rowToDelete: SmartNodeInstance): Unit = {
+    val row: SmartNodeInstance = if (rowToDelete.data.isEmpty) {
+      queryOneRow(rowToDelete.nodeSet.model, rowToDelete.id.get).getOrElse(
         // Maybe we should just exit and not worry about this
-        throw new Exception("Failed find data. Maybe the row was already deleted")
-      )
-      new DataInstance(DataState.Deleted,
-        data = existingRow.data,
-        id = existingRow.id,
-        tempID = None,
-        children = None
+        throw new Exception("Failed to select data to delete. Maybe the row was already deleted")
       )
     }
+    else rowToDelete
 
-    if (row.children.isDefined && !model.children.isEmpty) {
-      row.children.get.keys.foreach { childModelName: String =>
-        val childModel = model.children.get(childModelName).get
-        row.children.get(childModelName).foreach { childDataInstance: DataInstance =>
-          deleteSingleRow(childModel, childDataInstance)
-        }
-      }
-    }
+    // Delete all child records first regardless of DataState
+    row.foreachChild(childSet => childSet.foreach(childRow => deleteSingleRow(childRow)))
 
-    val (sql, params) = createSqlForDelete(model, row.data.get)
+    val (sql, params) = createSqlForDelete(row)
     val rowCountModified = update(sql, params)
     if (rowCountModified != 1) {
-      throw new Exception(f"Deleted ${rowCountModified} rows: $sql")
+      throw new Exception(f"Deleted $rowCountModified rows: $sql")
     }
-    Json.obj(
-      "id" -> row.id
-    )
   }
 
-  private def childUpdate(model: Model, row: DataInstance): JsObject = {
-    //    println(model)
-    val allChildJson: JsObject = row.children match {
-      case Some(childData) => {
-        def updateChildForModel(remainingMap: Map[String, Seq[DataInstance]], acc: JsObject): JsObject = {
-          if (remainingMap.isEmpty) acc
-          else {
-            val childModelName = remainingMap.head._1
-            val childData = remainingMap.head._2
-            val childResults = saveAllDataRows(model.children.get(childModelName).get, childData)
-            updateChildForModel(remainingMap.tail, acc + (childModelName -> childResults))
-          }
-        }
-        updateChildForModel(childData, Json.obj())
-      }
-      case None => Json.obj()
-    }
-    Json.obj(
-      "id" -> row.id,
-      "data" -> row.data,
-      "children" -> allChildJson
-    )
+  private def childUpdate(row: SmartNodeInstance): Unit = {
+    row.foreachChild(childSet => saveAll(childSet))
   }
 
-  private def createSqlForInsert(model: Model, row: Map[String, JsValue]): (String, List[Any]) = {
+  private def createSqlForInsert(row: SmartNodeInstance): (String, List[TntValue]) = {
+    val model = row.nodeSet.model
     def getColumnValues = {
-      val columns = Map.newBuilder[String, Any]
+      val columns = Map.newBuilder[String, TntValue]
       model.fields.values.foreach { field =>
-        val value = convertFromJsonToScala(row, field)
+        val value = row.get(field.name)
         if (value.isDefined) {
           columns += ((field.basisColumn.dbName, value.get))
         }
       }
-      columns.result
+      columns.result()
     }
     val columnValues = getColumnValues
     val setColumnPhrase = columnValues.keys.map { fieldName =>
@@ -165,7 +85,8 @@ trait DataSaver extends DataReader with Database {
       f"VALUES ($boundVars)", columnValues.values.toList)
   }
 
-  private def createSqlForUpdate(model: Model, row: Map[String, JsValue]): (String, List[Any]) = {
+  private def createSqlForUpdate(row: SmartNodeInstance): (String, List[Any]) = {
+    val model = row.nodeSet.model
     val primaryKey = getPrimaryKey(model)
     val primaryKeyValue = getPrimaryKeyValue(primaryKey.name, row)
 
@@ -173,13 +94,13 @@ trait DataSaver extends DataReader with Database {
       val columns = Map.newBuilder[String, Any]
       model.fields.values.foreach { field =>
         if (field.updateable) {
-          val value = convertFromJsonToScala(row, field)
+          val value = row.get(field.name)
           if (value.isDefined) {
             columns += ((field.basisColumn.dbName, value.get))
           }
         }
       }
-      columns.result
+      columns.result()
     }
     val columnValues = getColumnValues
 
@@ -192,23 +113,8 @@ trait DataSaver extends DataReader with Database {
       f"WHERE `${primaryKey.basisColumn.dbName}` = ?", columnValues.values.toList :+ primaryKeyValue)
   }
 
-  private def convertFromJsonToScala(row: Map[String, JsValue], field: ModelField): Option[Any] = {
-    row.get(field.name) match {
-      case Some(jsValue) => {
-        field.basisColumn.dataType match {
-          // convert JsValue based on field.type
-          case _ => Some(jsValue.as[String])
-        }
-      }
-      case None => {
-        println("Missing data for " + field.name)
-        None
-      }
-    }
-
-  }
-
-  private def createSqlForDelete(model: Model, row: Map[String, JsValue]): (String, List[Any]) = {
+  private def createSqlForDelete(row: SmartNodeInstance): (String, List[Any]) = {
+    val model = row.nodeSet.model
     val primaryKey = getPrimaryKey(model)
     val primaryKeyValue = getPrimaryKeyValue(primaryKey.name, row)
 
@@ -216,13 +122,9 @@ trait DataSaver extends DataReader with Database {
       f"WHERE `${primaryKey.basisColumn.dbName}` = ?", List(primaryKeyValue))
   }
 
-  private def getPrimaryKeyValue(primaryKeyName: String, row: Map[String, JsValue]) = {
-    row.getOrElse(primaryKeyName, {
-      throw new Exception("Data must include the table's primary key value")
-    }) match {
-      case JsNumber(value) => value.toLong
-      case JsString(value) => value.toString
-      case _ => throw new Exception("Invalid JsValue type: Must be JsNumber or JsString for " + row.get(primaryKeyName))
+  private def getPrimaryKeyValue(primaryKeyName: String, row: SmartNodeInstance) = {
+    row.get(primaryKeyName).getOrElse {
+      throw new Exception("Failed to find primaryKeyValue in " + row)
     }
   }
 

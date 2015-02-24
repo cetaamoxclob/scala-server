@@ -1,6 +1,6 @@
 package controllers
 
-import data.DataInstance
+import data.{SmartNodeSet, DataInstance}
 import models.{ArtifactType, ModelOrderBy, User}
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -19,15 +19,18 @@ object Application extends Controller with util.Timer {
   def readData(name: String, page: Int, filter: Option[String], orderBy: Option[ModelOrderBy]) = Action {
     val model = compiler.compileModel(name)
     val reader = new DataReaderService
-    val response: Seq[DataInstance] = reader.queryModelData(model, page, filter, if (orderBy.isDefined) Seq(orderBy.get) else model.orderBy)
-    Ok(Json.toJson(response))
+    val smartSet: SmartNodeSet = reader.queryModelData(model, page, filter, if (orderBy.isDefined) Seq(orderBy.get) else model.orderBy)
+    val jsonResponse = ??? // TODO Json.toJson(smartSet)
+    Ok(jsonResponse)
   }
 
   def saveData(name: String) = Action { request =>
     val saver = new DataSaverService
     val model = compiler.compileModel(name)
-    val response = saver.saveAll(model, request.body.asJson)
-    Ok(response)
+    val dataSet: SmartNodeSet = ??? // Json.fromJson(request.body.asJson.get)
+    saver.saveAll(dataSet)
+    val jsonResponse = ??? // TODO dataSet
+    Ok(jsonResponse)
   }
 
   def desktop(name: String) = Action {
@@ -44,10 +47,7 @@ object Application extends Controller with util.Timer {
   def importAll = Action {
     val tableImport = new ArtifactImport(ArtifactType.Table)
     val output = tableImport.readFromSourceAndWriteToDatabase("Column")
-    output match {
-      case Success(outputString) => Ok(outputString)
-      case _ => BadRequest("too badd")
-    }
+    Ok(output)
   }
 
   def exportAll = TODO

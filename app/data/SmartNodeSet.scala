@@ -9,12 +9,29 @@ case class SmartNodeSet(model: Model,
                         parentInstance: Option[SmartNodeInstance] = None
                          ) {
 
-  def insert(newInstance: SmartNodeInstance) = {
+  def insert(newInstance: SmartNodeInstance): SmartNodeInstance = {
     rows += newInstance
     newInstance
   }
 
-  def insert = {
+  def insert: SmartNodeInstance = {
     insert(new SmartNodeInstance(nodeSet = this, state = DataState.Inserted))
   }
+
+  def foreach(f: (SmartNodeInstance) => Unit) = {
+    rows.foreach(i => f(i))
+  }
+
+
+}
+
+object SmartNodeSet {
+  implicit def smartSetWriter = {
+
+  }
+
+  implicit def smartSetReader = {
+
+  }
+
 }
