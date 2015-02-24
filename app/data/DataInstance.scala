@@ -3,11 +3,11 @@ package data
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
-case class DataInstance(var state: DataState = DataState.Done,
-                        data: Option[Map[String, JsValue]],
-                        id: Option[String] = None,
-                        tempID: Option[String] = None,
-                        var children: Option[Map[String, Seq[DataInstance]]] = None)
+//case class DataInstance(var state: DataState = DataState.Done,
+//                        data: Option[Map[String, JsValue]],
+//                        id: Option[String] = None,
+//                        tempID: Option[String] = None,
+//                        var children: Option[Map[String, Seq[DataInstance]]] = None)
 
 object DataInstance {
   implicit def selectDataWrites: Writes[DataInstance] = (

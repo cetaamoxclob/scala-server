@@ -8,16 +8,16 @@ import play.api.libs.json._
 
 trait DataReader extends ArtifactCompiler with Database {
 
-  def queryOneRow(model: Model, id: Int): Option[DataInstance] = {
+  def queryOneRow(model: Model, id: Int) = {
     queryOneRow(model, Some(f"${model.instanceID.get} = $id"))
   }
 
-  def queryOneRow(model: Model, filter: Option[String]): Option[DataInstance] = {
+  def queryOneRow(model: Model, filter: Option[String]): Option[SmartNodeInstance] = {
     val existingRows = queryModelData(model, 1, filter, Seq.empty)
-    existingRows.headOption
+    existingRows.rows.headOption
   }
 
-  def queryModelData(model: Model, page: Int, filter: Option[String], orderBy: Seq[ModelOrderBy]): Seq[DataInstance] = {
+  def queryModelData(model: Model, page: Int, filter: Option[String], orderBy: Seq[ModelOrderBy]): SmartNodeSet = {
     var sqlBuilder = new SqlBuilder(
       from = model.basisTable.dbName,
       fields = model.fields,
@@ -34,67 +34,60 @@ trait DataReader extends ArtifactCompiler with Database {
     }
 
     val rs = query(sqlBuilder.toPreparedStatement, sqlBuilder.parameters)
-    val dataRows = convertResultSetToDataRows(model.instanceID, model.fields, rs)
-    if (dataRows.length > 0 && model.children.size > 0) {
-      model.children.map { childModelResult =>
-        val childModel = childModelResult._2
-        val parentIDs = getValues(dataRows, childModel.parentLink.get.parentField)
-        val childFilter = childModel.parentLink.get.childField + " In " + parentIDs.mkString(",")
-        val childRows = queryModelData(childModel, 1, Some(childFilter), childModel.orderBy)
-        addChildRowsToParent(dataRows, childModel.name, childModel.parentLink.get, childRows)
-      }
-      dataRows
-    } else dataRows
-  }
-
-  private def convertResultSetToDataRows(instanceID: Option[String], fields: Map[String, ModelField], rs: ResultSet) = {
-    val resultBuilder = Seq.newBuilder[DataInstance]
-
-    while (rs.next()) {
-      val fieldResults = fields.map {
-        case (fieldName, f) => {
-          val columnValue: JsValue = f.basisColumn.dataType match {
-            case "Int" | "Integer" => JsNumber(rs.getInt(fieldName))
-            case "String" => JsString(rs.getString(fieldName))
-            case "Boolean" => JsBoolean(rs.getBoolean(fieldName))
-            case _ => throw new MatchError(f"field.dataType of `${f.basisColumn.dataType}` is not String or Integer")
-          }
-          fieldName -> columnValue
+    val resultSet = convertResultSetToDataRows(model, rs)
+    if (resultSet.rows.length > 0 && model.children.size > 0) {
+      model.children.map {
+        case (childModelName: String, childModel: Model) => {
+          val parentIDs = getValueFromAllRows(resultSet.rows, childModel.parentLink.get.parentField)
+          val filterForChildModel = childModel.parentLink.get.childField + " In " + parentIDs.mkString(",")
+          val childRows = queryModelData(childModel, 1, Some(filterForChildModel), childModel.orderBy)
+          addChildRowsToParent(resultSet, childRows)
         }
       }
-      resultBuilder += new DataInstance(
-        id = if (instanceID.isDefined) Some(fieldResults(instanceID.get).toString) else None,
-        data = Some(fieldResults),
-        children = None
-      )
     }
-    resultBuilder.result
-
+    resultSet
   }
 
-  private def getValues(dataRows: Seq[DataInstance], fieldName: String) = {
+  private def convertResultSetToDataRows(model: Model, rs: ResultSet) = {
+    val resultBuilder = new SmartNodeSet(model)
+    while (rs.next()) {
+      val newInstance: SmartNodeInstance = resultBuilder.insert
+      model.fields.foreach {
+        case (fieldName, f) =>
+          newInstance.data + fieldName -> f.basisColumn.dataType match {
+            case "Int" | "Integer" => TntInt(rs.getInt(fieldName))
+            case "String" => TntString(rs.getString(fieldName))
+            case "Boolean" => TntBoolean(rs.getBoolean(fieldName))
+            case "Boolean" => TntDate(rs.getDate(fieldName))
+            case _ => throw new MatchError(f"field.dataType of `${f.basisColumn.dataType}` is not String or Integer")
+          }
+      }
+      newInstance.id = if (model.instanceID.isDefined) newInstance.data.get(model.instanceID.get) else None
+    }
+    resultBuilder
+  }
+
+  private def getValueFromAllRows(dataRows: Seq[SmartNodeInstance], fieldName: String) = {
     dataRows.map { row =>
       row.data.get(fieldName)
     }
   }
 
-  private def addChildRowsToParent(
-                                    parentRows: Seq[DataInstance],
-                                    childModelName: String,
-                                    parentLink: ModelParentLink,
-                                    childRows: Seq[DataInstance]): Unit = {
+  private def addChildRowsToParent(parentRows: SmartNodeSet,
+                                   childRows: SmartNodeSet): Unit = {
 
-    var remainingChildRows = childRows
-    parentRows.foreach { parentRow =>
-      val parentID = parentRow.data.get.get(parentLink.parentField).get
+    val parentLink = childRows.model.parentLink.get
+    var remainingChildRows = childRows.rows
+    parentRows.rows.foreach { parentRow =>
+      val parentID = parentRow.get(parentLink.parentField).get
       val (matching, nonMatching) = remainingChildRows.partition { childRow =>
-        parentID == childRow.data.get.get(parentLink.childField).get
+        parentID == childRow.get(parentLink.childField).get
       }
       remainingChildRows = nonMatching
-      parentRow.children = Some(parentRow.children.getOrElse(Map.empty) + (childModelName -> matching))
+      parentRow.children += (childRows.model.name -> matching)
     }
     if (remainingChildRows.length > 0) {
-      throw new Exception(s"Failed to match ${remainingChildRows.length} $childModelName records. Check datatypes of $parentLink")
+      throw new Exception(s"Failed to match ${remainingChildRows.length} ${childRows.model.name} records. Check datatypes of $parentLink")
     }
 
   }
