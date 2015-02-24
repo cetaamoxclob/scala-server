@@ -14,9 +14,6 @@ trait DataReader extends ArtifactCompiler with Database {
 
   def queryOneRow(model: Model, filter: Option[String]): Option[DataInstance] = {
     val existingRows = queryModelData(model, 1, filter, Seq.empty)
-    if (existingRows.size != 1) {
-      throw new Exception(f"Failed to find exactly 1 record for ${model.name} where ${filter}")
-    }
     existingRows.headOption
   }
 

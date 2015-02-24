@@ -33,7 +33,7 @@ trait DataSaver extends DataReader with Database {
     if (dataToSave.isEmpty) return JsArray()
     if (model.instanceID.isEmpty) throw new Exception("Cannot insert/update/delete an instance without an instanceID for " + model.name)
 
-    val results: Seq[JsValue] = dataToSave.map { dataRow =>
+    val results: Seq[JsObject] = dataToSave.map { dataRow =>
       dataRow.state match {
         case DataState.Inserted => insertSingleRow(model, dataRow)
         case DataState.Deleted => deleteSingleRow(model, dataRow)
@@ -44,11 +44,11 @@ trait DataSaver extends DataReader with Database {
     JsArray(results)
   }
 
-  private def insertSingleRow(model: Model, row: DataInstance): JsValue = {
+  def insertSingleRow(model: Model, row: DataInstance): JsObject = {
     val (sql, params) = createSqlForInsert(model, row.data.get)
 
     val rsKeys = insert(sql, params)
-    if (rsKeys.next()) {
+    val insertResults = if (rsKeys.next()) {
       val insertedID = rsKeys.getLong(1).toString
       Json.obj(
         "id" -> insertedID,
@@ -59,9 +59,21 @@ trait DataSaver extends DataReader with Database {
         "data" -> row.data
       )
     }
+
+    if (row.children.isDefined && !model.children.isEmpty) {
+      var childrenResults = Json.obj()
+      row.children.get.keys.foreach { childModelName: String =>
+        val childModel = model.children.get(childModelName).get
+        val childResults = row.children.get(childModelName).map { childDataInstance: DataInstance =>
+          insertSingleRow(childModel, childDataInstance)
+        }
+        childrenResults += (childModelName, JsArray(childResults))
+      }
+      insertResults + ("children", childrenResults)
+    } else insertResults
   }
 
-  private def updateSingleRow(model: Model, row: DataInstance): JsValue = {
+  private def updateSingleRow(model: Model, row: DataInstance): JsObject = {
     val (sql, params) = createSqlForUpdate(model, row.data.get)
     val rowCountModified = update(sql, params)
     if (rowCountModified != 1) {
@@ -73,7 +85,7 @@ trait DataSaver extends DataReader with Database {
     )
   }
 
-  def deleteSingleRow(model: Model, rowToDelete: DataInstance): JsValue = {
+  def deleteSingleRow(model: Model, rowToDelete: DataInstance): JsObject = {
     val row: DataInstance = if (rowToDelete.data.isDefined) rowToDelete
     else {
       val existingRow = queryOneRow(model, rowToDelete.id.get.toInt).getOrElse(
@@ -107,7 +119,7 @@ trait DataSaver extends DataReader with Database {
     )
   }
 
-  private def childUpdate(model: Model, row: DataInstance): JsValue = {
+  private def childUpdate(model: Model, row: DataInstance): JsObject = {
     //    println(model)
     val allChildJson: JsObject = row.children match {
       case Some(childData) => {
@@ -143,11 +155,10 @@ trait DataSaver extends DataReader with Database {
       columns.result
     }
     val columnValues = getColumnValues
-
     val setColumnPhrase = columnValues.keys.map { fieldName =>
       f"`$fieldName`"
     }.mkString(", ")
-    val boundVars = columnValues.keys.map { _ => "?"}.mkString(", ")
+    val boundVars = List.fill(columnValues.size)("?").mkString(",")
 
     (f"INSERT INTO `${model.basisTable.dbName}` " +
       f"($setColumnPhrase) " +

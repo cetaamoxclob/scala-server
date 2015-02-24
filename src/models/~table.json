@@ -45,10 +45,7 @@
         },
         {
           "name": "required",
-          "basisColumn": "Required",
-          "fieldDefault": {
-            "value": true
-          }
+          "basisColumn": "Required"
         },
         {
           "name": "dataType",
@@ -65,6 +62,36 @@
         {
           "name": "label",
           "basisColumn": "Label"
+        }
+      ]
+    },
+    {
+      "name": "joins",
+      "basisTable": "Join",
+      "parentLink": {
+        "parentField": "tableID",
+        "childField": "fromTableID"
+      },
+      "fields": [
+        {
+          "name": "joinID",
+          "basisColumn": "JoinID"
+        },
+        {
+          "name": "fromTableID",
+          "basisColumn": "FromTableID"
+        },
+        {
+          "name": "toTableName",
+          "basisColumn": "ToTableName"
+        },
+        {
+          "name": "name",
+          "basisColumn": "Name"
+        },
+        {
+          "name": "required",
+          "basisColumn": "Required"
         }
       ]
     }
