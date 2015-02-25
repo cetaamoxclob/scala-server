@@ -11,7 +11,10 @@ case class Model(name: String,
                  children: Map[String, Model],
                  steps: Map[Int, ModelStep],
                  parentLink: Option[ModelParentLink],
-                 orderBy: Seq[ModelOrderBy]
+                 orderBy: Seq[ModelOrderBy],
+                 allowInsert: Boolean,
+                 allowUpdate: Boolean,
+                 allowDelete: Boolean
                   ) {
   def toClientJson(): JsObject = {
     JsObject(Seq(

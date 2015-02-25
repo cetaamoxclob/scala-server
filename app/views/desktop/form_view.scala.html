@@ -25,8 +25,8 @@
                     aria-describedby="help-@(page.model.name)-@(field.name)"
                 }
                 >
-                @for(link <- field.links.getOrElse(Seq.empty)) {
-                    <a href="" data-ng-click="link('@link.page', '@link.filter', '@page.model.name')">{{title}}</a>
+                @for(link <- field.links) {
+                    <a href="" data-ng-click="link('@link.page.name', '@link.filter', '@page.model.name')">@link.page.title</a>
                 }
                 @if(field.help.isDefined) {
                     <span id="help-@(page.model.name)-@(field.name)" class="help-block">@Html(field.help.get)</span>

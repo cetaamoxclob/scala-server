@@ -10,10 +10,12 @@
             <span class="glyphicon glyphicon-refresh"></span>
             Refresh
         </button>
-        <button type="submit" data-ng-click="save()" class="btn btn-success" data-ng-disabled="!ModelCursor.dirty || TopPageForm.$invalid">
-            <span class="glyphicon glyphicon-floppy-disk"></span>
-            Save
-        </button>
+        @if(page.model.allowInsert || page.model.allowUpdate || page.model.allowDelete) {
+            <button type="submit" data-ng-click="save()" class="btn btn-success" data-ng-disabled="!ModelCursor.dirty || TopPageForm.$invalid">
+                <span class="glyphicon glyphicon-floppy-disk"></span>
+                Save
+            </button>
+        }
     </div>
     @desktop.page_view(page)
 </form>

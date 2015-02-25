@@ -53,6 +53,23 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
     }
   }
 
+  def compileShallowPage(name: String): ShallowPage = {
+    println("Compiling shallow page " + name)
+    val json = getArtifactContentAndParseJson(ArtifactType.Page, name)
+    json.validate[PageJson] match {
+      case JsSuccess(pageJson, _) => {
+        new ShallowPage(
+          name,
+          pageJson.title,
+          pageJson.icon
+        )
+      }
+      case JsError(err) => {
+        throw new Exception("Failed to compile page " + name + " due to the following error:" + err.toString)
+      }
+    }
+  }
+
   private def findField(fieldName: String, model: Model): Option[ModelField] = {
     model.fields.get(fieldName) match {
       case Some(field) => Option(field)
@@ -119,10 +136,13 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
       filter = field.filter,
       blurFunction = field.blurFunction,
       select = field.select match {
-        case Some(s) => Option(compileFieldSelect(s))
+        case Some(s) => Some(compileFieldSelect(s))
         case None => None
       },
-      links = None // TODO
+      links = field.links match {
+        case Some(s) => s.map(link => compileFieldLink(link))
+        case None => Seq.empty
+      }
     )
   }
 
@@ -133,6 +153,13 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
       targetID = selectJson.targetID,
       where = selectJson.where,
       otherMappings = selectJson.otherMappings
+    )
+  }
+
+  private def compileFieldLink(linkJson: PageFieldLinkJson): PageFieldLink = {
+    new PageFieldLink(
+      page = compileShallowPage(linkJson.page),
+      filter = linkJson.filter
     )
   }
 
@@ -182,7 +209,10 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
       },
       parentLink = model.parentLink,
       steps = compileSteps(basisTable.joins, model.steps),
-      orderBy = compileOrderBy(model.orderBy)
+      orderBy = compileOrderBy(model.orderBy),
+      allowInsert = model.allowInsert.getOrElse(basisTable.allowInsert),
+      allowUpdate = model.allowUpdate.getOrElse(basisTable.allowUpdate),
+      allowDelete = model.allowDelete.getOrElse(basisTable.allowDelete)
     )
   }
 
@@ -196,9 +226,10 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
             throw new Exception(f"Failed to find table named `${step.join}` in join clause")
           ).table
           val fields = step.fields.map(field => {
-            field.name -> compileModelField(field, toTable.columns.get(field.basisColumn).getOrElse {
-              throw new Exception("field.name ${field.name}")
-            })
+            field.name -> compileModelField(
+              field,
+              toTable.columns.getOrElse(field.basisColumn, throw new Exception("field.name ${field.name}"))
+            )
           }).toMap
           counter -> new ModelStep(
             table = toTable,
@@ -241,7 +272,10 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
           columns = columns,
           joins = if (table.joins.isDefined) {
             table.joins.get.map(join => join.name -> compileTableJoin(columns, join)).toMap
-          } else Map.empty
+          } else Map.empty,
+          allowInsert = table.allowInsert.getOrElse(true),
+          allowUpdate = table.allowUpdate.getOrElse(true),
+          allowDelete = table.allowDelete.getOrElse(true)
         )
       }
       case JsError(err) => {

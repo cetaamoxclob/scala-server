@@ -9,7 +9,10 @@ case class TableJson(dbName: String,
                      database: Option[String],
                      primaryKey: Option[String],
                      columns: Seq[TableColumnJson],
-                     joins: Option[Seq[TableJoinJson]]
+                     joins: Option[Seq[TableJoinJson]],
+                     allowInsert: Option[Boolean],
+                     allowUpdate: Option[Boolean],
+                     allowDelete: Option[Boolean]
                       )
 
 case class TableColumnJson(name: String,
@@ -40,7 +43,10 @@ object TableJson {
       (JsPath \ "database").readNullable[String] and
       (JsPath \ "primaryKey").readNullable[String] and
       (JsPath \ "columns").read[Seq[TableColumnJson]] and
-      (JsPath \ "joins").readNullable[Seq[TableJoinJson]]
+      (JsPath \ "joins").readNullable[Seq[TableJoinJson]] and
+      (JsPath \ "allowInsert").readNullable[Boolean] and
+      (JsPath \ "allowUpdate").readNullable[Boolean] and
+      (JsPath \ "allowDelete").readNullable[Boolean]
     ).apply(TableJson.apply _)
 
   implicit def tableColumnReads: Reads[TableColumnJson] = (

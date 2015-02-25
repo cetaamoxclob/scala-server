@@ -23,5 +23,8 @@
       "name": "TableDatabase",
       "basisColumn": "Database"
     }
-  ]
+  ],
+  "allowInsert": false,
+  "allowUpdate": false,
+  "allowDelete": false
 }

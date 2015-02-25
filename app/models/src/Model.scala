@@ -12,7 +12,10 @@ case class ModelJson(basisTable: String,
                      children: Option[Seq[ModelJson]],
                      orderBy: Option[Seq[ModelOrderBy]],
                      parentLink: Option[ModelParentLink],
-                     steps: Option[Seq[ModelStepJson]]
+                     steps: Option[Seq[ModelStepJson]],
+                     allowInsert: Option[Boolean],
+                     allowUpdate: Option[Boolean],
+                     allowDelete: Option[Boolean]
                       )
 
 // TODO Support steps that are more than 1 join away from basis table
@@ -37,7 +40,10 @@ object ModelJson {
       (JsPath \ "children").lazyReadNullable(Reads.seq[ModelJson](modelReads)) and
       (JsPath \ "orderBy").readNullable[Seq[ModelOrderBy]] and
       (JsPath \ "parentLink").readNullable[ModelParentLink] and
-      (JsPath \ "steps").readNullable[Seq[ModelStepJson]]
+      (JsPath \ "steps").readNullable[Seq[ModelStepJson]] and
+      (JsPath \ "allowInsert").readNullable[Boolean] and
+      (JsPath \ "allowUpdate").readNullable[Boolean] and
+      (JsPath \ "allowDelete").readNullable[Boolean]
     ).apply(ModelJson.apply _)
 
   implicit def modelFieldReads: Reads[ModelFieldJson] = (

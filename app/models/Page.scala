@@ -53,7 +53,7 @@ case class PageField(
                       filter: Option[String],
                       blurFunction: Option[String],
                       select: Option[PageFieldSelect],
-                      links: Option[Seq[PageFieldLinks]]
+                      links: Seq[PageFieldLink]
                       )
 
 case class PageFieldSelect(model: String,
@@ -63,5 +63,5 @@ case class PageFieldSelect(model: String,
                            otherMappings: Option[String]
                             )
 
-case class PageFieldLinks(page: ShallowPage, filter: String)
+case class PageFieldLink(page: ShallowPage, filter: String)
 

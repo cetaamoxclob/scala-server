@@ -18,9 +18,6 @@
       "name": "TableSQL"
     },
     {
-      "name": "TableModule"
-    },
-    {
       "name": "TableDatabase"
     }
   ]
