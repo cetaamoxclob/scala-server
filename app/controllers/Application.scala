@@ -10,8 +10,9 @@ import services._
 object Application extends Controller with Timer {
   val compiler = new ArtifactCompilerService
 
-  def index = {
-    desktop("ListTables") // TODO Get the default from the menu
+  def index = Action {
+    val menu = compiler.compileMenu("Default")
+    Redirect(menu.content.head.items.head.href.get)
   }
 
   def readData(name: String, page: Int = 1, filter: Option[String] = None, orderBy: Option[ModelOrderBy] = None) = Action {
