@@ -1,15 +1,13 @@
 package controllers
 
+import tantalim.util.{Timer, LoginStrategyType}
 import data.{DataConverters, SmartNodeSet}
 import models.{ArtifactType, ModelOrderBy, User}
-import play.api.libs.json.Json
+import play.api.libs.json._
 import play.api.mvc._
 import services._
-import util.LoginStrategyType
 
-import scala.util.Success
-
-object Application extends Controller with util.Timer {
+object Application extends Controller with Timer {
   val compiler = new ArtifactCompilerService
 
   def index = {
@@ -17,19 +15,23 @@ object Application extends Controller with util.Timer {
   }
 
   def readData(name: String, page: Int, filter: Option[String], orderBy: Option[ModelOrderBy]) = Action {
-    val model = compiler.compileModel(name)
-    val reader = new DataReaderService
-    val smartSet: SmartNodeSet = reader.queryModelData(model, page, filter, if (orderBy.isDefined) Seq(orderBy.get) else model.orderBy)
-    Ok(DataConverters.convertSmartNodeSetToJsonArr(smartSet))
+    timer("readData") {
+      val model = compiler.compileModel(name)
+      val reader = new DataReaderService
+      val smartSet: SmartNodeSet = reader.queryModelData(model, page, filter, if (orderBy.isDefined) Seq(orderBy.get) else model.orderBy)
+      Ok(DataConverters.convertSmartNodeSetToJsonArr(smartSet))
+    }
   }
 
-  def saveData(name: String) = Action { request =>
-    val saver = new DataSaverService
-    val model = compiler.compileModel(name)
-    val dataSet: SmartNodeSet = ??? // Json.fromJson(request.body.asJson.get)
-    saver.saveAll(dataSet)
-    val jsonResponse = Json.arr() // TODO dataSet
-    Ok(jsonResponse)
+  def saveData(name: String) = Action(parse.json) { request =>
+    timer("saveData") {
+      val saver = new DataSaverService
+      val model = compiler.compileModel(name)
+      val dataSet: SmartNodeSet = ??? // Json.fromJson(request.body.asJson.get)
+      saver.saveAll(dataSet)
+      val jsonResponse = Json.arr() // TODO dataSet
+      Ok(jsonResponse)
+    }
   }
 
   def desktop(name: String) = Action {
@@ -44,17 +46,21 @@ object Application extends Controller with util.Timer {
   def mobile(name: String) = TODO
 
   def importAll = Action {
-    val tableImport = new ArtifactImport(ArtifactType.Table)
-    val output = tableImport.readFromSourceAndWriteToDatabase("Column")
-    Ok(Json.arr())
+    timer("importAll") {
+      val tableImport = new ArtifactImport(ArtifactType.Table)
+      val output = tableImport.readFromSourceAndWriteToDatabase("Column")
+      Ok(Json.arr())
+    }
   }
 
   def exportAll = TODO
 
   def login = Action {
-    val message = None // Some("Message here")
-    val loginStrategies = List(LoginStrategyType.Github)
-    Ok(views.html.login("Scala Test", message, loginStrategies))
+    timer("login") {
+      val message = None // Some("Message here")
+      val loginStrategies = List(LoginStrategyType.Github)
+      Ok(views.html.login("Scala Test", message, loginStrategies))
+    }
   }
 
   def logout = Action {
