@@ -82,7 +82,7 @@
           "basisColumn": "FromTableID"
         },
         {
-          "name": "toTableName",
+          "name": "table",
           "basisColumn": "ToTableName"
         },
         {

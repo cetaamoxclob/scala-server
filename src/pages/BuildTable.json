@@ -53,16 +53,12 @@
         },
         {
           "name": "TableJoinToTableName",
-          "label": "To Table",
           "fieldType": "select",
           "select": {
             "model": "ListTables",
             "targetID": "TableJoinToTableID",
             "sourceValue": "TableName"
           }
-        },
-        {
-          "name": "TableJoinJoinType"
         },
         {
           "name": "TableJoinRequired"

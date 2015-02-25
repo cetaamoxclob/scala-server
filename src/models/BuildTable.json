@@ -133,13 +133,6 @@
             "value": true
           },
           "basisColumn": "Required"
-        },
-        {
-          "name": "TableJoinJoinType",
-          "fieldDefault": {
-            "value": "OM"
-          },
-          "basisColumn": "JoinType"
         }
       ],
       "children": [

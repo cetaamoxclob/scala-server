@@ -25,13 +25,8 @@
     {
       "name": "ToTableName",
       "required": true,
-      "dbName": "ToTableName"
-    },
-    {
-      "name": "JoinType",
-      "required": true,
-      "dbName": "joinType",
-      "label": "Join Type"
+      "dbName": "ToTableName",
+      "label": "To Table"
     },
     {
       "name": "Required",
