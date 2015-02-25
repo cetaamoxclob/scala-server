@@ -54,19 +54,14 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
       saver.saveAll(saving) must be equalTo saving
     }
 
-    "insert one parent row" in pending {
+    "insert one parent row" in {
       val saver = new DataSaver with Database {
         override def insert(sql: String, numberedParameters: List[Any]): ResultSet = {
           sql must be equalTo "INSERT INTO `person` (`name`) VALUES (?)"
-          numberedParameters must be equalTo List("Foo")
+          numberedParameters must be equalTo List(TntString("Foo"))
           new FakeResultSet {
-            override def next(): Boolean = {
-              return true
-            }
-
-            override def getLong(columnIndex: Int): Long = {
-              return 1
-            }
+            override def next(): Boolean = true
+            override def getInt(columnIndex: Int): Int = 1
           }
         }
       }
@@ -80,57 +75,57 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
       saving.rows.head.get("PersonID").get must be equalTo TntInt(_fakeID)
     }
 
-    "update one parent row" in pending {
+    "update one parent row" in {
       val saver = new DataSaver with Database {
         override def update(sql: String, numberedParameters: List[Any]): Int = {
           sql must be equalTo "UPDATE `person` SET `name` = ? WHERE `person_id` = ?"
-          numberedParameters must be equalTo List("Foo", 12)
+          numberedParameters must be equalTo List(TntString("Foo"), TntInt(12))
           1
         }
       }
 
       val saving = new SmartNodeSet(model)
       val sampleRow = saving.insert
+      sampleRow.state = DataState.Updated
       sampleRow.setId(TntInt(12))
       sampleRow.set("PersonName", TntString("Foo"))
       saver.saveAll(saving)
       sampleRow.state must be equalTo DataState.Done
     }
 
-    "delete one parent row" in pending {
+    "delete one parent row" in {
       val saver = new DataSaver with Database {
         override def update(sql: String, numberedParameters: List[Any]): Int = {
           sql must be equalTo "DELETE FROM `person` WHERE `person_id` = ?"
-          numberedParameters must be equalTo List(12)
+          numberedParameters must be equalTo List(TntInt(12))
           1
         }
 
         override def query(sql: String, numberedParameters: List[Any]): ResultSet = {
-          numberedParameters must be equalTo List(12)
+          numberedParameters must be equalTo List(TntInt(12))
           new FakeResultSet {
             var counter = 0
 
             override def next(): Boolean = {
               counter += 1
-              return counter <= 1
+              counter <= 1
             }
 
-            override def getInt(columnName: String): Int = {
-              return 12
-            }
+            override def getInt(columnName: String): Int = 12
           }
         }
       }
 
       val saving = new SmartNodeSet(model)
       val sampleRow = saving.insert
+      sampleRow.state = DataState.Deleted
       sampleRow.setId(TntInt(12))
       saver.saveAll(saving)
 
       sampleRow.state must be equalTo DataState.Done
     }
 
-    "update one child row" in  pending {
+    "update one child row" in {
       val saver = new DataSaver with Database {
         override def update(sql: String, numberedParameters: List[Any]): Int = {
           sql must be equalTo "UPDATE `phone` SET `phone_number` = ? WHERE `phone_id` = ?"
@@ -139,13 +134,12 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
         }
       }
 
+      val saving = new SmartNodeSet(model)
+      val sampleRow = saving.insert
+      sampleRow.state = DataState.ChildUpdated
+      sampleRow.setId(TntInt(12))
+      // TODO add in child view for tests
       Json.obj(
-        "state" -> DataState.ChildUpdated.toString,
-        "id" -> "12",
-        "data" -> Json.obj(
-          "PersonID" -> 12,
-          "PersonName" -> "Foo"
-        ),
         "children" -> Json.obj(
           "PersonPhone" -> Json.arr(
             Json.obj(
@@ -160,30 +154,6 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
           )
         )
       )
-
-      Json.obj(
-        "id" -> "12",
-        "data" -> Json.obj(
-          "PersonID" -> 12,
-          "PersonName" -> "Foo"
-        ),
-        "children" -> Json.obj(
-          "PersonPhone" -> Json.arr(
-            Json.obj(
-              "id" -> "12",
-              "data" -> Json.obj(
-                "PersonPhoneID" -> 34,
-                "PersonPhonePersonID" -> 12,
-                "PersonPhoneNumber" -> "(123) 456-7890"
-              )
-            )
-          )
-        )
-      )
-
-      val saving = new SmartNodeSet(model)
-      val sampleRow = saving.insert
-      sampleRow.setId(TntInt(12))
       saver.saveAll(saving)
 
       sampleRow.state must be equalTo DataState.Done

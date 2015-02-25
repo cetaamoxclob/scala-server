@@ -26,6 +26,7 @@ trait DataSaver extends DataReader with Database {
 
     // Insert all child records now regardless of DataState
     row.foreachChild(childSet => childSet.foreach(childRow => insertSingleRow(childRow)))
+    row.state = DataState.Done
   }
 
   def updateSingleRow(row: SmartNodeInstance): Unit = {
@@ -37,6 +38,7 @@ trait DataSaver extends DataReader with Database {
     }
 
     childUpdate(row)
+    row.state = DataState.Done
   }
 
   def deleteSingleRow(rowToDelete: SmartNodeInstance): Unit = {
@@ -56,10 +58,12 @@ trait DataSaver extends DataReader with Database {
     if (rowCountModified != 1) {
       throw new Exception(f"Deleted $rowCountModified rows: $sql")
     }
+    row.state = DataState.Done
   }
 
   private def childUpdate(row: SmartNodeInstance): Unit = {
     row.foreachChild(childSet => saveAll(childSet))
+    row.state = DataState.Done
   }
 
   private def createSqlForInsert(row: SmartNodeInstance): (String, List[TntValue]) = {
