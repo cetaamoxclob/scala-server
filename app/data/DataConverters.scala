@@ -1,24 +1,78 @@
 package data
 
-import play.api.libs.functional.syntax._
+import java.util.UUID
+
+import models.{ModelField, Model}
 import play.api.libs.json._
 
+/**
+ * Convert incoming JSON request into a valid SmartNodeSet
+ */
+class DataSaveReader(model: Model, jsRequest: JsValue) {
+
+  implicit def smartSetNodeReads: Reads[SmartNodeSet] = new Reads[SmartNodeSet] {
+    override def reads(json: JsValue): JsResult[SmartNodeSet] = {
+      println(json)
+      JsSuccess(new SmartNodeSet(model))
+    }
+  }
+
+  def validate(): JsResult[SmartNodeSet] = {
+    jsRequest.validate[SmartNodeSet]
+  }
+}
+
 object DataConverters {
-  //  def instanceWrites: Writes[SmartNodeInstance] = (
-  //    (JsPath \ "state").write[DataState] and
-  //      (JsPath \ "data").writeNullable[Map[String, JsValue]] and
-  //      (JsPath \ "id").writeNullable[String] and
-  //      (JsPath \ "tempID").writeNullable[String] and
-  //      (JsPath \ "children").lazyWriteNullable(Writes.map[Seq[SmartNodeInstance]])
-  //    )(unlift(SmartNodeInstance.unapply))
-  //
-  //  implicit def instanceReads: Reads[SmartNodeInstance] = (
-  //    (JsPath \ "state").read[DataState] and
-  //      (JsPath \ "data").readNullable[Map[String, JsValue]] and
-  //      (JsPath \ "id").readNullable[String] and
-  //      (JsPath \ "tempID").readNullable[String] and
-  //      (JsPath \ "children").lazyReadNullable(Reads.map(Reads.seq[SmartNodeInstance](instanceReads)))
-  //    ).apply(SmartNodeInstance.apply _)
+  def convertJsArrayToSmartNodeSet(smartNodeSet: SmartNodeSet, arraySource: JsArray): Unit = {
+    arraySource.value.foreach {
+      case JsObject(jsObject) =>
+        val smartInstance = smartNodeSet.insert
+        convertJsObjectToSmartNodeInstance(smartInstance, JsObject(jsObject))
+      case _ => throw new Exception("Expected JsObject")
+    }
+  }
+
+  def convertJsObjectToSmartNodeInstance(smartInstance: SmartNodeInstance, objectSource: JsObject): Unit = {
+    def readNullable(fieldName: String) = convertJsValueToTntValue(objectSource \ "id") match {
+      case TntNull() => None
+      case value => Some(value)
+    }
+    smartInstance.id = convertJsValueToTntValue(objectSource \ "id") match {
+      case TntNull() => None
+      case value => Some(value)
+    }
+    smartInstance.tempID = convertJsValueToTntValue(objectSource \ "tempID") match {
+      case TntTempID(value) => Some(TntTempID(value))
+      case TntString(value) => Some(TntTempID(java.util.UUID.fromString(value)))
+      case _ => None
+    }
+    smartInstance.state = (objectSource \ "state").validate[DataState] match {
+      case state: JsSuccess[DataState] => state.get
+      case _ => DataState.Done
+    }
+
+    smartInstance.model.fields.foreach {
+      case (fieldName: String, modelField: ModelField) =>
+        val value = objectSource \ "data" \ fieldName
+        value match {
+          case _: JsUndefined | JsNull => // Don't do anything
+          case _ => smartInstance.set(fieldName, DataConverters.convertJsValueToTntValue(value))
+        }
+    }
+
+    smartInstance.model.children.foreach {
+      case (childModelName: String, childModel: Model) =>
+        objectSource \ "children" \ childModelName match {
+          case childSource: JsArray => {
+            println(childModelName + " -- " + childSource)
+            val childSmartSet = new SmartNodeSet(childModel, parentInstance = Some(smartInstance))
+            smartInstance.children += (childModelName -> childSmartSet)
+            convertJsArrayToSmartNodeSet(childSmartSet, childSource)
+          }
+          case _ =>
+        }
+    }
+  }
 
   implicit def dataStateReads: Reads[DataState] = new Reads[DataState] {
     override def reads(json: JsValue): JsResult[DataState] = {
@@ -40,7 +94,6 @@ object DataConverters {
   }
 
   def convertSmartNodeSetToJsonArr(set: SmartNodeSet): JsArray = {
-//    println(s"converting ${set.rows.length} row(s) on ${set.model.name} for ${set.parentInstance.getOrElse("ROOT")}")
     val rowSeq: Seq[JsObject] = set.rows.map(i => convertSmartNodeInstanceToJsonObj(i))
     JsArray(rowSeq)
   }
@@ -54,8 +107,11 @@ object DataConverters {
     if (instance.id.isDefined) {
       result +=("id", convertTntValueToJsValue(instance.id.get))
     }
+    if (instance.tempID.isDefined) {
+      result +=("tempID", convertTntValueToJsValue(instance.tempID.get))
+    }
     if (!instance.children.isEmpty) {
-      val childInstances = instance.children.map{
+      val childInstances = instance.children.map {
         case (childName: String, childSet: SmartNodeSet) => (childName, convertSmartNodeSetToJsonArr(childSet))
       }.toSeq
       result +=("children", JsObject(childInstances))

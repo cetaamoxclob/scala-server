@@ -67,7 +67,7 @@ trait DataSaver extends DataReader with Database {
 
   private def deleteSingleRow(rowToDelete: SmartNodeInstance, dbConnection: Connection): Unit = {
     val row: SmartNodeInstance = if (rowToDelete.data.isEmpty) {
-      val myFilter = Some(f"${rowToDelete.model.instanceID.get} = ${rowToDelete.id.get}")
+      val myFilter = Some(f"${rowToDelete.model.instanceID.get} = ${rowToDelete.id.get.rawString}")
       val oldDataToDelete = queryModelData(rowToDelete.nodeSet.model, filter = myFilter)
       oldDataToDelete.rows.head
     }

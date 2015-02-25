@@ -84,6 +84,7 @@ trait Database {
           case value: Float => stmt.setFloat(index, value)
           case TntBoolean(value) => stmt.setBoolean(index, value)
           case TntInt(value) => stmt.setInt(index, value.toInt)
+          case TntDecimal(value) => stmt.setBigDecimal(index, value.bigDecimal)
           case TntString(value) => stmt.setString(index, value)
           case TntNull() => stmt.setNull(index, java.sql.Types.VARCHAR)
           //          case TntDate(value) => stmt.setDate(index, value.)

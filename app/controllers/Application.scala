@@ -25,11 +25,12 @@ object Application extends Controller with Timer {
 
   def saveData(name: String) = Action(parse.json) { request =>
     timer("saveData") {
-      val saver = new DataSaverService
       val model = compiler.compileModel(name)
-      val dataSet: SmartNodeSet = ??? // Json.fromJson(request.body.asJson.get)
+      val dataSet = new SmartNodeSet(model)
+      DataConverters.convertJsArrayToSmartNodeSet(dataSet, request.body.as[JsArray])
+      val saver = new DataSaverService
       saver.saveAll(dataSet)
-      val jsonResponse = Json.arr() // TODO dataSet
+      val jsonResponse = DataConverters.convertSmartNodeSetToJsonArr(dataSet)
       Ok(jsonResponse)
     }
   }
