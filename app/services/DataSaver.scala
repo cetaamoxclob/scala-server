@@ -15,14 +15,19 @@ trait DataSaver extends DataReader with Database {
     try {
       connection.setAutoCommit(false)
       saveAll(dataToSave, connection)
-    } catch {
-      case ex: SQLException => {
-        connection.rollback()
-        throw ex
-      }
-    } finally {
       connection.setAutoCommit(true)
-      connection.close()
+    } catch {
+      case ex: SQLException =>
+        if (!connection.isClosed) {
+          try {
+            connection.rollback()
+          }
+        }
+        throw ex
+    } finally {
+      if (!connection.isClosed) {
+        connection.close()
+      }
     }
   }
 
@@ -108,7 +113,7 @@ trait DataSaver extends DataReader with Database {
       }
 
       if (row.model.parentLink.isDefined) {
-        columnNames += row.model.parentLink.get.childField
+        columnNames += row.model.fields.get(row.model.parentLink.get.childField).get.basisColumn.dbName
         columnValues += row.nodeSet.parentInstance.get.get(row.model.parentLink.get.parentField).get
       }
       (columnNames.result(), columnValues.result())
@@ -127,27 +132,28 @@ trait DataSaver extends DataReader with Database {
     val primaryKey = getPrimaryKey(model)
     val primaryKeyValue = getPrimaryKeyValue(primaryKey.name, row)
 
-    def getColumnValues = {
-      val columns = Map.newBuilder[String, Any]
+    val (columnNames, columnValues) = {
+      val columnNames = List.newBuilder[String]
+      val columnValues = List.newBuilder[TntValue]
+
       model.fields.values.foreach { field =>
         if (field.updateable) {
           val value = row.get(field.name)
-          if (value.isDefined) {
-            columns += ((field.basisColumn.dbName, value.get))
-          }
+          columnNames += field.basisColumn.dbName
+          columnValues += value.getOrElse(
+            TntNull()
+          )
         }
       }
-      columns.result()
-    }
-    val columnValues = getColumnValues
 
-    val setColumnPhrase = columnValues.keys.map { fieldName =>
-      f"`$fieldName` = ?"
-    }.mkString(", ")
+      (columnNames.result(), columnValues.result())
+    }
+
+    val setColumnPhrase = columnNames.map(fieldName => f"`$fieldName` = ?").mkString(", ")
 
     (f"UPDATE `${model.basisTable.dbName}` " +
       f"SET $setColumnPhrase " +
-      f"WHERE `${primaryKey.basisColumn.dbName}` = ?", columnValues.values.toList :+ primaryKeyValue)
+      f"WHERE `${primaryKey.basisColumn.dbName}` = ?", columnValues.toList :+ primaryKeyValue)
   }
 
   private def createSqlForDelete(row: SmartNodeInstance): (String, List[Any]) = {
