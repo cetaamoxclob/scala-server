@@ -24,6 +24,7 @@ case class PageFieldJson(name: String,
                          filter: Option[String],
                          blurFunction: Option[String],
                          disabled: Option[Boolean],
+                         searchable: Option[Boolean],
                          select: Option[PageFieldSelectJson],
                          links: Option[Seq[PageFieldLinkJson]]
                           )
@@ -65,6 +66,7 @@ object PageJson {
       (JsPath \ "filter").readNullable[String] and
       (JsPath \ "blurFunction").readNullable[String] and
       (JsPath \ "disabled").readNullable[Boolean] and
+      (JsPath \ "searchable").readNullable[Boolean] and
       (JsPath \ "select").readNullable[PageFieldSelectJson] and
       (JsPath \ "links").readNullable[Seq[PageFieldLinkJson]]
     ).apply(PageFieldJson.apply _)

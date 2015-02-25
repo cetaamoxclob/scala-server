@@ -110,6 +110,7 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
       required = modelField.required,
       disabled = field.disabled.getOrElse(!column.updateable),
       label = field.label.getOrElse(column.label),
+      searchable = true,
       showInFormView = field.showInFormView.getOrElse(true),
       showInTableView = field.showInTableView.getOrElse(true),
       showInNavigation = field.showInNavigation.getOrElse(false),

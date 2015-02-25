@@ -1,0 +1,45 @@
+@(page: Page)
+<div id="search-view" data-ng-show="searchController.showSearch">
+    <h2>
+        @page.title
+    <small>Search</small>
+    </h2>
+    <div class="page-nav navbar navbar-inverse navbar-fixed-bottom">
+        <button data-ng-click="searchController.turnSearchOff()" class="btn btn-default">
+            <i class="fa fa-times"></i>
+            Cancel
+        </button>
+        <button data-ng-click="runSearch()" class="btn btn-success" data-ng-disabled="!filterValues">
+            <i class="fa fa-search"></i>
+            Search
+        </button>
+    </div>
+
+    <form class="form-horizontal" ng-submit="runSearch()">
+        <div class="form-group col-xs-12">
+            <label>Advanced Query Language</label>
+            <textarea class="form-control" rows="4" data-ng-model="filterString"></textarea>
+        </div>
+
+        @for(field <- page.fields) {
+            @if(field.searchable) {
+                <div class="form-group col-xs-12">
+                    <label for="search-@field.name" class="col-xs-2 control-label">@field.label</label>
+
+                    <div class="col-xs-4">
+                        <select class="form-control" id="search-@field.name-compare"
+                        ng-model="filterComparators.@field.name">
+                            <option>Contains</option>
+                            <option>Equals</option>
+                            <option>BeginsWith</option>
+                            <option>EndsWith</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-6">
+                        <input type="text" class="form-control" id="search-@field.name" ng-model="filterValues.@field.name">
+                    </div>
+                </div>
+            }
+        }
+    </form>
+</div>

@@ -14,7 +14,7 @@ object Application extends Controller with Timer {
     desktop("ListTables") // TODO Get the default from the menu
   }
 
-  def readData(name: String, page: Int, filter: Option[String], orderBy: Option[ModelOrderBy]) = Action {
+  def readData(name: String, page: Int = 1, filter: Option[String] = None, orderBy: Option[ModelOrderBy] = None) = Action {
     timer("readData") {
       val model = compiler.compileModel(name)
       val reader = new DataReaderService

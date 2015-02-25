@@ -44,6 +44,7 @@ case class PageField(
                       label: String,
                       required: Boolean,
                       disabled: Boolean,
+                      searchable: Boolean,
                       showInFormView: Boolean,
                       showInTableView: Boolean,
                       showInNavigation: Boolean,
