@@ -19,16 +19,8 @@ case class SmartNodeSet(model: Model,
     rows.foreach(i => f(i))
   }
 
+  def isEmpty = rows.isEmpty
 
-}
-
-object SmartNodeSet {
-  implicit def smartSetWriter = {
-
-  }
-
-  implicit def smartSetReader = {
-
-  }
+  def deleteAll() = rows.foreach(instance => instance.state = DataState.Deleted)
 
 }

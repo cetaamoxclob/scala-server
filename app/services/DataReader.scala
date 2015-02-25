@@ -7,16 +7,16 @@ import models.{Model, ModelOrderBy}
 
 trait DataReader extends ArtifactCompiler with Database {
 
-  def queryOneRow(model: Model, id: TntValue): Option[SmartNodeInstance] = {
-    queryOneRow(model, Some(f"${model.instanceID.get} = $id"))
-  }
+//  def queryOneRow(model: Model, id: TntValue): Option[SmartNodeInstance] = {
+//    queryOneRow(model, Some(f"${model.instanceID.get} = $id"))
+//  }
+//
+//  def queryOneRow(model: Model, filter: Option[String]): Option[SmartNodeInstance] = {
+//    val existingRows = queryModelData(model, 1, filter, Seq.empty)
+//    existingRows.rows.headOption
+//  }
 
-  def queryOneRow(model: Model, filter: Option[String]): Option[SmartNodeInstance] = {
-    val existingRows = queryModelData(model, 1, filter, Seq.empty)
-    existingRows.rows.headOption
-  }
-
-  def queryModelData(model: Model, page: Int, filter: Option[String], orderBy: Seq[ModelOrderBy]): SmartNodeSet = {
+  def queryModelData(model: Model, page: Int = 1, filter: Option[String] = None, orderBy: Seq[ModelOrderBy] = Seq.empty): SmartNodeSet = {
     var sqlBuilder = new SqlBuilder(
       from = model.basisTable.dbName,
       fields = model.fields,

@@ -3,7 +3,7 @@ package services
 import java.sql._
 
 import data._
-import mock.{FakeArtifacts, FakeResultSet}
+import mock.{FakeConnection, FakeArtifacts, FakeResultSet}
 import models._
 import org.junit.runner.RunWith
 import org.specs2.mock._
@@ -56,7 +56,7 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
 
     "insert one parent row" in {
       val saver = new DataSaver with Database {
-        override def insert(sql: String, numberedParameters: List[Any]): ResultSet = {
+        override def insert(sql: String, numberedParameters: List[Any], connection: Connection): ResultSet = {
           sql must be equalTo "INSERT INTO `person` (`name`) VALUES (?)"
           numberedParameters must be equalTo List(TntString("Foo"))
           new FakeResultSet {
@@ -77,7 +77,7 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
 
     "update one parent row" in {
       val saver = new DataSaver with Database {
-        override def update(sql: String, numberedParameters: List[Any]): Int = {
+        override def update(sql: String, numberedParameters: List[Any], connection: Connection): Int = {
           sql must be equalTo "UPDATE `person` SET `name` = ? WHERE `person_id` = ?"
           numberedParameters must be equalTo List(TntString("Foo"), TntInt(12))
           1
@@ -95,7 +95,7 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
 
     "delete one parent row" in {
       val saver = new DataSaver with Database {
-        override def update(sql: String, numberedParameters: List[Any]): Int = {
+        override def update(sql: String, numberedParameters: List[Any], connection: Connection): Int = {
           sql must be equalTo "DELETE FROM `person` WHERE `person_id` = ?"
           numberedParameters must be equalTo List(TntInt(12))
           1
@@ -127,7 +127,8 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
 
     "update one child row" in {
       val saver = new DataSaver with Database {
-        override def update(sql: String, numberedParameters: List[Any]): Int = {
+        override def getConnection(): Connection = new FakeConnection
+        override def update(sql: String, numberedParameters: List[Any], connection: Connection): Int = {
           sql must be equalTo "UPDATE `phone` SET `phone_number` = ? WHERE `phone_id` = ?"
           numberedParameters must be equalTo List("(123) 456-7890", 34)
           1

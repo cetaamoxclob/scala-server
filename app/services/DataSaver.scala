@@ -1,5 +1,7 @@
 package services
 
+import java.sql.{SQLException, Connection}
+
 import data._
 import models.Model
 
@@ -8,70 +10,91 @@ trait DataSaver extends DataReader with Database {
     if (dataToSave.model.instanceID.isEmpty)
       throw new Exception("Cannot insert/update/delete an instance without an instanceID for " + dataToSave.model.name)
 
+    val connection = getConnection()
+    // See http://docs.oracle.com/javase/tutorial/jdbc/basics/transactions.html
+    try {
+      connection.setAutoCommit(false)
+      saveAll(dataToSave, connection)
+    } catch {
+      case ex: SQLException => {
+        connection.rollback()
+        throw ex
+      }
+    } finally {
+      connection.setAutoCommit(true)
+      connection.close()
+    }
+  }
+
+  def saveAll(dataToSave: SmartNodeSet, dbConnection: Connection): Unit = {
+    if (dataToSave.model.instanceID.isEmpty)
+      throw new Exception("Cannot insert/update/delete an instance without an instanceID for " + dataToSave.model.name)
+
+
     dataToSave.rows.foreach { dataRow =>
       dataRow.state match {
-        case DataState.Inserted => insertSingleRow(dataRow)
-        case DataState.Deleted => deleteSingleRow(dataRow)
-        case DataState.Updated => updateSingleRow(dataRow)
-        case DataState.ChildUpdated | DataState.Done => childUpdate(dataRow)
+        case DataState.Inserted => insertSingleRow(dataRow, dbConnection)
+        case DataState.Deleted => deleteSingleRow(dataRow, dbConnection)
+        case DataState.Updated => updateSingleRow(dataRow, dbConnection)
+        case DataState.ChildUpdated | DataState.Done => childUpdate(dataRow, dbConnection)
       }
     }
   }
 
-  def insertSingleRow(row: SmartNodeInstance): Unit = {
+
+  private def insertSingleRow(row: SmartNodeInstance, dbConnection: Connection): Unit = {
     val (sql, params) = createSqlForInsert(row)
 
-    val rsKeys = insert(sql, params)
+    val rsKeys = insert(sql, params, dbConnection)
     if (rsKeys.next()) row.setId(TntInt(rsKeys.getInt(1)))
 
     // Insert all child records now regardless of DataState
-    row.foreachChild(childSet => childSet.foreach(childRow => insertSingleRow(childRow)))
+    row.foreachChild(childSet => childSet.foreach(childRow => insertSingleRow(childRow, dbConnection)))
     row.state = DataState.Done
   }
 
-  def updateSingleRow(row: SmartNodeInstance): Unit = {
+  private def updateSingleRow(row: SmartNodeInstance, dbConnection: Connection): Unit = {
     val (sql, params) = createSqlForUpdate(row)
 
-    val rowCountModified = update(sql, params)
+    val rowCountModified = update(sql, params, dbConnection)
     if (rowCountModified != 1) {
       throw new Exception(f"Update $rowCountModified rows: $sql")
     }
 
-    childUpdate(row)
+    childUpdate(row, dbConnection)
     row.state = DataState.Done
   }
 
-  def deleteSingleRow(rowToDelete: SmartNodeInstance): Unit = {
+  private def deleteSingleRow(rowToDelete: SmartNodeInstance, dbConnection: Connection): Unit = {
     val row: SmartNodeInstance = if (rowToDelete.data.isEmpty) {
-      queryOneRow(rowToDelete.nodeSet.model, rowToDelete.id.get).getOrElse(
-        // Maybe we should just exit and not worry about this
-        throw new Exception("Failed to select data to delete. Maybe the row was already deleted")
-      )
+      val myFilter = Some(f"${rowToDelete.model.instanceID.get} = ${rowToDelete.id.get}")
+      val oldDataToDelete = queryModelData(rowToDelete.nodeSet.model, filter = myFilter)
+      oldDataToDelete.rows.head
     }
     else rowToDelete
 
     // Delete all child records first regardless of DataState
-    row.foreachChild(childSet => childSet.foreach(childRow => deleteSingleRow(childRow)))
+    row.foreachChild(childSet => childSet.foreach(childRow => deleteSingleRow(childRow, dbConnection)))
 
     val (sql, params) = createSqlForDelete(row)
-    val rowCountModified = update(sql, params)
+    val rowCountModified = update(sql, params, dbConnection: Connection)
     if (rowCountModified != 1) {
       throw new Exception(f"Deleted $rowCountModified rows: $sql")
     }
     row.state = DataState.Done
   }
 
-  private def childUpdate(row: SmartNodeInstance): Unit = {
-    row.foreachChild(childSet => saveAll(childSet))
+  private def childUpdate(row: SmartNodeInstance, dbConnection: Connection): Unit = {
+    row.foreachChild(childSet => saveAll(childSet, dbConnection))
     row.state = DataState.Done
   }
 
   private def createSqlForInsert(row: SmartNodeInstance): (String, List[TntValue]) = {
     val model = row.nodeSet.model
-    val columnNames = List.newBuilder[String]
-    val columnValues = List.newBuilder[TntValue]
+    val (columnNames, columnValues) = {
+      val columnNames = List.newBuilder[String]
+      val columnValues = List.newBuilder[TntValue]
 
-    {
       model.fields.values.foreach { field =>
         val value = row.get(field.name)
         if (value.isDefined) {
@@ -88,15 +111,15 @@ trait DataSaver extends DataReader with Database {
         columnNames += row.model.parentLink.get.childField
         columnValues += row.nodeSet.parentInstance.get.get(row.model.parentLink.get.parentField).get
       }
+      (columnNames.result(), columnValues.result())
     }
-    val setColumnPhrase = columnNames.result.map { fieldName =>
-      f"`$fieldName`"
-    }.mkString(", ")
-    val boundVars = List.fill(columnNames.result.size)("?").mkString(",")
+
+    val setColumnPhrase = columnNames.map(fieldName => f"`$fieldName`").mkString(", ")
+    val boundVars = List.fill(columnNames.size)("?").mkString(",")
 
     (f"INSERT INTO `${model.basisTable.dbName}` " +
       f"($setColumnPhrase) " +
-      f"VALUES ($boundVars)", columnValues.result.toList)
+      f"VALUES ($boundVars)", columnValues.toList)
   }
 
   private def createSqlForUpdate(row: SmartNodeInstance): (String, List[Any]) = {

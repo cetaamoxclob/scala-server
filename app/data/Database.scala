@@ -16,6 +16,10 @@ trait Database {
     }
   }
 
+  def getConnection(): Connection = {
+    DB.getConnection()
+  }
+
   def query(sql: String, numberedParameters: List[Any]): ResultSet = {
     connect {
       connection =>
@@ -34,41 +38,35 @@ trait Database {
     }
   }
 
-  def update(sql: String, numberedParameters: List[Any]): Int = {
-    connect {
-      connection =>
-        if (numberedParameters.isEmpty) {
-          val stmt = connection.createStatement
-          println("Executing Update: " + sql)
-          stmt.executeUpdate(sql)
-        } else {
-          val stmt = connection.prepareStatement(sql)
-          if (!numberedParameters.isEmpty) {
-            setParameters(stmt, numberedParameters)
-          }
-          println("Executing Prepared Update: " + sql + " with " + numberedParameters)
-          stmt.executeUpdate
-        }
+  def update(sql: String, numberedParameters: List[Any], connection: Connection): Int = {
+    if (numberedParameters.isEmpty) {
+      val stmt = connection.createStatement
+      println("Executing Update: " + sql)
+      stmt.executeUpdate(sql)
+    } else {
+      val stmt = connection.prepareStatement(sql)
+      if (!numberedParameters.isEmpty) {
+        setParameters(stmt, numberedParameters)
+      }
+      println("Executing Prepared Update: " + sql + " with " + numberedParameters)
+      stmt.executeUpdate
     }
   }
 
-  def insert(sql: String, numberedParameters: List[Any]): ResultSet = {
-    connect {
-      connection =>
-        if (numberedParameters.isEmpty) {
-          val stmt = connection.createStatement
-          println("Executing Insert: " + sql)
-          stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS)
-          stmt.getGeneratedKeys
-        } else {
-          val stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
-          println("Executing Prepared Insert: " + sql + " with " + numberedParameters)
-          if (!numberedParameters.isEmpty) {
-            setParameters(stmt, numberedParameters)
-          }
-          stmt.executeUpdate
-          stmt.getGeneratedKeys
-        }
+  def insert(sql: String, numberedParameters: List[Any], connection: Connection): ResultSet = {
+    if (numberedParameters.isEmpty) {
+      val stmt = connection.createStatement
+      println("Executing Insert: " + sql)
+      stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS)
+      stmt.getGeneratedKeys
+    } else {
+      val stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+      println("Executing Prepared Insert: " + sql + " with " + numberedParameters)
+      if (!numberedParameters.isEmpty) {
+        setParameters(stmt, numberedParameters)
+      }
+      stmt.executeUpdate
+      stmt.getGeneratedKeys
     }
   }
 
@@ -88,7 +86,7 @@ trait Database {
           case TntInt(value) => stmt.setInt(index, value.toInt)
           case TntString(value) => stmt.setString(index, value)
           case TntNull() => stmt.setNull(index, java.sql.Types.VARCHAR)
-//          case TntDate(value) => stmt.setDate(index, value.)
+          //          case TntDate(value) => stmt.setDate(index, value.)
           case value: java.util.Date => stmt.setDate(index, value.asInstanceOf[java.sql.Date])
           case value => throw new Exception(s"Parameters of type ${value.getClass} is not supported for value ${value}")
         }
