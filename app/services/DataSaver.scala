@@ -64,25 +64,35 @@ trait DataSaver extends DataReader with Database {
 
   private def createSqlForInsert(row: SmartNodeInstance): (String, List[TntValue]) = {
     val model = row.nodeSet.model
-    def getColumnValues = {
-      val columns = Map.newBuilder[String, TntValue]
+    val columnNames = List.newBuilder[String]
+    val columnValues = List.newBuilder[TntValue]
+
+    {
       model.fields.values.foreach { field =>
         val value = row.get(field.name)
         if (value.isDefined) {
-          columns += ((field.basisColumn.dbName, value.get))
+          value.get match {
+            case TntNull() => // Don't bother inserting nulls
+            case _ =>
+              columnNames += field.basisColumn.dbName
+              columnValues += value.get
+          }
         }
       }
-      columns.result()
+
+      if (row.model.parentLink.isDefined) {
+        columnNames += row.model.parentLink.get.childField
+        columnValues += row.nodeSet.parentInstance.get.get(row.model.parentLink.get.parentField).get
+      }
     }
-    val columnValues = getColumnValues
-    val setColumnPhrase = columnValues.keys.map { fieldName =>
+    val setColumnPhrase = columnNames.result.map { fieldName =>
       f"`$fieldName`"
     }.mkString(", ")
-    val boundVars = List.fill(columnValues.size)("?").mkString(",")
+    val boundVars = List.fill(columnNames.result.size)("?").mkString(",")
 
     (f"INSERT INTO `${model.basisTable.dbName}` " +
       f"($setColumnPhrase) " +
-      f"VALUES ($boundVars)", columnValues.values.toList)
+      f"VALUES ($boundVars)", columnValues.result.toList)
   }
 
   private def createSqlForUpdate(row: SmartNodeInstance): (String, List[Any]) = {

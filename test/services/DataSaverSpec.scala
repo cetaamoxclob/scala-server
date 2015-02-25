@@ -2,14 +2,14 @@ package services
 
 import java.sql._
 
-import data.{DataState, Database}
+import data._
 import mock.{FakeArtifacts, FakeResultSet}
 import models._
 import org.junit.runner.RunWith
 import org.specs2.mock._
 import org.specs2.mutable._
 import org.specs2.runner._
-import play.api.libs.json.{JsNull, JsArray, Json}
+import play.api.libs.json.Json
 
 
 @RunWith(classOf[JUnitRunner])
@@ -50,10 +50,11 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
 
     "do nothing" in {
       val saver = new DataSaverService
-      saver.saveAll(model, None) must be equalTo JsArray()
+      val saving = new SmartNodeSet(model)
+      saver.saveAll(saving) must be equalTo saving
     }
 
-    "insert one parent row" in {
+    "insert one parent row" in pending {
       val saver = new DataSaver with Database {
         override def insert(sql: String, numberedParameters: List[Any]): ResultSet = {
           sql must be equalTo "INSERT INTO `person` (`name`) VALUES (?)"
@@ -70,29 +71,16 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
         }
       }
 
-      val _fakeID = "1"
-      val saving = Json.arr(
-        Json.obj(
-          "state" -> DataState.Inserted.toString,
-          "tempID" -> "ASDF1234",
-          "data" -> Json.obj(
-            "PersonName" -> "Foo"
-          )
-        )
-      )
-      val result = saver.saveAll(model, Option(saving))
-      result must be equalTo Json.arr(
-        Json.obj(
-          "id" -> _fakeID,
-          "data" -> Json.obj(
-            "PersonID" -> _fakeID,
-            "PersonName" -> "Foo"
-          )
-        )
-      )
+      val _fakeID = 1
+      val saving = new SmartNodeSet(model)
+      saving.insert.set("PersonName", TntString("Foo"))
+
+      saver.saveAll(saving)
+      saving.rows.head.id.get must be equalTo TntInt(_fakeID)
+      saving.rows.head.get("PersonID").get must be equalTo TntInt(_fakeID)
     }
 
-    "update one parent row" in {
+    "update one parent row" in pending {
       val saver = new DataSaver with Database {
         override def update(sql: String, numberedParameters: List[Any]): Int = {
           sql must be equalTo "UPDATE `person` SET `name` = ? WHERE `person_id` = ?"
@@ -101,21 +89,15 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
         }
       }
 
-      val sampleRow = Json.obj(
-        "state" -> DataState.Updated.toString,
-        "id" -> "12",
-        "data" -> Json.obj(
-          "PersonID" -> 12,
-          "PersonName" -> "Foo"
-        )
-      )
-
-      val saving = Json.arr(sampleRow)
-      val result = saver.saveAll(model, Option(saving))
-      result must be equalTo Json.arr(sampleRow - "state")
+      val saving = new SmartNodeSet(model)
+      val sampleRow = saving.insert
+      sampleRow.setId(TntInt(12))
+      sampleRow.set("PersonName", TntString("Foo"))
+      saver.saveAll(saving)
+      sampleRow.state must be equalTo DataState.Done
     }
 
-    "delete one parent row" in {
+    "delete one parent row" in pending {
       val saver = new DataSaver with Database {
         override def update(sql: String, numberedParameters: List[Any]): Int = {
           sql must be equalTo "DELETE FROM `person` WHERE `person_id` = ?"
@@ -140,19 +122,15 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
         }
       }
 
-      val sampleRow = Json.obj(
-        "state" -> DataState.Deleted.toString,
-        "id" -> "12"
-      )
+      val saving = new SmartNodeSet(model)
+      val sampleRow = saving.insert
+      sampleRow.setId(TntInt(12))
+      saver.saveAll(saving)
 
-      val saving = Json.arr(sampleRow)
-      val result = saver.saveAll(model, Option(saving))
-      result must be equalTo Json.arr(Json.obj(
-        "id" -> "12"
-      ))
+      sampleRow.state must be equalTo DataState.Done
     }
 
-    "update one child row" in {
+    "update one child row" in  pending {
       val saver = new DataSaver with Database {
         override def update(sql: String, numberedParameters: List[Any]): Int = {
           sql must be equalTo "UPDATE `phone` SET `phone_number` = ? WHERE `phone_id` = ?"
@@ -161,7 +139,7 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
         }
       }
 
-      val sampleRow = Json.obj(
+      Json.obj(
         "state" -> DataState.ChildUpdated.toString,
         "id" -> "12",
         "data" -> Json.obj(
@@ -183,7 +161,7 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
         )
       )
 
-      val expectedRow = Json.obj(
+      Json.obj(
         "id" -> "12",
         "data" -> Json.obj(
           "PersonID" -> 12,
@@ -203,10 +181,47 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
         )
       )
 
+      val saving = new SmartNodeSet(model)
+      val sampleRow = saving.insert
+      sampleRow.setId(TntInt(12))
+      saver.saveAll(saving)
 
-      val result = saver.saveAll(model, Option(Json.arr(sampleRow)))
-      result must be equalTo Json.arr(expectedRow)
+      sampleRow.state must be equalTo DataState.Done
     }
+
+    "insert one parent and child row" in pending {
+//      val saver = new DataSaver with Database {
+//        override def insert(sql: String, numberedParameters: List[Any]): ResultSet = {
+//          sql must be equalTo "INSERT INTO `person` (`name`) VALUES (?)"
+//          numberedParameters must be equalTo List("Foo")
+//          new FakeResultSet {
+//            override def next(): Boolean = {
+//              return true
+//            }
+//
+//            override def getLong(columnIndex: Int): Long = {
+//              return 1
+//            }
+//          }
+//        }
+//      }
+//
+//      val _fakeID = "1"
+//      val saving = new DataInstance(
+//        data = Json.obj(
+//          ("PersonName", "Foo")
+//        ),
+//        children = Map(
+//          ("phones", Seq(
+//
+//          ))
+//        )
+//      )
+//      val result = saver.insertSingleRow(model, saving)
+//      result must be equalTo saving
+      "" must be equalTo ""
+    }
+
 
   }
 }

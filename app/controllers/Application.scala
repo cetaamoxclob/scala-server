@@ -1,6 +1,6 @@
 package controllers
 
-import data.{SmartNodeSet, DataInstance}
+import data.{DataConverters, SmartNodeSet}
 import models.{ArtifactType, ModelOrderBy, User}
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -20,8 +20,7 @@ object Application extends Controller with util.Timer {
     val model = compiler.compileModel(name)
     val reader = new DataReaderService
     val smartSet: SmartNodeSet = reader.queryModelData(model, page, filter, if (orderBy.isDefined) Seq(orderBy.get) else model.orderBy)
-    val jsonResponse = ??? // TODO Json.toJson(smartSet)
-    Ok(jsonResponse)
+    Ok(DataConverters.convertSmartNodeSetToJsonArr(smartSet))
   }
 
   def saveData(name: String) = Action { request =>
@@ -29,7 +28,7 @@ object Application extends Controller with util.Timer {
     val model = compiler.compileModel(name)
     val dataSet: SmartNodeSet = ??? // Json.fromJson(request.body.asJson.get)
     saver.saveAll(dataSet)
-    val jsonResponse = ??? // TODO dataSet
+    val jsonResponse = Json.arr() // TODO dataSet
     Ok(jsonResponse)
   }
 
@@ -47,7 +46,7 @@ object Application extends Controller with util.Timer {
   def importAll = Action {
     val tableImport = new ArtifactImport(ArtifactType.Table)
     val output = tableImport.readFromSourceAndWriteToDatabase("Column")
-    Ok(output)
+    Ok(Json.arr())
   }
 
   def exportAll = TODO

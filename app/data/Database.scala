@@ -74,20 +74,26 @@ trait Database {
 
   private def setParameters(stmt: PreparedStatement, numberedParameters: List[Any]): Unit = {
     numberedParameters.zipWithIndex.foreach {
-      case (value, zipIndex) => {
+      case (tntValue, zipIndex) => {
         val index = zipIndex + 1
-        value match {
-          case _: String => stmt.setString(index, value.asInstanceOf[String])
-          case Boolean => stmt.setBoolean(index, value.asInstanceOf[Boolean])
-          case Long | _: java.lang.Long => stmt.setLong(index, value.asInstanceOf[Long])
-          case Int | _: java.lang.Integer => stmt.setInt(index, value.asInstanceOf[Int])
-          case Float => stmt.setFloat(index, value.asInstanceOf[Float])
-          case _: java.util.Date => stmt.setDate(index, value.asInstanceOf[java.sql.Date])
-          case _ => throw new Exception(s"Parameters of type ${value.getClass} is not supported for value ${value}")
+        tntValue match {
+          case value: String => stmt.setString(index, value)
+          case value: Boolean => stmt.setBoolean(index, value)
+          case value: Long => stmt.setLong(index, value)
+          case value: java.lang.Long => stmt.setLong(index, value)
+          case value: Int => stmt.setInt(index, value)
+          case value: java.lang.Integer => stmt.setInt(index, value)
+          case value: Float => stmt.setFloat(index, value)
+          case TntBoolean(value) => stmt.setBoolean(index, value)
+          case TntInt(value) => stmt.setInt(index, value.toInt)
+          case TntString(value) => stmt.setString(index, value)
+          case TntNull() => stmt.setNull(index, java.sql.Types.VARCHAR)
+//          case TntDate(value) => stmt.setDate(index, value.)
+          case value: java.util.Date => stmt.setDate(index, value.asInstanceOf[java.sql.Date])
+          case value => throw new Exception(s"Parameters of type ${value.getClass} is not supported for value ${value}")
         }
       }
     }
-
   }
 
 }

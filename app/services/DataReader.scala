@@ -3,8 +3,7 @@ package services
 import java.sql.ResultSet
 
 import data._
-import models.{ModelParentLink, ModelOrderBy, ModelField, Model}
-import play.api.libs.json._
+import models.{Model, ModelOrderBy}
 
 trait DataReader extends ArtifactCompiler with Database {
 
@@ -37,12 +36,17 @@ trait DataReader extends ArtifactCompiler with Database {
     val resultSet = convertResultSetToDataRows(model, rs)
     if (resultSet.rows.length > 0 && model.children.size > 0) {
       model.children.map {
-        case (childModelName: String, childModel: Model) => {
-          val parentIDs = getValueFromAllRows(resultSet.rows, childModel.parentLink.get.parentField)
+        case (childModelName: String, childModel: Model) =>
+          val parentFieldName = childModel.parentLink.get.parentField
+          val parentIDs: Seq[Int] = resultSet.rows.map { row =>
+            row.get(parentFieldName) match {
+              case Some(parentFieldValue) => parentFieldValue.asInstanceOf[TntInt].value.toInt
+              case None => -1
+            }
+          }
           val filterForChildModel = childModel.parentLink.get.childField + " In " + parentIDs.mkString(",")
           val childRows = queryModelData(childModel, 1, Some(filterForChildModel), childModel.orderBy)
           addChildRowsToParent(resultSet, childRows)
-        }
       }
     }
     resultSet
@@ -54,25 +58,19 @@ trait DataReader extends ArtifactCompiler with Database {
       val newInstance = resultBuilder.insert
       model.fields.foreach {
         case (fieldName, f) =>
-          newInstance.data + fieldName -> {
+          newInstance.set(fieldName, {
             f.basisColumn.dataType match {
               case "Int" | "Integer" => TntInt(rs.getInt(fieldName))
               case "String" => TntString(rs.getString(fieldName))
               case "Boolean" => TntBoolean(rs.getBoolean(fieldName))
-              case "Boolean" => TntDate(rs.getDate(fieldName))
+              case "Date" => TntDate(rs.getDate(fieldName))
               case _ => throw new MatchError(f"field.dataType of `${f.basisColumn.dataType}` is not String or Integer")
             }
-          }
+          })
       }
       newInstance.id = if (model.instanceID.isDefined) newInstance.data.get(model.instanceID.get) else None
     }
     resultBuilder
-  }
-
-  private def getValueFromAllRows(dataRows: Seq[SmartNodeInstance], fieldName: String) = {
-    dataRows.map { row =>
-      row.data.get(fieldName)
-    }
   }
 
   private def addChildRowsToParent(parentRows: SmartNodeSet,
@@ -86,7 +84,9 @@ trait DataReader extends ArtifactCompiler with Database {
         parentID == childRow.get(parentLink.childField).get
       }
       remainingChildRows = nonMatching
-      parentRow.children + (childRows.model.name -> matching)
+      val childSet = new SmartNodeSet(childRows.model, parentInstance = Some(parentRow))
+      childSet.rows ++= matching
+      parentRow.children += (childRows.model.name -> childSet)
     }
     if (remainingChildRows.length > 0) {
       throw new Exception(s"Failed to match ${remainingChildRows.length} ${childRows.model.name} records. Check datatypes of $parentLink")

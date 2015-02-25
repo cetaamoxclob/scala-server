@@ -33,7 +33,7 @@ case class SmartNodeInstance(
                               /**
                                * map of SmartNodeInstances representing the children of this node
                                */
-                              children: Map[String, SmartNodeSet] = Map.empty) {
+                              children: mutable.HashMap[String, SmartNodeSet] = mutable.HashMap.empty) {
   def delete = {
     state = DataState.Deleted
   }
@@ -50,7 +50,7 @@ case class SmartNodeInstance(
 
   def get(fieldName: String) = data.get(fieldName)
 
-  def set(fieldName: String, value: TntValue) = data + (fieldName -> value)
+  def set(fieldName: String, value: TntValue) = data += (fieldName -> value)
 
   def model = nodeSet.model
 
@@ -74,14 +74,8 @@ case class SmartNodeInstance(
     }
   }
 
-  def setupChildSets = {
-    nodeSet.model.children.foreach { childModel =>
-      val newSet = new SmartNodeSet(
-        model = childModel._2,
-        parentInstance = Some(this)
-      )
-      children + childModel._1 -> newSet
-    }
+  override def toString = {
+    val idString = if (id.isDefined) id.get.toString else data.toString
+    s"${model.name}($idString)"
   }
-
 }

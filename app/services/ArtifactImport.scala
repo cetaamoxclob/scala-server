@@ -18,42 +18,46 @@ class ArtifactImport(artifactType: ArtifactType) extends ArtifactCompilerService
 
     val artifactSource = getArtifactContentAndParseJson(artifactType, artifactName).as[JsObject]
 
-    val dataToInsert = convertSourceToInsertData(artifactWriter.copy(name = artifactName), artifactSource)
-    saveAll(dataToInsert)
-    dataToInsert
-  }
-
-  private def convertSourceToInsertData(model: Model, artifactSource: JsObject): SmartNodeSet = {
-    val smartNodeSet = new SmartNodeSet(model)
+    val smartNodeSet = new SmartNodeSet(artifactWriter.copy(name = artifactName))
     val smartInstance = smartNodeSet.insert
+    convertJsObjectToSmartNodeInstance(smartInstance, artifactSource)
+    insertSingleRow(smartInstance)
+    smartInstance
+  }
 
-    {
-      val artifactUniqueNameField = "name"
+  private def convertJsArrayToSmartNodeSet(smartNodeSet: SmartNodeSet, arraySource: JsArray): Unit = {
+    arraySource.value.foreach {
+      case JsObject(jsObject) => val smartInstance = smartNodeSet.insert
+        convertJsObjectToSmartNodeInstance(smartInstance, JsObject(jsObject))
+      case _ => throw new Exception("Expected JsObject")
+    }
+  }
+
+  private def convertJsObjectToSmartNodeInstance(smartInstance: SmartNodeInstance, objectSource: JsObject): Unit = {
+    smartInstance.model.fields.foreach {
+      case (fieldName: String, modelField: ModelField) => {
+        val value = objectSource \ fieldName
+        value match {
+          case _: JsUndefined | JsNull => // Don't do anything
+          case _ => smartInstance.set(fieldName, DataConverters.convertJsValueToTntValue(value))
+        }
+      }
+    }
+
+    val artifactUniqueNameField = "name"
+    if (smartInstance.get(artifactUniqueNameField).isEmpty) {
       smartInstance.set(artifactUniqueNameField, TntString(smartInstance.model.name))
-      smartInstance.model.fields.foreach{
-        case(fieldName: String, modelField: ModelField) => {
-          val value = (artifactSource \ fieldName)
-          smartInstance.set(fieldName, convertJsValueToTntValue(value))
-        }
-      }
-      smartInstance.model.children.foreach{
-        case(childModelName: String, childModel: Model) => {
-          val childSource = (artifactSource \ childModelName).as[JsObject]
-          val childSmartSet = convertSourceToInsertData(childModel, childSource)
-          smartInstance.children + (childModelName -> childSmartSet)
-        }
+    }
+
+    smartInstance.model.children.foreach {
+      case (childModelName: String, childModel: Model) => {
+        val childSource = (objectSource \ childModelName).as[JsArray]
+        println(childModelName + " -- " + childSource)
+        val childSmartSet = new SmartNodeSet(childModel, parentInstance = Some(smartInstance))
+        smartInstance.children += (childModelName -> childSmartSet)
+        convertJsArrayToSmartNodeSet(childSmartSet, childSource)
       }
     }
-    smartNodeSet
   }
 
-  private def convertJsValueToTntValue(jsValue: JsValue): TntValue = {
-    jsValue match {
-      case JsString(value) => TntString(value)
-      case JsNumber(value) => TntDecimal(value)
-      case JsBoolean(value) => TntBoolean(value)
-      case JsNull => new TntNull
-      case _ => throw new Exception("Can't parse JsValue to TntValue")
-    }
-  }
 }

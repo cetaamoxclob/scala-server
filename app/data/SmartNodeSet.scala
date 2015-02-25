@@ -9,13 +9,10 @@ case class SmartNodeSet(model: Model,
                         parentInstance: Option[SmartNodeInstance] = None
                          ) {
 
-  def insert(newInstance: SmartNodeInstance): SmartNodeInstance = {
+  def insert = {
+    val newInstance = new SmartNodeInstance(nodeSet = this, state = DataState.Inserted)
     rows += newInstance
     newInstance
-  }
-
-  def insert: SmartNodeInstance = {
-    insert(new SmartNodeInstance(nodeSet = this, state = DataState.Inserted))
   }
 
   def foreach(f: (SmartNodeInstance) => Unit) = {
