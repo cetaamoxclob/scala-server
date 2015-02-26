@@ -16,7 +16,12 @@
         <section class="content container">
             <h1>Import Artifacts</h1>
 
-            @flash.get("success").getOrElse("")
+            @if(flash.get("success").isDefined) {
+                <div class="alert alert-success" role="alert">@flash.get("success").get</div>
+            }
+            @if(flash.get("failure").isDefined) {
+                <div class="alert alert-danger" role="alert">@flash.get("failure").get</div>
+            }
 
             <table class="table table-hover col-md-6">
                 <thead>

@@ -1,7 +1,7 @@
 package controllers
 
 import tantalim.util.{Timer, LoginStrategyType}
-import data.{DataConverters, SmartNodeSet}
+import data.{DataState, DataConverters, SmartNodeSet}
 import models.{ArtifactType, ModelOrderBy, User}
 import play.api.libs.json._
 import play.api.mvc._
@@ -60,10 +60,13 @@ object Application extends Controller with Timer {
   def importArtifact(artifactType: String, name: String) = Action {
     timer("importArtifact") {
       val tableImport = new ArtifactImport(ArtifactType.valueOf(artifactType))
-      tableImport.readFromSourceAndWriteToDatabase(name)
-      Redirect(controllers.routes.Application.importList()).flashing(
+      val result = tableImport.readFromSourceAndWriteToDatabase(name)
+      val message = if (result.state == DataState.Done) {
         "success" -> s"$artifactType($name) was imported"
-      )
+      } else {
+        "failure" -> s"$artifactType($name) failed to import"
+      }
+      Redirect(controllers.routes.Application.importList()).flashing(message)
     }
   }
 
