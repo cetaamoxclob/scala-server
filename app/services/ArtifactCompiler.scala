@@ -8,26 +8,14 @@ import scala.collection._
 trait ArtifactCompiler extends ArtifactService with TableCache {
 
   def compileMenu(name: String): Menu = {
-    getMenu match {
-      case s: JsSuccess[Menu] => {
-        val menu = s.get
-        menu.copy(content = menu.content.map(content =>
-          content.copy(items = content.items.map(item => {
-            if (item.page.isDefined) {
-              val pageName = item.page.get
-              val json: PageJson = getPage(pageName).getOrElse {
-                PageJson.empty.copy(title = "Error: " + pageName)
-              }
-              item.copy(
-                title = Option(item.title.getOrElse(json.title)),
-                href = Option(item.href.getOrElse("/page/" + pageName + "/"))
-              )
-            } else {
-              item
-            }
-          }
-          ))
-        ))
+    println("Compiling menu " + name)
+
+    getMenu(name) match {
+      case JsSuccess(menu, _) => {
+        new Menu(
+          menu.appTitle,
+          menu.content.map(content => compileMenuContent(content))
+        )
       }
       case err: JsError => {
         throw new Exception("Failed to compile menu " + name + " due to the following error:" + err.toString)
@@ -35,18 +23,41 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
     }
   }
 
+  private def compileMenuContent(contentJson: MenuContentJson): MenuContent = {
+    new MenuContent(
+      contentJson.title,
+      contentJson.items.map(item => compileMenuItem(item))
+    )
+  }
+
+  private def compileMenuItem(itemJson: MenuItemJson): MenuItem = {
+    if (itemJson.page.isDefined) {
+      val page = compileShallowPage(itemJson.page.get)
+      new MenuItem(
+        itemJson.title.getOrElse(page.title),
+        "/page/" + itemJson.page.get + "/",
+        itemJson.icon.map(icon => Icon(icon)).orElse(page.icon.map(icon => Icon(icon)))
+      )
+    } else {
+      new MenuItem(
+        itemJson.title.get, // title is required if page is missing
+        itemJson.href.get, // href is required if page is missing
+        itemJson.icon.map(icon => Icon(icon))
+      )
+    }
+  }
+
   def compilePage(name: String): Page = {
     println("Compiling page " + name)
-    val json = getArtifactContentAndParseJson(ArtifactType.Page, name)
-    json.validate[PageJson] match {
-      case JsSuccess(pageJson, _) => {
+
+    getPage(name) match {
+      case JsSuccess(pageJson, _) =>
         val page = pageJson.copy(name = Option(name))
         val modelName: String = page.model.getOrElse(page.name.getOrElse {
           throw new Exception("Neither the model nor the page has a name: " + page.toString)
         })
         val model = compileModel(modelName)
         compilePageView(page, model)
-      }
       case JsError(err) => {
         throw new Exception("Failed to compile page " + name + " due to the following error:" + err.toString)
       }
@@ -90,7 +101,7 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
     }
   }
 
-  private def compilePageView(pageJson: PageJson, model: Model): Page = {
+  private def compilePageView(pageJson: PageJson, model: Model, parentPage: Option[Page] = None): Page = {
     val fields = pageJson.fields.getOrElse(Seq.empty).map { f =>
       val modelField = findField(f.name, model).getOrElse {
         throw new Exception(f"Failed to find field named `${f.name}` in Model `${model.name}` but found these: \n${model.fields.keys} \n${model.steps.values}")
@@ -105,9 +116,10 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
       viewMode = pageJson.viewMode.getOrElse("form"),
       model = model,
       fields = fields,
-      hasFormView = fields.find(field => field.showInFormView).isDefined,
-      hasTableView = fields.find(field => field.showInTableView).isDefined,
-      hasNavigation = fields.find(field => field.showInNavigation).isDefined,
+      hasFormView = fields.exists(field => field.showInFormView),
+      hasTableView = fields.exists(field => field.showInTableView),
+      hasNavigation = fields.exists(field => field.showInNavigation),
+      parentPage = parentPage,
       children = pageJson.children match {
         case Some(childViews) => childViews.map { childView =>
           val childModelName = childView.model.getOrElse(childView.name.get)

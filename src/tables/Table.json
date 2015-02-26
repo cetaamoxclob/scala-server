@@ -29,6 +29,27 @@
     {
       "name": "PrimaryKey",
       "dbName": "primaryKey"
+    },
+    {
+      "name": "AllowInsert",
+      "dbName": "allowInsert",
+      "label": "Allow Insert",
+      "dataType": "Boolean",
+      "fieldType": "checkbox"
+    },
+    {
+      "name": "AllowUpdate",
+      "dbName": "allowUpdate",
+      "label": "Allow Update",
+      "dataType": "Boolean",
+      "fieldType": "checkbox"
+    },
+    {
+      "name": "AllowDelete",
+      "dbName": "allowDelete",
+      "label": "Allow Delete",
+      "dataType": "Boolean",
+      "fieldType": "checkbox"
     }
   ]
 }

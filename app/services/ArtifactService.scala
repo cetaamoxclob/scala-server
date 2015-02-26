@@ -2,7 +2,7 @@ package services
 
 import com.google.common.base.Charsets
 import com.google.common.io.Files
-import models.src.{TableJson, ModelJson, PageJson}
+import models.src._
 import play.api.Play.current
 import models._
 import play.api.Play
@@ -17,13 +17,9 @@ trait ArtifactService {
     Json.parse(artifactContent)
   }
 
-  def getMenu: JsResult[Menu] = {
-    getMenu("Default")
-  }
-
-  def getMenu(name: String): JsResult[Menu] = {
+  def getMenu(name: String): JsResult[MenuJson] = {
     val artifactJson = getArtifactContentAndParseJson(ArtifactType.Menu, name)
-    artifactJson.validate[Menu]
+    artifactJson.validate[MenuJson]
   }
 
   def getPage(name: String): JsResult[PageJson] = {

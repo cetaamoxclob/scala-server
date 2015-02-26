@@ -10,9 +10,11 @@ import services._
 object Application extends Controller with Timer {
   val compiler = new ArtifactCompilerService
 
+  private val applicationMenu = "Default"
+
   def index = Action {
-    val menu = compiler.compileMenu("Default")
-    Redirect(menu.content.head.items.head.href.get)
+    val menu = compiler.compileMenu(applicationMenu)
+    Redirect(menu.content.head.items.head.href)
   }
 
   def readData(name: String, page: Int = 1, filter: Option[String] = None, orderBy: Option[ModelOrderBy] = None) = Action {
@@ -38,21 +40,31 @@ object Application extends Controller with Timer {
 
   def desktop(name: String) = Action {
     timer("desktop") {
-      val menu = compiler.compileMenu("Default")
+      val menu = compiler.compileMenu(applicationMenu)
       val page = compiler.compilePage(name)
       val user = new User("12345", "trevorallred", "Trevor Allred")
-      Ok(views.html.desktop.index(page, menu, user))
+      Ok(views.html.desktop.page.index(page, menu, user))
     }
   }
 
   def mobile(name: String) = TODO
 
-  def importAll = Action {
-    timer("importAll") {
-      val tableImport = new ArtifactImport(ArtifactType.Table)
-      val output = tableImport.readFromSourceAndWriteToDatabase("Column")
-      Ok(Json.arr())
+  def importArtifact(artifactType: ArtifactType, name: String) = Action {
+    timer("importArtifact") {
+      val tableImport = new ArtifactImport(artifactType)
+      tableImport.readFromSourceAndWriteToDatabase(name)
+      Redirect(controllers.routes.Application.importList()).flashing(
+        "success" -> "The artifact was imported"
+      )
     }
+  }
+
+  def importList = Action {
+    implicit request =>
+      val menu = compiler.compileMenu(applicationMenu)
+      val artifactList = new ArtifactManager().getListToImport
+      val user = new User("12345", "trevorallred", "Trevor Allred")
+      Ok(views.html.desktop.importList(menu, user, artifactList))
   }
 
   def exportAll = TODO

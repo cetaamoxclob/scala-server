@@ -20,9 +20,9 @@ case class DeepTable(
                       primaryKey: Option[TableColumn],
                       columns: Map[String, TableColumn],
                       joins: Map[String, TableJoin],
-                      allowInsert: Boolean,
-                      allowUpdate: Boolean,
-                      allowDelete: Boolean
+                      allowInsert: Boolean = true,
+                      allowUpdate: Boolean = true,
+                      allowDelete: Boolean = true
                       ) extends Table
 
 case class TableColumn(

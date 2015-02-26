@@ -24,11 +24,13 @@
         },
         {
           "title": "Import",
-          "href": "/importAll"
+          "href": "/importAll",
+          "icon": "fa-sign-in"
         },
         {
           "title": "Export",
-          "href": "/exportAll"
+          "href": "/exportAll",
+          "icon": "fa-sign-out"
         }
       ]
     }

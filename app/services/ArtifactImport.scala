@@ -1,7 +1,7 @@
 package services
 
 import data._
-import models.{ArtifactType, Model, ModelField}
+import models.{ArtifactStub, ArtifactType, Model, ModelField}
 import play.api.libs.json._
 
 class ArtifactImport(artifactType: ArtifactType) extends ArtifactCompilerService with DataReader with DataSaver {
@@ -61,5 +61,16 @@ class ArtifactImport(artifactType: ArtifactType) extends ArtifactCompilerService
     }
     insertArtifact()
   }
+
+}
+
+class ArtifactManager {
+
+  def getListToImport : Seq[ArtifactStub] = Seq(
+    ArtifactStub(ArtifactType.Table, "Table"),
+    ArtifactStub(ArtifactType.Table, "Column"),
+    ArtifactStub(ArtifactType.Table, "Join"),
+    ArtifactStub(ArtifactType.Table, "JoinColumn")
+  )
 
 }

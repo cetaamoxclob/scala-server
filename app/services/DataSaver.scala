@@ -11,7 +11,6 @@ trait DataSaver extends DataReader with Database {
       throw new Exception("Cannot insert/update/delete an instance without an instanceID for " + dataToSave.model.name)
 
     val connection = getConnection()
-    // See http://docs.oracle.com/javase/tutorial/jdbc/basics/transactions.html
     try {
       connection.setAutoCommit(false)
       saveAll(dataToSave, connection)
@@ -21,6 +20,8 @@ trait DataSaver extends DataReader with Database {
         if (!connection.isClosed) {
           try {
             connection.rollback()
+          } catch {
+            case err => println("failed to rollback connection: " + err)
           }
         }
         throw ex

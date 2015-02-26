@@ -17,6 +17,7 @@ case class Page(
                  hasTableView: Boolean,
                  hasNavigation: Boolean,
                  viewMode: String,
+                 parentPage: Option[Page],
                  children: Seq[Page]
                  ) {
 
@@ -35,6 +36,14 @@ case class Page(
       childPage.toClientJson
     }))
   ))
+
+  private val rootDepth: Int = 1
+  def depth: Int = {
+    parentPage match {
+      case Some(page) => page.depth + 1
+      case None => rootDepth
+    }
+  }
 
 }
 

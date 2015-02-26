@@ -12,9 +12,9 @@ case class Model(name: String,
                  steps: Map[Int, ModelStep],
                  parentLink: Option[ModelParentLink],
                  orderBy: Seq[ModelOrderBy],
-                 allowInsert: Boolean,
-                 allowUpdate: Boolean,
-                 allowDelete: Boolean
+                 allowInsert: Boolean = true,
+                 allowUpdate: Boolean = true,
+                 allowDelete: Boolean = true
                   ) {
   def toClientJson(): JsObject = {
     JsObject(Seq(

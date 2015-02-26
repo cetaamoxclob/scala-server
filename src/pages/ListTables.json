@@ -20,6 +20,15 @@
     },
     {
       "name": "TableDatabase"
+    },
+    {
+      "name": "TableAllowInsert"
+    },
+    {
+      "name": "TableAllowUpdate"
+    },
+    {
+      "name": "TableAllowDelete"
     }
   ]
 }

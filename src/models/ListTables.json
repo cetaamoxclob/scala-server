@@ -22,6 +22,18 @@
     {
       "name": "TableDatabase",
       "basisColumn": "Database"
+    },
+    {
+      "name": "TableAllowInsert",
+      "basisColumn": "AllowInsert"
+    },
+    {
+      "name": "TableAllowUpdate",
+      "basisColumn": "AllowUpdate"
+    },
+    {
+      "name": "TableAllowDelete",
+      "basisColumn": "AllowDelete"
     }
   ],
   "allowInsert": false,
