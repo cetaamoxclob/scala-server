@@ -10,8 +10,8 @@ import play.api.libs.json._
 
 trait ArtifactService {
 
-  def getArtifactContentAndParseJson(artifactType: ArtifactType, name: String): JsValue = {
-    val directoryName = "src/" + artifactType.getDirectory + "/" + name + ".json"
+  def getArtifactContentAndParseJson(artifactType: ArtifactClass.Value, name: String): JsValue = {
+    val directoryName = "src/" + artifactType + "/" + name + ".json"
     val artifactContent = Files.toString(Play.getFile(directoryName), Charsets.UTF_8)
 
     Json.parse(artifactContent)

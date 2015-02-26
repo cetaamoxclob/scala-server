@@ -3,22 +3,22 @@
 # ~~~~
 
 # Home page
-GET         /                         controllers.Application.index
-GET         /m/:name                  controllers.Application.mobile(name)
-GET         /m/:name/                 controllers.Application.mobile(name)
-GET         /page/:name               controllers.Application.desktop(name)
-GET         /page/:name/              controllers.Application.desktop(name)
-GET         /page/:name/search        controllers.Application.desktop(name)
+GET         /                                  controllers.Application.index
+GET         /m/:name                           controllers.Application.mobile(name)
+GET         /m/:name/                          controllers.Application.mobile(name)
+GET         /page/:name/                       controllers.Application.desktop(name)
+GET         /page/:name/search                 controllers.Application.desktop(name)
 
-GET         /login                    controllers.Application.login
-GET         /logout                   controllers.Application.logout
-GET         /auth/:strategy           controllers.Application.auth(strategy)
+GET         /login                             controllers.Application.login
+GET         /logout                            controllers.Application.logout
+GET         /auth/:strategy                    controllers.Application.auth(strategy)
 
-GET         /data/:name               controllers.Application.readData(name, page: Int ?= 1, filter: Option[String], orderBy: Option[models.ModelOrderBy])
-POST        /data/:name               controllers.Application.saveData(name)
+GET         /data/:name                        controllers.Application.readData(name, page: Int ?= 1, filter: Option[String], orderBy: Option[models.ModelOrderBy])
+POST        /data/:name                        controllers.Application.saveData(name)
 
-GET         /importAll                controllers.Application.importAll
-GET         /exportAll                controllers.Application.exportAll
+GET         /import/                           controllers.Application.importList
+POST        /import/:artifactType/:name        controllers.Application.importArtifact(artifactType: models.ArtifactType, name)
+GET         /exportAll                         controllers.Application.exportAll
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file             controllers.Assets.at(path="/public", file)
+GET         /assets/*file                      controllers.Assets.at(path="/public", file)

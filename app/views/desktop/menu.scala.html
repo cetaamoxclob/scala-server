@@ -1,4 +1,5 @@
 @(menu: Menu, user: User)
+@import models.Menu
 @import models.User
 
 <div class="navbar navbar-inverse navbar-fixed-top" data-role="navigation">
@@ -9,10 +10,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/">@menu.appTitle</a>
+        <a class="navbar-brand" href="/">@(menu.appTitle)</a>
     </div>
 
-    <div class="navbar-collapse collapse in hidden-xs" style="height : auto ;">
+    <div class="navbar-collapse collapse in hidden-xs">
         <ul class="navbar-nav nav">
         @for(content <- menu.content) {
             <li class="dropdown">
@@ -20,7 +21,15 @@
                 <ul class="dropdown-menu">
                 @for(item <- content.items) {
                     <li>
-                        <a href="@item.href.getOrElse("#unknown")">@item.title</a>
+                        <a href="@item.href">
+                            @if(item.hasGlyphicon) {
+                                <span class="glyphicon @item.icon.get" aria-hidden="true"></span>
+                            }
+                            @if(item.hasFontAwesome) {
+                                <i class="fa @item.icon.get" aria-hidden="true"></i>
+                            }
+                            @item.title
+                        </a>
                     </li>
                 }
                 </ul>
