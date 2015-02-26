@@ -49,22 +49,22 @@ object Application extends Controller with Timer {
 
   def mobile(name: String) = TODO
 
+  def importList = Action {
+    implicit request =>
+      val menu = compiler.compileMenu(applicationMenu)
+      val artifactList = new ArtifactServiceService().findArtifacts
+      val user = new User("12345", "trevorallred", "Trevor Allred")
+      Ok(views.html.desktop.importList(menu, user, artifactList))
+  }
+
   def importArtifact(artifactType: String, name: String) = Action {
     timer("importArtifact") {
       val tableImport = new ArtifactImport(ArtifactType.valueOf(artifactType))
       tableImport.readFromSourceAndWriteToDatabase(name)
       Redirect(controllers.routes.Application.importList()).flashing(
-        "success" -> "The artifact was imported"
+        "success" -> s"$artifactType($name) was imported"
       )
     }
-  }
-
-  def importList = Action {
-    implicit request =>
-      val menu = compiler.compileMenu(applicationMenu)
-      val artifactList = new ArtifactManager().getListToImport
-      val user = new User("12345", "trevorallred", "Trevor Allred")
-      Ok(views.html.desktop.importList(menu, user, artifactList))
   }
 
   def exportAll = TODO

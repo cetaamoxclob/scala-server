@@ -48,11 +48,14 @@ class ArtifactImport(artifactType: ArtifactType) extends ArtifactCompilerService
 
         smartInstance.model.children.foreach {
           case (childModelName: String, childModel: Model) =>
-            val childSource = (objectSource \ childModelName).as[JsArray]
-            println(childModelName + " -- " + childSource)
-            val childSmartSet = new SmartNodeSet(childModel, parentInstance = Some(smartInstance))
-            smartInstance.children += (childModelName -> childSmartSet)
-            convertJsArrayToSmartNodeSet(childSmartSet, childSource)
+            objectSource \ childModelName match {
+              case _: JsUndefined | JsNull => // Don't do anything
+              case childSource: JsArray =>
+                println(childModelName + " -- " + childSource)
+                val childSmartSet = new SmartNodeSet(childModel, parentInstance = Some(smartInstance))
+                smartInstance.children += (childModelName -> childSmartSet)
+                convertJsArrayToSmartNodeSet(childSmartSet, childSource)
+            }
         }
       }
       convertJsObjectToSmartNodeInstance(smartInstance, artifactSource)
@@ -61,16 +64,5 @@ class ArtifactImport(artifactType: ArtifactType) extends ArtifactCompilerService
     }
     insertArtifact()
   }
-
-}
-
-class ArtifactManager {
-
-  def getListToImport : Seq[ArtifactStub] = Seq(
-    ArtifactStub(ArtifactType.Table, "Table"),
-    ArtifactStub(ArtifactType.Table, "Column"),
-    ArtifactStub(ArtifactType.Table, "Join"),
-    ArtifactStub(ArtifactType.Table, "JoinColumn")
-  )
 
 }

@@ -21,7 +21,7 @@ trait DataSaver extends DataReader with Database {
           try {
             connection.rollback()
           } catch {
-            case err => println("failed to rollback connection: " + err)
+            case err: Throwable => println("failed to rollback connection: " + err)
           }
         }
         throw ex

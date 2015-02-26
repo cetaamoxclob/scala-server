@@ -1,5 +1,7 @@
 package services
 
+import java.io.File
+
 import com.google.common.base.Charsets
 import com.google.common.io.Files
 import models.src._
@@ -37,4 +39,21 @@ trait ArtifactService {
     artifactJson.validate[TableJson]
   }
 
+  def findArtifacts : Seq[ArtifactStub] = {
+
+    def artifactName(rootPath: String, filePath: String): String = {
+//      rootPath + "-" + filePath
+      filePath.replace(rootPath, "").replace(".json", "").replace("/", "")
+    }
+
+    ArtifactType.values().flatMap{ artifactType: ArtifactType =>
+      val artifactDir = new File("src/" + artifactType.getDirectory)
+      val allFiles = artifactDir.listFiles()
+      val filesList = allFiles.find(f => f.isFile())
+      val temp = allFiles.map(f => ArtifactStub(artifactType, artifactName(artifactDir.getAbsolutePath, f.getCanonicalPath)))
+      temp
+    }.toSeq
+  }
 }
+
+class ArtifactServiceService extends ArtifactService
