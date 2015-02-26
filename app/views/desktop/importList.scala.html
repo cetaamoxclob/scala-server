@@ -9,28 +9,33 @@
         <title>Tantalim Import</title>
         <link rel="stylesheet" href="@routes.Assets.at("lib/fontawesome/css/font-awesome.min.css")">
         <link rel="stylesheet" href="@routes.Assets.at("lib/bootstrap/dist/css/bootstrap.min.css")">
-        <link rel="stylesheet" href="@routes.Assets.at("lib/bootstrap-social/bootstrap-social.css")">
         <link rel="stylesheet" href="@routes.Assets.at("lib/tantalim-client/public/css/common.css")">
     </head>
     <body>
         @desktop.menu(menu, user)
         <section class="content container">
             <h1>Import Artifacts</h1>
-            @flash.get("success").getOrElse("Welcome!")
+
+            @flash.get("success").getOrElse("")
+
             <table class="table table-hover col-md-6">
                 <thead>
                     <tr>
                         <th>Artifact Type</th>
                         <th>Artifact Name</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for(artifact <- artifactList) {
-                    <tr>
-                        <td>@artifact.artifactType</td>
-                        <td><a href="@routes.Application.importArtifact(artifact.artifactType, artifact.name)">@artifact.name</a></td>
-                    </tr>
+                @for(artifact <- artifactList) {
+                    @helper.form(action = routes.Application.importArtifact(artifact.artifactType.toString, artifact.name)) {
+                        <tr>
+                            <td>@artifact.artifactType</td>
+                            <td>@artifact.name</td>
+                            <td><button class="btn btn-primary btn-xs">Import</button></td>
+                        </tr>
                     }
+                }
                 </tbody>
             </table>
 
@@ -38,16 +43,6 @@
             <!-- Bootstrap JS -->
         <script type="text/javascript" src="@routes.Assets.at("lib/jquery/dist/jquery.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("lib/bootstrap/dist/js/bootstrap.js")"></script>
-            <!-- Angular JS -->
-        <script type="text/javascript" src="@routes.Assets.at("lib/angular/angular.js")"></script>
-        <script type="text/javascript" src="@routes.Assets.at("lib/angular-sanitize/angular-sanitize.js")"></script>
-
-        <script type="text/javascript" src="@routes.Assets.at("lib/angular-cookies/angular-cookies.js")"></script>
-        <script type="text/javascript" src="@routes.Assets.at("lib/angular-resource/angular-resource.js")"></script>
-        <script type="text/javascript" src="@routes.Assets.at("lib/angular-route/angular-route.js")"></script>
-            <!-- Angular UI -->
-        <script type="text/javascript" src="@routes.Assets.at("lib/angular-bootstrap/ui-bootstrap.js")"></script>
-        <script type="text/javascript" src="@routes.Assets.at("lib/angular-bootstrap/ui-bootstrap-tpls.js")"></script>
     </body>
 </html>
 

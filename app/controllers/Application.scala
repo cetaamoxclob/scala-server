@@ -49,9 +49,9 @@ object Application extends Controller with Timer {
 
   def mobile(name: String) = TODO
 
-  def importArtifact(artifactType: ArtifactType, name: String) = Action {
+  def importArtifact(artifactType: String, name: String) = Action {
     timer("importArtifact") {
-      val tableImport = new ArtifactImport(artifactType)
+      val tableImport = new ArtifactImport(ArtifactType.valueOf(artifactType))
       tableImport.readFromSourceAndWriteToDatabase(name)
       Redirect(controllers.routes.Application.importList()).flashing(
         "success" -> "The artifact was imported"

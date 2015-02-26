@@ -24,7 +24,7 @@
         },
         {
           "title": "Import",
-          "href": "/importAll",
+          "href": "/import/",
           "icon": "fa-sign-in"
         },
         {

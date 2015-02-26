@@ -17,7 +17,7 @@ GET         /data/:name                        controllers.Application.readData(
 POST        /data/:name                        controllers.Application.saveData(name)
 
 GET         /import/                           controllers.Application.importList
-POST        /import/:artifactType/:name        controllers.Application.importArtifact(artifactType: models.ArtifactType, name)
+POST        /import/:artifactType/:name        controllers.Application.importArtifact(artifactType, name)
 GET         /exportAll                         controllers.Application.exportAll
 
 # Map static resources from the /public folder to the /assets URL path

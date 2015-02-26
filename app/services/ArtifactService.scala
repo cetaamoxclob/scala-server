@@ -10,8 +10,8 @@ import play.api.libs.json._
 
 trait ArtifactService {
 
-  def getArtifactContentAndParseJson(artifactType: ArtifactClass.Value, name: String): JsValue = {
-    val directoryName = "src/" + artifactType + "/" + name + ".json"
+  def getArtifactContentAndParseJson(artifactType: ArtifactType, name: String): JsValue = {
+    val directoryName = "src/" + artifactType.getDirectory + "/" + name + ".json"
     val artifactContent = Files.toString(Play.getFile(directoryName), Charsets.UTF_8)
 
     Json.parse(artifactContent)
@@ -33,7 +33,7 @@ trait ArtifactService {
   }
 
   def getTable(name: String): JsResult[TableJson] = {
-    val artifactJson = getArtifactContentAndParseJson(ArtifactType.Model, name)
+    val artifactJson = getArtifactContentAndParseJson(ArtifactType.Table, name)
     artifactJson.validate[TableJson]
   }
 
