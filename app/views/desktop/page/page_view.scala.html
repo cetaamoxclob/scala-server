@@ -87,36 +87,7 @@
             </div>
 
             <div class="" data-ng-if="PageCursor.sections.@(page.name).viewMode === 'table'" data-ng-click="chooseModel('@page.model.name')">
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                            @for(field <- page.fields) {
-                                @if(field.showInTableView) {
-                                    <th>@field.label</th>
-                                }
-                            }
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr data-ng-repeat="row in current.sets.@(page.model.name).rows"
-                            data-ng-click="action.select('@page.model.name', $index)"
-                            data-ng-dblclick="PageCursor.sections.@(page.name).viewMode = 'form'"
-                            data-ng-class="{success: row.id === current.instances.@(page.model.name).id}">
-                            @for(field <- page.fields) {
-                                @if(field.showInTableView) {
-                                    <td class="text-display">
-                                        <span class="text-view" data-ng-bind="row.data.@(field.name) @if(field.filter.isDefined){ | @field.filter}"></span>
-                                    </td>
-                                }
-                            }
-                            </tr>
-                            <tr data-ng-hide="current.sets.@(page.model.name).rows.length">
-                                <td colspan="@page.fieldLengthInTableView">No Data Found</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                @desktop.page.grid_view(page)
             </div>
 
             <div class="row" data-ng-if="PageCursor.sections.@(page.name).viewMode === 'form'" data-ng-click="chooseModel('@page.model.name')">

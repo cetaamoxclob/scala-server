@@ -1,0 +1,37 @@
+@(page: Page)
+@import models.Page
+
+<div class="table-responsive">
+    <table class="tnt-grid table table-bordered">
+        <thead>
+            <tr>
+            @for(field <- page.fields) {
+                @if(field.showInTableView) {
+                    <th>@field.label</th>
+                }
+            }
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="row in current.sets.@(page.model.name).rows">
+            @for(field <- page.fields) {
+                @if(field.showInTableView) {
+                    <td class="text-display"
+                        data-ng-class="{success: action.cellIsSelected('@page.model.name', $index, '@field.name')}"
+                        data-ng-mousedown="action.mousedown('@page.model.name', $index, '@field.name')"
+                        data-ng-mouseover="action.mouseover('@page.model.name', $index, '@field.name')"
+                        data-ng-mouseup="action.mouseup('@page.model.name', $index, '@field.name')"
+                        data-ng-dblclick="action.dblclick('@page.model.name', $index, '@field.name')">
+                        <span class="text-view" data-ng-bind="row.data.@field.name @if(field.filter.isDefined){ | @field.filter}"></span>
+                        <input class="text-edit" data-ng-model="row.data.@field.name"
+                            data-ng-show="action.cellIsEditing('@page.model.name', $index, '@field.name')">
+                    </td>
+                }
+            }
+            </tr>
+            <tr data-ng-hide="current.sets.@(page.model.name).rows.length">
+                <td colspan="@page.fieldLengthInTableView">No Data Found</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
