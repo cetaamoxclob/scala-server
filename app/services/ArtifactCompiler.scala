@@ -280,7 +280,7 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
         val columns = table.columns.map(column => column.name -> compileTableColumn(column)).toMap
         new DeepTable(
           name,
-          table.dbName,
+          table.dbName.getOrElse(name),
           primaryKey = if (table.primaryKey.isDefined) columns.get(table.primaryKey.get) else None,
           columns = columns,
           joins = if (table.joins.isDefined) {
@@ -305,7 +305,7 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
         val columns = table.columns.map(column => column.name -> compileTableColumn(column)).toMap
         new ShallowTable(
           name,
-          table.dbName,
+          table.dbName.getOrElse(name),
           columns = columns
         )
       }
@@ -318,7 +318,7 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
   private def compileTableColumn(column: TableColumnJson): TableColumn = {
     new TableColumn(
       name = column.name,
-      dbName = column.dbName,
+      dbName = column.dbName.getOrElse(column.name),
       dataType = column.dataType.getOrElse("String"),
       fieldType = column.fieldType.getOrElse("text"),
       required = column.required.getOrElse(false),
@@ -341,12 +341,11 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
 
   private def compileTableJoinColumn(fromTable: Map[String, TableColumn], toTable: Map[String, TableColumn], joinColumn: TableJoinColumnJson): TableJoinColumn = {
     new TableJoinColumn(
-      to = toTable.get(joinColumn.to).getOrElse {
+      to = toTable.getOrElse(
+        joinColumn.to,
         throw new Exception("Column `" + joinColumn.to + "` was not found when joining to table")
-      },
-      from = if (joinColumn.from.isDefined) {
-        fromTable.get(joinColumn.from.get)
-      } else None,
+      ),
+      from = if (joinColumn.from.isDefined) fromTable.get(joinColumn.from.get) else None,
       fromText = joinColumn.fromText
     )
   }
