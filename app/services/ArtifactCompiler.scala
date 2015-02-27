@@ -135,6 +135,7 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
     val column = modelField.basisColumn
     new PageField(
       name = field.name,
+      modelField = modelField,
       fieldType = field.fieldType.getOrElse(column.fieldType),
       required = modelField.required,
       disabled = field.disabled.getOrElse(!column.updateable),

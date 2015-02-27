@@ -50,6 +50,7 @@ case class Page(
 case class PageField(
                       name: String,
                       fieldType: String,
+                      modelField: ModelField,
                       label: String,
                       required: Boolean,
                       disabled: Boolean,
@@ -63,7 +64,8 @@ case class PageField(
                       blurFunction: Option[String],
                       select: Option[PageFieldSelect],
                       links: Seq[PageFieldLink]
-                      )
+                      ) {
+}
 
 case class PageFieldSelect(model: String,
                            sourceValue: String,

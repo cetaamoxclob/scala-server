@@ -18,15 +18,25 @@
                 <td class="tnt-grid-left-nav" data-ng-bind="$index + 1"></td>
             @for(field <- page.fields) {
                 @if(field.showInTableView) {
-                    <td class="text-display"
+                    <td class="text-display @if(field.modelField.basisColumn.dataType == "Int"){text-right}"
                         data-ng-class="{success: action.cellIsSelected('@page.model.name', $index, '@field.name')}"
                         data-ng-mousedown="action.mousedown('@page.model.name', $index, '@field.name')"
                         data-ng-mouseover="action.mouseover('@page.model.name', $index, '@field.name')"
                         data-ng-mouseup="action.mouseup('@page.model.name', $index, '@field.name')"
                         data-ng-dblclick="action.dblclick('@page.model.name', $index, '@field.name')">
-                        <span class="text-view" data-ng-bind="row.data.@field.name @if(field.filter.isDefined){ | @field.filter}"></span>
-                        <input class="text-edit" data-ng-model="row.data.@field.name"
-                            data-ng-show="action.cellIsEditing('@page.model.name', $index, '@field.name')">
+                        @if(field.fieldType == "checkbox") {
+                            <i data-ng-show="row.data.@field.name == true" class="icon-check-sign icon-large"></i>
+                            <i data-ng-show="row.data.@field.name == false" class="icon-check-sign icon-large"></i>
+                            <input type="checkbox" data-ng-model="row.data.@field.name"
+                            data-ng-show="action.cellIsEditing('@page.model.name', $index, '@field.name')"
+                            data-ng-change="rowChanged(current.instances.@(page.model.name), '@field.name')">
+                        } else {
+                            @field.modelField.basisColumn.dataType
+                            <span class="text-view" data-ng-bind="row.data.@field.name @if(field.filter.isDefined){ | @field.filter}"></span>
+                            <input class="text-edit" data-ng-model="row.data.@field.name"
+                            data-ng-show="action.cellIsEditing('@page.model.name', $index, '@field.name')"
+                            data-ng-change="rowChanged(current.instances.@(page.model.name))">
+                        }
                     </td>
                 }
             }
