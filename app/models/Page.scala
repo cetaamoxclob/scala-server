@@ -66,7 +66,7 @@ case class PageField(
                       links: Seq[PageFieldLink]
                       ) {
   def alignRight = {
-    isNumericType || isDateType
+    isNumericType
   }
   def isNumericType = {
     modelField.basisColumn.dataType == "Integer"
