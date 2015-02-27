@@ -1,6 +1,7 @@
 {
   "title": "Review Claims",
   "icon": "fa-bed",
+  "mode": "table",
   "fields": [
     {
       "name": "PatientPatientID"
@@ -13,6 +14,9 @@
     },
     {
       "name": "PatientLastName"
+    },
+    {
+      "name": "PatientDateOfBirth"
     }
   ],
   "children": []

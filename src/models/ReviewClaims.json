@@ -3,14 +3,17 @@
   "limit": 10,
   "orderBy": [
     {
-      "fieldName": "PatientName"
+      "fieldName": "PatientLastName"
+    },
+    {
+      "fieldName": "PatientFirstName"
     }
   ],
   "fields": [
     {
       "name": "PatientPatientID",
       "updateable": false,
-      "basisColumn": "TableID"
+      "basisColumn": "PatientID"
     },
     {
       "name": "PatientName",
@@ -23,6 +26,10 @@
     {
       "name": "PatientLastName",
       "basisColumn": "LastName"
+    },
+    {
+      "name": "PatientDateOfBirth",
+      "basisColumn": "BirthDate"
     }
   ],
   "children": []
