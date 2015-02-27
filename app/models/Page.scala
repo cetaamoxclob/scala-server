@@ -65,6 +65,15 @@ case class PageField(
                       select: Option[PageFieldSelect],
                       links: Seq[PageFieldLink]
                       ) {
+  def alignRight = {
+    isNumericType || isDateType
+  }
+  def isNumericType = {
+    modelField.basisColumn.dataType == "Integer"
+  }
+  def isDateType = {
+    modelField.basisColumn.dataType == "Date"
+  }
 }
 
 case class PageFieldSelect(model: String,
