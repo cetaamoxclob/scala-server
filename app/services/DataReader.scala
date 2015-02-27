@@ -25,11 +25,14 @@ trait DataReader extends ArtifactCompiler with Database {
       limit = model.limit)
 
     if (filter.isDefined) {
-      val parseResults = DataFilter.parse(filter.get, model.fields)
-      sqlBuilder = sqlBuilder.copy(
-        where = Option(parseResults._1),
-        parameters = parseResults._2
-      )
+      DataFilter.parse(filter.get, model.fields) match {
+        case (where: String, params: List[Any])  => if (!params.isEmpty) {
+          sqlBuilder = sqlBuilder.copy(
+            where = Some(where),
+            parameters = params
+          )
+        }
+      }
     }
 
     val rs = query(sqlBuilder.toPreparedStatement, sqlBuilder.parameters)
