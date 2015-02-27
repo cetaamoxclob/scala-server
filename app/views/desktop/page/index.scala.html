@@ -13,9 +13,7 @@
             <title>@page.title</title>
             <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
-            @if(page.icon.isDefined) {
-                <link href="@page.icon" rel="shortcut icon" type="image/x-icon">
-            }
+            <link rel="shortcut icon" href="@routes.Assets.at("images/favicon.png")">
             <base href="/page/@page.name/">
 
             <link rel="stylesheet" href="@routes.Assets.at("lib/fontawesome/css/font-awesome.min.css")">
