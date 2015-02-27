@@ -1,0 +1,28 @@
+{
+  "dbName": "slhpPatient",
+  "primaryKey": "PatientID",
+  "columns": [
+    {
+      "name": "PatientID",
+      "dataType": "Integer",
+      "updateable": false
+    },
+    {
+      "name": "Name",
+      "label": "Patient Name"
+    },
+    {
+      "name": "FirstName",
+      "label": "First Name"
+    },
+    {
+      "name": "LastName",
+      "label": "Last Name"
+    },
+    {
+      "name": "BirthDate",
+      "dataType": "Date",
+      "label": "DOB"
+    }
+  ]
+}

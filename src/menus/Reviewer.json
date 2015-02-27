@@ -5,9 +5,7 @@
       "title": "Review",
       "items": [
         {
-          "title": "Import",
-          "href": "/import/",
-          "icon": "fa-sign-in"
+          "page": "ReviewClaims"
         }
       ]
     },

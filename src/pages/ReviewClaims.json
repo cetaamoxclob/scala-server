@@ -1,0 +1,19 @@
+{
+  "title": "Review Claims",
+  "icon": "fa-bed",
+  "fields": [
+    {
+      "name": "PatientPatientID"
+    },
+    {
+      "name": "PatientName"
+    },
+    {
+      "name": "PatientFirstName"
+    },
+    {
+      "name": "PatientLastName"
+    }
+  ],
+  "children": []
+}

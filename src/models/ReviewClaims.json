@@ -1,0 +1,29 @@
+{
+  "basisTable": "Patient",
+  "limit": 10,
+  "orderBy": [
+    {
+      "fieldName": "PatientName"
+    }
+  ],
+  "fields": [
+    {
+      "name": "PatientPatientID",
+      "updateable": false,
+      "basisColumn": "TableID"
+    },
+    {
+      "name": "PatientName",
+      "basisColumn": "Name"
+    },
+    {
+      "name": "PatientFirstName",
+      "basisColumn": "FirstName"
+    },
+    {
+      "name": "PatientLastName",
+      "basisColumn": "LastName"
+    }
+  ],
+  "children": []
+}
