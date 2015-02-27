@@ -7,14 +7,14 @@ import models.{Model, ModelOrderBy}
 
 trait DataReader extends ArtifactCompiler with Database {
 
-//  def queryOneRow(model: Model, id: TntValue): Option[SmartNodeInstance] = {
-//    queryOneRow(model, Some(f"${model.instanceID.get} = $id"))
-//  }
-//
-//  def queryOneRow(model: Model, filter: Option[String]): Option[SmartNodeInstance] = {
-//    val existingRows = queryModelData(model, 1, filter, Seq.empty)
-//    existingRows.rows.headOption
-//  }
+  //  def queryOneRow(model: Model, id: TntValue): Option[SmartNodeInstance] = {
+  //    queryOneRow(model, Some(f"${model.instanceID.get} = $id"))
+  //  }
+  //
+  //  def queryOneRow(model: Model, filter: Option[String]): Option[SmartNodeInstance] = {
+  //    val existingRows = queryModelData(model, 1, filter, Seq.empty)
+  //    existingRows.rows.headOption
+  //  }
 
   def queryModelData(model: Model, page: Int = 1, filter: Option[String] = None, orderBy: Seq[ModelOrderBy] = Seq.empty): SmartNodeSet = {
     var sqlBuilder = new SqlBuilder(
@@ -26,7 +26,7 @@ trait DataReader extends ArtifactCompiler with Database {
 
     if (filter.isDefined) {
       DataFilter.parse(filter.get, model.fields) match {
-        case (where: String, params: List[Any])  => if (!params.isEmpty) {
+        case (where: String, params: List[Any]) => if (!params.isEmpty) {
           sqlBuilder = sqlBuilder.copy(
             where = Some(where),
             parameters = params
@@ -66,7 +66,12 @@ trait DataReader extends ArtifactCompiler with Database {
               case "Int" | "Integer" => TntInt(rs.getInt(fieldName))
               case "String" => TntString(rs.getString(fieldName))
               case "Boolean" => TntBoolean(rs.getBoolean(fieldName))
-              case "Date" => TntDate(rs.getDate(fieldName))
+              case "Date" => {
+                rs.getDate(fieldName) match {
+                  case null => TntNull()
+                  case _ => TntDate(rs.getDate(fieldName))
+                }
+              }
               case _ => throw new MatchError(f"field.dataType of `${f.basisColumn.dataType}` is not String or Integer")
             }
           })
