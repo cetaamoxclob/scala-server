@@ -1,0 +1,53 @@
+{
+  "appTitle": "SLHP Medical Code Review",
+  "content": [
+    {
+      "title": "Review",
+      "items": [
+        {
+          "title": "Import",
+          "href": "/import/",
+          "icon": "fa-sign-in"
+        }
+      ]
+    },
+    {
+      "title": "Data Warehouse",
+      "items": [
+        ]
+    },
+    {
+      "title": "Tantalim IDE",
+      "items": [
+        {
+          "page": "ListTables"
+        },
+        {
+          "page": "BuildTable"
+        },
+        {
+          "page": "TableReport"
+        },
+        {
+          "title": "Import",
+          "href": "/import/",
+          "icon": "fa-sign-in"
+        },
+        {
+          "title": "Export",
+          "href": "/exportAll",
+          "icon": "fa-sign-out"
+        }
+      ]
+    },
+    {
+      "title": "Manage",
+      "items": [
+        {
+          "page": "ManageUsers",
+          "title": "Users"
+        }
+      ]
+    }
+  ]
+}
