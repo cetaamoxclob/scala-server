@@ -4,7 +4,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 
-case class TableJson(dbName: String,
+case class TableJson(dbName: Option[String],
                      module: Option[String],
                      database: Option[String],
                      primaryKey: Option[String],
@@ -16,7 +16,7 @@ case class TableJson(dbName: String,
                       )
 
 case class TableColumnJson(name: String,
-                           dbName: String,
+                           dbName: Option[String],
                            dataType: Option[String],
                            updateable: Option[Boolean],
                            required: Option[Boolean],
@@ -38,7 +38,7 @@ case class TableJoinColumnJson(to: String,
 
 object TableJson {
   implicit def tableReads: Reads[TableJson] = (
-    (JsPath \ "dbName").read[String] and
+    (JsPath \ "dbName").readNullable[String] and
       (JsPath \ "module").readNullable[String] and
       (JsPath \ "database").readNullable[String] and
       (JsPath \ "primaryKey").readNullable[String] and
@@ -51,7 +51,7 @@ object TableJson {
 
   implicit def tableColumnReads: Reads[TableColumnJson] = (
     (JsPath \ "name").read[String] and
-      (JsPath \ "dbName").read[String] and
+      (JsPath \ "dbName").readNullable[String] and
       (JsPath \ "dataType").readNullable[String] and
       (JsPath \ "updateable").readNullable[Boolean] and
       (JsPath \ "required").readNullable[Boolean] and
