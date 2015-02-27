@@ -5,6 +5,7 @@
     <table class="tnt-grid table table-bordered">
         <thead>
             <tr>
+                <th class="tnt-grid-corner"></th>
             @for(field <- page.fields) {
                 @if(field.showInTableView) {
                     <th>@field.label</th>
@@ -14,6 +15,7 @@
         </thead>
         <tbody>
             <tr data-ng-repeat="row in current.sets.@(page.model.name).rows">
+                <td class="tnt-grid-left-nav" data-ng-bind="$index + 1"></td>
             @for(field <- page.fields) {
                 @if(field.showInTableView) {
                     <td class="text-display"

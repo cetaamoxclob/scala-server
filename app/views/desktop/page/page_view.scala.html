@@ -39,7 +39,50 @@
     </div>
     <div data-ng-show="action.length('@page.model.name')">
         <div data-ng-hide="hide@page.name">
-            <div class="form-group">
+            <div class="form-group" data-ng-show="PageCursor.sections.@(page.name).viewMode === 'table'">
+                @if(page.model.allowInsert) {
+                    <button type="button" class="btn btn-primary btn-xs"
+                    data-ng-click="action.insert('@page.model.name')"
+                    data-ng-disabled="TopPageForm.$invalid">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Insert
+                    </button>
+                }
+                @if(page.model.allowDelete) {
+                    <button type="button" class="btn btn-danger btn-xs"
+                    data-ng-click="action.deleteSelected('@page.model.name')"
+                    data-ng-disabled="!action.deleteEnabled('@page.model.name')">
+                        <span class="glyphicon glyphicon-trash"></span>
+                        Delete
+                    </button>
+                }
+                @if(depth == 0) {
+                    <button type="button" class="btn btn-xs"
+                    data-ng-click="searchController.previousPage()"
+                    data-ng-disabled="searchController.page() <= 1 || TopPageForm.$invalid">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                        Previous Page
+                    </button>
+                    <button type="button" class="btn btn-xs"
+                    data-ng-click="searchController.nextPage()"
+                    data-ng-disabled="searchController.page() >= searchController.maxPages || TopPageForm.$invalid">
+                        Next Page
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </button>
+                }
+                @if(page.hasFormView) {
+                    <button type="button" class="btn btn-default btn-xs" data-ng-click="PageCursor.sections.@(page.name).viewMode = 'form'"
+                    data-ng-show="PageCursor.sections.@(page.name).viewMode !== 'form'">
+                        <span class="glyphicon glyphicon-file"></span>
+                        Form View
+                    </button>
+                }
+            <span class="instance-count" data-ng-show="current.sets.@(page.model.name).rows.length > 0">
+                Page <span data-ng-bind="searchController.page()"></span>
+                  of <span data-ng-bind="searchController.maxPages"></span>
+            </span>
+            </div>
+            <div class="form-group" data-ng-show="PageCursor.sections.@(page.name).viewMode === 'form'">
                 @if(page.model.allowInsert) {
                     <button type="button" class="btn btn-primary btn-xs"
                     data-ng-click="action.insert('@page.model.name')"
@@ -60,24 +103,19 @@
             data-ng-click="action.previous('@page.model.name')"
             data-ng-disabled="current.sets.@(page.model.name).currentIndex == 0 || TopPageForm.$invalid">
                 <span class="glyphicon glyphicon-chevron-left"></span>
-                Previous
+                Previous Row
             </button>
             <button type="button" class="btn btn-xs"
             data-ng-click="action.next('@page.model.name')"
             data-ng-disabled="current.sets.@(page.model.name).currentIndex == current.sets.@(page.model.name).rows.length - 1 || TopPageForm.$invalid">
-                Next
+                Next Row
                 <span class="glyphicon glyphicon-chevron-right"></span>
             </button>
-                @if(page.hasFormView || page.hasTableView) {
+                @if(page.hasTableView) {
                     <button type="button" class="btn btn-default btn-xs" data-ng-click="PageCursor.sections.@(page.name).viewMode = 'table'"
                     data-ng-show="PageCursor.sections.@(page.name).viewMode !== 'table'">
                         <span class="glyphicon glyphicon-th"></span>
                         Table View
-                    </button>
-                    <button type="button" class="btn btn-default btn-xs" data-ng-click="PageCursor.sections.@(page.name).viewMode = 'form'"
-                    data-ng-show="PageCursor.sections.@(page.name).viewMode !== 'form'">
-                        <span class="glyphicon glyphicon-file"></span>
-                        Form View
                     </button>
                 }
             <span class="instance-count" data-ng-show="current.sets.@(page.model.name).rows.length > 0">
