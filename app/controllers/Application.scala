@@ -10,7 +10,7 @@ import services._
 object Application extends Controller with Timer {
   val compiler = new ArtifactCompilerService
 
-  private val applicationMenu = "Reviewer"
+  private val applicationMenu = "Default"
 
   def index = Action {
     val menu = compiler.compileMenu(applicationMenu)
