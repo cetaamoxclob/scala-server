@@ -12,7 +12,7 @@ import play.api.libs.json._
 
 trait ArtifactService {
 
-  private val tantalimRoot = "tantalim"
+  private def tantalimRoot = "tantalim"
 
   private def getSourceLocation(artifactType: ArtifactType, name: String): String = {
     val fileNameAndPartialDirLocation = artifactType.getDirectory + "/" + name + ".json"
