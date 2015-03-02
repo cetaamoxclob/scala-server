@@ -16,8 +16,8 @@
     },
     {
       "name": "ClaimNumber",
-      "label": "Claim Number"
-      "required": true,      
+      "label": "Claim Number",
+      "required": true      
     },
     {
       "name": "ServiceDate",
