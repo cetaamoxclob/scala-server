@@ -6,7 +6,7 @@ lazy val `tantalim` = (project in file(".")).enablePlugins(PlayScala)
   .aggregate(tantalimServer).dependsOn(tantalimServer)
   .aggregate(tantalimModels).dependsOn(tantalimModels)
 
-lazy val tantalimServer = project in file("modules/tantalimServer")
+lazy val tantalimServer = (project in file("modules/tantalimServer")).enablePlugins(PlayScala)
 
 lazy val tantalimModels = project in file("modules/tantalimModels")
 

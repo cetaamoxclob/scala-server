@@ -1,4 +1,4 @@
-package com.tantalim.data;
+package data;
 
 public enum Comparator {
     Equals,
