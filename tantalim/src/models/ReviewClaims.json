@@ -11,7 +11,7 @@
   ],
   "fields": [
     {
-      "name": "PatientPatientID",
+      "name": "PatientID",
       "updateable": false,
       "basisColumn": "PatientID"
     },
@@ -28,9 +28,44 @@
       "basisColumn": "LastName"
     },
     {
-      "name": "PatientDateOfBirth",
+      "name": "PatientBirthDate",
       "basisColumn": "BirthDate"
     }
   ],
-  "children": []
+  "children": [
+    {
+      "name": "Claim",
+      "basisTable": "Claim",
+      "parentLink": {
+        "parentField": "PatientID",
+        "childField": "ClaimPatientID"
+      },
+      "fields": [
+        {
+          "name": "ClaimClaimID",
+          "basisColumn": "ClaimID"
+        },
+        {
+          "name": "ClaimPatientID",
+          "basisColumn": "PatientID"
+        },
+        {
+          "name": "ClaimClaimNumber",
+          "basisColumn": "ClaimNumber"
+        },
+        {
+          "name": "ClaimServiceDate",
+          "basisColumn": "ServiceDate"
+        },
+        {
+          "name": "ClaimVendorID",
+          "basisColumn": "VendorID"
+        },
+        {
+          "name": "ClaimProviderID",
+          "basisColumn": "ProviderID"
+        }
+      ]
+    }
+  ]
 }

@@ -24,19 +24,14 @@
     {
       "name": "VendorID",
       "dataType": "Integer",
-      "updateable": false,
-      "label": "First Name"
+      "updateable": false
     },
     {
       "name": "ProviderID",
       "dataType": "Integer",
-      "updateable": false,
-      "label": "First Name"
+      "updateable": false
     }
   ],
   "joins": [
-    {
-
-    }
   ]
 }
