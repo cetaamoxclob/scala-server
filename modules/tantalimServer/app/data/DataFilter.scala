@@ -1,6 +1,6 @@
 package data
 
-import models.ModelField
+import com.tantalim.models.ModelField
 import org.joda.time.DateTime
 
 object DataFilter {
@@ -52,7 +52,7 @@ object DataFilter {
         case Comparator.BeginsWith => (s"LIKE ?", List(right + "%"))
         case Comparator.EndsWith => (s"LIKE ?", List("%" + right))
         case Comparator.Contains => (s"LIKE ?", List("%" + right + "%"))
-        case Comparator.In => {
+        case Comparator.In =>
           val valueListAsString = if (right.charAt(0) == '(' && right.last == ')') right.substring(1, right.length - 1)
           else right
           val values = valueListAsString.split(",").toList
@@ -60,8 +60,7 @@ object DataFilter {
           (f"IN ($bindings)", values.map(value => {
             value.replaceAll("\"", "").toInt
           }))
-        }
-        case _ => {
+        case _ =>
           if (fieldLeft.get.basisColumn.dataType == "Date") {
             val formattedDate = formatDate(right)
             if (formattedDate.isDefined)
@@ -74,7 +73,6 @@ object DataFilter {
             } else right.toString
             (comparatorToSql(comparator) + " ?", List(parameter))
           }
-        }
       }
       (fieldToSql(fieldLeft.get) + " " + rightSide, params)
 

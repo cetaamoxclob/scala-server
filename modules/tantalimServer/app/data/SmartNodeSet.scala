@@ -1,6 +1,6 @@
 package data
 
-import models.Model
+import com.tantalim.models.Model
 
 import scala.collection.mutable.ListBuffer
 

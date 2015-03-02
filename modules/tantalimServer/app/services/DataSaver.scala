@@ -3,7 +3,7 @@ package services
 import java.sql.{SQLException, Connection}
 
 import data._
-import models.Model
+import com.tantalim.models.Model
 
 trait DataSaver extends DataReader with Database {
   def saveAll(dataToSave: SmartNodeSet): Unit = {

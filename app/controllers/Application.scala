@@ -2,7 +2,7 @@ package controllers
 
 import com.tantalim.util.{Timer, LoginStrategyType}
 import data.{DataState, DataConverters, SmartNodeSet}
-import models.{ArtifactType, ModelOrderBy, User}
+import com.tantalim.models.{ArtifactType, ModelOrderBy, User}
 import play.api.libs.json._
 import play.api.mvc._
 import services._

@@ -4,7 +4,7 @@ import java.sql.Date
 import java.util.Calendar
 
 import mock.FakeArtifacts
-import models.{TableColumn, ModelField}
+import com.tantalim.models.{TableColumn, ModelField}
 import org.joda.time.DateTime
 import org.junit.runner.RunWith
 import org.specs2.mutable._

@@ -1,7 +1,7 @@
 package services
 
 import data._
-import models.{ArtifactStub, ArtifactType, Model, ModelField}
+import com.tantalim.models.{ArtifactType, Model, ModelField}
 import play.api.libs.json._
 
 class ArtifactImport(artifactType: ArtifactType) extends ArtifactCompilerService with DataReader with DataSaver {

@@ -1,7 +1,7 @@
 package services
 
 import mock.FakeArtifacts
-import models._
+import com.tantalim.models._
 import org.junit.runner._
 import org.specs2.mock._
 import org.specs2.mutable._

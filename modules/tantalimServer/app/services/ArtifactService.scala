@@ -4,9 +4,9 @@ import java.io.File
 
 import com.google.common.base.Charsets
 import com.google.common.io.Files
+import com.tantalim.models.{ArtifactStub, ArtifactType}
 import models.src._
 import play.api.Play.current
-import models._
 import play.api.Play
 import play.api.libs.json._
 
@@ -75,7 +75,6 @@ trait ArtifactService {
     ArtifactType.values().flatMap { artifactType: ArtifactType =>
       val artifactDir = new File(tantalimRoot + "src/" + artifactType.getDirectory)
       val allFiles = artifactDir.listFiles()
-      val filesList = allFiles.find(f => f.isFile())
       val temp = allFiles.map(f => ArtifactStub(artifactType, artifactName(artifactDir.getAbsolutePath, f.getCanonicalPath)))
       temp
     }.toSeq

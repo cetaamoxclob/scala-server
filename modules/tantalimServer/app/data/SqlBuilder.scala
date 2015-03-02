@@ -1,6 +1,6 @@
 package data
 
-import models.{ModelOrderBy, ModelStep, ModelField}
+import com.tantalim.models.{ModelOrderBy, ModelStep, ModelField}
 
 case class SqlBuilder(
                        from: String,
@@ -19,9 +19,8 @@ case class SqlBuilder(
   private def getFields: String = {
     if (fields.isEmpty) "*"
     else fields.map {
-      case (fieldName, f) => {
-        s"`t0`.`${f.basisColumn.dbName}` AS `${fieldName}`"
-      }
+      case (fieldName, f) =>
+        s"`t0`.`${f.basisColumn.dbName}` AS `$fieldName`"
     }.toSeq.mkString(", ")
   }
 

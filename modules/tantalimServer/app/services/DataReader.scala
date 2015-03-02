@@ -3,7 +3,7 @@ package services
 import java.sql.ResultSet
 
 import data._
-import models.{Model, ModelOrderBy}
+import com.tantalim.models.{Model, ModelOrderBy}
 
 trait DataReader extends ArtifactCompiler with Database {
 

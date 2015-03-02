@@ -1,6 +1,6 @@
 package services
 
-import models.DeepTable
+import com.tantalim.models.DeepTable
 import play.api.cache.Cache
 import play.api.Play.current
 

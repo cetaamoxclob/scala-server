@@ -1,7 +1,7 @@
 package services
 
+import com.tantalim.models._
 import models.src._
-import models._
 import play.api.libs.json.{JsError, JsSuccess}
 import scala.collection._
 
@@ -11,15 +11,13 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
     println("Compiling menu " + name)
 
     getMenu(name) match {
-      case JsSuccess(menu, _) => {
+      case JsSuccess(menu, _) =>
         new Menu(
           menu.appTitle,
           menu.content.map(content => compileMenuContent(content))
         )
-      }
-      case err: JsError => {
+      case err: JsError =>
         throw new Exception("Failed to compile menu " + name + " due to the following error:" + err.toString)
-      }
     }
   }
 
@@ -58,9 +56,8 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
         })
         val model = compileModel(modelName)
         compilePageView(page, model)
-      case JsError(err) => {
+      case JsError(err) =>
         throw new Exception("Failed to compile page " + name + " due to the following error:" + err.toString)
-      }
     }
   }
 
@@ -68,16 +65,14 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
     println("Compiling shallow page " + name)
     val json = getArtifactContentAndParseJson(ArtifactType.Page, name)
     json.validate[PageJson] match {
-      case JsSuccess(pageJson, _) => {
+      case JsSuccess(pageJson, _) =>
         new ShallowPage(
           name,
           pageJson.title,
           pageJson.icon
         )
-      }
-      case JsError(err) => {
+      case JsError(err) =>
         throw new Exception("Failed to compile page " + name + " due to the following error:" + err.toString)
-      }
     }
   }
 
@@ -180,12 +175,10 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
     println("Compiling model " + name)
     val json = getArtifactContentAndParseJson(ArtifactType.Model, name)
     json.validate[ModelJson] match {
-      case JsSuccess(modelJson, _) => {
+      case JsSuccess(modelJson, _) =>
         compileModelView(modelJson.copy(name = Option(name)))
-      }
-      case JsError(err) => {
+      case JsError(err) =>
         throw new Exception("Failed to compile model " + name + " due to the following error:" + err.toString)
-      }
     }
   }
 
@@ -233,7 +226,7 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
     if (steps.isEmpty) Map.empty
     else {
       steps.get.zipWithIndex.map {
-        case (step, counter) => {
+        case (step, counter) =>
           val toTable = fromTableJoins.getOrElse(
             step.join,
             throw new Exception(f"Failed to find table named `${step.join}` in join clause")
@@ -250,7 +243,6 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
             fields = fields,
             steps = Map.empty
           )
-        }
       }.toMap
     }
   }
@@ -276,7 +268,7 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
     println("Compiling table " + name)
     val json = getArtifactContentAndParseJson(ArtifactType.Table, name)
     json.validate[TableJson] match {
-      case JsSuccess(table, _) => {
+      case JsSuccess(table, _) =>
         val columns = table.columns.map(column => column.name -> compileTableColumn(column)).toMap
         new DeepTable(
           name,
@@ -290,10 +282,8 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
           allowUpdate = table.allowUpdate.getOrElse(true),
           allowDelete = table.allowDelete.getOrElse(true)
         )
-      }
-      case JsError(err) => {
+      case JsError(err) =>
         throw new Exception("Failed to compile table " + name + " due to the following error:" + err.toString)
-      }
     }
   }
 
@@ -301,17 +291,15 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
     println("Compiling shallow table " + name)
     val json = getArtifactContentAndParseJson(ArtifactType.Table, name)
     json.validate[TableJson] match {
-      case JsSuccess(table, _) => {
+      case JsSuccess(table, _) =>
         val columns = table.columns.map(column => column.name -> compileTableColumn(column)).toMap
         new ShallowTable(
           name,
           table.dbName.getOrElse(name),
           columns = columns
         )
-      }
-      case JsError(err) => {
+      case JsError(err) =>
         throw new Exception("Failed to compile shallow table " + name + " due to the following error:" + err.toString)
-      }
     }
   }
 
