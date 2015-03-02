@@ -1,6 +1,6 @@
 package controllers
 
-import tantalim.util.{Timer, LoginStrategyType}
+import com.tantalim.util.{Timer, LoginStrategyType}
 import data.{DataState, DataConverters, SmartNodeSet}
 import models.{ArtifactType, ModelOrderBy, User}
 import play.api.libs.json._

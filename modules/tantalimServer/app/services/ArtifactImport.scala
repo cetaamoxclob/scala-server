@@ -55,6 +55,7 @@ class ArtifactImport(artifactType: ArtifactType) extends ArtifactCompilerService
                 val childSmartSet = new SmartNodeSet(childModel, parentInstance = Some(smartInstance))
                 smartInstance.children += (childModelName -> childSmartSet)
                 convertJsArrayToSmartNodeSet(childSmartSet, childSource)
+              case _ => throw new Exception("Something else happened that shouldn't")
             }
         }
       }

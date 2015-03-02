@@ -1,4 +1,4 @@
-package tantalim.util
+package com.tantalim.util
 
 trait Timer {
 
