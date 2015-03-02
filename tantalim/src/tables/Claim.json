@@ -1,0 +1,42 @@
+{
+  "dbName": "slhpClaim",
+  "primaryKey": "ClaimID",
+  "columns": [
+    {
+      "name": "ClaimID",
+      "dataType": "Integer",
+      "updateable": false
+    },
+    {
+      "name": "PatientID",
+      "dataType": "Integer",
+      "updateable": false
+    },
+    {
+      "name": "ClaimNumber",
+      "label": "Claim Number"
+    },
+    {
+      "name": "ServiceDate",
+      "dataType": "Date",
+      "label": "DOS"
+    },
+    {
+      "name": "VendorID",
+      "dataType": "Integer",
+      "updateable": false,
+      "label": "First Name"
+    },
+    {
+      "name": "ProviderID",
+      "dataType": "Integer",
+      "updateable": false,
+      "label": "First Name"
+    }
+  ],
+  "joins": [
+    {
+
+    }
+  ]
+}
