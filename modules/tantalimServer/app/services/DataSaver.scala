@@ -47,7 +47,6 @@ trait DataSaver extends DataReader with Database {
     }
   }
 
-
   private def insertSingleRow(row: SmartNodeInstance, dbConnection: Connection): Unit = {
     val (sql, params) = createSqlForInsert(row)
 
@@ -138,7 +137,7 @@ trait DataSaver extends DataReader with Database {
       val columnValues = List.newBuilder[TntValue]
 
       model.fields.values.foreach { field =>
-        if (field.updateable) {
+        if (field.updateable && field.step.isEmpty) {
           val value = row.get(field.name)
           columnNames += field.basisColumn.dbName
           columnValues += value.getOrElse(

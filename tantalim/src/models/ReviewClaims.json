@@ -43,7 +43,8 @@
       "steps": [
         {
           "name": "ClaimVendor",
-          "join": "Vendor"
+          "join": "Vendor",
+          "parent": "ClaimProvider"
         },
         {
           "name": "ClaimProvider",
