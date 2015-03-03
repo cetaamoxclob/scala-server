@@ -2,10 +2,11 @@ package services
 
 import java.sql.ResultSet
 
+import compiler.ModelCompiler
 import data._
 import com.tantalim.models.{Model, ModelOrderBy}
 
-trait DataReader extends ArtifactCompiler with Database {
+trait DataReader extends ModelCompiler with Database {
 
   //  def queryOneRow(model: Model, id: TntValue): Option[SmartNodeInstance] = {
   //    queryOneRow(model, Some(f"${model.instanceID.get} = $id"))
@@ -19,6 +20,7 @@ trait DataReader extends ArtifactCompiler with Database {
   def queryModelData(model: Model, page: Int = 1, filter: Option[String] = None, orderBy: Seq[ModelOrderBy] = Seq.empty): SmartNodeSet = {
     var sqlBuilder = new SqlBuilder(
       from = model.basisTable.dbName,
+      steps = model.steps,
       fields = model.fields,
       page = page,
       orderBy = orderBy,

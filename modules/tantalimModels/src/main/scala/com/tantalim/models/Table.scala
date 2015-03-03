@@ -6,6 +6,11 @@ abstract class Table {
   def dbName: String
 
   def columns: Map[String, TableColumn]
+
+  def getColumn(name: String) = columns.getOrElse(
+    name,
+    throw new Exception(f"failed to find column named `$name` in table `${this.name}` but found: ${this.columns.keys}")
+  )
 }
 
 case class ShallowTable(

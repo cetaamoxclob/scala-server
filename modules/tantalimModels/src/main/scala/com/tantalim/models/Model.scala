@@ -6,7 +6,7 @@ case class Model(name: String,
                  instanceID: Option[String],
                  fields: Map[String, ModelField],
                  children: Map[String, Model],
-                 steps: Map[Int, ModelStep],
+                 steps: scala.collection.Map[Int, ModelStep], // I'm not sure why just ": Map[Int," ... won't work here
                  parentLink: Option[ModelParentLink],
                  orderBy: Seq[ModelOrderBy],
                  allowInsert: Boolean = true,
@@ -16,14 +16,16 @@ case class Model(name: String,
 
 case class ModelField(name: String,
                       basisColumn: TableColumn,
-                      step: Option[String] = None,
+                      step: Option[ModelStep] = None,
                       updateable: Boolean = true,
                       required: Boolean = false
                        )
 
-case class ModelStep(table: Table,
+case class ModelStep(name: String,
+                     tableAlias: Int,
+                     join: TableJoin,
                      required: Boolean,
-                     steps: Map[Int, ModelStep])
+                     parentAlias: Int)
 
 case class ModelOrderBy(fieldName: String,
                         ascending: Option[Boolean])

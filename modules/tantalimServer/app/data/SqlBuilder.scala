@@ -5,7 +5,7 @@ import com.tantalim.models.{ModelOrderBy, ModelStep, ModelField}
 case class SqlBuilder(
                        from: String,
                        fields: Map[String, ModelField],
-                       steps: Option[Map[Integer, ModelStep]] = None,
+                       steps: scala.collection.Map[Int, ModelStep],
                        where: Option[String] = None,
                        orderBy: Seq[ModelOrderBy] = Seq.empty,
                        parameters: List[Any] = List.empty,
@@ -20,12 +20,29 @@ case class SqlBuilder(
     if (fields.isEmpty) "*"
     else fields.map {
       case (fieldName, f) =>
-        s"`t0`.`${f.basisColumn.dbName}` AS `$fieldName`"
+        s"${getAlias(f)}.`${f.basisColumn.dbName}` AS `$fieldName`"
     }.toSeq.mkString(", ")
   }
 
+  private def getAlias(field: ModelField): String = {
+    if (field.step.isEmpty) "`t0`"
+    else s"`t${field.step.get.tableAlias}`"
+  }
+
   private def getJoins: String = {
-    ""
+    steps.map { case (alias, step) =>
+      val join = if (step.required) "INNER JOIN" else "LEFT JOIN"
+      val from = "t" + step.parentAlias
+      val to = "t" + step.tableAlias
+      val columns = step.join.columns.map{ joinColumn =>
+        val fromVal = if (joinColumn.from.isDefined) s"`$from`.`${joinColumn.from.get.dbName}`"
+        else s"'${joinColumn.fromText.get}'"
+        s"`$to`.`${joinColumn.to.dbName}` = $fromVal"
+      }.mkString(" AND ")
+      val columnClause = if (columns.isEmpty) ""
+      else "ON " + columns
+      s"$join `${step.join.table.dbName}` AS `$to` $columnClause"
+    }.toSeq.mkString(" ")
   }
 
   private def getWhere: String = {

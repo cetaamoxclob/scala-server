@@ -18,7 +18,11 @@ case class ModelJson(basisTable: String,
                      allowDelete: Option[Boolean]
                       )
 
-case class ModelStepJson(join: String, required: Option[Boolean])
+case class ModelStepJson(name: String,
+                         join: String,
+                         required: Option[Boolean],
+                         parent: Option[String]
+                          )
 
 case class ModelFieldJson(name: String,
                           basisColumn: String,
@@ -51,8 +55,10 @@ object ModelJson {
     ).apply(ModelFieldJson.apply _)
 
   implicit def stepReads: Reads[ModelStepJson] = (
-    (JsPath \ "join").read[String] and
-      (JsPath \ "required").readNullable[Boolean]
+    (JsPath \ "name").read[String] and
+      (JsPath \ "join").read[String] and
+      (JsPath \ "required").readNullable[Boolean] and
+      (JsPath \ "stepJson").readNullable[String]
     ).apply(ModelStepJson.apply _)
 
   implicit def parentLinkReads: Reads[ModelParentLink] = (
