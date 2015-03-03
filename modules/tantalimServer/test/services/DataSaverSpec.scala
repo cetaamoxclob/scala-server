@@ -2,9 +2,9 @@ package services
 
 import java.sql._
 
+import com.tantalim.models._
 import data._
 import mock.{FakeConnection, FakeArtifacts, FakeResultSet}
-import com.tantalim.models._
 import org.junit.runner.RunWith
 import org.specs2.mock._
 import org.specs2.mutable._

@@ -1,6 +1,6 @@
 package mock
 
-import com.tantalim.models.{ModelStep, TableColumn, ModelField}
+import com.tantalim.models.{ModelField, ModelStep, TableColumn}
 
 trait FakeArtifacts {
   def fakeModelFieldMap(fieldName: String, dbName: String, dataType: String = "String", step: Option[ModelStep] = None,
