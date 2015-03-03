@@ -11,13 +11,13 @@
     {
       "name": "PatientID",
       "dataType": "Integer",
-      "required": true,      
+      "required": true,
       "updateable": false
     },
     {
       "name": "ClaimNumber",
       "label": "Claim Number",
-      "required": true      
+      "required": true
     },
     {
       "name": "ServiceDate",
@@ -27,15 +27,33 @@
     },
     {
       "name": "VendorID",
-      "dataType": "Integer",
-      "updateable": false
+      "dataType": "Integer"
     },
     {
       "name": "ProviderID",
-      "dataType": "Integer",
-      "updateable": false
+      "dataType": "Integer"
     }
   ],
   "joins": [
+    {
+      "name": "Vendor",
+      "table": "Vendor",
+      "columns": [
+        {
+          "from": "VendorID",
+          "to": "VendorID"
+        }
+      ]
+    },
+    {
+      "name": "Provider",
+      "table": "Provider",
+      "columns": [
+        {
+          "from": "ProviderID",
+          "to": "ProviderID"
+        }
+      ]
+    }
   ]
 }

@@ -40,6 +40,16 @@
         "parentField": "PatientID",
         "childField": "ClaimPatientID"
       },
+      "steps": [
+        {
+          "name": "ClaimVendor",
+          "join": "Vendor"
+        },
+        {
+          "name": "ClaimProvider",
+          "join": "Provider"
+        }
+      ],
       "fields": [
         {
           "name": "ClaimClaimID",
@@ -58,8 +68,18 @@
           "basisColumn": "ServiceDate"
         },
         {
+          "name": "ClaimVendorName",
+          "basisColumn": "Name",
+          "step": "ClaimVendor"
+        },
+        {
           "name": "ClaimVendorID",
           "basisColumn": "VendorID"
+        },
+        {
+          "name": "ClaimProviderName",
+          "basisColumn": "Name",
+          "step": "ClaimProvider"
         },
         {
           "name": "ClaimProviderID",
