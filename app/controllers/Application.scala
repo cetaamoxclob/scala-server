@@ -1,6 +1,7 @@
 package controllers
 
 import com.tantalim.util.{Timer, LoginStrategyType}
+import compiler.{MenuCompiler, TableCompiler, ModelCompiler, PageCompiler}
 import data.{DataState, DataConverters, SmartNodeSet}
 import com.tantalim.models.{ArtifactType, ModelOrderBy, User}
 import play.api.libs.json._
@@ -8,7 +9,7 @@ import play.api.mvc._
 import services._
 
 object Application extends Controller with Timer {
-  val compiler = new ArtifactCompilerService
+  val compiler = new PageCompiler with ModelCompiler with TableCompiler with MenuCompiler
 
   private val applicationMenu = "Default"
 
@@ -48,6 +49,13 @@ object Application extends Controller with Timer {
   }
 
   def mobile(name: String) = TODO
+
+  def ddl(tableName: String) = Action {
+    implicit request =>
+      val table = compiler.compileTable(tableName)
+      val tableSchema = new TableSchema {}
+      Ok(tableSchema.generateTableDDL(table))
+  }
 
   def importList = Action {
     implicit request =>

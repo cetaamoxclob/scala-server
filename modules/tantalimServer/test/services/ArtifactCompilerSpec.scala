@@ -1,6 +1,7 @@
 package services
 
 import com.tantalim.models._
+import compiler.{MenuCompiler, ModelCompiler}
 import mock.FakeArtifacts
 import org.junit.runner._
 import org.specs2.mock._
@@ -28,7 +29,7 @@ class ArtifactCompilerSpec extends Specification with Mockito with FakeArtifacts
                       """)
       }
 
-      val compilerService = new ArtifactCompilerService with ArtifactServiceMock
+      val compilerService = new MenuCompiler with ArtifactServiceMock
       val menu = compilerService.compileMenu("Foo")
       menu.appTitle must be equalTo "Test App"
     }
@@ -90,7 +91,7 @@ class ArtifactCompilerSpec extends Specification with Mockito with FakeArtifacts
 
 
 
-      val compilerService = new ArtifactCompilerService with ArtifactServiceMock with TableCacheMock
+      val compilerService = new ModelCompiler with ArtifactServiceMock with TableCacheMock
       val model = compilerService.compileModel("ListPeople")
       model must be equalTo expected
     }

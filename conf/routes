@@ -16,6 +16,7 @@ GET         /auth/:strategy                    controllers.Application.auth(stra
 GET         /data/:name                        controllers.Application.readData(name, page: Int ?= 1, filter: Option[String])
 POST        /data/:name                        controllers.Application.saveData(name)
 
+GET         /ddl/:tableName                    controllers.Application.ddl(tableName)
 GET         /import/                           controllers.Application.importList
 POST        /import/:artifactType/:name        controllers.Application.importArtifact(artifactType, name)
 GET         /exportAll                         controllers.Application.exportAll

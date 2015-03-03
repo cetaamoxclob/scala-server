@@ -14,7 +14,7 @@ trait TableCompiler extends ArtifactService with TableCache {
     val json = getArtifactContentAndParseJson(ArtifactType.Table, name)
     json.validate[TableJson] match {
       case JsSuccess(table, _) =>
-        val columns = table.columns.map(column => column.name -> compileTableColumn(column)).toMap
+        val columns = compileTableColumns(table.columns)
         new DeepTable(
           name,
           table.dbName.getOrElse(name),
@@ -37,10 +37,11 @@ trait TableCompiler extends ArtifactService with TableCache {
     val json = getArtifactContentAndParseJson(ArtifactType.Table, name)
     json.validate[TableJson] match {
       case JsSuccess(table, _) =>
-        val columns = table.columns.map(column => column.name -> compileTableColumn(column)).toMap
+        val columns = compileTableColumns(table.columns)
         new ShallowTable(
           name,
           table.dbName.getOrElse(name),
+          primaryKey = if (table.primaryKey.isDefined) columns.get(table.primaryKey.get) else None,
           columns = columns
         )
       case JsError(err) =>
@@ -48,10 +49,17 @@ trait TableCompiler extends ArtifactService with TableCache {
     }
   }
 
-  private def compileTableColumn(column: TableColumnJson): TableColumn = {
+  private def compileTableColumns(tableColumns: Seq[TableColumnJson]): scala.collection.immutable.Map[String, TableColumn] = {
+    tableColumns.zipWithIndex.map{
+      case (column, order) =>
+        column.name -> compileTableColumn(column, order)}.toMap
+  }
+
+  private def compileTableColumn(column: TableColumnJson, order: Int): TableColumn = {
     new TableColumn(
       name = column.name,
       dbName = column.dbName.getOrElse(column.name),
+      order = order,
       dataType = column.dataType.getOrElse("String"),
       fieldType = column.fieldType.getOrElse("text"),
       required = column.required.getOrElse(false),

@@ -5,6 +5,8 @@ abstract class Table {
 
   def dbName: String
 
+  def primaryKey: Option[TableColumn]
+
   def columns: Map[String, TableColumn]
 
   def getColumn(name: String) = columns.getOrElse(
@@ -16,6 +18,7 @@ abstract class Table {
 case class ShallowTable(
                          name: String,
                          dbName: String,
+                         primaryKey: Option[TableColumn],
                          columns: Map[String, TableColumn]
                          ) extends Table
 
@@ -33,6 +36,7 @@ case class DeepTable(
 case class TableColumn(
                         name: String,
                         dbName: String,
+                        order: Int,
                         dataType: String = "String",
                         updateable: Boolean = true,
                         required: Boolean = false,
