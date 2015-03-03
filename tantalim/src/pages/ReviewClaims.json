@@ -32,10 +32,10 @@
           "name": "ClaimServiceDate"
         },
         {
-          "name": "ClaimVendorID"
+          "name": "ClaimVendorName"
         },
         {
-          "name": "ClaimProviderID"
+          "name": "ClaimProviderName"
         }
       ]
     }
