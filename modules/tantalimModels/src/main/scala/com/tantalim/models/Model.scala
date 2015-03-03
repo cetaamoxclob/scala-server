@@ -23,7 +23,6 @@ case class ModelField(name: String,
 
 case class ModelStep(table: Table,
                      required: Boolean,
-                     fields: Map[String, ModelField],
                      steps: Map[Int, ModelStep])
 
 case class ModelOrderBy(fieldName: String,

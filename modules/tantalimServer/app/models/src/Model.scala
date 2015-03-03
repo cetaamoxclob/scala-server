@@ -18,11 +18,7 @@ case class ModelJson(basisTable: String,
                      allowDelete: Option[Boolean]
                       )
 
-// TODO Support steps that are more than 1 join away from basis table
-case class ModelStepJson(join: String,
-                         fields: Seq[ModelFieldJson],
-                         required: Option[Boolean]
-                          )
+case class ModelStepJson(join: String, required: Option[Boolean])
 
 case class ModelFieldJson(name: String,
                           basisColumn: String,
@@ -56,7 +52,6 @@ object ModelJson {
 
   implicit def stepReads: Reads[ModelStepJson] = (
     (JsPath \ "join").read[String] and
-      (JsPath \ "fields").read[Seq[ModelFieldJson]] and
       (JsPath \ "required").readNullable[Boolean]
     ).apply(ModelStepJson.apply _)
 

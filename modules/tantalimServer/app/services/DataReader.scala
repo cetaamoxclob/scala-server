@@ -26,7 +26,7 @@ trait DataReader extends ArtifactCompiler with Database {
 
     if (filter.isDefined) {
       DataFilter.parse(filter.get, model.fields) match {
-        case (where: String, params: List[Any]) => if (!params.isEmpty) {
+        case (where: String, params: List[Any]) => if (params.nonEmpty) {
           sqlBuilder = sqlBuilder.copy(
             where = Some(where),
             parameters = params
@@ -66,12 +66,11 @@ trait DataReader extends ArtifactCompiler with Database {
               case "Int" | "Integer" => TntInt(rs.getInt(fieldName))
               case "String" => TntString(rs.getString(fieldName))
               case "Boolean" => TntBoolean(rs.getBoolean(fieldName))
-              case "Date" => {
+              case "Date" =>
                 rs.getDate(fieldName) match {
                   case null => TntNull()
                   case _ => TntDate(rs.getDate(fieldName))
                 }
-              }
               case _ => throw new MatchError(f"field.dataType of `${f.basisColumn.dataType}` is not String or Integer")
             }
           })

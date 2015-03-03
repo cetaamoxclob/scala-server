@@ -76,31 +76,12 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
     }
   }
 
-  private def findField(fieldName: String, model: Model): Option[ModelField] = {
-    model.fields.get(fieldName) match {
-      case Some(field) => Option(field)
-      case None => findField(fieldName, model.steps.values.toSeq)
-    }
-  }
-
-  private def findField(fieldName: String, steps: Seq[ModelStep]): Option[ModelField] = {
-    steps.map { step =>
-      findField(fieldName, step)
-    }.flatMap(fields => fields).headOption
-  }
-
-  private def findField(fieldName: String, step: ModelStep): Option[ModelField] = {
-    step.fields.get(fieldName) match {
-      case Some(field) => Option(field)
-      case None => findField(fieldName, step.steps.values.toSeq)
-    }
-  }
-
   private def compilePageView(pageJson: PageJson, model: Model, parentPage: Option[Page] = None): Page = {
     val fields = pageJson.fields.getOrElse(Seq.empty).map { f =>
-      val modelField = findField(f.name, model).getOrElse {
-        throw new Exception(f"Failed to find field named `${f.name}` in Model `${model.name}` but found these: \n${model.fields.keys} \n${model.steps.values}")
-      }
+      val modelField = model.fields.getOrElse(f.name,
+        throw new Exception(f"Failed to find field named `${f.name}` in Model `${model.name}` " +
+          f"but found these: \n${model.fields.keys} \n${model.steps.values}")
+      )
       compilePageField(f, modelField)
     }
     new Page(
@@ -231,16 +212,9 @@ trait ArtifactCompiler extends ArtifactService with TableCache {
             step.join,
             throw new Exception(f"Failed to find table named `${step.join}` in join clause")
           ).table
-          val fields = step.fields.map(field => {
-            field.name -> compileModelField(
-              field,
-              toTable.columns.getOrElse(field.basisColumn, throw new Exception("field.name ${field.name}"))
-            )
-          }).toMap
           counter -> new ModelStep(
             table = toTable,
             step.required.getOrElse(true),
-            fields = fields,
             steps = Map.empty
           )
       }.toMap
