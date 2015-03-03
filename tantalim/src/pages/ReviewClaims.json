@@ -26,12 +26,6 @@
       "viewMode": "table",
       "fields": [
         {
-          "name": "ClaimClaimID"
-        },
-        {
-          "name": "ClaimPatientID"
-        },
-        {
           "name": "ClaimClaimNumber"
         },
         {
