@@ -1,0 +1,24 @@
+{
+  "dbName": "slhpProcedure",
+  "primaryKey": "ProcedureID",
+  "columns": [
+    {
+      "name": "ProcedureID",
+      "dataType": "Integer",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "ProcedureCode",
+      "label": "Procedure code",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "ProcedureDescription",
+      "label": "Procedure description",
+      "required": true,
+      "updateable": false
+    }
+  ]
+}

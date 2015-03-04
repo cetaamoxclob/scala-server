@@ -1,0 +1,17 @@
+{
+  "dbName": "slhpReviewType",
+  "primaryKey": "ReviewTypeCode",
+  "columns": [
+    {
+      "name": "ReviewTypeCode",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "ReviewType",
+      "label": "Review Type",
+      "required": true,
+      "updateable": false
+    }
+  ]
+}
