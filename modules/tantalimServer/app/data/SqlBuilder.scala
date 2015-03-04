@@ -13,7 +13,18 @@ case class SqlBuilder(
                        limit: Int = 0) {
 
   def toPreparedStatement: String = {
-    f"SELECT $getFields FROM `$from` AS `t0` $getJoins $getWhere $getOrderBy $getLimits"
+    f"SELECT $getFields \nFROM `$from` AS `t0` $getJoins $getWhere $getOrderBy $getLimits"
+  }
+
+  /**
+   * Calculate the total number of rows. We don't use SQL_CALC_FOUND_ROWS because
+   * 1) SQL_CALC_FOUND_ROWS is the same speed as another COUNT(*) and we don't always need the page number
+   * 2) SQL_CALC_FOUND_ROWS may not be supported in all RDMSs
+   * @return
+   */
+  def toCalcRowsStatement: String = {
+    // TODO we might be able to make this faster if getJoins only returns required joins
+    f"SELECT COUNT(*) total FROM `$from` AS `t0` $getJoins $getWhere"
   }
 
   private def getFields: String = {
@@ -42,19 +53,19 @@ case class SqlBuilder(
       val columnClause = if (columns.isEmpty) ""
       else "ON " + columns
       s"$join `${step.join.table.dbName}` AS `$to` $columnClause"
-    }.toSeq.mkString(" ")
+    }.toSeq.mkString("\n")
   }
 
   private def getWhere: String = {
     if (where.isEmpty) ""
     else {
-      "WHERE " + where.get
+      "\nWHERE " + where.get
     }
   }
 
   private def getOrderBy: String = {
     if (orderBy.isEmpty) ""
-    else "ORDER BY " + orderBy.map(modelOrderBy => {
+    else "\nORDER BY " + orderBy.map(modelOrderBy => {
       val ascDesc = if (modelOrderBy.ascending.isDefined && !modelOrderBy.ascending.get) " DESC" else ""
       modelOrderBy.fieldName + ascDesc
     }).mkString(", ")

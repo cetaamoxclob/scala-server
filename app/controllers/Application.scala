@@ -21,9 +21,15 @@ object Application extends Controller with Timer {
   def readData(name: String, page: Int = 1, filter: Option[String] = None, orderBy: Option[ModelOrderBy] = None) = Action {
     timer("readData") {
       val model = compiler.compileModel(name)
-      val reader = new DataReaderService
+      val reader = new DataReader {}
       val smartSet: SmartNodeSet = reader.queryModelData(model, page, filter, if (orderBy.isDefined) Seq(orderBy.get) else model.orderBy)
-      Ok(DataConverters.convertSmartNodeSetToJsonArr(smartSet))
+      val totalPages = reader.calcTotalRows(model, filter)
+      println(totalPages)
+      Ok(Json.obj(
+        "maxPages" -> JsNumber(totalPages),
+        "sql" -> JsString("SELECT FROM ..."),
+        "rows" -> DataConverters.convertSmartNodeSetToJsonArr(smartSet)
+      ))
     }
   }
 

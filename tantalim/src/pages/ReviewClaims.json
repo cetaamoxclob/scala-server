@@ -4,12 +4,6 @@
   "viewMode": "table",
   "fields": [
     {
-      "name": "PatientID"
-    },
-    {
-      "name": "PatientName"
-    },
-    {
       "name": "PatientFirstName"
     },
     {

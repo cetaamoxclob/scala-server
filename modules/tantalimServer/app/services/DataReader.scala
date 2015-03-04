@@ -4,18 +4,25 @@ import java.sql.ResultSet
 
 import compiler.ModelCompiler
 import data._
-import com.tantalim.models.{Model, ModelOrderBy}
+import com.tantalim.models.{ModelField, Model, ModelOrderBy}
 
 trait DataReader extends ModelCompiler with Database {
 
-  //  def queryOneRow(model: Model, id: TntValue): Option[SmartNodeInstance] = {
-  //    queryOneRow(model, Some(f"${model.instanceID.get} = $id"))
-  //  }
-  //
-  //  def queryOneRow(model: Model, filter: Option[String]): Option[SmartNodeInstance] = {
-  //    val existingRows = queryModelData(model, 1, filter, Seq.empty)
-  //    existingRows.rows.headOption
-  //  }
+  def calcTotalRows(model: Model, filter: Option[String]): Long = {
+    if (model.limit == 0) return 1
+    var sqlBuilder = new SqlBuilder(
+      from = model.basisTable.dbName,
+      steps = model.steps,
+      fields = model.fields,
+      limit = model.limit)
+    sqlBuilder = parseFilterForSql(sqlBuilder, model.fields, filter)
+    val rs = query(sqlBuilder.toCalcRowsStatement, sqlBuilder.parameters)
+    rs.next()
+    val rows = rs.getLong(1)
+    calcMaxPages(rows, model.limit)
+  }
+
+  private def calcMaxPages(rows: Long, limit: Int) = Math.ceil(rows.toDouble / limit).toInt
 
   def queryModelData(model: Model, page: Int = 1, filter: Option[String] = None, orderBy: Seq[ModelOrderBy] = Seq.empty): SmartNodeSet = {
     var sqlBuilder = new SqlBuilder(
@@ -26,16 +33,7 @@ trait DataReader extends ModelCompiler with Database {
       orderBy = orderBy,
       limit = model.limit)
 
-    if (filter.isDefined) {
-      DataFilter.parse(filter.get, model.fields) match {
-        case (where: String, params: List[Any]) => if (params.nonEmpty) {
-          sqlBuilder = sqlBuilder.copy(
-            where = Some(where),
-            parameters = params
-          )
-        }
-      }
-    }
+    sqlBuilder = parseFilterForSql(sqlBuilder, model.fields, filter)
 
     val rs = query(sqlBuilder.toPreparedStatement, sqlBuilder.parameters)
     val resultSet = convertResultSetToDataRows(model, rs)
@@ -55,6 +53,20 @@ trait DataReader extends ModelCompiler with Database {
       }
     }
     resultSet
+  }
+
+  private def parseFilterForSql(sqlBuilder: SqlBuilder, modelFields: Map[String, ModelField], filter: Option[String]): SqlBuilder = {
+    if (filter.isDefined) {
+      DataFilter.parse(filter.get, modelFields) match {
+        case (where: String, params: List[Any]) => if (params.nonEmpty) {
+          return sqlBuilder.copy(
+            where = Some(where),
+            parameters = params
+          )
+        }
+      }
+    }
+    sqlBuilder
   }
 
   private def convertResultSetToDataRows(model: Model, rs: ResultSet) = {
@@ -104,5 +116,9 @@ trait DataReader extends ModelCompiler with Database {
   }
 
 }
-
-class DataReaderService extends DataReader
+//
+//case class DataReaderClass(model: Model, page: Int = 1, filter: Option[String] = None, orderBy: Seq[ModelOrderBy] = Seq.empty) extends DataReader {
+//  def calcTotalRows = calcTotalRows(model, filter)
+//  def queryModelData = queryModelData(model, page, filter, orderBy)
+//  def getSql = getSql(model, page, filter, orderBy)
+//}

@@ -66,17 +66,28 @@ trait ArtifactService {
   }
 
   def findArtifacts: Seq[ArtifactStub] = {
-
     def artifactName(rootPath: String, filePath: String): String = {
-      //      rootPath + "-" + filePath
       filePath.replace(rootPath, "").replace(".json", "").replace("/", "")
     }
 
+    def getArtifactsFromDir(moduleLocation: String, artifactType: ArtifactType, moduleName: Option[String]): Seq[ArtifactStub] = {
+      val artifactDir = new File(moduleLocation + "/" + artifactType.getDirectory)
+      if (artifactDir.isDirectory) {
+        artifactDir.listFiles().map(f =>
+          ArtifactStub(artifactType, artifactName(artifactDir.getAbsolutePath, f.getCanonicalPath), moduleName)
+        )
+      } else Seq.empty
+    }
+
     ArtifactType.values().flatMap { artifactType: ArtifactType =>
-      val artifactDir = new File(tantalimRoot + "src/" + artifactType.getDirectory)
-      val allFiles = artifactDir.listFiles()
-      val temp = allFiles.map(f => ArtifactStub(artifactType, artifactName(artifactDir.getAbsolutePath, f.getCanonicalPath)))
-      temp
+      val localFiles = getArtifactsFromDir(tantalimRoot + "/src", artifactType, None)
+
+      new File(tantalimRoot + "/lib/").listFiles().foldLeft(localFiles){(acc, libDir) =>
+        if (libDir.isDirectory) {
+          val localFiles = getArtifactsFromDir(libDir.getCanonicalPath, artifactType, Some(libDir.getName))
+          acc ++ localFiles
+        } else acc
+      }
     }.toSeq
   }
 }
