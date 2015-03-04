@@ -1,0 +1,55 @@
+{
+  "dbName": "slhpReviewIssue",
+  "primaryKey": "ReviewIssueID",
+  "columns": [
+    {
+      "name": "ReviewIssueID",
+      "dataType": "Integer",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "ReviewID",
+      "dataType": "Integer",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "IssueCode",
+      "required": true,
+      "updateable": false    
+    },
+    {
+      "name": "UserID",
+      "required": true,
+      "updateable": false    
+    },
+    {
+      "name": "Revenue",
+      "dataType": "Integer",
+      "updateable": false    
+    }
+  ],
+  "joins": [
+    {
+      "name": "Review",
+      "table": "Review",
+      "columns": [
+        {
+          "from": "ReviewID",
+          "to": "ReviewID"
+        }
+      ]
+    },
+    {
+      "name": "Issue",
+      "table": "Issue",
+      "columns": [
+        {
+          "from": "IssueCode",
+          "to": "IssueCode"
+        }
+      ]
+    }    
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "dbName": "slhpIssueType",
+  "primaryKey": "IssueTypeCode",
+  "columns": [
+    {
+      "name": "IssueTypeCode",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "IssueType",
+      "label": "Issue Type",
+      "required": true,
+      "updateable": false
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "dbName": "slhpAttachment",
+  "primaryKey": "AttachmentID",
+  "columns": [
+    {
+      "name": "AttachmentID",
+      "dataType": "Integer",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "AttachmentTypeCode",
+      "label": "Attachment Type Code",
+    },
+    {
+      "name": "File",
+      "label": "File",
+      "required": true,
+    },
+    {
+      "name": "PatientID",
+      "label": "PatientID",
+      "dataType": "Integer",
+      "updateable": false
+    },
+    {
+      "name": "ClaimID",
+      "label": "Claim ID",
+      "dataType": "Integer",
+      "updateable": false
+    }
+  ],
+  "joins": [
+    {
+      "name": "AttachmentType",
+      "table": "AttachmentType",
+      "columns": [
+        {
+          "from": "AttachmentTypeCode",
+          "to": "AttachmentTypeCode"
+        }
+      ]
+    },
+    {
+      "name": "Claim",
+      "table": "Claim",
+      "columns": [
+        {
+          "from": "ClaimID",
+          "to": "ClaimID"
+        }
+      ]
+    },
+    {
+      "name": "Patient",
+      "table": "Patient",
+      "columns": [
+        {
+          "from": "PatientID",
+          "to": "PatientID"
+        }
+      ]
+    }    
+  ]
+}

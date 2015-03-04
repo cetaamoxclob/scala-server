@@ -1,0 +1,29 @@
+{
+  "dbName": "slhpAttachmentType",
+  "primaryKey": "AttachmentTypeCode",
+  "columns": [
+    {
+      "name": "AttachmentTypeCode",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "AttachmentType",
+      "label": "Attachment Type",
+      "required": true,
+      "updateable": false
+    }
+  ], 
+  "joins": [
+    {
+     "name": "AttachmentType",
+      "table": "AttachmentType",
+      "columns": [
+        {
+          "from": "AttachmentTypeCode",
+          "to": "AttachmentTypeCode"
+        }
+      ]
+    }    
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "dbName": "slhpReviewPassStatus",
+  "primaryKey": "ReviewPassStatusCode",
+  "columns": [
+    {
+      "name": "ReviewPassStatusCode",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "ReviewPassStatus",
+      "label": "Review Pass Status",
+      "required": true,
+      "updateable": false
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "dbName": "slhpIssue",
+  "primaryKey": "IssueCode",
+  "columns": [
+    {
+      "name": "IssueCode",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "Issue",
+      "label": "Issue",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "IssueTypeCode",
+      "label": "Issue Type Code",
+      "required": true,
+      "updateable": false
+    }
+  ],
+  "joins": [
+    {
+      "name": "IssueType",
+      "table": "IssueType",
+      "columns": [
+        {
+          "from": "IssueTypeCode",
+          "to": "IssueTypeCode"
+        }
+      ]
+    }    
+  ]  
+}
