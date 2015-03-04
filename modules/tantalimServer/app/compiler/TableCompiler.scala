@@ -50,9 +50,10 @@ trait TableCompiler extends ArtifactService with TableCache {
   }
 
   private def compileTableColumns(tableColumns: Seq[TableColumnJson]): scala.collection.immutable.Map[String, TableColumn] = {
-    tableColumns.zipWithIndex.map{
+    tableColumns.zipWithIndex.map {
       case (column, order) =>
-        column.name -> compileTableColumn(column, order)}.toMap
+        column.name -> compileTableColumn(column, order)
+    }.toMap
   }
 
   private def compileTableColumn(column: TableColumnJson, order: Int): TableColumn = {
@@ -60,7 +61,7 @@ trait TableCompiler extends ArtifactService with TableCache {
       name = column.name,
       dbName = column.dbName.getOrElse(column.name),
       order = order,
-      dataType = column.dataType.getOrElse("String"),
+      dataType = compileDataType(column.dataType),
       fieldType = column.fieldType.getOrElse("text"),
       required = column.required.getOrElse(false),
       updateable = column.updateable.getOrElse(true),
@@ -68,6 +69,14 @@ trait TableCompiler extends ArtifactService with TableCache {
       help = column.help,
       placeholder = column.placeholder
     )
+  }
+
+  private def compileDataType(value: Option[String]): DataType = {
+    if (value.isEmpty) DataType.String
+    else {
+      val needle = value.get.toLowerCase
+      DataType.values.find(t => t.toString.toLowerCase == needle).get
+    }
   }
 
   private def compileTableJoin(fromColumns: Map[String, TableColumn], join: TableJoinJson): TableJoin = {

@@ -37,7 +37,7 @@ case class TableColumn(
                         name: String,
                         dbName: String,
                         order: Int,
-                        dataType: String = "String",
+                        dataType: DataType = DataType.String,
                         updateable: Boolean = true,
                         required: Boolean = false,
                         label: String,

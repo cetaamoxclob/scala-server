@@ -4,7 +4,7 @@ import java.sql.ResultSet
 
 import compiler.ModelCompiler
 import data._
-import com.tantalim.models.{ModelField, Model, ModelOrderBy}
+import com.tantalim.models._
 
 trait DataReader extends ModelCompiler with Database {
 
@@ -77,10 +77,11 @@ trait DataReader extends ModelCompiler with Database {
         case (fieldName, f) =>
           newInstance.set(fieldName, {
             f.basisColumn.dataType match {
-              case "Int" | "Integer" => TntInt(rs.getInt(fieldName))
-              case "String" => TntString(rs.getString(fieldName))
-              case "Boolean" => TntBoolean(rs.getBoolean(fieldName))
-              case "Date" =>
+              case DataType.Integer => TntInt(rs.getInt(fieldName))
+              case DataType.Decimal => TntDecimal(rs.getBigDecimal(fieldName))
+              case DataType.String => TntString(rs.getString(fieldName))
+              case DataType.Boolean => TntBoolean(rs.getBoolean(fieldName))
+              case DataType.Date | DataType.DateTime =>
                 rs.getDate(fieldName) match {
                   case null => TntNull()
                   case _ => TntDate(rs.getDate(fieldName))
@@ -116,6 +117,7 @@ trait DataReader extends ModelCompiler with Database {
   }
 
 }
+
 //
 //case class DataReaderClass(model: Model, page: Int = 1, filter: Option[String] = None, orderBy: Seq[ModelOrderBy] = Seq.empty) extends DataReader {
 //  def calcTotalRows = calcTotalRows(model, filter)

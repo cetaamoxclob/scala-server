@@ -1,6 +1,6 @@
 package services
 
-import com.tantalim.models.Table
+import com.tantalim.models.{DataType, Table}
 
 trait TableSchema {
 
@@ -12,13 +12,13 @@ trait TableSchema {
       columnSql ++= "  `"
       columnSql ++= column.dbName
       columnSql ++= "` "
-      columnSql ++= (column.dataType.toLowerCase match {
-        case "boolean" => "TINYINT"
-        case "date" => "DATE"
-        case "datetime" => "DATETIME"
-        case "int" | "integer" => "INT"
-        case "Decimal" => "DECIMAL"
-        case _ => "VARCHAR(50)" // TODO Include length
+      columnSql ++= (column.dataType match {
+        case DataType.Boolean => "TINYINT"
+        case DataType.Date => "DATE"
+        case DataType.DateTime => "DATETIME"
+        case DataType.Integer => "INT"
+        case DataType.Decimal => "DECIMAL"
+        case DataType.String => "VARCHAR(50)"
       })
       columnSql ++= (if (column.required) " NOT NULL" else " NULL")
       if (isPrimaryKey) {
@@ -34,12 +34,3 @@ trait TableSchema {
   }
 
 }
-
-
-//`ClaimID` int(10) unsigned NOT NULL AUTO_INCREMENT,
-//`PatientID` int(10) unsigned NOT NULL,
-//`ClaimNumber` varchar(50) DEFAULT NULL,
-//`ServiceDate` date DEFAULT NULL,
-//`VendorID` int(11) DEFAULT NULL,
-//`ProviderID` int(11) DEFAULT NULL,
-//PRIMARY KEY (`ClaimID`)
