@@ -16,26 +16,70 @@
     },
     {
       "name": "ClaimNumber",
-      "label": "Claim Number",
-      "required": true      
+      "label": "Claim #",
+      "required": true,
+      "updateable": false            
     },
     {
-      "name": "ServiceDate",
+      "name": "DateOfService",
       "dataType": "Date",
       "required": true,
-      "label": "DOS"
+      "label": "DOS",
+      "updateable": false      
     },
     {
       "name": "VendorID",
       "dataType": "Integer",
+      "required": true,
       "updateable": false
     },
     {
       "name": "ProviderID",
       "dataType": "Integer",
+      "required": true,
       "updateable": false
     }
   ],
   "joins": [
+    {
+      "name": "Vendor",
+      "table": "Vendor",
+      "columns": [
+        {
+          "from": "VendorID",
+          "to": "VendorID"
+        }
+      ]
+    },
+    {
+      "name": "Provider",
+      "table": "Provider",
+      "columns": [
+        {
+          "from": "ProviderID",
+          "to": "ProviderID"
+        }
+      ]
+    },
+    {
+      "name": "Patient",
+      "table": "Patient",
+      "columns": [
+        {
+          "from": "PatientID",
+          "to": "PatientID"
+        }
+      ]
+    },
+    {
+      "name": "Claim",
+      "table": "Claim",
+      "columns": [
+        {
+          "from": "ClaimID",
+          "to": "ClaimID"
+        }
+      ]
+    }    
   ]
 }

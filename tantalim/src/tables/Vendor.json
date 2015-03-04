@@ -1,0 +1,24 @@
+{
+  "dbName": "slhpVendor",
+  "primaryKey": "VendorID",
+  "columns": [
+    {
+      "name": "VendorID",
+      "dataType": "Integer",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "VendorName",
+      "label": "Vendor Name",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "TaxID",
+      "label": "Tax ID",
+      "required": true,
+      "updateable": false
+    },
+  ]
+}
