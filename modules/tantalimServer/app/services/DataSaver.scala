@@ -3,7 +3,7 @@ package services
 import java.sql.{SQLException, Connection}
 
 import data._
-import com.tantalim.models.Model
+import com.tantalim.models.{FieldDefaultType, ModelField, Model}
 
 trait DataSaver extends DataReader with Database {
   def saveAll(dataToSave: SmartNodeSet): Unit = {
@@ -101,14 +101,10 @@ trait DataSaver extends DataReader with Database {
       val columnValues = List.newBuilder[TntValue]
 
       model.fields.values.foreach { field =>
-        val value = row.get(field.name)
+        val value = getValueForInsert(row, field)
         if (value.isDefined) {
-          value.get match {
-            case TntNull() => // Don't bother inserting nulls
-            case _ =>
-              columnNames += field.basisColumn.dbName
-              columnValues += value.get
-          }
+          columnNames += field.basisColumn.dbName
+          columnValues += value.get
         }
       }
 
@@ -125,6 +121,40 @@ trait DataSaver extends DataReader with Database {
     (f"INSERT INTO `${model.basisTable.dbName}` " +
       f"($setColumnPhrase) " +
       f"VALUES ($boundVars)", columnValues.toList)
+  }
+
+  private def getValueForInsert(row: SmartNodeInstance, field: ModelField): Option[TntValue] = {
+
+    if (field.fieldDefault.isDefined && field.fieldDefault.get.overwrite) {
+      getDefaultValue(row, field)
+    } else {
+      val value = row.get(field.name)
+      if (value.isDefined) {
+        value.get match {
+          case TntNull() => None
+          case _ => Some(value.get)
+        }
+      } else {
+        if (field.fieldDefault.isDefined) {
+          getDefaultValue(row, field)
+        } else None
+      }
+    }
+  }
+
+  private def getDefaultValue(row: SmartNodeInstance, field: ModelField): Option[TntValue] = {
+    val default = field.fieldDefault.get
+    default.defaultType match {
+      case FieldDefaultType.Constant =>
+        field.basisColumn.dataType match {
+          case _ => Some(TntString(default.value))
+        }
+      case FieldDefaultType.Field => row.get(default.value)
+      case FieldDefaultType.Fxn =>
+        val fxnString = default.value
+
+        None
+    }
   }
 
   private def createSqlForUpdate(row: SmartNodeInstance): (String, List[Any]) = {

@@ -60,7 +60,7 @@
           "name": "TableColumnRequired",
           "basisColumn": "Required",
           "fieldDefault": {
-            "value": true
+            "value": "true"
           }
         },
         {
@@ -130,7 +130,7 @@
           "name": "TableJoinRequired",
           "dataType": "Boolean",
           "fieldDefault": {
-            "value": true
+            "value": "true"
           },
           "basisColumn": "Required"
         }

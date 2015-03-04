@@ -18,8 +18,14 @@ case class ModelField(name: String,
                       basisColumn: TableColumn,
                       step: Option[ModelStep] = None,
                       updateable: Boolean = true,
-                      required: Boolean = false
+                      required: Boolean = false,
+                      fieldDefault: Option[FieldDefault] = None
                        )
+
+case class FieldDefault(value: String,
+                        overwrite: Boolean,
+                        defaultType: FieldDefaultType,
+                        watch: Seq[String])
 
 case class ModelStep(name: String,
                      tableAlias: Int,

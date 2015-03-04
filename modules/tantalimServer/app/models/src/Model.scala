@@ -28,8 +28,14 @@ case class ModelFieldJson(name: String,
                           basisColumn: String,
                           step: Option[String],
                           required: Option[Boolean],
-                          updateable: Option[Boolean]
+                          updateable: Option[Boolean],
+                          fieldDefault: Option[FieldDefaultJson]
                            )
+
+case class FieldDefaultJson(value: String,
+                            overwrite: Option[Boolean],
+                            defaultType: Option[String],
+                            watch: Option[Seq[String]])
 
 object ModelJson {
   implicit def modelReads: Reads[ModelJson] = (
@@ -51,8 +57,16 @@ object ModelJson {
       (JsPath \ "basisColumn").read[String] and
       (JsPath \ "step").readNullable[String] and
       (JsPath \ "required").readNullable[Boolean] and
-      (JsPath \ "updateable").readNullable[Boolean]
+      (JsPath \ "updateable").readNullable[Boolean] and
+      (JsPath \ "fieldDefault").readNullable[FieldDefaultJson]
     ).apply(ModelFieldJson.apply _)
+
+  implicit def fieldDefaultReads: Reads[FieldDefaultJson] = (
+    (JsPath \ "value").read[String] and
+      (JsPath \ "overwrite").readNullable[Boolean] and
+      (JsPath \ "type").readNullable[String] and
+      (JsPath \ "watch").readNullable[Seq[String]]
+    ).apply(FieldDefaultJson.apply _)
 
   implicit def stepReads: Reads[ModelStepJson] = (
     (JsPath \ "name").read[String] and
