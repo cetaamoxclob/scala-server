@@ -145,7 +145,8 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
       step = step,
       required = field.required.getOrElse(basisColumn.required),
       updateable = field.updateable.getOrElse(basisColumn.updateable),
-      fieldDefault = compileFieldDefault(field.fieldDefault)
+      fieldDefault = compileFieldDefault(field.fieldDefault),
+      export = field.export.getOrElse(true)
     )
   }
 

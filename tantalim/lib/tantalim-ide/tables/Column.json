@@ -25,7 +25,6 @@
       "name": "Required",
       "dataType": "Boolean",
       "dbName": "required",
-      "required": true,
       "fieldType": "checkbox"
     },
     {
@@ -46,6 +45,10 @@
     {
       "name": "Label",
       "dbName": "label"
+    },
+    {
+      "name": "Updateable",
+      "dbName": "updateable"
     }
   ],
   "joins": [

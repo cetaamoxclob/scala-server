@@ -30,7 +30,8 @@ case class ModelFieldJson(name: String,
                           step: Option[String],
                           required: Option[Boolean],
                           updateable: Option[Boolean],
-                          fieldDefault: Option[FieldDefaultJson]
+                          fieldDefault: Option[FieldDefaultJson],
+                          export: Option[Boolean]
                            )
 
 case class FieldDefaultJson(value: String,
@@ -60,7 +61,8 @@ object ModelJson {
       (JsPath \ "step").readNullable[String] and
       (JsPath \ "required").readNullable[Boolean] and
       (JsPath \ "updateable").readNullable[Boolean] and
-      (JsPath \ "fieldDefault").readNullable[FieldDefaultJson]
+      (JsPath \ "fieldDefault").readNullable[FieldDefaultJson] and
+      (JsPath \ "export").readNullable[Boolean]
     ).apply(ModelFieldJson.apply _)
 
   implicit def fieldDefaultReads: Reads[FieldDefaultJson] = (

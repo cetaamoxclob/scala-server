@@ -79,12 +79,20 @@ trait DataReader extends ModelCompiler with Database {
             f.basisColumn.dataType match {
               case DataType.Integer => TntInt(rs.getInt(fieldName))
               case DataType.Decimal => TntDecimal(rs.getBigDecimal(fieldName))
-              case DataType.String => TntString(rs.getString(fieldName))
-              case DataType.Boolean => TntBoolean(rs.getBoolean(fieldName))
-              case DataType.Date | DataType.DateTime =>
-                rs.getDate(fieldName) match {
+              case DataType.String =>
+                val rsValue = rs.getString(fieldName)
+                rsValue match {
                   case null => TntNull()
-                  case _ => TntDate(rs.getDate(fieldName))
+                  case _ => TntString(rsValue)
+                }
+              case DataType.Boolean =>
+                if (rs.wasNull()) TntNull()
+                else TntBoolean(rs.getBoolean(fieldName))
+              case DataType.Date | DataType.DateTime =>
+                val rsValue = rs.getDate(fieldName)
+                rsValue match {
+                  case null => TntNull()
+                  case _ => TntDate(rsValue)
                 }
               case _ => throw new MatchError(f"field.dataType of `${f.basisColumn.dataType}` is not String or Integer")
             }

@@ -20,7 +20,8 @@ case class ModelField(name: String,
                       step: Option[ModelStep] = None,
                       updateable: Boolean = true,
                       required: Boolean = false,
-                      fieldDefault: Option[FieldDefault] = None
+                      fieldDefault: Option[FieldDefault] = None,
+                      export: Boolean = true
                        )
 
 case class FieldDefault(value: String,

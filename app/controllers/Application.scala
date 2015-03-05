@@ -84,7 +84,11 @@ object Application extends Controller with Timer {
     }
   }
 
-  def exportAll = TODO
+  def exportArtifact(artifactType: String, name: String) = Action {
+      val tableExport = new ArtifactExport(ArtifactType.valueOf(artifactType))
+      val output = tableExport.readFromDatabaseAndWriteToSource(name)
+      Ok(Json.prettyPrint(output))
+  }
 
   def login = Action {
     timer("login") {

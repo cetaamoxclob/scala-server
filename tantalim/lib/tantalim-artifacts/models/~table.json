@@ -3,11 +3,13 @@
   "fields": [
     {
       "name": "tableID",
-      "basisColumn": "TableID"
+      "basisColumn": "TableID",
+      "export": false
     },
     {
       "name": "name",
-      "basisColumn": "Name"
+      "basisColumn": "Name",
+      "export": false
     },
     {
       "name": "database",
@@ -30,14 +32,24 @@
         "parentField": "tableID",
         "childField": "tableID"
       },
+      "orderBy": [
+        {
+          "fieldName": "displayOrder"
+        },
+        {
+          "fieldName": "columnID"
+        }
+      ],
       "fields": [
         {
           "name": "columnID",
-          "basisColumn": "ColumnID"
+          "basisColumn": "ColumnID",
+          "export": false
         },
         {
           "name": "tableID",
-          "basisColumn": "TableID"
+          "basisColumn": "TableID",
+          "export": false
         },
         {
           "name": "name",
@@ -53,11 +65,16 @@
         },
         {
           "name": "displayOrder",
-          "basisColumn": "DisplayOrder"
+          "basisColumn": "DisplayOrder",
+          "export": false
         },
         {
           "name": "dbName",
           "basisColumn": "SQL"
+        },
+        {
+          "name": "updateable",
+          "basisColumn": "Updateable"
         },
         {
           "name": "label",
@@ -75,11 +92,13 @@
       "fields": [
         {
           "name": "joinID",
-          "basisColumn": "JoinID"
+          "basisColumn": "JoinID",
+          "export": false
         },
         {
           "name": "fromTableID",
-          "basisColumn": "FromTableID"
+          "basisColumn": "FromTableID",
+          "export": false
         },
         {
           "name": "table",

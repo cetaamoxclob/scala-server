@@ -19,7 +19,7 @@ POST        /data/:name                        controllers.Application.saveData(
 GET         /ddl/:tableName                    controllers.Application.ddl(tableName)
 GET         /import/                           controllers.Application.importList
 POST        /import/:artifactType/:name        controllers.Application.importArtifact(artifactType, name)
-GET         /exportAll                         controllers.Application.exportAll
+GET         /export/:artifactType/:name        controllers.Application.exportArtifact(artifactType, name)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                      controllers.Assets.at(path="/public", file)
