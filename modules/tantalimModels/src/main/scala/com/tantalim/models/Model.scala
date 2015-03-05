@@ -11,7 +11,8 @@ case class Model(name: String,
                  orderBy: Seq[ModelOrderBy],
                  allowInsert: Boolean = true,
                  allowUpdate: Boolean = true,
-                 allowDelete: Boolean = true
+                 allowDelete: Boolean = true,
+                 preSave: Option[String]
                   )
 
 case class ModelField(name: String,

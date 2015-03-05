@@ -84,7 +84,8 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
       orderBy = compileOrderBy(model.orderBy),
       allowInsert = model.allowInsert.getOrElse(basisTable.allowInsert),
       allowUpdate = model.allowUpdate.getOrElse(basisTable.allowUpdate),
-      allowDelete = model.allowDelete.getOrElse(basisTable.allowDelete)
+      allowDelete = model.allowDelete.getOrElse(basisTable.allowDelete),
+      preSave = model.preSave
     )
   }
 

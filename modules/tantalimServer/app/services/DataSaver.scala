@@ -36,8 +36,7 @@ trait DataSaver extends DataReader with Database {
     if (dataToSave.model.instanceID.isEmpty)
       throw new Exception("Cannot insert/update/delete an instance without an instanceID for " + dataToSave.model.name)
 
-
-    dataToSave.rows.foreach { dataRow =>
+    dataToSave.foreach { dataRow =>
       dataRow.state match {
         case DataState.Inserted => insertSingleRow(dataRow, dbConnection)
         case DataState.Deleted => deleteSingleRow(dataRow, dbConnection)
@@ -48,6 +47,15 @@ trait DataSaver extends DataReader with Database {
   }
 
   private def insertSingleRow(row: SmartNodeInstance, dbConnection: Connection): Unit = {
+    if (row.nodeSet.model.preSave.isDefined) {
+      // TODO Eval row.nodeSet.model.preSave
+      var counter = 10
+      row.getChild("columns").foreach { column =>
+        column.set("displayOrder", TntInt(counter))
+        counter += 10
+      }
+    }
+
     val (sql, params) = createSqlForInsert(row)
 
     val rsKeys = insert(sql, params, dbConnection)
@@ -156,6 +164,7 @@ trait DataSaver extends DataReader with Database {
         // https://code.google.com/p/scalascriptengine/
         if (field.name == "displayOrder") {
           Some(TntInt(10 + (row.index * 10)))
+          None
         } else {
           None
         }

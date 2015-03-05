@@ -63,6 +63,10 @@ case class SmartNodeInstance(
     }
   }
 
+  def getChild(childName: String) = {
+    children.get(childName).get
+  }
+
   def foreachChild(f: (SmartNodeSet) => Unit) = {
     nodeSet.model.children.foreach {
       case (childModelName: String, childModel: Model) =>
