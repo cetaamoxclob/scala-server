@@ -4,7 +4,7 @@ import java.sql.Date
 import java.util.Calendar
 
 import mock.FakeArtifacts
-import com.tantalim.models.{TableColumn, ModelField}
+import com.tantalim.models.{DataType, TableColumn, ModelField}
 import org.joda.time.DateTime
 import org.junit.runner.RunWith
 import org.specs2.mutable._
@@ -14,9 +14,9 @@ import org.specs2.runner._
 class DataFilterSpec extends Specification with FakeArtifacts {
 
   val modelColumnSample: Map[String, ModelField] = Map(
-    fakeModelFieldMap("TableID", "id", "Integer", None, false, true),
-    fakeModelFieldMap("CreatedDate", "created_date", "Date"),
-    fakeModelFieldMap("TableName", "name", "String")
+    fakeModelFieldMap("TableID", "id", DataType.Integer, None, false, true),
+    fakeModelFieldMap("CreatedDate", "created_date", DataType.Date),
+    fakeModelFieldMap("TableName", "name", DataType.String)
   )
 
   private def mustBeEqual(filter: String, whereClause: String, parameters: List[Any]) = {

@@ -72,7 +72,8 @@ class ArtifactCompilerSpec extends Specification with Mockito with FakeArtifacts
           columns = Map("PersonID" -> new TableColumn(
             "PersonID",
             "person_id",
-            dataType = "String",
+            order = 10,
+            dataType = DataType.String,
             updateable = true,
             required = false,
             label = "PersonID",
@@ -83,7 +84,7 @@ class ArtifactCompilerSpec extends Specification with Mockito with FakeArtifacts
         limit = 0,
         parentLink = None,
         instanceID = None,
-        fields = Map(fakeModelFieldMap("PersonID", "person_id", "String")),
+        fields = Map(fakeModelFieldMap("PersonID", "person_id", DataType.String)),
         children = Map.empty,
         steps = Map.empty,
         orderBy = Seq.empty

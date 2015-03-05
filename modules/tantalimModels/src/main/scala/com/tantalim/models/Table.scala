@@ -18,7 +18,7 @@ abstract class Table {
 case class ShallowTable(
                          name: String,
                          dbName: String,
-                         primaryKey: Option[TableColumn],
+                         primaryKey: Option[TableColumn] = None,
                          columns: Map[String, TableColumn]
                          ) extends Table
 

@@ -24,8 +24,8 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
       instanceID = Option("PersonID"),
       parentLink = None,
       fields = Map(
-        fakeModelFieldMap("PersonID", "person_id", "Integer", updateable = false),
-        fakeModelFieldMap("PersonName", "name", "String", required = true)
+        fakeModelFieldMap("PersonID", "person_id", DataType.Integer, updateable = false),
+        fakeModelFieldMap("PersonName", "name", required = true)
       ),
       children = Map("PersonPhone" -> new Model(
         "PersonPhone",
@@ -36,9 +36,9 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
         instanceID = Option("PersonPhoneID"),
         parentLink = Some(new ModelParentLink("PersonID", "PersonPhonePersonID")),
         fields = Map(
-          fakeModelFieldMap("PersonPhoneID", "phone_id", "Integer", updateable = false),
-          fakeModelFieldMap("PersonPhonePersonID", "person_id", "Integer", updateable = false),
-          fakeModelFieldMap("PersonPhoneNumber", "phone_number", "String", required = true)
+          fakeModelFieldMap("PersonPhoneID", "phone_id", DataType.Integer, updateable = false),
+          fakeModelFieldMap("PersonPhonePersonID", "person_id", DataType.Integer, updateable = false),
+          fakeModelFieldMap("PersonPhoneNumber", "phone_number", required = true)
         ),
         children = Map.empty,
         steps = Map.empty,

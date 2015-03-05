@@ -6,8 +6,7 @@
       "name": "ApplicationID",
       "dbName": "appID",
       "dataType": "Integer",
-      "updateable": false,
-      "columnDefault": "GUID"
+      "updateable": false
     },
     {
       "name": "Code",
@@ -20,35 +19,6 @@
     {
       "name": "Description",
       "dbName": "description"
-    },
-    {
-      "name": "DisplayOrder",
-      "dbName": "displayOrder"
-    },
-    {
-      "name": "DataType",
-      "dbName": "dataType"
-    },
-    {
-      "name": "SQL",
-      "dbName": "dbName"
-    },
-    {
-      "name": "Label",
-      "dbName": "label"
-    }
-  ],
-  "joins": [
-    {
-      "name": "Table",
-      "table": "Table",
-      "required": true,
-      "columns": [
-        {
-          "from": "TableID",
-          "to": "TableID"
-        }
-      ]
     }
   ]
 }
