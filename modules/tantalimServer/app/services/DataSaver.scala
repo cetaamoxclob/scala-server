@@ -152,15 +152,13 @@ trait DataSaver extends DataReader with Database {
         }
       case FieldDefaultType.Field => row.get(default.value)
       case FieldDefaultType.Fxn =>
-        calculateValueFromFunction(default.value, row, field)
-    }
-  }
-
-  private def calculateValueFromFunction(body: String, row: SmartNodeInstance, field: ModelField): Option[TntValue] = {
-    if (field.name == "displayOrder") {
-      Some(TntInt(10 + (row.index * 10)))
-    } else {
-      None
+        // Rule of Three - waiting for more examples of functions
+        // https://code.google.com/p/scalascriptengine/
+        if (field.name == "displayOrder") {
+          Some(TntInt(10 + (row.index * 10)))
+        } else {
+          None
+        }
     }
   }
 
