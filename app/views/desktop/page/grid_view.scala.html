@@ -7,9 +7,10 @@
                 <th class="tnt-grid-corner"></th>
             @for(field <- page.fields) {
                 @if(field.showInTableView) {
-                    <th>@field.label</th>
+                    <th class="text-center" width="@{field.tableWidth}%">@field.label</th>
                 }
             }
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -17,27 +18,26 @@
                 <td class="tnt-grid-left-nav" data-ng-bind="$index + 1"></td>
             @for(field <- page.fields) {
                 @if(field.showInTableView) {
-                    <td class="text-display @if(field.alignRight){text-right}"
+                    <td class="text-display @if(field.alignCenter){text-center} @if(field.alignRight){text-right}"
                         data-ng-class="{success: action.cellIsSelected('@page.model.name', $index, '@field.name')}"
                         data-ng-mousedown="action.mousedown('@page.model.name', $index, '@field.name')"
                         data-ng-mouseover="action.mouseover('@page.model.name', $index, '@field.name')"
                         data-ng-mouseup="action.mouseup('@page.model.name', $index, '@field.name')"
                         data-ng-dblclick="action.dblclick('@page.model.name', $index, '@field.name')">
                         @if(field.fieldType == "checkbox") {
-                            <i data-ng-show="row.data.@field.name == true" class="icon-check-sign icon-large"></i>
-                            <i data-ng-show="row.data.@field.name == false" class="icon-check-sign icon-large"></i>
-                            <input type="checkbox" data-ng-model="row.data.@field.name"
-                            data-ng-show="action.cellIsEditing('@page.model.name', $index, '@field.name')"
-                            data-ng-change="rowChanged(current.instances.@(page.model.name), '@field.name')">
+                            <i data-ng-show="row.data.@field.name === true" class="fa fa-check-square-o fa-lg fa-fw" data-ng-click="row.data.@field.name = false; rowChanged(current.instances.@(page.model.name))"></i>
+                            <i data-ng-show="row.data.@field.name === false" class="fa fa-square-o fa-lg fa-fw" data-ng-click="row.data.@field.name = @if(field.modelField.required) {false} else {null}; rowChanged(current.instances.@(page.model.name))"></i>
+                            <i data-ng-show="row.data.@field.name === undefined || row.data.@field.name === null" class="fa fa-square-o fa-lg fa-fw disabled" data-ng-click="row.data.@field.name = true; rowChanged(current.instances.@(page.model.name))"></i>
                         } else {
                             <span class="text-view" data-ng-bind="row.data.@field.name @if(field.filter.isDefined){ | @field.filter}"></span>
-                            <input class="text-edit" data-ng-model="row.data.@field.name"
+                            <input type="text" class="text-edit" data-ng-model="row.data.@field.name"
                             data-ng-show="action.cellIsEditing('@page.model.name', $index, '@field.name')"
                             data-ng-change="rowChanged(current.instances.@(page.model.name))">
                         }
                     </td>
                 }
             }
+                <td></td>
             </tr>
             <tr data-ng-hide="current.sets.@(page.model.name).rows.length">
                 <td colspan="@page.fieldLengthInTableView">No Data Found</td>
