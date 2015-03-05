@@ -75,7 +75,7 @@ trait TableCompiler extends ArtifactService with TableCache {
     if (value.isEmpty) DataType.String
     else {
       val needle = value.get.toLowerCase
-      DataType.values.find(t => t.toString.toLowerCase == needle).get
+      DataType.values.find(t => t.toString.toLowerCase == needle).getOrElse(throw new Exception(s"${value.get} is not a valid DataType"))
     }
   }
 
