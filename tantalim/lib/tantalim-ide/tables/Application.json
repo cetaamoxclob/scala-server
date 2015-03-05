@@ -6,15 +6,18 @@
       "name": "ApplicationID",
       "dbName": "appID",
       "dataType": "Integer",
+      "required": true,
       "updateable": false
     },
     {
       "name": "Code",
-      "dbName": "appCode"
+      "dbName": "appCode",
+      "required": true
     },
     {
       "name": "Name",
-      "dbName": "name"
+      "dbName": "name",
+      "required": true
     },
     {
       "name": "Description",

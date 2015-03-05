@@ -3,7 +3,7 @@ package services
 import java.sql.{SQLException, Connection}
 
 import data._
-import com.tantalim.models.{FieldDefaultType, ModelField, Model}
+import com.tantalim.models.{DataType, FieldDefaultType, ModelField, Model}
 
 trait DataSaver extends DataReader with Database {
   def saveAll(dataToSave: SmartNodeSet): Unit = {
@@ -147,13 +147,20 @@ trait DataSaver extends DataReader with Database {
     default.defaultType match {
       case FieldDefaultType.Constant =>
         field.basisColumn.dataType match {
+          case DataType.Boolean => Some(TntBoolean(default.value == "true"))
           case _ => Some(TntString(default.value))
         }
       case FieldDefaultType.Field => row.get(default.value)
       case FieldDefaultType.Fxn =>
-        val fxnString = default.value
+        calculateValueFromFunction(default.value, row, field)
+    }
+  }
 
-        None
+  private def calculateValueFromFunction(body: String, row: SmartNodeInstance, field: ModelField): Option[TntValue] = {
+    if (field.name == "displayOrder") {
+      Some(TntInt(10 + (row.index * 10)))
+    } else {
+      None
     }
   }
 

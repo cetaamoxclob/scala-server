@@ -73,6 +73,14 @@ case class SmartNodeInstance(
     }
   }
 
+  def index: Int = {
+    val (_, i) = nodeSet.rows.zipWithIndex.find{
+      case (row, index) =>
+        this == row
+    }.get
+    i
+  }
+
   override def toString = {
     val idString = if (id.isDefined) id.get.toString else data.toString()
     s"${model.name}($idString)"
