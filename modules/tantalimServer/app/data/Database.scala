@@ -87,8 +87,9 @@ trait Database {
           case TntDecimal(value) => stmt.setBigDecimal(index, value.bigDecimal)
           case TntString(value) => stmt.setString(index, value)
           case TntNull() => stmt.setNull(index, java.sql.Types.VARCHAR)
-          //          case TntDate(value) => stmt.setDate(index, value.)
-          case value: java.util.Date => stmt.setDate(index, value.asInstanceOf[java.sql.Date])
+          case TntDate(value) => stmt.setDate(index, new java.sql.Date(value.getMillis))
+          case value: org.joda.time.DateTime => stmt.setDate(index, new java.sql.Date(value.getMillis))
+          case value: java.util.Date => stmt.setDate(index, new java.sql.Date(value.getTime))
           case value => throw new Exception(s"Parameters of type ${value.getClass} is not supported for value ${value}")
         }
       }

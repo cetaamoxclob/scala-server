@@ -46,9 +46,7 @@ class ArtifactCompilerSpec extends Specification with Mockito with FakeArtifacts
   "columns": [{
     "name": "PersonID", "dbName": "person_id"
   }]
-}
-                                                   """)
-
+}""")
             case ArtifactType.Model => Json.parse( """
 {
   "basisTable": "Person",
@@ -56,8 +54,7 @@ class ArtifactCompilerSpec extends Specification with Mockito with FakeArtifacts
     "name": "PersonID",
     "basisColumn": "PersonID"
   }]
-}
-                                                   """)
+}""")
 
           }
         }
@@ -72,7 +69,7 @@ class ArtifactCompilerSpec extends Specification with Mockito with FakeArtifacts
           columns = Map("PersonID" -> new TableColumn(
             "PersonID",
             "person_id",
-            order = 10,
+            order = 0,
             dataType = DataType.String,
             updateable = true,
             required = false,
@@ -89,8 +86,6 @@ class ArtifactCompilerSpec extends Specification with Mockito with FakeArtifacts
         steps = Map.empty,
         orderBy = Seq.empty
       )
-
-
 
       val compilerService = new ModelCompiler with ArtifactServiceMock with TableCacheMock
       val model = compilerService.compileModel("ListPeople")

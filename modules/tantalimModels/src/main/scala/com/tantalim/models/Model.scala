@@ -12,7 +12,7 @@ case class Model(name: String,
                  allowInsert: Boolean = true,
                  allowUpdate: Boolean = true,
                  allowDelete: Boolean = true,
-                 preSave: Option[String]
+                 preSave: Option[String] = None
                   )
 
 case class ModelField(name: String,

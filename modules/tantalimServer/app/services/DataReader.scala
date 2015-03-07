@@ -5,6 +5,7 @@ import java.sql.ResultSet
 import compiler.ModelCompiler
 import data._
 import com.tantalim.models._
+import org.joda.time.DateTime
 
 trait DataReader extends ModelCompiler with Database {
 
@@ -96,7 +97,7 @@ trait DataReader extends ModelCompiler with Database {
               case DataType.Date | DataType.DateTime =>
                 val rsValue = rs.getDate(fieldName)
                 if (rs.wasNull()) TntNull()
-                else TntDate(rsValue)
+                else TntDate(new DateTime(rsValue.getTime))
               case _ => throw new MatchError(f"field.dataType of `${f.basisColumn.dataType}` is not String or Integer")
             }
           })
