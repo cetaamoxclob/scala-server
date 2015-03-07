@@ -23,16 +23,26 @@
                         data-ng-mousedown="action.mousedown('@page.model.name', $index, '@field.name')"
                         data-ng-mouseover="action.mouseover('@page.model.name', $index, '@field.name')"
                         data-ng-mouseup="action.mouseup('@page.model.name', $index, '@field.name')"
-                        data-ng-dblclick="action.dblclick('@page.model.name', $index, '@field.name')">
+                        @if(field.fieldType != "checkbox") {
+                            data-ng-dblclick="action.dblclick('@page.model.name', $index, '@field.name')"
+                        }
+                    >
                         @if(field.fieldType == "checkbox") {
-                            <i data-ng-show="row.data.@field.name === true" class="fa fa-check-square-o fa-lg fa-fw" data-ng-click="row.data.@field.name = false; rowChanged(current.instances.@(page.model.name))"></i>
-                            <i data-ng-show="row.data.@field.name === false" class="fa fa-square-o fa-lg fa-fw" data-ng-click="row.data.@field.name = @if(field.modelField.required) {true} else {null}; rowChanged(current.instances.@(page.model.name))"></i>
-                            <i data-ng-show="row.data.@field.name === undefined || row.data.@field.name === null" class="fa fa-square-o fa-lg fa-fw disabled" data-ng-click="row.data.@field.name = true; rowChanged(current.instances.@(page.model.name))"></i>
+                            <i class="fa fa-check-square-o fa-lg"
+                                data-ng-show="row.data.@field.name === true"
+                                data-ng-click="row.toggle('@(field.name)', @(field.required))"></i>
+                            <i class="fa fa-square-o fa-lg"
+                                data-ng-show="row.data.@field.name === false"
+                                data-ng-click="row.toggle('@(field.name)', @(field.required))"></i>
+                            <i class="fa fa-square-o fa-lg disabled"
+                                data-ng-show="row.data.@field.name === undefined || row.data.@field.name === null"
+                                data-ng-click="row.toggle('@(field.name)', @(field.required))"></i>
                         } else {
                             <span class="text-view" data-ng-bind="row.data.@field.name @if(field.filter.isDefined){ | @field.filter}"></span>
                             <input type="text" class="text-edit" data-ng-model="row.data.@field.name"
                             data-ng-show="action.cellIsEditing('@page.model.name', $index, '@field.name')"
-                            data-ng-change="rowChanged(current.instances.@(page.model.name))">
+                            data-ng-change="row.update('@(field.name)')"
+                            focus-me="action.focus('@page.model.name', $index, '@field.name')">
                         }
                     </td>
                 }

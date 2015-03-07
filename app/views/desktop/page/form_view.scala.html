@@ -3,11 +3,16 @@
 @for(field <- page.fields) {
     @if(field.showInFormView) {
         <div class="form-group" ng-class="{'has-error': TopPageForm.@(field.name).$invalid}">
+            {{
+                row = current.instances.@(page.model.name);
+                data = row.data;
+                ""
+            }}
             @if(field.fieldType == "text") {
                 <label class="control-label" for="@(page.model.name)-@(field.name)">@field.label</label>
                 <input type="text" class="form-control" id="@(page.model.name)-@(field.name)" name="@(field.name)"
-                data-ng-model="current.instances.@(page.model.name).data.@(field.name)"
-                ng-change="rowChanged(current.instances.@(page.model.name))"
+                data-ng-model="data.@(field.name)"
+                ng-change="row.update('@(field.name)')"
                 @if(field.blurFunction.isDefined) {
                     ng-blur="@Html(field.blurFunction.get)"
                 }
@@ -15,7 +20,7 @@
                     placeholder="@field.placeholder.get"
                 }
                 @if(field.required) {
-                    ng-required="current.instances.@(page.model.name)"
+                    ng-required="row"
                 }
                 @if(field.disabled) {
                     disabled="disabled"
@@ -25,6 +30,7 @@
                 }
                 >
                 @for(link <- field.links) {
+                    <i class="fa fa-link fa-rotate-90" data-ng-click=""></i>
                     <a href="" data-ng-click="link('@link.page.name', '@link.filter', '@page.model.name')">@link.page.title</a>
                 }
                 @if(field.help.isDefined) {
@@ -34,7 +40,7 @@
             @if(field.fieldType == "select") {
                 <label class="control-label" for="@(page.model.name)-@field.name">@field.label</label>
                 <ui-select
-                current="current.instances.@(page.model.name).data"
+                current="data"
                 item-model="@field.select.get.model"
                 item-value="@field.select.get.sourceValue"
                 item-where="@field.select.get.where"
@@ -46,10 +52,10 @@
             }
             @if(field.fieldType == "checkbox") {
                 <div class="checkbox">
-                    <label class="control-label" class="ui-checkbox" for="@(page.model.name)-@(field.name)">
-                        <input type="checkbox" id="@(page.model.name)-@(field.name)"
-                        data-ng-model="current.instances.@(page.model.name).data.@(field.name)"
-                        ng-change="rowChanged(current.instances.@(page.model.name), '@(field.name)')">
+                    <label class="control-label" class="ui-checkbox" for="@(page.model.name)-@(field.name)" data-ng-click="row.toggle('@(field.name)', @(field.required))">
+                        <i data-ng-show="data.@(field.name) === true" class="fa fa-check-square-o fa-lg fa-fw"></i>
+                        <i data-ng-show="data.@(field.name) === false" class="fa fa-square-o fa-lg fa-fw"></i>
+                        <i data-ng-show="data.@(field.name) === undefined || data.@(field.name) === null" class="fa fa-square-o fa-lg fa-fw disabled"></i>
                         @field.label
                     </label>
                 </div>

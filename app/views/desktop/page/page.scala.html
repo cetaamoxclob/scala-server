@@ -10,7 +10,7 @@
             Refresh
         </button>
         @if(page.model.allowInsert || page.model.allowUpdate || page.model.allowDelete) {
-            <button type="button" data-ng-click="save()" class="btn btn-success" data-ng-disabled="!ModelCursor.dirty || TopPageForm.$invalid">
+            <button type="button" data-ng-click="save()" class="btn btn-success" data-ng-disabled="!ModelCursor.dirty() || TopPageForm.$invalid">
                 <span class="glyphicon glyphicon-floppy-disk"></span>
                 Save
             </button>
