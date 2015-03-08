@@ -25,7 +25,8 @@ CREATE TABLE db_column
     dataType VARCHAR(20),
     displayOrder INT DEFAULT 0,
     dbName VARCHAR(50),
-    label VARCHAR(50)
+    label VARCHAR(50),
+    updateable TINYINT UNSIGNED DEFAULT 0
 );
 ALTER TABLE db_column ADD FOREIGN KEY (tableID) REFERENCES db_table (tableID) ON UPDATE CASCADE;
 CREATE UNIQUE INDEX naturalKey ON db_column (tableID, name);
