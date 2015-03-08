@@ -2,7 +2,7 @@
   "name": "tantalim-ide",
   "version": "0.0.1",
   "dependencies": {
-    "tantalim-client": "latest"
+    "tantalim-client": "git@github.com:tantalim/tantalim-client.git"
   },
   "resolutions": {
     "angular": ">= 1.3"
