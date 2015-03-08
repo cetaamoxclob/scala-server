@@ -21,11 +21,12 @@ CREATE TABLE db_column
     columnID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     tableID INT NOT NULL,
     name VARCHAR(50) NOT NULL,
-    required TINYINT UNSIGNED DEFAULT 0,
+    required TINYINT,
     dataType VARCHAR(20),
-    displayOrder INT DEFAULT 0,
+    displayOrder INT,
     dbName VARCHAR(50),
-    label VARCHAR(50)
+    label VARCHAR(50),
+    updateable TINYINT
 );
 ALTER TABLE db_column ADD FOREIGN KEY (tableID) REFERENCES db_table (tableID) ON UPDATE CASCADE;
 CREATE UNIQUE INDEX naturalKey ON db_column (tableID, name);
