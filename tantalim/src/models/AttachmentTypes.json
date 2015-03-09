@@ -1,0 +1,27 @@
+{
+  "basisTable": "AttachmentType",
+  "orderBy": [
+    {
+      "fieldName": "AttachmentType"
+    }
+  ],
+  "fields": [
+    {
+      "name": "AttachmentTypeCode",
+      "updateable": false,
+      "basisColumn": "AttachmentTypeCode"
+    },
+    {
+      "name": "AttachmentType",
+      "basisColumn": "AttachmentType"
+    },
+    {
+      "name": "ActiveFlag",
+      "basisColumn": "ActiveFlag"
+    },
+    {
+      "name": "DisplaySequence",
+      "basisColumn": "DisplaySequence"
+    }
+  ]
+}
