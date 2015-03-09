@@ -9,7 +9,8 @@
       "name": "AttachmentType"
     },
     {
-      "name": "ActiveFlag"
+      "name": "ActiveFlag",
+      "fieldType": "checkbox"
     },
     {
       "name": "DisplaySequence"
