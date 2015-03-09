@@ -8,8 +8,8 @@
       "required": true
     },
     {
-      "name": "VendorName",
-      "label": "Vendor Name",
+      "name": "Name",
+      "label": "Vendor",
       "required": true
     },
     {
