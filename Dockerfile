@@ -1,4 +1,4 @@
-FROM dockerfile/java
+FROM dockerfile/java:oracle-java8
 MAINTAINER Trevor Allred <trevor@tantalim.com>
 RUN ["mkdir", "-p", "/opt/docker/logs"]
 #VOLUME ["/opt/docker/logs"]

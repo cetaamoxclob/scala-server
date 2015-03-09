@@ -42,7 +42,14 @@ trait ArtifactService {
     val directoryName = getSourceLocation(artifactType, name)
     val artifactContent = Files.toString(Play.getFile(directoryName), Charsets.UTF_8)
 
-    Json.parse(artifactContent)
+    try {
+      Json.parse(artifactContent)
+    } catch {
+      case e: Exception =>
+        println("Failed to parse :" + artifactContent)
+        println(e.toString)
+        throw e
+    }
   }
 
   def getMenu(name: String): JsResult[MenuJson] = {
