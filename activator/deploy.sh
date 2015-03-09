@@ -8,6 +8,6 @@ cp Dockerfile target/docker/
 cd target/docker
 docker build -t $APP .
 
-docker push $APP
+# docker push $APP
 
-echo docker run -d -p 9000:9000 -v ${DIR}/tantalim:/opt/docker/tantalim -v ~/application.conf:/opt/docker/conf/application.conf $APP
+echo docker run -d -p 9000:9000 -v ${DIR}/tantalim:/opt/docker/tantalim -v ~/slhp/application.conf:/opt/docker/conf/application.prod.conf $APP

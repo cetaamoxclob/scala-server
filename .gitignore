@@ -4,3 +4,4 @@ target
 dist
 /.idea
 *.iml
+conf/application.prod.conf
