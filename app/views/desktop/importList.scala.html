@@ -1,7 +1,4 @@
-@(menu: Menu, user: User, artifactList: Seq[ArtifactStub])(implicit flash: Flash)
-@import models.ArtifactStub
-@import models.Menu
-@import models.User
+@(menu: com.tantalim.models.Menu, user: com.tantalim.models.User, artifactList: Seq[com.tantalim.models.ArtifactStub])(implicit flash: Flash)
 <!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -27,6 +24,7 @@
                 <thead>
                     <tr>
                         <th>Artifact Type</th>
+                        <th>Module</th>
                         <th>Artifact Name</th>
                         <th></th>
                     </tr>
@@ -36,6 +34,7 @@
                     @helper.form(action = routes.Application.importArtifact(artifact.artifactType.toString, artifact.name)) {
                         <tr>
                             <td>@artifact.artifactType</td>
+                            <td>@artifact.module.getOrElse("local")</td>
                             <td>@artifact.name</td>
                             <td><button class="btn btn-primary btn-xs">Import</button></td>
                         </tr>

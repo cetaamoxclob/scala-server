@@ -4,6 +4,7 @@
   "columns": [
     {
       "name": "AttachmentTypeCode",
+      "label": "Code",
       "required": true,
       "updateable": false
     },
@@ -15,22 +16,20 @@
     },
     {
       "name": "ActiveFlag",
-      "label": "Active Flag",
+      "label": "Active",
       "dataType": "Boolean",
-      "columnDefault": "true",      
-      "required": true,
-      "updateable": true
+      "columnDefault": "true",
+      "required": true
     },
     {
       "name": "DisplaySequence",
-      "label": "Display Sequence",
-      "required": false,
-      "updateable": true
+      "label": "Order",
+      "dataType": "Integer"
     }
-  ], 
+  ],
   "joins": [
     {
-     "name": "AttachmentType",
+      "name": "AttachmentType",
       "table": "AttachmentType",
       "columns": [
         {
@@ -38,6 +37,6 @@
           "to": "AttachmentTypeCode"
         }
       ]
-    }    
+    }
   ]
 }

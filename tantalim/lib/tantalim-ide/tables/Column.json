@@ -45,6 +45,10 @@
     {
       "name": "Label",
       "dbName": "label"
+    },
+    {
+      "name": "Updateable",
+      "dbName": "updateable"
     }
   ],
   "joins": [

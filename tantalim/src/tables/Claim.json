@@ -11,14 +11,13 @@
     {
       "name": "PatientID",
       "dataType": "Integer",
-      "required": true,      
+      "required": true,
       "updateable": false
     },
     {
       "name": "ClaimNumber",
       "label": "Claim #",
-      "required": true,
-      "updateable": false            
+      "required": true
     },
     {
       "name": "DateOfService",
@@ -30,14 +29,12 @@
     {
       "name": "VendorID",
       "dataType": "Integer",
-      "required": true,
-      "updateable": false
+      "required": true
     },
     {
       "name": "ProviderID",
       "dataType": "Integer",
-      "required": true,
-      "updateable": false
+      "required": true
     }
   ],
   "joins": [

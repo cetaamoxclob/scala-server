@@ -1,0 +1,139 @@
+body {
+}
+
+.nav, .pagination, .carousel, .panel-title a {
+    cursor: pointer;
+}
+
+.navbar .nav > li > a.brand {
+    padding-left: 20px;
+    margin-left: 0
+}
+
+#loading {
+    background-color: #EEEEEE;
+    height: 100%;
+    position: fixed;
+    z-index: 5;
+}
+
+#loadingMessage {
+    background-color: #DDDDDD;
+    margin-top: 100px;
+    position: fixed;
+    padding: 2em;
+}
+
+.content {
+    margin-top: 70px;
+    margin-bottom: 70px;
+    width: 100%;
+}
+
+#server-status, #server-error {
+    position: fixed;
+    padding: 2px 10px;
+    left: 0;
+    top: 51px;
+    width: 100%;
+    border-radius: 0;
+    margin: 0;
+    z-index: 100;
+    font-size: 0.9em;
+}
+
+div.smart-select {
+    position: absolute;
+    height: 300px;
+    overflow-y: scroll;
+    z-index: 1;
+}
+
+#static-content {
+    margin-top: 20px;
+}
+
+.instance-count {
+    color: #777;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+.tantalum-grid {
+    height: 400px;
+}
+
+/* Fixes for ng-grid */
+.ngColMenu label {
+    margin-right: 20px;
+}
+
+.page-nav {
+    padding: 5px;
+}
+
+#search {
+    background-color: #faf2cc;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+
+.childSection {
+    margin-left: 30px;
+    position: relative;
+}
+
+.childSection .icon-indent {
+    position: absolute;
+    top: 9px;
+    left: -17px;
+    cursor: pointer;
+}
+
+
+/** For the Grid **/
+
+table.tnt-grid td.text-display {
+    position: relative;
+}
+
+table.tnt-grid td.text-display .text-edit {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    padding: 0px 4px;
+    border: 1px solid rgb(143, 181, 224);
+    z-index: 10;
+}
+
+i.disabled {
+    color: #DDDDDD
+}
+
+i.fa-check-square-o {
+    margin-right: -1px;
+    margin-left: 1px;
+}
+
+table.tnt-grid .tnt-grid-corner {
+}
+
+table.tnt-grid tr th {
+    cursor: pointer;
+    background-color: #EEEEEE;
+}
+
+table.tnt-grid td.tnt-grid-left-nav {
+    cursor: pointer;
+    width: 3em;
+    font-size: x-small;
+    text-align: right;
+    background-color: #EEEEEE;
+    vertical-align: middle;
+    padding: 0px 5px 0px 0px;
+}
+

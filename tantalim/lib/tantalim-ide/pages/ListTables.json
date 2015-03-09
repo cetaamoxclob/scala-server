@@ -2,6 +2,7 @@
   "title": "List Tables",
   "icon": "glyphicon-th-list",
   "model": "ListTables",
+  "viewMode": "table",
   "fields": [
     {
       "name": "TableName",
@@ -10,7 +11,7 @@
         {
           "title": "Build Table",
           "page": "BuildTable",
-          "filter": "TableTableID Equals [TableTableID]"
+          "filter": "TableName Equals [TableName]"
         }
       ]
     },

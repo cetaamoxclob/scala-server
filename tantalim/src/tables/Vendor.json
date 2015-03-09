@@ -5,20 +5,17 @@
     {
       "name": "VendorID",
       "dataType": "Integer",
-      "required": true,
-      "updateable": false
+      "required": true
     },
     {
       "name": "VendorName",
       "label": "Vendor Name",
-      "required": true,
-      "updateable": false
+      "required": true
     },
     {
       "name": "TaxID",
       "label": "Tax ID",
-      "required": true,
-      "updateable": false
-    },
+      "required": true
+    }
   ]
 }

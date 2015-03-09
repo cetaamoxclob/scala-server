@@ -18,7 +18,7 @@
     {
       "name": "TableColumns",
       "title": "Columns",
-      "parentModel": "BuildTable",
+      "viewMode": "table",
       "fields": [
         {
           "name": "TableColumnDisplayOrder"
@@ -45,7 +45,6 @@
     {
       "name": "TableJoins",
       "title": "Joins",
-      "parentModel": "BuildTable",
       "fields": [
         {
           "name": "TableJoinName",
@@ -68,7 +67,6 @@
         {
           "name": "TableJoinColumns",
           "title": "Join Columns",
-          "parentModel": "TableJoins",
           "fields": [
             {
               "name": "TableJoinJoinColumnFromColumn",

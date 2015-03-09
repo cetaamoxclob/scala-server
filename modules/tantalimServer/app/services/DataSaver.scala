@@ -3,7 +3,7 @@ package services
 import java.sql.{SQLException, Connection}
 
 import data._
-import models.Model
+import com.tantalim.models.{DataType, FieldDefaultType, ModelField, Model}
 
 trait DataSaver extends DataReader with Database {
   def saveAll(dataToSave: SmartNodeSet): Unit = {
@@ -36,8 +36,7 @@ trait DataSaver extends DataReader with Database {
     if (dataToSave.model.instanceID.isEmpty)
       throw new Exception("Cannot insert/update/delete an instance without an instanceID for " + dataToSave.model.name)
 
-
-    dataToSave.rows.foreach { dataRow =>
+    dataToSave.foreach { dataRow =>
       dataRow.state match {
         case DataState.Inserted => insertSingleRow(dataRow, dbConnection)
         case DataState.Deleted => deleteSingleRow(dataRow, dbConnection)
@@ -47,8 +46,16 @@ trait DataSaver extends DataReader with Database {
     }
   }
 
-
   private def insertSingleRow(row: SmartNodeInstance, dbConnection: Connection): Unit = {
+    if (row.nodeSet.model.preSave.isDefined) {
+      // TODO Eval row.nodeSet.model.preSave
+      var counter = 10
+      row.getChild("columns").foreach { column =>
+        column.set("displayOrder", TntInt(counter))
+        counter += 10
+      }
+    }
+
     val (sql, params) = createSqlForInsert(row)
 
     val rsKeys = insert(sql, params, dbConnection)
@@ -102,14 +109,10 @@ trait DataSaver extends DataReader with Database {
       val columnValues = List.newBuilder[TntValue]
 
       model.fields.values.foreach { field =>
-        val value = row.get(field.name)
+        val value = getValueForInsert(row, field)
         if (value.isDefined) {
-          value.get match {
-            case TntNull() => // Don't bother inserting nulls
-            case _ =>
-              columnNames += field.basisColumn.dbName
-              columnValues += value.get
-          }
+          columnNames += field.basisColumn.dbName
+          columnValues += value.get
         }
       }
 
@@ -128,6 +131,46 @@ trait DataSaver extends DataReader with Database {
       f"VALUES ($boundVars)", columnValues.toList)
   }
 
+  private def getValueForInsert(row: SmartNodeInstance, field: ModelField): Option[TntValue] = {
+
+    if (field.fieldDefault.isDefined && field.fieldDefault.get.overwrite) {
+      getDefaultValue(row, field)
+    } else {
+      val value = row.get(field.name)
+      if (value.isDefined) {
+        value.get match {
+          case TntNull() => None
+          case _ => Some(value.get)
+        }
+      } else {
+        if (field.fieldDefault.isDefined) {
+          getDefaultValue(row, field)
+        } else None
+      }
+    }
+  }
+
+  private def getDefaultValue(row: SmartNodeInstance, field: ModelField): Option[TntValue] = {
+    val default = field.fieldDefault.get
+    default.defaultType match {
+      case FieldDefaultType.Constant =>
+        field.basisColumn.dataType match {
+          case DataType.Boolean => Some(TntBoolean(default.value == "true"))
+          case _ => Some(TntString(default.value))
+        }
+      case FieldDefaultType.Field => row.get(default.value)
+      case FieldDefaultType.Fxn =>
+        // Rule of Three - waiting for more examples of functions
+        // https://code.google.com/p/scalascriptengine/
+        if (field.name == "displayOrder") {
+          Some(TntInt(10 + (row.index * 10)))
+          None
+        } else {
+          None
+        }
+    }
+  }
+
   private def createSqlForUpdate(row: SmartNodeInstance): (String, List[Any]) = {
     val model = row.nodeSet.model
     val primaryKey = getPrimaryKey(model)
@@ -138,7 +181,7 @@ trait DataSaver extends DataReader with Database {
       val columnValues = List.newBuilder[TntValue]
 
       model.fields.values.foreach { field =>
-        if (field.updateable) {
+        if (field.updateable && field.step.isEmpty) {
           val value = row.get(field.name)
           columnNames += field.basisColumn.dbName
           columnValues += value.getOrElse(

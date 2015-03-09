@@ -1,6 +1,6 @@
 package data
 
-import models.Model
+import com.tantalim.models.Model
 
 import scala.collection.mutable
 
@@ -34,16 +34,16 @@ case class SmartNodeInstance(
                                * map of SmartNodeInstances representing the children of this node
                                */
                               children: mutable.HashMap[String, SmartNodeSet] = mutable.HashMap.empty) {
-  def delete = {
+  def delete() = {
     state = DataState.Deleted
   }
 
-  def update = if (state == DataState.Done) {
+  def update() = if (state == DataState.Done) {
     state = DataState.Updated
     if (nodeSet.parentInstance.isDefined) nodeSet.parentInstance.get
   }
 
-  def childUpdated = if (state == DataState.Done) {
+  def childUpdated() = if (state == DataState.Done) {
     state = DataState.ChildUpdated
     if (nodeSet.parentInstance.isDefined) nodeSet.parentInstance.get
   }
@@ -56,12 +56,15 @@ case class SmartNodeInstance(
 
   def setId(value: TntValue) = {
     nodeSet.model.instanceID match {
-      case Some(instanceID) => {
+      case Some(instanceID) =>
         id = Some(value)
         set(instanceID, value)
-      }
       case None => throw new Exception("InstanceID isn't defined for " + this)
     }
+  }
+
+  def getChild(childName: String) = {
+    children.get(childName).get
   }
 
   def foreachChild(f: (SmartNodeSet) => Unit) = {
@@ -74,8 +77,16 @@ case class SmartNodeInstance(
     }
   }
 
+  def index: Int = {
+    val (_, i) = nodeSet.rows.zipWithIndex.find{
+      case (row, index) =>
+        this == row
+    }.get
+    i
+  }
+
   override def toString = {
-    val idString = if (id.isDefined) id.get.toString else data.toString
+    val idString = if (id.isDefined) id.get.toString else data.toString()
     s"${model.name}($idString)"
   }
 }

@@ -11,8 +11,7 @@
     {
       "name": "Name",
       "label": "Patient Name",
-      "required": true,
-      "updateable": false
+      "required": true
     },
     {
       "name": "FirstName",

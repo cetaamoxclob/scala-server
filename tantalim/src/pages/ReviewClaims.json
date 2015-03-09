@@ -4,12 +4,6 @@
   "viewMode": "table",
   "fields": [
     {
-      "name": "PatientID"
-    },
-    {
-      "name": "PatientName"
-    },
-    {
       "name": "PatientFirstName"
     },
     {
@@ -26,22 +20,16 @@
       "viewMode": "table",
       "fields": [
         {
-          "name": "ClaimClaimID"
-        },
-        {
-          "name": "ClaimPatientID"
-        },
-        {
           "name": "ClaimClaimNumber"
         },
         {
           "name": "ClaimServiceDate"
         },
         {
-          "name": "ClaimVendorID"
+          "name": "ClaimVendorName"
         },
         {
-          "name": "ClaimProviderID"
+          "name": "ClaimProviderName"
         }
       ]
     }

@@ -11,18 +11,15 @@
     {
       "name": "Name",
       "label": "Provider",
-      "required": true,
-      "updateable": false
+      "required": true
     },
     {
       "name": "FirstName",
-      "label": "First Name",
-      "updateable": false
+      "label": "First Name"
     },
     {
       "name": "LastName",
-      "label": "Last Name",
-      "updateable": false
+      "label": "Last Name"
     }
   ]
 }

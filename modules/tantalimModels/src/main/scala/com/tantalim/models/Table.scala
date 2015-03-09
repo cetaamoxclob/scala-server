@@ -5,12 +5,20 @@ abstract class Table {
 
   def dbName: String
 
+  def primaryKey: Option[TableColumn]
+
   def columns: Map[String, TableColumn]
+
+  def getColumn(name: String) = columns.getOrElse(
+    name,
+    throw new Exception(f"failed to find column named `$name` in table `${this.name}` but found: ${this.columns.keys}")
+  )
 }
 
 case class ShallowTable(
                          name: String,
                          dbName: String,
+                         primaryKey: Option[TableColumn] = None,
                          columns: Map[String, TableColumn]
                          ) extends Table
 
@@ -28,7 +36,8 @@ case class DeepTable(
 case class TableColumn(
                         name: String,
                         dbName: String,
-                        dataType: String = "String",
+                        order: Int,
+                        dataType: DataType = DataType.String,
                         updateable: Boolean = true,
                         required: Boolean = false,
                         label: String,

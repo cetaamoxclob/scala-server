@@ -7,8 +7,7 @@
       "dbName": "joinID",
       "dataType": "Integer",
       "updateable": false,
-      "required": true,
-      "columnDefault": "GUID"
+      "required": true
     },
     {
       "name": "Name",

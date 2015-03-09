@@ -10,12 +10,12 @@
     },
     {
       "name": "AttachmentTypeCode",
-      "label": "Attachment Type Code",
+      "label": "Attachment Type Code"
     },
     {
       "name": "File",
       "label": "File",
-      "required": true,
+      "required": true
     },
     {
       "name": "PatientID",

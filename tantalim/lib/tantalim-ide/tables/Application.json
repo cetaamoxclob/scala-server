@@ -6,49 +6,22 @@
       "name": "ApplicationID",
       "dbName": "appID",
       "dataType": "Integer",
-      "updateable": false,
-      "columnDefault": "GUID"
+      "required": true,
+      "updateable": false
     },
     {
       "name": "Code",
-      "dbName": "appCode"
+      "dbName": "appCode",
+      "required": true
     },
     {
       "name": "Name",
-      "dbName": "name"
+      "dbName": "name",
+      "required": true
     },
     {
       "name": "Description",
       "dbName": "description"
-    },
-    {
-      "name": "DisplayOrder",
-      "dbName": "displayOrder"
-    },
-    {
-      "name": "DataType",
-      "dbName": "dataType"
-    },
-    {
-      "name": "SQL",
-      "dbName": "dbName"
-    },
-    {
-      "name": "Label",
-      "dbName": "label"
-    }
-  ],
-  "joins": [
-    {
-      "name": "Table",
-      "table": "Table",
-      "required": true,
-      "columns": [
-        {
-          "from": "TableID",
-          "to": "TableID"
-        }
-      ]
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "basisTable": "Table",
-  "limit": 10,
+  "limit": 100,
   "orderBy": [
     {
       "fieldName": "TableName"
@@ -36,7 +36,7 @@
       "basisColumn": "AllowDelete"
     }
   ],
-  "allowInsert": false,
-  "allowUpdate": false,
-  "allowDelete": false
+  "allowInsert": true,
+  "allowUpdate": true,
+  "allowDelete": true
 }

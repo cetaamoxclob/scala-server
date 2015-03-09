@@ -1,19 +1,40 @@
-@(page: Page, depth: Int)
-@import models.Page
+@(page: com.tantalim.models.Page, depth: Int)
 <div id="@page.name" class="childSection">
-    @if(depth > 0) {
+    @if(depth == 0) {
+        <div class="page-header">
+            <h1>@page.title</h1>
+            <span class="icon-indent glyphicon glyphicon-triangle-right" aria-hidden="true"
+            data-ng-click="hide@page.name = true" data-ng-hide="hide@page.name"></span>
+            <span class="icon-indent glyphicon glyphicon-triangle-bottom" aria-hidden="true"
+            data-ng-click="hide@page.name = false" data-ng-show="hide@page.name"></span>
+        </div>
+
+        <nav data-ng-show="searchController.maxPages > 1">
+            <ul class="nav navbar-nav navbar-right" style="margin-right: auto">
+                <button type="button" class="btn btn-xs"
+                data-ng-click="searchController.previousPage()"
+                data-ng-disabled="searchController.page() <= 1 || TopPageForm.$invalid">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                    Previous Page
+                </button>
+                <button type="button" class="btn btn-xs"
+                data-ng-click="searchController.nextPage()"
+                data-ng-disabled="searchController.page() >= searchController.maxPages || TopPageForm.$invalid">
+                    Next Page
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </button>
+                <span class="instance-count">
+                    Page <span data-ng-bind="searchController.page()"></span>
+                    of <span data-ng-bind="searchController.maxPages"></span>
+                </span>
+            </ul>
+        </nav>
+    } else {
         <span class="icon-indent glyphicon glyphicon-triangle-right" aria-hidden="true"
         data-ng-click="hide@page.name = true" data-ng-hide="hide@page.name"></span>
         <span class="icon-indent glyphicon glyphicon-triangle-bottom" aria-hidden="true"
         data-ng-click="hide@page.name = false" data-ng-show="hide@page.name"></span>
         <h2>@page.title</h2>
-    } else {
-        <h1>@page.title</h1>
-        <hr>
-        <span class="icon-indent glyphicon glyphicon-triangle-right" aria-hidden="true"
-        data-ng-click="hide@page.name = true" data-ng-hide="hide@page.name"></span>
-        <span class="icon-indent glyphicon glyphicon-triangle-bottom" aria-hidden="true"
-        data-ng-click="hide@page.name = false" data-ng-show="hide@page.name"></span>
     }
     <div data-ng-hide="hide@page.name || action.length('@page.model.name')">
         @if(page.model.parentLink.isEmpty) {
@@ -56,20 +77,6 @@
                         Delete
                     </button>
                 }
-                @if(depth == 0) {
-                    <button type="button" class="btn btn-xs"
-                    data-ng-click="searchController.previousPage()"
-                    data-ng-disabled="searchController.page() <= 1 || TopPageForm.$invalid">
-                        <span class="glyphicon glyphicon-chevron-left"></span>
-                        Previous Page
-                    </button>
-                    <button type="button" class="btn btn-xs"
-                    data-ng-click="searchController.nextPage()"
-                    data-ng-disabled="searchController.page() >= searchController.maxPages || TopPageForm.$invalid">
-                        Next Page
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                    </button>
-                }
                 @if(page.hasFormView) {
                     <button type="button" class="btn btn-default btn-xs" data-ng-click="PageCursor.sections.@(page.name).viewMode = 'form'"
                     data-ng-show="PageCursor.sections.@(page.name).viewMode !== 'form'">
@@ -77,10 +84,6 @@
                         Form View
                     </button>
                 }
-            <span class="instance-count" data-ng-show="current.sets.@(page.model.name).rows.length > 0">
-                Page <span data-ng-bind="searchController.page()"></span>
-                  of <span data-ng-bind="searchController.maxPages"></span>
-            </span>
             </div>
             <div class="form-group" data-ng-show="PageCursor.sections.@(page.name).viewMode === 'form'">
                 @if(page.model.allowInsert) {
@@ -103,12 +106,12 @@
             data-ng-click="action.previous('@page.model.name')"
             data-ng-disabled="current.sets.@(page.model.name).currentIndex == 0 || TopPageForm.$invalid">
                 <span class="glyphicon glyphicon-chevron-left"></span>
-                Previous Row
+                Previous
             </button>
             <button type="button" class="btn btn-xs"
             data-ng-click="action.next('@page.model.name')"
             data-ng-disabled="current.sets.@(page.model.name).currentIndex == current.sets.@(page.model.name).rows.length - 1 || TopPageForm.$invalid">
-                Next Row
+                Next
                 <span class="glyphicon glyphicon-chevron-right"></span>
             </button>
                 @if(page.hasTableView) {

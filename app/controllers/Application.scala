@@ -1,14 +1,15 @@
 package controllers
 
 import com.tantalim.util.{Timer, LoginStrategyType}
+import compiler.{MenuCompiler, TableCompiler, ModelCompiler, PageCompiler}
 import data.{DataState, DataConverters, SmartNodeSet}
-import models.{ArtifactType, ModelOrderBy, User}
+import com.tantalim.models.{ArtifactType, ModelOrderBy, User}
 import play.api.libs.json._
 import play.api.mvc._
 import services._
 
 object Application extends Controller with Timer {
-  val compiler = new ArtifactCompilerService
+  val compiler = new PageCompiler with ModelCompiler with TableCompiler with MenuCompiler
 
   private val applicationMenu = "Default"
 
@@ -20,9 +21,15 @@ object Application extends Controller with Timer {
   def readData(name: String, page: Int = 1, filter: Option[String] = None, orderBy: Option[ModelOrderBy] = None) = Action {
     timer("readData") {
       val model = compiler.compileModel(name)
-      val reader = new DataReaderService
+      val reader = new DataReader {}
       val smartSet: SmartNodeSet = reader.queryModelData(model, page, filter, if (orderBy.isDefined) Seq(orderBy.get) else model.orderBy)
-      Ok(DataConverters.convertSmartNodeSetToJsonArr(smartSet))
+      val totalPages = reader.calcTotalRows(model, filter)
+      println(totalPages)
+      Ok(Json.obj(
+        "maxPages" -> JsNumber(totalPages),
+        "sql" -> JsString("SELECT FROM ..."),
+        "rows" -> DataConverters.convertSmartNodeSetToJsonArr(smartSet)
+      ))
     }
   }
 
@@ -49,6 +56,13 @@ object Application extends Controller with Timer {
 
   def mobile(name: String) = TODO
 
+  def ddl(tableName: String) = Action {
+    implicit request =>
+      val table = compiler.compileTable(tableName)
+      val tableSchema = new TableSchema {}
+      Ok(tableSchema.generateTableDDL(table))
+  }
+
   def importList = Action {
     implicit request =>
       val menu = compiler.compileMenu(applicationMenu)
@@ -70,7 +84,11 @@ object Application extends Controller with Timer {
     }
   }
 
-  def exportAll = TODO
+  def exportArtifact(artifactType: String, name: String) = Action {
+      val tableExport = new ArtifactExport(ArtifactType.valueOf(artifactType))
+      val output = tableExport.readFromDatabaseAndWriteToSource(name)
+      Ok(Json.prettyPrint(output))
+  }
 
   def login = Action {
     timer("login") {

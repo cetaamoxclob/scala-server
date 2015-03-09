@@ -1,8 +1,6 @@
 package data
 
-import java.util.UUID
-
-import models.{ModelField, Model}
+import com.tantalim.models.{ModelField, Model}
 import play.api.libs.json._
 
 /**
@@ -63,12 +61,11 @@ object DataConverters {
     smartInstance.model.children.foreach {
       case (childModelName: String, childModel: Model) =>
         objectSource \ "children" \ childModelName match {
-          case childSource: JsArray => {
+          case childSource: JsArray =>
             println(childModelName + " -- " + childSource)
             val childSmartSet = new SmartNodeSet(childModel, parentInstance = Some(smartInstance))
             smartInstance.children += (childModelName -> childSmartSet)
             convertJsArrayToSmartNodeSet(childSmartSet, childSource)
-          }
           case _ =>
         }
     }
@@ -77,13 +74,12 @@ object DataConverters {
   implicit def dataStateReads: Reads[DataState] = new Reads[DataState] {
     override def reads(json: JsValue): JsResult[DataState] = {
       json match {
-        case JsString(s) => {
+        case JsString(s) =>
           try {
             JsSuccess(DataState.fromString(s))
           } catch {
             case _: IllegalArgumentException => JsError(s"Failed to convert DataState value from $s")
           }
-        }
         case _ => JsError("String value expected")
       }
     }
