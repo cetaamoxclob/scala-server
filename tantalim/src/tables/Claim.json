@@ -20,7 +20,7 @@
       "required": true
     },
     {
-      "name": "DateOfService",
+      "name": "ServiceDate",
       "dataType": "Date",
       "required": true,
       "label": "DOS"
