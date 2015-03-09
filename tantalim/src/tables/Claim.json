@@ -20,10 +20,11 @@
       "required": true
     },
     {
-      "name": "ServiceDate",
+      "name": "DateOfService",
       "dataType": "Date",
       "required": true,
-      "label": "DOS"
+      "label": "DOS",
+      "updateable": false      
     },
     {
       "name": "VendorID",

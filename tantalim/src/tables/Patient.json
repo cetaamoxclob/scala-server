@@ -15,16 +15,19 @@
     },
     {
       "name": "FirstName",
-      "label": "First Name"
+      "label": "First Name",
+      "updateable": false
     },
     {
       "name": "LastName",
-      "label": "Last Name"
+      "label": "Last Name",
+      "updateable": false
     },
     {
       "name": "BirthDate",
       "dataType": "Date",
-      "label": "DOB"
+      "label": "DOB",
+      "updateable": false
     }
   ]
 }
