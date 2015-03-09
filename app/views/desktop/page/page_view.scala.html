@@ -48,14 +48,25 @@
                             Search Again
                         </button>
                     </span>
-                    <span data-ng-hide="filterString"><strong>No Records in Database</strong></span>
+                    <span data-ng-hide="filterString">
+                        <p><strong>No Records Exist</strong></p>
+                        @if(page.model.allowInsert) {
+                            <hr>
+                            <button type="button" class="btn btn-primary btn-sm" data-ng-click="action.insert('@page.model.name')">
+                                <span class="glyphicon glyphicon-plus"></span>
+                                Insert New @page.title
+                            </button>
+                        }
+                    </span>
                 </div>
             </div>
         } else {
-            <button type="button" class="btn btn-primary btn-sm" data-ng-click="action.insert('@page.model.name')">
-                <span class="glyphicon glyphicon-plus"></span>
-                Insert New @page.title
-            </button>
+            @if(page.model.allowInsert) {
+                <button type="button" class="btn btn-primary btn-sm" data-ng-click="action.insert('@page.model.name')">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Insert New @page.title
+                </button>
+            }
         }
     </div>
     <div data-ng-show="action.length('@page.model.name')">
