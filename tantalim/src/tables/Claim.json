@@ -1,18 +1,19 @@
 {
   "dbName": "slhpClaim",
   "primaryKey": "ClaimID",
+  "allowInsert": false,
+  "allowUpdate": false,
+  "allowDelete": true,
   "columns": [
     {
       "name": "ClaimID",
       "dataType": "Integer",
-      "required": true,
-      "updateable": false
+      "required": true
     },
     {
       "name": "PatientID",
       "dataType": "Integer",
-      "required": true,
-      "updateable": false
+      "required": true
     },
     {
       "name": "ClaimNumber",
@@ -20,11 +21,10 @@
       "required": true
     },
     {
-      "name": "DateOfService",
+      "name": "ServiceDate",
       "dataType": "Date",
       "required": true,
-      "label": "DOS",
-      "updateable": false      
+      "label": "DOS"
     },
     {
       "name": "VendorID",
@@ -77,6 +77,6 @@
           "to": "ClaimID"
         }
       ]
-    }    
+    }
   ]
 }
