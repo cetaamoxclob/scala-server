@@ -1,15 +1,15 @@
 {
-  "dbName": "slhpReviewType",
-  "primaryKey": "ReviewTypeCode",
+  "dbName": "slhpReviewPassStatus",
+  "primaryKey": "ReviewPassStatusCode",
   "columns": [
     {
-      "name": "ReviewTypeCode",
+      "name": "ReviewPassStatusCode",
       "required": true,
       "updateable": false
     },
     {
-      "name": "ReviewType",
-      "label": "Review Type",
+      "name": "ReviewPassStatus",
+      "label": "Review Pass Status",
       "required": true,
       "updateable": false
     },

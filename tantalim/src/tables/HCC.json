@@ -1,22 +1,22 @@
 {
-  "dbName": "slhpProcedure",
-  "primaryKey": "ProcedureID",
+  "dbName": "slhpHCC",
+  "primaryKey": "HCCID",
   "columns": [
     {
-      "name": "ProcedureID",
+      "name": "HCCID",
       "dataType": "Integer",
       "required": true,
       "updateable": false
     },
     {
-      "name": "ProcedureCode",
-      "label": "Procedure code",
+      "name": "HCCCode",
+      "label": "HCC code",
       "required": true,
       "updateable": false
     },
     {
-      "name": "ProcedureDescription",
-      "label": "Procedure description",
+      "name": "HCCDescription",
+      "label": "HCC description",
       "required": true,
       "updateable": false
     }

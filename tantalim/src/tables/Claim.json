@@ -16,22 +16,24 @@
     },
     {
       "name": "ClaimNumber",
-      "label": "Claim Number",
+      "label": "Claim #",
       "required": true
     },
     {
-      "name": "ServiceDate",
+      "name": "DateOfService",
       "dataType": "Date",
       "required": true,
       "label": "DOS"
     },
     {
       "name": "VendorID",
-      "dataType": "Integer"
+      "dataType": "Integer",
+      "required": true
     },
     {
       "name": "ProviderID",
-      "dataType": "Integer"
+      "dataType": "Integer",
+      "required": true
     }
   ],
   "joins": [
@@ -54,6 +56,26 @@
           "to": "ProviderID"
         }
       ]
-    }
+    },
+    {
+      "name": "Patient",
+      "table": "Patient",
+      "columns": [
+        {
+          "from": "PatientID",
+          "to": "PatientID"
+        }
+      ]
+    },
+    {
+      "name": "Claim",
+      "table": "Claim",
+      "columns": [
+        {
+          "from": "ClaimID",
+          "to": "ClaimID"
+        }
+      ]
+    }    
   ]
 }

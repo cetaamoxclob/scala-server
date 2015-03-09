@@ -1,0 +1,41 @@
+{
+  "dbName": "slhpDiagnosis",
+  "primaryKey": "DiagnosisID",
+  "columns": [
+    {
+      "name": "DiagnosisID",
+      "dataType": "Integer",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "DiagnosisCode",
+      "label": "Diagnosis code",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "DiagnosisDescription",
+      "label": "Diagnosis description",
+      "required": true,
+      "updateable": false
+    }, 
+    {
+      "name": "HCCID",
+      "dataType": "Integer",
+      "updateable": false
+    }
+  ],
+  "joins": [
+    {
+      "name": "HCC",
+      "table": "HCC",
+      "columns": [
+        {
+          "from": "HCCID",
+          "to": "HCCID"
+        }
+      ]
+    }    
+  ]
+}  

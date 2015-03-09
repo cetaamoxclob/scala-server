@@ -5,11 +5,13 @@
     {
       "name": "PatientID",
       "dataType": "Integer",
+      "required": true,
       "updateable": false
     },
     {
       "name": "Name",
-      "label": "Patient Name"
+      "label": "Patient Name",
+      "required": true
     },
     {
       "name": "FirstName",

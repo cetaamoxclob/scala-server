@@ -1,15 +1,15 @@
 {
-  "dbName": "slhpReviewType",
-  "primaryKey": "ReviewTypeCode",
+  "dbName": "slhpIssueType",
+  "primaryKey": "IssueTypeCode",
   "columns": [
     {
-      "name": "ReviewTypeCode",
+      "name": "IssueTypeCode",
       "required": true,
       "updateable": false
     },
     {
-      "name": "ReviewType",
-      "label": "Review Type",
+      "name": "IssueType",
+      "label": "Issue Type",
       "required": true,
       "updateable": false
     },

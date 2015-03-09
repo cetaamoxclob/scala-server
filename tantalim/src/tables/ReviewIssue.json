@@ -1,7 +1,13 @@
 {
-  "dbName": "slhpReview",
-  "primaryKey": "ReviewID",
+  "dbName": "slhpReviewIssue",
+  "primaryKey": "ReviewIssueID",
   "columns": [
+    {
+      "name": "ReviewIssueID",
+      "dataType": "Integer",
+      "required": true,
+      "updateable": false
+    },
     {
       "name": "ReviewID",
       "dataType": "Integer",
@@ -9,40 +15,39 @@
       "updateable": false
     },
     {
-      "name": "ReviewTypeCode",
+      "name": "IssueCode",
       "required": true,
       "updateable": false    
     },
     {
-      "name": "ReviewPassStatusCode",
-      "dataType": "Integer",
+      "name": "UserID",
       "required": true,
       "updateable": false    
     },
     {
       "name": "Revenue",
-      "dataType": "Decimal",
+      "dataType": "Integer",
       "updateable": false    
     }
   ],
   "joins": [
     {
-      "name": "ReviewType",
-      "table": "ReviewType",
+      "name": "Review",
+      "table": "Review",
       "columns": [
         {
-          "from": "ReviewTypeCode",
-          "to": "ReviewTypeCode"
+          "from": "ReviewID",
+          "to": "ReviewID"
         }
       ]
     },
     {
-      "name": "ReviewPassStatus",
-      "table": "ReviewPassStatus",
+      "name": "Issue",
+      "table": "Issue",
       "columns": [
         {
-          "from": "ReviewPassStatusCode",
-          "to": "ReviewPassStatusCode"
+          "from": "IssueCode",
+          "to": "IssueCode"
         }
       ]
     }    

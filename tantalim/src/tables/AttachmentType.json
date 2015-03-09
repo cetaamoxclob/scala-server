@@ -1,15 +1,15 @@
 {
-  "dbName": "slhpReviewType",
-  "primaryKey": "ReviewTypeCode",
+  "dbName": "slhpAttachmentType",
+  "primaryKey": "AttachmentTypeCode",
   "columns": [
     {
-      "name": "ReviewTypeCode",
+      "name": "AttachmentTypeCode",
       "required": true,
       "updateable": false
     },
     {
-      "name": "ReviewType",
-      "label": "Review Type",
+      "name": "AttachmentType",
+      "label": "Attachment Type",
       "required": true,
       "updateable": false
     },
@@ -27,5 +27,17 @@
       "required": false,
       "updateable": true
     }
+  ], 
+  "joins": [
+    {
+     "name": "AttachmentType",
+      "table": "AttachmentType",
+      "columns": [
+        {
+          "from": "AttachmentTypeCode",
+          "to": "AttachmentTypeCode"
+        }
+      ]
+    }    
   ]
 }
