@@ -1,4 +1,5 @@
 @(page: com.tantalim.models.Page)
+@import data.ComparatorByDataType
 <div id="search-view" data-ng-show="searchController.showSearch">
     <h2>
         @page.title
@@ -15,10 +16,10 @@
         </button>
     </div>
 
-    <form class="form-horizontal" ng-submit="runSearch()">
-        <div class="form-group col-xs-12">
+    <form class="form-horizontal">
+        <div class="form-group col-xs-8">
             <label>Advanced Query Language</label>
-            <textarea class="form-control" rows="4" data-ng-model="filterString"></textarea>
+            <textarea class="form-control" rows="3" data-ng-model="filterString"></textarea>
         </div>
 
         @for(field <- page.fields) {
@@ -26,18 +27,36 @@
                 <div class="form-group col-xs-12">
                     <label for="search-@field.name" class="col-xs-2 control-label">@field.label</label>
 
-                    <div class="col-xs-4">
-                        <select class="form-control" id="search-@field.name-compare"
-                        ng-model="filterComparators.@field.name">
-                            <option>Contains</option>
-                            <option>Equals</option>
-                            <option>BeginsWith</option>
-                            <option>EndsWith</option>
-                        </select>
-                    </div>
-                    <div class="col-xs-6">
-                        <input type="text" class="form-control" id="search-@field.name" ng-model="filterValues.@field.name">
-                    </div>
+                    @if(field.isBoolean) {
+                        <div class="col-xs-6">
+                            <div class="btn-group" role="group" ng-init="filterComparators.@field.name = 'Equals'">
+                                <button type="button" class="btn btn-default"
+                                data-ng-class="{'btn-primary': filterValues.@field.name === null}"
+                                data-ng-click="filterValues.@field.name = null">Any</button>
+                                <button type="button" class="btn btn-default"
+                                data-ng-class="{'btn-primary': filterValues.@field.name === 'true'}"
+                                data-ng-click="filterValues.@field.name = 'true'">Yes</button>
+                                <button type="button" class="btn btn-default"
+                                data-ng-class="{'btn-primary': filterValues.@field.name === 'false'}"
+                                data-ng-click="filterValues.@field.name = 'false'">No</button>
+                            </div>
+                        </div>
+                    } else {
+                        <div class="col-xs-2">
+                            <select class="form-control" id="search-@field.name-compare"
+                            ng-model="filterComparators.@field.name">
+                            @for(comparator <- ComparatorByDataType.get(field.modelField.basisColumn.dataType)) {
+                                <option>@comparator</option>
+                            }
+                            </select>
+                        </div>
+                        <div class="col-xs-4">
+                            <input type="text" class="form-control" id="search-@field.name" ng-model="filterValues.@field.name">
+                        </div>
+                        <div>
+                            <button class="btn" ng-show="filterValues.@field.name" ng-click="filterValues.@field.name = ''">Clear</button>
+                        </div>
+                    }
                 </div>
             }
         }

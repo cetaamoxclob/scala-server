@@ -10,7 +10,7 @@ trait DataSaver extends DataReader with Database {
     if (dataToSave.model.instanceID.isEmpty)
       throw new Exception("Cannot insert/update/delete an instance without an instanceID for " + dataToSave.model.name)
 
-    val connection = getConnection()
+    val connection = getConnection
     try {
       connection.setAutoCommit(false)
       saveAll(dataToSave, connection)

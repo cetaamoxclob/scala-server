@@ -22,9 +22,7 @@
                 @if(field.required) {
                     ng-required="row"
                 }
-                @if(field.disabled) {
-                    disabled="disabled"
-                }
+                ng-disabled="row.state !== 'INSERTED' && @if(field.modelField.updateable){false}else{true}"
                 @if(field.help.isDefined) {
                     aria-describedby="help-@(page.model.name)-@(field.name)"
                 }

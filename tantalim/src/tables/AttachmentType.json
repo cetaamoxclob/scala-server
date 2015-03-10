@@ -11,8 +11,7 @@
     {
       "name": "AttachmentType",
       "label": "Attachment Type",
-      "required": true,
-      "updateable": false
+      "required": true
     },
     {
       "name": "ActiveFlag",

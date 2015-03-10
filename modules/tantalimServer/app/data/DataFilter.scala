@@ -61,17 +61,21 @@ object DataFilter {
             value.replaceAll("\"", "").toInt
           }))
         case _ =>
-          if (fieldLeft.get.basisColumn.dataType == DataType.Date || fieldLeft.get.basisColumn.dataType == DataType.DateTime) {
-            val formattedDate = formatDate(right)
-            if (formattedDate.isDefined)
-              (comparatorToSql(comparator) + " " + formattedDate.get, List())
-            else
-              (comparatorToSql(comparator) + " ?", List(DateTime.parse(right)))
-          } else {
-            val parameter = if (fieldLeft.get.basisColumn.dataType == DataType.Integer) {
-              right.toInt
-            } else right.toString
-            (comparatorToSql(comparator) + " ?", List(parameter))
+          fieldLeft.get.basisColumn.dataType match {
+            case DataType.Date | DataType.DateTime =>
+              val formattedDate = formatDate(right)
+              if (formattedDate.isDefined)
+                (comparatorToSql(comparator) + " " + formattedDate.get, List())
+              else
+                (comparatorToSql(comparator) + " ?", List(DateTime.parse(right)))
+            case DataType.Integer =>
+              (comparatorToSql(comparator) + " ?", List(right.toInt))
+            case DataType.Decimal =>
+              (comparatorToSql(comparator) + " ?", List(right.toFloat))
+            case DataType.Boolean =>
+              (comparatorToSql(comparator) + " ?", List(right.toBoolean))
+            case _ =>
+              (comparatorToSql(comparator) + " ?", List(right.toString))
           }
       }
       (fieldToSql(fieldLeft.get) + " " + rightSide, params)
@@ -86,9 +90,9 @@ object DataFilter {
       case Comparator.Equals => "="
       case Comparator.In => "IN"
       case Comparator.GreaterThan | Comparator.After => ">"
-      case Comparator.GreaterThanOrEquals | Comparator.OnOrAfter => ">="
+      case Comparator.GreaterThanOrEqual | Comparator.OnOrAfter => ">="
       case Comparator.LessThan | Comparator.Before => "<"
-      case Comparator.LessThanOrEquals | Comparator.OnOrBefore => "<="
+      case Comparator.LessThanOrEqual | Comparator.OnOrBefore => "<="
       case Comparator.Contains | Comparator.BeginsWith | Comparator.EndsWith => "LIKE"
       case Comparator.IsEmpty => "IS NULL"
     }

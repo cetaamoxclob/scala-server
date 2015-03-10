@@ -82,13 +82,7 @@
         },
         {
           "name": "TableColumnSQL",
-          "basisColumn": "SQL",
-          "fieldDefault": {
-            "type": "fxn",
-            "updateable": false,
-            "value": "10 + (row.nodeSet.rows.length * 10)",
-            "watch": [""]
-          }
+          "basisColumn": "SQL"
         },
         {
           "name": "TableColumnLabel",

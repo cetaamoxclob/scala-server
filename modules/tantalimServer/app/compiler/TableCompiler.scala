@@ -14,7 +14,7 @@ trait TableCompiler extends ArtifactService with TableCache {
     val json = getArtifactContentAndParseJson(ArtifactType.Table, name)
     json.validate[TableJson] match {
       case JsSuccess(table, _) =>
-        val columns = compileTableColumns(table.columns)
+        val columns = compileTableColumns(table)
         new DeepTable(
           name,
           table.dbName.getOrElse(name),
@@ -37,7 +37,7 @@ trait TableCompiler extends ArtifactService with TableCache {
     val json = getArtifactContentAndParseJson(ArtifactType.Table, name)
     json.validate[TableJson] match {
       case JsSuccess(table, _) =>
-        val columns = compileTableColumns(table.columns)
+        val columns = compileTableColumns(table)
         new ShallowTable(
           name,
           table.dbName.getOrElse(name),
@@ -49,14 +49,14 @@ trait TableCompiler extends ArtifactService with TableCache {
     }
   }
 
-  private def compileTableColumns(tableColumns: Seq[TableColumnJson]): scala.collection.immutable.Map[String, TableColumn] = {
-    tableColumns.zipWithIndex.map {
+  private def compileTableColumns(table: TableJson): scala.collection.immutable.Map[String, TableColumn] = {
+    table.columns.zipWithIndex.map {
       case (column, order) =>
-        column.name -> compileTableColumn(column, order)
+        column.name -> compileTableColumn(table, column, order)
     }.toMap
   }
 
-  private def compileTableColumn(column: TableColumnJson, order: Int): TableColumn = {
+  private def compileTableColumn(table: TableJson, column: TableColumnJson, order: Int): TableColumn = {
     new TableColumn(
       name = column.name,
       dbName = column.dbName.getOrElse(column.name),
@@ -64,7 +64,7 @@ trait TableCompiler extends ArtifactService with TableCache {
       dataType = compileDataType(column.dataType),
       fieldType = column.fieldType.getOrElse("text"),
       required = column.required.getOrElse(false),
-      updateable = column.updateable.getOrElse(true),
+      updateable = table.allowUpdate.getOrElse(true) && column.updateable.getOrElse(true),
       label = column.label.getOrElse(column.name),
       help = column.help,
       placeholder = column.placeholder
