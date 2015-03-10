@@ -20,29 +20,45 @@ object Application extends Controller with Timer {
 
   def readData(name: String, page: Int = 1, filter: Option[String] = None, orderBy: Option[ModelOrderBy] = None) = Action {
     timer("readData") {
-      val model = compiler.compileModel(name)
-      val reader = new DataReader {}
-      val smartSet: SmartNodeSet = reader.queryModelData(model, page, filter, if (orderBy.isDefined) Seq(orderBy.get) else model.orderBy)
-      val totalPages = reader.calcTotalRows(model, filter)
-      println(totalPages)
-      Ok(Json.obj(
-        "maxPages" -> JsNumber(totalPages),
-        "sql" -> JsString("SELECT FROM ..."),
-        "rows" -> DataConverters.convertSmartNodeSetToJsonArr(smartSet)
-      ))
+      try {
+        val model = compiler.compileModel(name)
+        val reader = new DataReader {}
+        val smartSet: SmartNodeSet = reader.queryModelData(model, page, filter, if (orderBy.isDefined) Seq(orderBy.get) else model.orderBy)
+        val totalPages = reader.calcTotalRows(model, filter)
+        println(totalPages)
+        Ok(Json.obj(
+          "maxPages" -> JsNumber(totalPages),
+          "sql" -> JsString("SELECT FROM ..."),
+          "rows" -> DataConverters.convertSmartNodeSetToJsonArr(smartSet)
+        ))
+      } catch {
+        case e: Exception => Ok(convertExceptionToJson(e))
+      }
     }
   }
 
   def saveData(name: String) = Action(parse.json) { request =>
     timer("saveData") {
-      val model = compiler.compileModel(name)
-      val dataSet = new SmartNodeSet(model)
-      DataConverters.convertJsArrayToSmartNodeSet(dataSet, request.body.as[JsArray])
-      val saver = new DataSaverService
-      saver.saveAll(dataSet)
-      val jsonResponse = DataConverters.convertSmartNodeSetToJsonArr(dataSet)
-      Ok(jsonResponse)
+      try {
+        val model = compiler.compileModel(name)
+        val dataSet = new SmartNodeSet(model)
+        DataConverters.convertJsArrayToSmartNodeSet(dataSet, request.body.as[JsArray])
+        val saver = new DataSaverService
+        saver.saveAll(dataSet)
+        val jsonResponse = DataConverters.convertSmartNodeSetToJsonArr(dataSet)
+        Ok(jsonResponse)
+      } catch {
+        case e: Exception => Ok(convertExceptionToJson(e))
+      }
     }
+  }
+
+  private def convertExceptionToJson(e: Exception) = {
+    Json.obj(
+      "error" -> Json.obj(
+        "message" -> e.toString
+      )
+    )
   }
 
   def desktop(name: String) = Action {
@@ -85,9 +101,9 @@ object Application extends Controller with Timer {
   }
 
   def exportArtifact(artifactType: String, name: String) = Action {
-      val tableExport = new ArtifactExport(ArtifactType.valueOf(artifactType))
-      val output = tableExport.readFromDatabaseAndWriteToSource(name)
-      Ok(Json.prettyPrint(output))
+    val tableExport = new ArtifactExport(ArtifactType.valueOf(artifactType))
+    val output = tableExport.readFromDatabaseAndWriteToSource(name)
+    Ok(Json.prettyPrint(output))
   }
 
   def login = Action {
