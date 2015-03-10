@@ -115,5 +115,5 @@
       ]
     }
   ],
-  "preSave": "var counter = 10; row.getChild(\"columns\").foreach { column => column.set(\"displayOrder\", TntInt(counter)); counter += 10 }"
+  "preSave": "artifacts.TablePreSave"
 }
