@@ -1,6 +1,6 @@
 package controllers
 
-import com.tantalim.util.{Timer, LoginStrategyType}
+import com.tantalim.util.{TantalimException, Timer, LoginStrategyType}
 import compiler.{MenuCompiler, TableCompiler, ModelCompiler, PageCompiler}
 import data.{DataState, DataConverters, SmartNodeSet}
 import com.tantalim.models.{ArtifactType, ModelOrderBy, User}
@@ -63,10 +63,14 @@ object Application extends Controller with Timer {
 
   def desktop(name: String) = Action {
     timer("desktop") {
-      val menu = compiler.compileMenu(applicationMenu)
-      val page = compiler.compilePage(name)
-      val user = new User("12345", "trevorallred", "Trevor Allred")
-      Ok(views.html.desktop.page.index(page, menu, user))
+      try {
+        val menu = compiler.compileMenu(applicationMenu)
+        val page = compiler.compilePage(name)
+        val user = new User("12345", "trevorallred", "Trevor Allred")
+        Ok(views.html.desktop.page.index(page, menu, user))
+      } catch {
+        case e: TantalimException => Ok(views.html.error(e))
+      }
     }
   }
 

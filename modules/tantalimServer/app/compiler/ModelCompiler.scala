@@ -1,6 +1,7 @@
 package compiler
 
 import com.tantalim.models._
+import com.tantalim.util.TantalimException
 import models.src.{FieldDefaultJson, ModelFieldJson, ModelJson}
 import play.api.libs.json.{JsError, JsSuccess}
 import services.ArtifactService
@@ -16,7 +17,7 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
       case JsSuccess(modelJson, _) =>
         compileModelView(modelJson.copy(name = Option(name)))
       case JsError(err) =>
-        throw new Exception("Failed to compile model " + name + " due to the following error:" + err.toString)
+        throw new TantalimException("Failed to compile model " + name, "See the following error:" + err.toString)
     }
   }
 
@@ -38,7 +39,7 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
     val stepsByInt: Map[Int, ModelStep] = tempSteps.map { step =>
       step.tableAlias.get -> new ModelStep(name = step.name,
         tableAlias = step.tableAlias.get,
-        join = step.tableJoin.getOrElse(throw new Exception(s"tableJoin for $step is still missing")),
+        join = step.tableJoin.getOrElse(throw new TantalimException(s"tableJoin for $step is still missing", "Add or rename the step")),
         required = step.required.get,
         parentAlias = step.parent match {
           case Some(parent) => parent.tableAlias.get
@@ -60,7 +61,7 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
           val stepName = f.step.get
           val stepID = stepIntsByName.getOrElse(
             stepName,
-            throw new Exception(s"Can't find step `$stepName` for field `${f.name}`")
+            throw new TantalimException(s"Can't find step `$stepName` for field `${f.name}`", "Add it")
           )
           val fieldStep = stepsByInt.get(stepID)
           val tableJoin = fieldStep.get.join
@@ -116,7 +117,7 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
         step.parent = parentStep
         step.tableJoin = fromTable.joins.get(step.join)
         if (step.required.isEmpty) step.required = Some(step.tableJoin.get.required)
-        val tableJoin = step.tableJoin.getOrElse(throw new Exception(s"Could not find join named `${step.join}` in `${fromTable.name}`"))
+        val tableJoin = step.tableJoin.getOrElse(throw new TantalimException(s"Could not find join named `${step.join}` in `${fromTable.name}`", "Add it"))
         val deepTable = compileTable(tableJoin.table.name)
         addTableJoinsToSteps(tempSteps, Some(step), deepTable)
       }

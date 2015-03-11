@@ -5,6 +5,7 @@ import java.io.File
 import com.google.common.base.Charsets
 import com.google.common.io.Files
 import com.tantalim.models.{ArtifactStub, ArtifactType}
+import com.tantalim.util.TantalimException
 import models.src._
 import play.api.Play.current
 import play.api.Play
@@ -28,7 +29,7 @@ trait ArtifactService {
       })
 
       libList.headOption.getOrElse {
-        throw new Exception(s"Failed to find source $artifactType named $name")
+        throw new TantalimException(s"Failed to find source $artifactType named $name", "Create the json file")
       }
     }
   }
@@ -39,16 +40,19 @@ trait ArtifactService {
   }
 
   def getArtifactContentAndParseJson(artifactType: ArtifactType, name: String): JsValue = {
-    val directoryName = getSourceLocation(artifactType, name)
-    val artifactContent = Files.toString(Play.getFile(directoryName), Charsets.UTF_8)
+    val fileName = getSourceLocation(artifactType, name)
+    val artifactContent = Files.toString(Play.getFile(fileName), Charsets.UTF_8)
+
+    if (artifactContent.isEmpty)
+      throw new TantalimException(s"Artifact $artifactType named `$name` is empty", "Edit the file: " + fileName + artifactContent)
 
     try {
       Json.parse(artifactContent)
     } catch {
-      case e: Exception =>
-        println("Failed to parse :" + artifactContent)
-        println(e.toString)
-        throw e
+      case e: Exception => throw new TantalimException(
+        s"Failed to parse $artifactType named `$name`",
+        e.getMessage
+      )
     }
   }
 

@@ -5,7 +5,7 @@ version := "1.0"
 lazy val app = (project in file(".")).enablePlugins(PlayScala)
   .aggregate(server, models, util).dependsOn(server, models, util)
 
-lazy val server = (project in file("modules/tantalimServer")).enablePlugins(PlayScala).dependsOn(models)
+lazy val server = (project in file("modules/tantalimServer")).enablePlugins(PlayScala).dependsOn(models, util)
 
 lazy val models = project in file("modules/tantalimModels")
 

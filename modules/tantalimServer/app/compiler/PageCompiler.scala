@@ -1,6 +1,7 @@
 package compiler
 
 import com.tantalim.models._
+import com.tantalim.util.TantalimException
 import models.src.{PageFieldLinkJson, PageFieldSelectJson, PageFieldJson, PageJson}
 import play.api.libs.json.{JsError, JsSuccess}
 import services.ArtifactService
@@ -15,13 +16,11 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
     getPage(name) match {
       case JsSuccess(pageJson, _) =>
         val page = pageJson.copy(name = Option(name))
-        val modelName: String = page.model.getOrElse(page.name.getOrElse {
-          throw new Exception("Neither the model nor the page has a name: " + page.toString)
-        })
+        val modelName: String = page.model.getOrElse(page.name.get)
         val model = compileModel(modelName)
         compilePageView(page, model)
       case JsError(err) =>
-        throw new Exception("Failed to compile page " + name + " due to the following error:" + err.toString)
+        throw new TantalimException ("Failed to compile page " + name + " due to the following error:" + err.toString, "")
     }
   }
 
@@ -36,15 +35,15 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
           pageJson.icon
         )
       case JsError(err) =>
-        throw new Exception("Failed to compile page " + name + " due to the following error:" + err.toString)
+        throw new TantalimException ("Failed to compile page " + name, "The JSON parse error was found at: " + err.toString)
     }
   }
 
   private def compilePageView(pageJson: PageJson, model: Model, parentPage: Option[Page] = None): Page = {
     val fields = pageJson.fields.getOrElse(Seq.empty).map { f =>
       val modelField = model.fields.getOrElse(f.name,
-        throw new Exception(f"Failed to find field named `${f.name}` in Model `${model.name}` " +
-          f"but found these: \n${model.fields.keys} \n${model.steps.values}")
+        throw new TantalimException (f"Failed to find field named `${f.name}` in Model `${model.name}` " +
+          f"but found these: \n${model.fields.keys} \n${model.steps.values}", "")
       )
       compilePageField(f, modelField)
     }

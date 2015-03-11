@@ -1,0 +1,33 @@
+@(error: com.tantalim.util.TantalimException)
+
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+        <title>Error</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="/img/icons/favicon.ico" rel="shortcut icon" type="image/x-icon">
+
+        <link rel="stylesheet" href="@routes.Assets.at("lib/fontawesome/css/font-awesome.min.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("lib/bootstrap/dist/css/bootstrap.min.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("lib/bootstrap-social/bootstrap-social.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("lib/tantalim-client/public/css/login.css")">
+
+            <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="container">
+            <div class="jumbotron">
+                <h3>Tantalim Error</h3>
+                <p>@error.getMessage</p>
+                <hr>
+                <p>@error.getHelp</p>
+            </div>
+        </div>
+    </body>
+</html>
+
