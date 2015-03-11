@@ -1,6 +1,7 @@
 package data
 
 import com.tantalim.models.Model
+import com.tantalim.util.TantalimException
 
 import scala.collection.mutable
 
@@ -64,6 +65,10 @@ case class SmartNodeInstance(
   }
 
   def getChild(childName: String) = {
+    if (children.get(childName).isEmpty) throw new TantalimException(
+      "Failed to find child named " + childName,
+      "Child models include: " + children.map(c => c._1).mkString(", ") + " on " + this
+    )
     children.get(childName).get
   }
 

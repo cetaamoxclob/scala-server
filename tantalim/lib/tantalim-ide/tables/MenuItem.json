@@ -15,6 +15,12 @@
       "required": true
     },
     {
+      "name": "DisplayOrder",
+      "dataType": "Integer",
+      "dbName": "displayOrder",
+      "label": "Order"
+    },
+    {
       "name": "Page",
       "dbName": "page"
     },

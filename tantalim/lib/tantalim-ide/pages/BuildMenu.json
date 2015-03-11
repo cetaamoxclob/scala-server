@@ -1,3 +1,53 @@
 {
-  "title": "Build Menu"
+  "title": "Build Menu",
+  "icon": "fa-bars",
+  "fields": [
+    {
+      "name": "MenuName",
+      "showInNavigation": true
+    },
+    {
+      "name": "MenuTitle"
+    }
+  ],
+  "children": [
+    {
+      "name": "MenuContent",
+      "title": "Content",
+      "fields": [
+        {
+          "name": "MenuContentDisplayOrder"
+        },
+        {
+          "name": "MenuContentTitle",
+          "showInNavigation": true
+        }
+      ],
+      "children": [
+        {
+          "name": "MenuItem",
+          "title": "Items",
+          "viewMode": "table",
+          "fields": [
+            {
+              "name": "MenuItemDisplayOrder"
+            },
+            {
+              "name": "MenuItemPage"
+            },
+            {
+              "name": "MenuItemTitle"
+            },
+            {
+              "name": "MenuItemLink"
+            },
+            {
+              "name": "MenuItemIcon"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+
 }

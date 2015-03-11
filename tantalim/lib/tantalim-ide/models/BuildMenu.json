@@ -33,6 +33,10 @@
           "basisColumn": "MenuID"
         },
         {
+          "name": "MenuContentDisplayOrder",
+          "basisColumn": "DisplayOrder"
+        },
+        {
           "name": "MenuContentTitle",
           "basisColumn": "Title"
         }
@@ -53,6 +57,10 @@
             {
               "name": "MenuItemContentID",
               "basisColumn": "ContentID"
+            },
+            {
+              "name": "MenuItemDisplayOrder",
+              "basisColumn": "DisplayOrder"
             },
             {
               "name": "MenuItemPage",

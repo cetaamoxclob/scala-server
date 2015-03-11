@@ -15,6 +15,7 @@
       "basisColumn": "Title"
     }
   ],
+  "preSave": "artifacts.MenuContentPreSave",
   "children": [
     {
       "name": "content",
@@ -23,6 +24,14 @@
         "parentField": "MenuMenuID",
         "childField": "MenuContentMenuID"
       },
+      "orderBy": [
+        {
+          "fieldName": "MenuContentDisplayOrder"
+        },
+        {
+          "fieldName": "MenuContentContentID"
+        }
+      ],
       "fields": [
         {
           "name": "MenuContentContentID",
@@ -35,10 +44,16 @@
           "export": false
         },
         {
+          "name": "MenuContentDisplayOrder",
+          "basisColumn": "DisplayOrder",
+          "export": false
+        },
+        {
           "name": "title",
           "basisColumn": "Title"
         }
       ],
+      "preSave": "artifacts.MenuItemPreSave",
       "children": [
         {
           "name": "items",
@@ -47,6 +62,14 @@
             "parentField": "MenuContentContentID",
             "childField": "MenuItemContentID"
           },
+          "orderBy": [
+            {
+              "fieldName": "MenuItemDisplayOrder"
+            },
+            {
+              "fieldName": "MenuItemItemID"
+            }
+          ],
           "fields": [
             {
               "name": "MenuItemItemID",
@@ -56,6 +79,11 @@
             {
               "name": "MenuItemContentID",
               "basisColumn": "ContentID",
+              "export": false
+            },
+            {
+              "name": "MenuItemDisplayOrder",
+              "basisColumn": "DisplayOrder",
               "export": false
             },
             {
