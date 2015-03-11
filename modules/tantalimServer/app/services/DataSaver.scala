@@ -49,7 +49,7 @@ trait DataSaver extends DataReader with Database {
   private def insertSingleRow(row: SmartNodeInstance, dbConnection: Connection): Unit = {
     if (row.nodeSet.model.preSave.isDefined) {
       val preSaveClass = Class.forName(row.nodeSet.model.preSave.get)
-      val preSaveClassObject = preSaveClass.newInstance().asInstanceOf[TantalimEval]
+      val preSaveClassObject = preSaveClass.newInstance().asInstanceOf[TantalimPreSave]
       preSaveClassObject.preSave(row)
     }
 
@@ -220,7 +220,7 @@ trait DataSaver extends DataReader with Database {
 
 }
 
-trait TantalimEval {
+trait TantalimPreSave {
   def preSave(row: SmartNodeInstance): Unit
 }
 

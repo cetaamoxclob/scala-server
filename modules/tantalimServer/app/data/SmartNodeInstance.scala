@@ -51,7 +51,13 @@ case class SmartNodeInstance(
 
   def get(fieldName: String) = data.get(fieldName)
 
-  def set(fieldName: String, value: TntValue) = data += (fieldName -> value)
+  def set(fieldName: String, value: TntValue) = {
+    if (nodeSet.model.fields.get(fieldName).isEmpty) {
+      throw new TantalimException(s"Can't find field named $fieldName in ${nodeSet.model.name}",
+        "Choose an existing field: " + nodeSet.model.fields.keys.mkString(", "))
+    }
+    data += (fieldName -> value)
+  }
 
   def model = nodeSet.model
 
