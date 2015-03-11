@@ -1,0 +1,82 @@
+{
+  "basisTable": "Menu",
+  "fields": [
+    {
+      "name": "MenuMenuID",
+      "basisColumn": "MenuID",
+      "export": false
+    },
+    {
+      "name": "name",
+      "basisColumn": "Name"
+    },
+    {
+      "name": "appTitle",
+      "basisColumn": "Title"
+    }
+  ],
+  "children": [
+    {
+      "name": "content",
+      "basisTable": "MenuContent",
+      "parentLink": {
+        "parentField": "MenuMenuID",
+        "childField": "MenuContentMenuID"
+      },
+      "fields": [
+        {
+          "name": "MenuContentContentID",
+          "basisColumn": "ContentID",
+          "export": false
+        },
+        {
+          "name": "MenuContentMenuID",
+          "basisColumn": "MenuID",
+          "export": false
+        },
+        {
+          "name": "title",
+          "basisColumn": "Title"
+        }
+      ],
+      "children": [
+        {
+          "name": "items",
+          "basisTable": "MenuItem",
+          "parentLink": {
+            "parentField": "MenuContentContentID",
+            "childField": "MenuItemContentID"
+          },
+          "fields": [
+            {
+              "name": "MenuItemItemID",
+              "basisColumn": "ItemID",
+              "export": false
+            },
+            {
+              "name": "MenuItemContentID",
+              "basisColumn": "ContentID",
+              "export": false
+            },
+            {
+              "name": "page",
+              "basisColumn": "Page"
+            },
+            {
+              "name": "title",
+              "basisColumn": "Title"
+            },
+            {
+              "name": "href",
+              "basisColumn": "Link"
+            },
+            {
+              "name": "icon",
+              "basisColumn": "Icon"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

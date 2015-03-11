@@ -1,0 +1,34 @@
+{
+  "dbName": "menu_item",
+  "primaryKey": "ItemID",
+  "columns": [
+    {
+      "name": "ItemID",
+      "dbName": "itemID",
+      "dataType": "Integer",
+      "updateable": false
+    },
+    {
+      "name": "ContentID",
+      "dbName": "contentID",
+      "dataType": "Integer",
+      "required": true
+    },
+    {
+      "name": "Page",
+      "dbName": "page"
+    },
+    {
+      "name": "Title",
+      "dbName": "title"
+    },
+    {
+      "name": "Link",
+      "dbName": "href"
+    },
+    {
+      "name": "Icon",
+      "dbName": "icon"
+    }
+  ]
+}

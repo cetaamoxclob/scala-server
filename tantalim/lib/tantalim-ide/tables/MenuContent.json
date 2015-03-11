@@ -1,0 +1,22 @@
+{
+  "dbName": "menu_content",
+  "primaryKey": "ContentID",
+  "columns": [
+    {
+      "name": "ContentID",
+      "dbName": "contentID",
+      "dataType": "Integer",
+      "updateable": false
+    },
+    {
+      "name": "MenuID",
+      "dbName": "menuID",
+      "dataType": "Integer"
+    },
+    {
+      "name": "Title",
+      "dbName": "title",
+      "required": true
+    }
+  ]
+}

@@ -6,8 +6,7 @@
   "fields": [
     {
       "name": "id",
-      "showInTableView": false,
-      "disabled": true
+      "showInTableView": false
     },
     {
       "name": "username"
