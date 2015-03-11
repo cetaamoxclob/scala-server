@@ -32,6 +32,15 @@
           "page": "BuildTable"
         },
         {
+          "page": "BuildModel"
+        },
+        {
+          "page": "BuildPage"
+        },
+        {
+          "page": "BuildMenu"
+        },
+        {
           "page": "TableReport"
         },
         {

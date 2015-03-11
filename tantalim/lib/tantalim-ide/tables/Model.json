@@ -1,0 +1,64 @@
+{
+  "dbName": "model",
+  "primaryKey": "ModelID",
+  "columns": [
+    {
+      "name": "ModelID",
+      "dbName": "modelID",
+      "dataType": "Integer",
+      "updateable": false
+    },
+    {
+      "name": "Name",
+      "dbName": "name",
+      "required": true,
+      "label": "Model Name"
+    },
+    {
+      "name": "BasisTable",
+      "dbName": "basisTable",
+      "required": true,
+      "label": "Basis Table"
+    },
+    {
+      "name": "Limit",
+      "dataType": "Integer",
+      "dbName": "maxRows"
+    },
+    {
+      "name": "ParentField",
+      "dbName": "parentField",
+      "label": "Parent Field"
+    },
+    {
+      "name": "ChildField",
+      "dbName": "childField",
+      "label": "Child Field"
+    },
+    {
+      "name": "PreSave",
+      "dbName": "preSave"
+    },
+    {
+      "name": "AllowInsert",
+      "dbName": "allowInsert",
+      "label": "Allow Insert",
+      "dataType": "Boolean",
+      "fieldType": "checkbox"
+    },
+    {
+      "name": "AllowUpdate",
+      "dbName": "allowUpdate",
+      "label": "Allow Update",
+      "dataType": "Boolean",
+      "fieldType": "checkbox"
+    },
+    {
+      "name": "AllowDelete",
+      "dbName": "allowDelete",
+      "label": "Allow Delete",
+      "dataType": "Boolean",
+      "fieldType": "checkbox"
+    }
+  ]
+}
