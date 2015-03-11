@@ -1,13 +1,12 @@
 {
-  "dbName": "db_table",
+  "dbName": "table",
   "primaryKey": "TableID",
   "columns": [
     {
       "name": "TableID",
       "dbName": "tableID",
       "dataType": "Integer",
-      "updateable": false,
-      "disabled": true
+      "updateable": false
     },
     {
       "name": "Name",

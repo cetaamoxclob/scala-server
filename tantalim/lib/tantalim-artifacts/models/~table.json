@@ -2,7 +2,7 @@
   "basisTable": "Table",
   "fields": [
     {
-      "name": "tableID",
+      "name": "TableID",
       "basisColumn": "TableID",
       "export": false
     },
@@ -29,25 +29,25 @@
       "name": "columns",
       "basisTable": "Column",
       "parentLink": {
-        "parentField": "tableID",
-        "childField": "tableID"
+        "parentField": "TableID",
+        "childField": "TableID"
       },
       "orderBy": [
         {
-          "fieldName": "displayOrder"
+          "fieldName": "DisplayOrder"
         },
         {
-          "fieldName": "columnID"
+          "fieldName": "ColumnID"
         }
       ],
       "fields": [
         {
-          "name": "columnID",
+          "name": "ColumnID",
           "basisColumn": "ColumnID",
           "export": false
         },
         {
-          "name": "tableID",
+          "name": "TableID",
           "basisColumn": "TableID",
           "export": false
         },
@@ -64,7 +64,7 @@
           "basisColumn": "DataType"
         },
         {
-          "name": "displayOrder",
+          "name": "DisplayOrder",
           "basisColumn": "DisplayOrder",
           "export": false
         },
@@ -86,7 +86,7 @@
       "name": "joins",
       "basisTable": "Join",
       "parentLink": {
-        "parentField": "tableID",
+        "parentField": "TableID",
         "childField": "fromTableID"
       },
       "fields": [

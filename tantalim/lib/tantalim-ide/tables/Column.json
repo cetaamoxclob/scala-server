@@ -1,5 +1,5 @@
 {
-  "dbName": "db_column",
+  "dbName": "table_column",
   "module": "Tables",
   "database": "TantalimMeta",
   "primaryKey": "ColumnID",

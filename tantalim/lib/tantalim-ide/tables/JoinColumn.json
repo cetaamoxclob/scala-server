@@ -1,5 +1,5 @@
 {
-  "dbName": "db_join_column",
+  "dbName": "table_join_column",
   "primaryKey": "JoinColumnID",
   "columns": [
     {
