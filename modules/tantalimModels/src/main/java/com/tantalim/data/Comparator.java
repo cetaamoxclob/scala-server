@@ -1,4 +1,4 @@
-package data;
+package com.tantalim.data;
 
 public enum Comparator {
     Equals, NotEquals,
@@ -8,5 +8,5 @@ public enum Comparator {
     GreaterThan, GreaterThanOrEqual,
     Before, OnOrBefore,
     After, OnOrAfter,
-    IsEmpty
+    Between, IsEmpty
 }

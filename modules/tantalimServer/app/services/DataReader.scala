@@ -2,12 +2,11 @@ package services
 
 import java.sql.ResultSet
 
-import compiler.ModelCompiler
+import com.tantalim.filter.compiler.CompiledFilter
 import data._
 import com.tantalim.models._
-import org.joda.time.DateTime
 
-trait DataReader extends ModelCompiler with Database {
+trait DataReader extends Database {
 
   def calcTotalRows(model: Model, filter: Option[String]): Long = {
     if (model.limit == 0) return 1
@@ -58,8 +57,9 @@ trait DataReader extends ModelCompiler with Database {
 
   private def parseFilterForSql(sqlBuilder: SqlBuilder, modelFields: Map[String, ModelField], filter: Option[String]): SqlBuilder = {
     if (filter.isDefined) {
-      DataFilter.parse(filter.get, modelFields) match {
-        case (where: String, params: List[Any]) => if (params.nonEmpty) {
+      val compiler = new com.tantalim.filter.compiler.CompileFilter(filter.get, modelFields)
+      compiler.parse() match {
+        case CompiledFilter(where: String, params: List[Any]) => if (params.nonEmpty) {
           return sqlBuilder.copy(
             where = Some(where),
             parameters = params
@@ -95,6 +95,7 @@ trait DataReader extends ModelCompiler with Database {
                 if (rs.wasNull()) TntNull()
                 else TntBoolean(rsValue)
               case DataType.Date | DataType.DateTime =>
+                import org.joda.time.DateTime
                 val rsValue = rs.getDate(fieldName)
                 if (rs.wasNull()) TntNull()
                 else TntDate(new DateTime(rsValue.getTime))

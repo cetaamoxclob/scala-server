@@ -1,10 +1,11 @@
 package services
 
 import com.tantalim.models.ArtifactType
+import compiler.ModelCompiler
 import data._
 import play.api.libs.json._
 
-class ArtifactExport(artifactType: ArtifactType) extends DataReader with DataSaver {
+class ArtifactExport(artifactType: ArtifactType) extends DataReader with DataSaver with ModelCompiler {
   val artifactReader = compileModel("~" + artifactType.toString.toLowerCase)
 
   def readFromDatabaseAndWriteToSource(artifactName: String) = {

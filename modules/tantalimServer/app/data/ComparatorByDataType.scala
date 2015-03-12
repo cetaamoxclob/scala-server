@@ -1,5 +1,6 @@
 package data
 
+import com.tantalim.data.Comparator
 import com.tantalim.models.DataType
 
 object ComparatorByDataType {
