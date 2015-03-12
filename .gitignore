@@ -1,7 +1,6 @@
 logs
 project/project
 target
-dist
 /.idea
 *.iml
 conf/application.prod.conf
