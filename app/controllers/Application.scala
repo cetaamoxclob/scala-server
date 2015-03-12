@@ -25,13 +25,13 @@ object Application extends Controller with Timer {
         val reader = new DataReader {}
         val smartSet: SmartNodeSet = reader.queryModelData(model, page, filter, if (orderBy.isDefined) Seq(orderBy.get) else model.orderBy)
         val totalPages = reader.calcTotalRows(model, filter)
-        println(totalPages)
         Ok(Json.obj(
           "maxPages" -> JsNumber(totalPages),
-          "sql" -> JsString("SELECT FROM ..."),
+          //          "sql" -> JsString("SELECT FROM ..."),
           "rows" -> DataConverters.convertSmartNodeSetToJsonArr(smartSet)
         ))
       } catch {
+        case e: TantalimException => Ok(convertExceptionToJson(e))
         case e: Exception => Ok(convertExceptionToJson(e))
       }
     }
@@ -56,7 +56,16 @@ object Application extends Controller with Timer {
   private def convertExceptionToJson(e: Exception) = {
     Json.obj(
       "error" -> Json.obj(
-        "message" -> e.toString
+        "message" -> e.getMessage
+      )
+    )
+  }
+
+  private def convertExceptionToJson(e: TantalimException) = {
+    Json.obj(
+      "error" -> Json.obj(
+        "message" -> e.getMessage,
+        "help" -> e.getHelp
       )
     )
   }

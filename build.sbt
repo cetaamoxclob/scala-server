@@ -11,7 +11,7 @@ lazy val models = project in file("modules/tantalimModels")
 
 lazy val util = project in file("modules/util")
 
-lazy val filterCompiler = (project in file("modules/filterCompiler")).dependsOn(models)
+lazy val filterCompiler = (project in file("modules/filterCompiler")).dependsOn(models, util)
 
 scalaVersion := "2.11.1"
 

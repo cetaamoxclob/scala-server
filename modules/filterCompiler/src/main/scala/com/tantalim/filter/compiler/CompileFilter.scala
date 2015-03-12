@@ -3,6 +3,7 @@ package com.tantalim.filter.compiler
 import com.tantalim.filter.compiler.src._
 import com.tantalim.models.{DataType, ModelField}
 import com.tantalim.data.Comparator
+import com.tantalim.util.TantalimException
 import org.antlr.v4.runtime.{CommonTokenStream, ANTLRInputStream}
 
 class CompileFilter(filter: String, fields: Map[String, ModelField]) extends FilterBaseVisitor[Value] {
@@ -82,7 +83,9 @@ class CompileFilter(filter: String, fields: Map[String, ModelField]) extends Fil
   override def visitField(ctx: FilterParser.FieldContext) = {
     val fieldName = ctx.getText
     val field = fields.getOrElse(fieldName,
-      throw new Exception("SQL expressions must have a model field as the left side but received " + fieldName)
+      throw new TantalimException("Unknown Field named " + fieldName,
+        "If this was text then please wrap it in quotes. Otherwise double check the name of the field in: " + fields.keys.mkString(", ")
+      )
     )
     Value(Some(s"`t0`.`${field.basisColumn.dbName}`"), List(field))
   }
