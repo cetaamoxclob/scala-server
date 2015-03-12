@@ -39,9 +39,45 @@ class CompileFilter(filter: String, fields: Map[String, ModelField]) extends Fil
     val comparator = visit(ctx.comparator)
     val right = visit(ctx.right)
 
-    val (rightSide, params) = calculateRightSideWithParams(leftField.getField.get.basisColumn.dataType, comparator, right)
-    Value(sql = Some(leftField.sql.get + " " + comparator.sql.get + " " + rightSide), params)
+    if (right.sql.isDefined) {
+      Value(sql = Some(leftField.sql.get + " " + comparator.sql.get + " " + right.sql.get), List.empty)
+    } else {
+      val sql = getSql(comparator, right.values)
+      val params = getParams(leftField.getField.get.basisColumn.dataType, comparator, right)
+      Value(sql = Some(leftField.sql.get + " " + comparator.sql.get + " " + sql), params)
+    }
   }
+
+  private def getSql(comparator: Value, values: List[Any]): String =
+    comparator.getComparator.get match {
+      case Comparator.IsEmpty => ""
+      case Comparator.In => "(" + values.map(_ => "?").mkString(",") + ")"
+      case Comparator.Between => "? AND ?" // This isn't working yet
+      case _ => "?"
+    }
+
+  private def getParams(leftDataType: DataType, comparator: Value, rightContext: Value): List[Any] =
+    comparator.getComparator.get match {
+      case Comparator.IsEmpty => List.empty
+      case Comparator.In => rightContext.values
+      case Comparator.BeginsWith => List(rightContext.getString + "%")
+      case Comparator.EndsWith => List("%" + rightContext.getString)
+      case Comparator.Contains => List("%" + rightContext.getString + "%")
+      case _ =>
+        leftDataType match {
+          case DataType.Date | DataType.DateTime =>
+            import org.joda.time.DateTime
+            List(DateTime.parse(rightContext.getString))
+          case DataType.Integer =>
+            List(rightContext.getInteger)
+          case DataType.Decimal =>
+            List(rightContext.getFloat)
+          case DataType.Boolean =>
+            List(rightContext.getBoolean) // This isn't working yet
+          case _ =>
+            List(rightContext.getString)
+        }
+    }
 
   override def visitField(ctx: FilterParser.FieldContext) = {
     val fieldName = ctx.getText
@@ -115,71 +151,5 @@ class CompileFilter(filter: String, fields: Map[String, ModelField]) extends Fil
     case "M" => "MONTH"
     case "Y" => "YEAR"
     case value => value
-  }
-
-  private def calculateRightSideWithParams(leftDataType: DataType, comparator: Value, rightContext: Value): (String, List[Any]) = {
-
-    var sql = if (rightContext.sql.isDefined) rightContext.sql.get
-    else
-      comparator.getComparator.get match {
-        case Comparator.IsEmpty => ""
-        case Comparator.In => "(" + rightContext.values.map(_ => "?").mkString(",") + ")"
-        case Comparator.Between => "? AND ?" // This isn't working yet
-        case _ => "?"
-      }
-
-    val params: List[Any] = comparator.getComparator.get match {
-      case Comparator.IsEmpty => List.empty
-      case Comparator.In => rightContext.values
-      case Comparator.BeginsWith => List(rightContext.getString + "%")
-      case Comparator.EndsWith => List("%" + rightContext.getString)
-      case Comparator.Contains => List("%" + rightContext.getString + "%")
-      case _ =>
-        leftDataType match {
-          case DataType.Date | DataType.DateTime =>
-            if (rightContext.sql.isDefined) {
-              sql = rightContext.sql.get
-              List.empty
-            } else {
-              import org.joda.time.DateTime
-              List(DateTime.parse(rightContext.getString))
-            }
-          case DataType.Integer =>
-            List(rightContext.getInteger)
-          case DataType.Decimal =>
-            List(rightContext.getFloat)
-          case DataType.Boolean =>
-            List(rightContext.getBoolean) // This isn't working yet
-          case _ =>
-            List(rightContext.getString)
-        }
-    }
-    (sql, params)
-  }
-}
-
-object CompileFilter {
-  private def formatDate(dateMatcherCandidate: String): Option[String] = {
-    val datePattern = dateMatcherCandidate.trim
-    if (datePattern == "NOW") return Some("NOW()")
-
-    try {
-      val patternDateInterval = """(-?)(\d+)(\w+)""".r
-      val patternDateInterval(negate, digit, date) = dateMatcherCandidate
-      val dateAddFxn = if (negate == "-") "DATE_SUB" else "DATE_ADD"
-      Some(f"$dateAddFxn(NOW(), INTERVAL $digit ${toIntervalType(date)})")
-    } catch {
-      case err: MatchError => None
-    }
-  }
-
-  private def toIntervalType(interval: String): String = {
-    interval.toUpperCase match {
-      case "D" | "DAY" | "DAYS" => "DAY"
-      case "W" | "WEEK" | "WEEKS" => "WEEK"
-      case "M" | "MONTH" | "MONTHS" => "MONTH"
-      case "Y" | "YEAR" | "YEARS" => "YEAR"
-      case _ => throw new Exception("Invalid interval type: " + interval)
-    }
   }
 }
