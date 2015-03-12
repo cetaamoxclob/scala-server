@@ -18,12 +18,15 @@ basicAtom
  : (INT | FLOAT)  #numberAtom
  | (TRUE | FALSE) #booleanAtom
  | STRING         #stringAtom
+ | NOW            #DateNow
+ | '-' futureDate #pastDateAtom
+ | futureDate     #futureDateAtom
  | '(' (basicAtom) (',' basicAtom)* ')' #listAtom
  ;
 
-field : FIELD;
+futureDate : INT dateMeasure;
 
-date : 'NOW' ;
+field : FIELD;
 
 comparators : '='
       | '!='
@@ -48,10 +51,13 @@ comparators : '='
       | 'OnOrAfter'
 ;
 
+dateMeasure : 's'|'m'|'h'|'D'|'W'|'M'|'Y';
+
 TRUE : 'true';
 FALSE : 'false';
 AND : 'and' | 'AND';
 OR : 'or' | 'OR';
+NOW : 'NOW';
 
 FIELD
  : [a-zA-Z_] [a-zA-Z_0-9]*
@@ -67,8 +73,8 @@ FLOAT
  ;
 
 STRING
- : '"' (~["\r\n] | '""')* '"'
- | '\'' (~["\r\n] | '\'\'')* '\''
+ :  '"' (~["\r\n\"])* '"'
+ | '\'' (~["\r\n\'])* '\''
  ;
 
 SPACE

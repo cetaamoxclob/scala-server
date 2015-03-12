@@ -80,6 +80,27 @@ public interface FilterVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStringAtom(@NotNull FilterParser.StringAtomContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code DateNow}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDateNow(@NotNull FilterParser.DateNowContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code pastDateAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPastDateAtom(@NotNull FilterParser.PastDateAtomContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code futureDateAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFutureDateAtom(@NotNull FilterParser.FutureDateAtomContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code listAtom}
 	 * labeled alternative in {@link FilterParser#basicAtom}.
 	 * @param ctx the parse tree
@@ -87,21 +108,27 @@ public interface FilterVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitListAtom(@NotNull FilterParser.ListAtomContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link FilterParser#futureDate}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFutureDate(@NotNull FilterParser.FutureDateContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link FilterParser#field}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitField(@NotNull FilterParser.FieldContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link FilterParser#date}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDate(@NotNull FilterParser.DateContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link FilterParser#comparators}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitComparators(@NotNull FilterParser.ComparatorsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link FilterParser#dateMeasure}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDateMeasure(@NotNull FilterParser.DateMeasureContext ctx);
 }

@@ -1,6 +1,5 @@
 package com.tantalim.filter.compiler
 
-import com.tantalim.filter.compiler.src.FilterParser._
 import com.tantalim.filter.compiler.src._
 import com.tantalim.models.{DataType, ModelField}
 import com.tantalim.data.Comparator
@@ -27,7 +26,7 @@ class CompileFilter(filter: String, fields: Map[String, ModelField]) extends Fil
     val left = visit(ctx.left)
     val right = visit(ctx.right)
     val andOr = ctx.andor.getText.toUpperCase
-    Value(Some(s"${left.sql} $andOr ${right.sql}"), left.values ++: right.values)
+    Value(Some(s"${left.sql.get} $andOr ${right.sql.get}"), left.values ++: right.values)
   }
 
   override def visitParenthesisPhrase(ctx: FilterParser.ParenthesisPhraseContext) = {
@@ -71,6 +70,7 @@ class CompileFilter(filter: String, fields: Map[String, ModelField]) extends Fil
       case Comparator.LessThan | Comparator.Before => "<"
       case Comparator.LessThanOrEqual | Comparator.OnOrBefore => "<="
       case Comparator.Contains | Comparator.BeginsWith | Comparator.EndsWith => "LIKE"
+      case Comparator.Between => "BETWEEN"
       case Comparator.IsEmpty => "IS NULL"
     }
 
@@ -85,7 +85,6 @@ class CompileFilter(filter: String, fields: Map[String, ModelField]) extends Fil
 
   override def visitNumberAtom(ctx: FilterParser.NumberAtomContext) = {
     val intValue = ctx.getText.toInt
-    println("intValue = " + intValue)
     Value(values = List(intValue))
   }
 
@@ -95,37 +94,67 @@ class CompileFilter(filter: String, fields: Map[String, ModelField]) extends Fil
     Value(values = itemList.flatMap(a => visit(a).values).toList)
   }
 
-  private def calculateRightSideWithParams(leftDataType: DataType, comparator: Value, rightContext: Value): (String, List[Any]) = {
-    val right = rightContext
-//    val fieldRight = fields.get(right)
+  override def visitDateNow(ctx: FilterParser.DateNowContext) = {
+    Value(sql = Some("NOW()"))
+  }
 
-    comparator.getComparator.get match {
-      case Comparator.IsEmpty => ("", List.empty)
-      case Comparator.BeginsWith => ("?", List(right.getString + "%"))
-      case Comparator.EndsWith => ("?", List("%" + right.getString))
-      case Comparator.Contains => ("?", List("%" + right.getString + "%"))
-      case Comparator.In =>
-        ("(" + rightContext.values.map(_ => "?").mkString(",") + ")", rightContext.values)
+  override def visitPastDateAtom(ctx: FilterParser.PastDateAtomContext) = {
+    Value(sql = Some(s"DATE_SUB(NOW(), INTERVAL ${ctx.futureDate().INT} ${convertDateMeasure(ctx.futureDate().dateMeasure.getText)})"))
+  }
+
+  override def visitFutureDate(ctx: FilterParser.FutureDateContext) = {
+    Value(sql = Some(s"DATE_ADD(NOW(), INTERVAL ${ctx.INT} ${convertDateMeasure(ctx.dateMeasure.getText)})"))
+  }
+
+  private def convertDateMeasure(measure: String) = measure match {
+    case "s" => "SECOND"
+    case "m" => "MINUTE"
+    case "h" => "HOUR"
+    case "D" => "DAY"
+    case "W" => "WEEK"
+    case "M" => "MONTH"
+    case "Y" => "YEAR"
+    case value => value
+  }
+
+  private def calculateRightSideWithParams(leftDataType: DataType, comparator: Value, rightContext: Value): (String, List[Any]) = {
+
+    var sql = if (rightContext.sql.isDefined) rightContext.sql.get
+    else
+      comparator.getComparator.get match {
+        case Comparator.IsEmpty => ""
+        case Comparator.In => "(" + rightContext.values.map(_ => "?").mkString(",") + ")"
+        case Comparator.Between => "? AND ?" // This isn't working yet
+        case _ => "?"
+      }
+
+    val params: List[Any] = comparator.getComparator.get match {
+      case Comparator.IsEmpty => List.empty
+      case Comparator.In => rightContext.values
+      case Comparator.BeginsWith => List(rightContext.getString + "%")
+      case Comparator.EndsWith => List("%" + rightContext.getString)
+      case Comparator.Contains => List("%" + rightContext.getString + "%")
       case _ =>
         leftDataType match {
-//          case DataType.Date | DataType.DateTime =>
-//            val formattedDate = CompileFilter.formatDate(right)
-//            if (formattedDate.isDefined)
-//              ("?" + formattedDate.get, List())
-//            else {
-//              import org.joda.time.DateTime
-//              ("?", List(DateTime.parse(right)))
-//            }
+          case DataType.Date | DataType.DateTime =>
+            if (rightContext.sql.isDefined) {
+              sql = rightContext.sql.get
+              List.empty
+            } else {
+              import org.joda.time.DateTime
+              List(DateTime.parse(rightContext.getString))
+            }
           case DataType.Integer =>
-            ("?", List(right.getInteger))
-//          case DataType.Decimal =>
-//            ("?", List(right.toFloat))
-//          case DataType.Boolean =>
-//            ("?", List(right.toBoolean))
+            List(rightContext.getInteger)
+          case DataType.Decimal =>
+            List(rightContext.getFloat)
+          case DataType.Boolean =>
+            List(rightContext.getBoolean) // This isn't working yet
           case _ =>
-            ("?", List(rightContext.getString))
+            List(rightContext.getString)
         }
     }
+    (sql, params)
   }
 }
 

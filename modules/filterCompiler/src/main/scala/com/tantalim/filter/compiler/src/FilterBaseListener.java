@@ -137,6 +137,42 @@ public class FilterBaseListener implements FilterListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterDateNow(@NotNull FilterParser.DateNowContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDateNow(@NotNull FilterParser.DateNowContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPastDateAtom(@NotNull FilterParser.PastDateAtomContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPastDateAtom(@NotNull FilterParser.PastDateAtomContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFutureDateAtom(@NotNull FilterParser.FutureDateAtomContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFutureDateAtom(@NotNull FilterParser.FutureDateAtomContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterListAtom(@NotNull FilterParser.ListAtomContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -144,6 +180,18 @@ public class FilterBaseListener implements FilterListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitListAtom(@NotNull FilterParser.ListAtomContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFutureDate(@NotNull FilterParser.FutureDateContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFutureDate(@NotNull FilterParser.FutureDateContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -161,18 +209,6 @@ public class FilterBaseListener implements FilterListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDate(@NotNull FilterParser.DateContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitDate(@NotNull FilterParser.DateContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterComparators(@NotNull FilterParser.ComparatorsContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -180,6 +216,18 @@ public class FilterBaseListener implements FilterListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitComparators(@NotNull FilterParser.ComparatorsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDateMeasure(@NotNull FilterParser.DateMeasureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDateMeasure(@NotNull FilterParser.DateMeasureContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

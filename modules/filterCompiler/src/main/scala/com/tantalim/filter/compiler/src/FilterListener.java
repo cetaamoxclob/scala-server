@@ -125,6 +125,42 @@ public interface FilterListener extends ParseTreeListener {
 	 */
 	void exitStringAtom(@NotNull FilterParser.StringAtomContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code DateNow}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 */
+	void enterDateNow(@NotNull FilterParser.DateNowContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code DateNow}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 */
+	void exitDateNow(@NotNull FilterParser.DateNowContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code pastDateAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 */
+	void enterPastDateAtom(@NotNull FilterParser.PastDateAtomContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code pastDateAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 */
+	void exitPastDateAtom(@NotNull FilterParser.PastDateAtomContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code futureDateAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 */
+	void enterFutureDateAtom(@NotNull FilterParser.FutureDateAtomContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code futureDateAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 */
+	void exitFutureDateAtom(@NotNull FilterParser.FutureDateAtomContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code listAtom}
 	 * labeled alternative in {@link FilterParser#basicAtom}.
 	 * @param ctx the parse tree
@@ -137,6 +173,16 @@ public interface FilterListener extends ParseTreeListener {
 	 */
 	void exitListAtom(@NotNull FilterParser.ListAtomContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link FilterParser#futureDate}.
+	 * @param ctx the parse tree
+	 */
+	void enterFutureDate(@NotNull FilterParser.FutureDateContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FilterParser#futureDate}.
+	 * @param ctx the parse tree
+	 */
+	void exitFutureDate(@NotNull FilterParser.FutureDateContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link FilterParser#field}.
 	 * @param ctx the parse tree
 	 */
@@ -147,16 +193,6 @@ public interface FilterListener extends ParseTreeListener {
 	 */
 	void exitField(@NotNull FilterParser.FieldContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link FilterParser#date}.
-	 * @param ctx the parse tree
-	 */
-	void enterDate(@NotNull FilterParser.DateContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link FilterParser#date}.
-	 * @param ctx the parse tree
-	 */
-	void exitDate(@NotNull FilterParser.DateContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link FilterParser#comparators}.
 	 * @param ctx the parse tree
 	 */
@@ -166,4 +202,14 @@ public interface FilterListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitComparators(@NotNull FilterParser.ComparatorsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link FilterParser#dateMeasure}.
+	 * @param ctx the parse tree
+	 */
+	void enterDateMeasure(@NotNull FilterParser.DateMeasureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FilterParser#dateMeasure}.
+	 * @param ctx the parse tree
+	 */
+	void exitDateMeasure(@NotNull FilterParser.DateMeasureContext ctx);
 }
