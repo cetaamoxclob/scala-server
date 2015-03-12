@@ -18,38 +18,26 @@ public interface FilterVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStart(@NotNull FilterParser.StartContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code andPhrase}
+	 * Visit a parse tree produced by the {@code AndPhrase}
 	 * labeled alternative in {@link FilterParser#phrase}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitAndPhrase(@NotNull FilterParser.AndPhraseContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code operatorExpr}
+	 * Visit a parse tree produced by the {@code StatementPhrase}
 	 * labeled alternative in {@link FilterParser#phrase}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitOperatorExpr(@NotNull FilterParser.OperatorExprContext ctx);
+	T visitStatementPhrase(@NotNull FilterParser.StatementPhraseContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code parenthesisPhrase}
+	 * Visit a parse tree produced by the {@code ParenthesisPhrase}
 	 * labeled alternative in {@link FilterParser#phrase}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitParenthesisPhrase(@NotNull FilterParser.ParenthesisPhraseContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link FilterParser#anyValue}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAnyValue(@NotNull FilterParser.AnyValueContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link FilterParser#simpleValue}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSimpleValue(@NotNull FilterParser.SimpleValueContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link FilterParser#andOrs}.
 	 * @param ctx the parse tree
@@ -57,17 +45,53 @@ public interface FilterVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAndOrs(@NotNull FilterParser.AndOrsContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code fieldAtom}
+	 * labeled alternative in {@link FilterParser#atom}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFieldAtom(@NotNull FilterParser.FieldAtomContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code basicAtm}
+	 * labeled alternative in {@link FilterParser#atom}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBasicAtm(@NotNull FilterParser.BasicAtmContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code numberAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNumberAtom(@NotNull FilterParser.NumberAtomContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code booleanAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBooleanAtom(@NotNull FilterParser.BooleanAtomContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stringAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStringAtom(@NotNull FilterParser.StringAtomContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code listAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitListAtom(@NotNull FilterParser.ListAtomContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link FilterParser#field}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitField(@NotNull FilterParser.FieldContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link FilterParser#list}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitList(@NotNull FilterParser.ListContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link FilterParser#date}.
 	 * @param ctx the parse tree

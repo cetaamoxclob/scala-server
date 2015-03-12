@@ -1,25 +1,29 @@
 grammar Filter;
 
-start : phrase ;
+start : phrase;
 
-phrase : left=phrase andor=andOrs right=phrase #andPhrase
-      | '(' phrase ')'                       #parenthesisPhrase
-      | left=field comparator=comparators right=anyValue #operatorExpr
+phrase : left=phrase andor=andOrs right=phrase             #AndPhrase
+      | '(' phrase ')'                                     #ParenthesisPhrase
+      | left=field comparator=comparators right=atom       #StatementPhrase
 ;
 
-anyValue : field | list | simpleValue;
+andOrs : AND | OR;
 
-simpleValue : STRINGLITERAL | NUMBER | FLOAT | date;
+atom
+ : field          #fieldAtom
+ | basicAtom      #basicAtm
+ ;
 
-andOrs : 'AND ' | 'OR';
+basicAtom
+ : (INT | FLOAT)  #numberAtom
+ | (TRUE | FALSE) #booleanAtom
+ | STRING         #stringAtom
+ | '(' (basicAtom) (',' basicAtom)* ')' #listAtom
+ ;
 
-field : LETTERS (LETTERS |NUMBER)*;
+field : FIELD;
 
-list : '(' LETTERS (LETTERS |NUMBER)* ')';
-
-date : 'NOW'
-      |
-      | ;
+date : 'NOW' ;
 
 comparators : '='
       | '!='
@@ -30,8 +34,12 @@ comparators : '='
       | 'BeginsWith'
       | 'EndsWith'
       | 'Contains'
+      | '>'
+      | '>='
       | 'GreaterThan'
       | 'GreaterThanOrEqual'
+      | '<'
+      | '<='
       | 'LessThan'
       | 'LessThanOrEqual'
       | 'Before'
@@ -40,10 +48,29 @@ comparators : '='
       | 'OnOrAfter'
 ;
 
-INT   : ('0'..'9')+ ;
-LETTERS	:('a'..'z' |'A'..'Z' )+;
-STRINGLITERAL : '"' ~["\r\n]* '"' | '\'' ~['\r\n]* '\'';
-NUMBER : ('0'..'9')+ ( ('e' | 'E')  NUMBER)*;
-FLOAT : ('0'..'9')* '.' ('0'..'9')+ ( ('e' | 'E') ('0'..'9')+)*;
+TRUE : 'true';
+FALSE : 'false';
+AND : 'and' | 'AND';
+OR : 'or' | 'OR';
 
-WS    : [ \t\r\n]+ -> skip ;
+FIELD
+ : [a-zA-Z_] [a-zA-Z_0-9]*
+ ;
+
+INT
+ : [0-9]+
+ ;
+
+FLOAT
+ : [0-9]+ '.' [0-9]*
+ | '.' [0-9]+
+ ;
+
+STRING
+ : '"' (~["\r\n] | '""')* '"'
+ | '\'' (~["\r\n] | '\'\'')* '\''
+ ;
+
+SPACE
+ : [ \t\r\n] -> skip
+ ;

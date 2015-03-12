@@ -3,13 +3,15 @@ name := "tantalim"
 version := "1.0"
 
 lazy val app = (project in file(".")).enablePlugins(PlayScala)
-  .aggregate(server, models, util).dependsOn(server, models, util)
+  .aggregate(server, models, util, filterCompiler).dependsOn(server, models, util, filterCompiler)
 
-lazy val server = (project in file("modules/tantalimServer")).enablePlugins(PlayScala).dependsOn(models, util)
+lazy val server = (project in file("modules/tantalimServer")).enablePlugins(PlayScala).dependsOn(models, util, filterCompiler)
 
 lazy val models = project in file("modules/tantalimModels")
 
 lazy val util = project in file("modules/util")
+
+lazy val filterCompiler = (project in file("modules/filterCompiler")).dependsOn(models)
 
 scalaVersion := "2.11.1"
 

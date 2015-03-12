@@ -41,13 +41,13 @@ public class FilterBaseListener implements FilterListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterOperatorExpr(@NotNull FilterParser.OperatorExprContext ctx) { }
+	@Override public void enterStatementPhrase(@NotNull FilterParser.StatementPhraseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitOperatorExpr(@NotNull FilterParser.OperatorExprContext ctx) { }
+	@Override public void exitStatementPhrase(@NotNull FilterParser.StatementPhraseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -65,30 +65,6 @@ public class FilterBaseListener implements FilterListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAnyValue(@NotNull FilterParser.AnyValueContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAnyValue(@NotNull FilterParser.AnyValueContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterSimpleValue(@NotNull FilterParser.SimpleValueContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitSimpleValue(@NotNull FilterParser.SimpleValueContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterAndOrs(@NotNull FilterParser.AndOrsContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -101,6 +77,78 @@ public class FilterBaseListener implements FilterListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterFieldAtom(@NotNull FilterParser.FieldAtomContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFieldAtom(@NotNull FilterParser.FieldAtomContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBasicAtm(@NotNull FilterParser.BasicAtmContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBasicAtm(@NotNull FilterParser.BasicAtmContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNumberAtom(@NotNull FilterParser.NumberAtomContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNumberAtom(@NotNull FilterParser.NumberAtomContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBooleanAtom(@NotNull FilterParser.BooleanAtomContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBooleanAtom(@NotNull FilterParser.BooleanAtomContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterStringAtom(@NotNull FilterParser.StringAtomContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStringAtom(@NotNull FilterParser.StringAtomContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterListAtom(@NotNull FilterParser.ListAtomContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitListAtom(@NotNull FilterParser.ListAtomContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterField(@NotNull FilterParser.FieldContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -108,18 +156,6 @@ public class FilterBaseListener implements FilterListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitField(@NotNull FilterParser.FieldContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterList(@NotNull FilterParser.ListContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitList(@NotNull FilterParser.ListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

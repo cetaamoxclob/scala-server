@@ -19,61 +19,41 @@ public interface FilterListener extends ParseTreeListener {
 	 */
 	void exitStart(@NotNull FilterParser.StartContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code andPhrase}
+	 * Enter a parse tree produced by the {@code AndPhrase}
 	 * labeled alternative in {@link FilterParser#phrase}.
 	 * @param ctx the parse tree
 	 */
 	void enterAndPhrase(@NotNull FilterParser.AndPhraseContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code andPhrase}
+	 * Exit a parse tree produced by the {@code AndPhrase}
 	 * labeled alternative in {@link FilterParser#phrase}.
 	 * @param ctx the parse tree
 	 */
 	void exitAndPhrase(@NotNull FilterParser.AndPhraseContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code operatorExpr}
+	 * Enter a parse tree produced by the {@code StatementPhrase}
 	 * labeled alternative in {@link FilterParser#phrase}.
 	 * @param ctx the parse tree
 	 */
-	void enterOperatorExpr(@NotNull FilterParser.OperatorExprContext ctx);
+	void enterStatementPhrase(@NotNull FilterParser.StatementPhraseContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code operatorExpr}
+	 * Exit a parse tree produced by the {@code StatementPhrase}
 	 * labeled alternative in {@link FilterParser#phrase}.
 	 * @param ctx the parse tree
 	 */
-	void exitOperatorExpr(@NotNull FilterParser.OperatorExprContext ctx);
+	void exitStatementPhrase(@NotNull FilterParser.StatementPhraseContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code parenthesisPhrase}
+	 * Enter a parse tree produced by the {@code ParenthesisPhrase}
 	 * labeled alternative in {@link FilterParser#phrase}.
 	 * @param ctx the parse tree
 	 */
 	void enterParenthesisPhrase(@NotNull FilterParser.ParenthesisPhraseContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code parenthesisPhrase}
+	 * Exit a parse tree produced by the {@code ParenthesisPhrase}
 	 * labeled alternative in {@link FilterParser#phrase}.
 	 * @param ctx the parse tree
 	 */
 	void exitParenthesisPhrase(@NotNull FilterParser.ParenthesisPhraseContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link FilterParser#anyValue}.
-	 * @param ctx the parse tree
-	 */
-	void enterAnyValue(@NotNull FilterParser.AnyValueContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link FilterParser#anyValue}.
-	 * @param ctx the parse tree
-	 */
-	void exitAnyValue(@NotNull FilterParser.AnyValueContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link FilterParser#simpleValue}.
-	 * @param ctx the parse tree
-	 */
-	void enterSimpleValue(@NotNull FilterParser.SimpleValueContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link FilterParser#simpleValue}.
-	 * @param ctx the parse tree
-	 */
-	void exitSimpleValue(@NotNull FilterParser.SimpleValueContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link FilterParser#andOrs}.
 	 * @param ctx the parse tree
@@ -85,6 +65,78 @@ public interface FilterListener extends ParseTreeListener {
 	 */
 	void exitAndOrs(@NotNull FilterParser.AndOrsContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code fieldAtom}
+	 * labeled alternative in {@link FilterParser#atom}.
+	 * @param ctx the parse tree
+	 */
+	void enterFieldAtom(@NotNull FilterParser.FieldAtomContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code fieldAtom}
+	 * labeled alternative in {@link FilterParser#atom}.
+	 * @param ctx the parse tree
+	 */
+	void exitFieldAtom(@NotNull FilterParser.FieldAtomContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code basicAtm}
+	 * labeled alternative in {@link FilterParser#atom}.
+	 * @param ctx the parse tree
+	 */
+	void enterBasicAtm(@NotNull FilterParser.BasicAtmContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code basicAtm}
+	 * labeled alternative in {@link FilterParser#atom}.
+	 * @param ctx the parse tree
+	 */
+	void exitBasicAtm(@NotNull FilterParser.BasicAtmContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code numberAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 */
+	void enterNumberAtom(@NotNull FilterParser.NumberAtomContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code numberAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 */
+	void exitNumberAtom(@NotNull FilterParser.NumberAtomContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code booleanAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 */
+	void enterBooleanAtom(@NotNull FilterParser.BooleanAtomContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code booleanAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 */
+	void exitBooleanAtom(@NotNull FilterParser.BooleanAtomContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code stringAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 */
+	void enterStringAtom(@NotNull FilterParser.StringAtomContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code stringAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 */
+	void exitStringAtom(@NotNull FilterParser.StringAtomContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code listAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 */
+	void enterListAtom(@NotNull FilterParser.ListAtomContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code listAtom}
+	 * labeled alternative in {@link FilterParser#basicAtom}.
+	 * @param ctx the parse tree
+	 */
+	void exitListAtom(@NotNull FilterParser.ListAtomContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link FilterParser#field}.
 	 * @param ctx the parse tree
 	 */
@@ -94,16 +146,6 @@ public interface FilterListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitField(@NotNull FilterParser.FieldContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link FilterParser#list}.
-	 * @param ctx the parse tree
-	 */
-	void enterList(@NotNull FilterParser.ListContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link FilterParser#list}.
-	 * @param ctx the parse tree
-	 */
-	void exitList(@NotNull FilterParser.ListContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link FilterParser#date}.
 	 * @param ctx the parse tree

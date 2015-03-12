@@ -1,11 +1,12 @@
 package com.tantalim.filter.compiler
 
+import com.tantalim.filter.compiler.src.FilterParser._
 import com.tantalim.filter.compiler.src._
 import com.tantalim.models.{DataType, ModelField}
 import com.tantalim.data.Comparator
 import org.antlr.v4.runtime.{CommonTokenStream, ANTLRInputStream}
 
-class CompileFilter(filter: String, fields: Map[String, ModelField]) extends FilterBaseVisitor[CompiledFilter] {
+class CompileFilter(filter: String, fields: Map[String, ModelField]) extends FilterBaseVisitor[Value] {
 
   private def parser = new FilterParser(
     new CommonTokenStream(
@@ -14,78 +15,53 @@ class CompileFilter(filter: String, fields: Map[String, ModelField]) extends Fil
       )))
 
   def parse() = {
-    visit(parser.start)
+    val value = visit(parser.start)
+    CompiledFilter(value.sql.get, value.values)
   }
 
-  override def visitOperatorExpr(ctx: FilterParser.OperatorExprContext) = {
-    val left = ctx.left.getText
-    val right = ctx.right.getText
+  override def visitStart(ctx: FilterParser.StartContext) = {
+    visit(ctx.phrase())
+  }
 
-    val fieldLeft = fields.get(left)
-    val fieldRight = fields.get(right)
+  override def visitAndPhrase(ctx: FilterParser.AndPhraseContext) = {
+    val left = visit(ctx.left)
+    val right = visit(ctx.right)
+    val andOr = ctx.andor.getText.toUpperCase
+    Value(Some(s"${left.sql} $andOr ${right.sql}"), left.values ++: right.values)
+  }
 
-    if (fieldLeft.isEmpty) {
-      throw new Exception("SQL expressions must have a model field as the left side but received " + filter)
-    }
+  override def visitParenthesisPhrase(ctx: FilterParser.ParenthesisPhraseContext) = {
+    val content = visit(ctx.phrase())
+    content.copy(sql = Some(s"(${content.sql.getOrElse("")})"))
+  }
 
+  override def visitStatementPhrase(ctx: FilterParser.StatementPhraseContext) = {
+    val leftField = visit(ctx.left)
+    val comparator = visit(ctx.comparator)
+    val right = visit(ctx.right)
+
+    val (rightSide, params) = calculateRightSideWithParams(leftField.getField.get.basisColumn.dataType, comparator, right)
+    Value(sql = Some(leftField.sql.get + " " + comparator.sql.get + " " + rightSide), params)
+  }
+
+  override def visitField(ctx: FilterParser.FieldContext) = {
+    val fieldName = ctx.getText
+    val field = fields.getOrElse(fieldName,
+      throw new Exception("SQL expressions must have a model field as the left side but received " + fieldName)
+    )
+    println("Found field " + field.name)
+    Value(Some(s"`t0`.`${field.basisColumn.dbName}`"), List(field))
+  }
+
+  override def visitComparators(ctx: FilterParser.ComparatorsContext) = {
     val comparator = {
-      val comparatorCandidate: String = ctx.op.getText
-      // workaround for "=" being a good option but not a very good Enum value
+      val comparatorCandidate = ctx.getText
       if (comparatorCandidate == "=") Comparator.Equals
       else if (comparatorCandidate == ">") Comparator.GreaterThan
       else if (comparatorCandidate == "<") Comparator.LessThan
       else Comparator.valueOf(comparatorCandidate)
     }
-    val (rightSide, params): (String, List[Any]) = comparator match {
-      case Comparator.IsEmpty => (f"IS NULL", List.empty)
-      case Comparator.BeginsWith => (s"LIKE ?", List(right + "%"))
-      case Comparator.EndsWith => (s"LIKE ?", List("%" + right))
-      case Comparator.Contains => (s"LIKE ?", List("%" + right + "%"))
-      case Comparator.In =>
-        val valueListAsString = if (right.charAt(0) == '(' && right.last == ')') right.substring(1, right.length - 1)
-        else right
-        val values = valueListAsString.split(",").toList
-        val bindings = values.map { value => "?"}.mkString(",")
-        (f"IN ($bindings)", values.map(value => {
-          value.replaceAll("\"", "").toInt
-        }))
-      case _ =>
-        fieldLeft.get.basisColumn.dataType match {
-          case DataType.Date | DataType.DateTime =>
-            val formattedDate = CompileFilter.formatDate(right)
-            if (formattedDate.isDefined)
-              (CompileFilter.comparatorToSql(comparator) + " " + formattedDate.get, List())
-            else {
-              import org.joda.time.DateTime
-              (CompileFilter.comparatorToSql(comparator) + " ?", List(DateTime.parse(right)))
-            }
-          case DataType.Integer =>
-            (CompileFilter.comparatorToSql(comparator) + " ?", List(right.toInt))
-          case DataType.Decimal =>
-            (CompileFilter.comparatorToSql(comparator) + " ?", List(right.toFloat))
-          case DataType.Boolean =>
-            (CompileFilter.comparatorToSql(comparator) + " ?", List(right.toBoolean))
-          case _ =>
-            (CompileFilter.comparatorToSql(comparator) + " ?", List(right.toString))
-        }
-    }
-    CompiledFilter(CompileFilter.fieldToSql(fieldLeft.get) + " " + rightSide, params)
-  }
-
-  override def visitStart(ctx: FilterParser.StartContext) = {
-    visit(ctx.expr())
-  }
-
-  override def visitParenthesisExpr(ctx: FilterParser.ParenthesisExprContext) = {
-    val content = visit(ctx.expr())
-    content.copy(sql = s"(${content.sql})")
-  }
-
-}
-
-object CompileFilter {
-  private def comparatorToSql(comparator: Comparator): String = {
-    comparator match {
+    val sql = comparator match {
       case Comparator.Equals => "="
       case Comparator.NotEquals => "<>"
       case Comparator.In => "IN"
@@ -97,12 +73,63 @@ object CompileFilter {
       case Comparator.Contains | Comparator.BeginsWith | Comparator.EndsWith => "LIKE"
       case Comparator.IsEmpty => "IS NULL"
     }
+
+    Value(Some(sql), List(comparator))
   }
 
-  private def fieldToSql(field: ModelField): String = {
-    f"`t0`.`${field.basisColumn.dbName}`"
+  override def visitStringAtom(ctx: FilterParser.StringAtomContext) = {
+    val raw = ctx.getText
+    val cleanedUp = raw.substring(1, raw.length() - 1).replace("\'", "'").replace("\\\"", "\"")
+    Value(values = List(cleanedUp))
   }
 
+  override def visitNumberAtom(ctx: FilterParser.NumberAtomContext) = {
+    val intValue = ctx.getText.toInt
+    println("intValue = " + intValue)
+    Value(values = List(intValue))
+  }
+
+  override def visitListAtom(ctx: FilterParser.ListAtomContext) = {
+    import scala.collection.JavaConverters._
+    val itemList = ctx.basicAtom.asScala
+    Value(values = itemList.flatMap(a => visit(a).values).toList)
+  }
+
+  private def calculateRightSideWithParams(leftDataType: DataType, comparator: Value, rightContext: Value): (String, List[Any]) = {
+    val right = rightContext
+//    val fieldRight = fields.get(right)
+
+    comparator.getComparator.get match {
+      case Comparator.IsEmpty => ("", List.empty)
+      case Comparator.BeginsWith => ("?", List(right.getString + "%"))
+      case Comparator.EndsWith => ("?", List("%" + right.getString))
+      case Comparator.Contains => ("?", List("%" + right.getString + "%"))
+      case Comparator.In =>
+        ("(" + rightContext.values.map(_ => "?").mkString(",") + ")", rightContext.values)
+      case _ =>
+        leftDataType match {
+//          case DataType.Date | DataType.DateTime =>
+//            val formattedDate = CompileFilter.formatDate(right)
+//            if (formattedDate.isDefined)
+//              ("?" + formattedDate.get, List())
+//            else {
+//              import org.joda.time.DateTime
+//              ("?", List(DateTime.parse(right)))
+//            }
+          case DataType.Integer =>
+            ("?", List(right.getInteger))
+//          case DataType.Decimal =>
+//            ("?", List(right.toFloat))
+//          case DataType.Boolean =>
+//            ("?", List(right.toBoolean))
+          case _ =>
+            ("?", List(rightContext.getString))
+        }
+    }
+  }
+}
+
+object CompileFilter {
   private def formatDate(dateMatcherCandidate: String): Option[String] = {
     val datePattern = dateMatcherCandidate.trim
     if (datePattern == "NOW") return Some("NOW()")
@@ -126,5 +153,4 @@ object CompileFilter {
       case _ => throw new Exception("Invalid interval type: " + interval)
     }
   }
-
 }
