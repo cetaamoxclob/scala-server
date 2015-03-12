@@ -11,7 +11,7 @@ class ArtifactImport(artifactType: ArtifactType) extends DataReader with DataSav
 
   def readFromSourceAndWriteToDatabase(artifactName: String) = {
     def deleteExistingArtifact() {
-      val oldDataToDelete = queryModelData(artifactWriter, filter = Some("name = " + artifactName))
+      val oldDataToDelete = queryModelData(artifactWriter, filter = Some(s"name = '$artifactName'"))
       if (!oldDataToDelete.isEmpty) {
         oldDataToDelete.deleteAll()
         saveAll(oldDataToDelete)
