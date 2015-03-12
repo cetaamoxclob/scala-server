@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 APP=tantalim/slhp
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" cd ../ && pwd )
