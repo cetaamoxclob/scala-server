@@ -5,7 +5,7 @@ RUN ["mkdir", "-p", "/opt/docker/logs"]
 EXPOSE 9000
 WORKDIR /opt/docker
 USER daemon
-ENTRYPOINT ["bin/tantalim"]
+ENTRYPOINT ["bin/tantalim", "-Dconfig.file=/opt/docker/conf/application.conf"]
 CMD []
 USER root
 ADD files /

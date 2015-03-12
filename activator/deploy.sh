@@ -11,6 +11,4 @@ cd ${TANTALIM_HOME}/target/docker/
 echo "Building docker $APP"
 docker build -t $APP .
 
-# docker push $APP
-
-echo docker run -d -p 9000:9000 -v ${TANTALIM_HOME}/tantalim:/opt/docker/tantalim -v ~/slhp/application.conf:/opt/docker/conf/application.prod.conf $APP
+docker push $APP
