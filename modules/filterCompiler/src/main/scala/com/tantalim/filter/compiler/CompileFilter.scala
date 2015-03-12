@@ -84,7 +84,6 @@ class CompileFilter(filter: String, fields: Map[String, ModelField]) extends Fil
     val field = fields.getOrElse(fieldName,
       throw new Exception("SQL expressions must have a model field as the left side but received " + fieldName)
     )
-    println("Found field " + field.name)
     Value(Some(s"`t0`.`${field.basisColumn.dbName}`"), List(field))
   }
 
