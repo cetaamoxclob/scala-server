@@ -1,5 +1,4 @@
-package models
-
+package compiler
 
 import com.tantalim.models._
 import play.api.libs.json._

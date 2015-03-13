@@ -2,7 +2,7 @@ package compiler
 
 import com.tantalim.models._
 import com.tantalim.util.TantalimException
-import models.src.{FieldDefaultJson, ModelFieldJson, ModelJson}
+import compiler.src.{FieldDefaultJson, ModelFieldJson, ModelJson}
 import play.api.libs.json.{JsError, JsSuccess}
 import services.ArtifactService
 

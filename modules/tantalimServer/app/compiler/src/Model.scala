@@ -1,4 +1,4 @@
-package models.src
+package compiler.src
 
 import com.tantalim.models.{ModelOrderBy, ModelParentLink}
 import play.api.libs.functional.syntax._

@@ -1,7 +1,7 @@
 package compiler
 
 import com.tantalim.models.{Icon, MenuItem, MenuContent, Menu}
-import models.src.{MenuItemJson, MenuContentJson}
+import compiler.src.{MenuItemJson, MenuContentJson}
 import play.api.libs.json.{JsError, JsSuccess}
 import services.ArtifactService
 

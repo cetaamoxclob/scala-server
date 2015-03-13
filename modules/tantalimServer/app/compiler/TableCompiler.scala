@@ -1,7 +1,7 @@
 package compiler
 
 import com.tantalim.models._
-import models.src.{TableJoinColumnJson, TableJoinJson, TableColumnJson, TableJson}
+import compiler.src.{TableJoinColumnJson, TableJoinJson, TableColumnJson, TableJson}
 import play.api.libs.json.{JsError, JsSuccess}
 import services.{TableCache, ArtifactService}
 

@@ -6,7 +6,7 @@ import com.google.common.base.Charsets
 import com.google.common.io.Files
 import com.tantalim.models.{ArtifactStub, ArtifactType}
 import com.tantalim.util.TantalimException
-import models.src._
+import compiler.src._
 import play.api.Play.current
 import play.api.Play
 import play.api.libs.json._
