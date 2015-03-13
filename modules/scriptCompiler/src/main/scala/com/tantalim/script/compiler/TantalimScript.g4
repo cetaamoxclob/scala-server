@@ -1,0 +1,4 @@
+grammar TantalimScript;
+
+start : phrase;
+
