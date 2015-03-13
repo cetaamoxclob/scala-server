@@ -19,7 +19,7 @@ case class ShallowTable(
                          name: String,
                          dbName: String,
                          primaryKey: Option[TableColumn] = None,
-                         columns: Map[String, TableColumn]
+                         columns: Map[String, TableColumn] = Map.empty
                          ) extends Table
 
 case class DeepTable(

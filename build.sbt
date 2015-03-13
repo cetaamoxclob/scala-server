@@ -15,7 +15,7 @@ lazy val filterCompiler = (project in file("modules/filterCompiler"))
   .dependsOn(models % "test->test;compile->compile", util)
 
 lazy val scriptCompiler = (project in file("modules/scriptCompiler"))
-  .dependsOn(nodes)
+  .dependsOn(nodes, models % "test->test;compile->compile")
 
 lazy val nodes = (project in file("modules/nodes"))
   .dependsOn(models, util)
