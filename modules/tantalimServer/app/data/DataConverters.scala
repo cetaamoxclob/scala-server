@@ -1,6 +1,7 @@
 package data
 
 import com.tantalim.models.{ModelField, Model}
+import com.tantalim.nodes._
 import play.api.libs.json._
 
 /**

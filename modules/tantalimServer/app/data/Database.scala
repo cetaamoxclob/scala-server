@@ -2,6 +2,7 @@ package data
 
 import java.sql.{PreparedStatement, Statement, Connection, ResultSet}
 
+import com.tantalim.nodes._
 import play.api.Play.current
 import play.api.db.DB
 

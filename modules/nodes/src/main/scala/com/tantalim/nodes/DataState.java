@@ -1,4 +1,4 @@
-package data;
+package com.tantalim.nodes;
 
 public enum DataState {
     Done, Inserted, Updated, Deleted, ChildUpdated;

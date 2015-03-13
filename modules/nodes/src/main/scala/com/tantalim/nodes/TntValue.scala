@@ -1,4 +1,4 @@
-package data
+package com.tantalim.nodes
 
 import java.util.UUID
 import org.joda.time.DateTime

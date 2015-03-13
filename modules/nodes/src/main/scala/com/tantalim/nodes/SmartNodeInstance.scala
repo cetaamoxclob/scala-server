@@ -1,4 +1,4 @@
-package data
+package com.tantalim.nodes
 
 import com.tantalim.models.Model
 import com.tantalim.util.TantalimException

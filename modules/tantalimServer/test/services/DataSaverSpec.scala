@@ -3,6 +3,7 @@ package services
 import java.sql._
 
 import com.tantalim.models._
+import com.tantalim.nodes.{TntInt, TntString, DataState, SmartNodeSet}
 import data._
 import mock.{FakeConnection, FakeArtifacts, FakeResultSet}
 import org.junit.runner.RunWith

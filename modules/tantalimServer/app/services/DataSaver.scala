@@ -2,6 +2,7 @@ package services
 
 import java.sql.{SQLException, Connection}
 
+import com.tantalim.nodes._
 import data._
 import com.tantalim.models.{DataType, FieldDefaultType, ModelField, Model}
 

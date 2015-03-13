@@ -1,8 +1,9 @@
 package controllers
 
+import com.tantalim.nodes.{DataState, SmartNodeSet}
 import com.tantalim.util.{TantalimException, Timer, LoginStrategyType}
 import compiler.{MenuCompiler, TableCompiler, ModelCompiler, PageCompiler}
-import data.{DataState, DataConverters, SmartNodeSet}
+import data.DataConverters
 import com.tantalim.models.{ArtifactType, ModelOrderBy, User}
 import play.api.libs.json._
 import play.api.mvc._

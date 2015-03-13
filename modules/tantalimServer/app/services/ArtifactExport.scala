@@ -1,6 +1,7 @@
 package services
 
 import com.tantalim.models.ArtifactType
+import com.tantalim.nodes._
 import compiler.ModelCompiler
 import data._
 import play.api.libs.json._

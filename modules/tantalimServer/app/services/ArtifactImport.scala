@@ -1,5 +1,6 @@
 package services
 
+import com.tantalim.nodes.{TntString, SmartNodeSet, SmartNodeInstance}
 import compiler.ModelCompiler
 import data._
 import com.tantalim.models.{ArtifactType, Model, ModelField}

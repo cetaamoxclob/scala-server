@@ -1,6 +1,5 @@
 package com.tantalim.script.compiler
 
-import com.tantalim.models.{DataType, ModelField}
 import org.junit.runner.RunWith
 import org.specs2.mutable._
 import org.specs2.runner._

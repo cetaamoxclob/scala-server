@@ -3,6 +3,7 @@ package services
 import java.sql.ResultSet
 
 import com.tantalim.filter.compiler.CompiledFilter
+import com.tantalim.nodes._
 import data._
 import com.tantalim.models._
 

@@ -1,4 +1,4 @@
-name := "filterCompiler"
+name := "scriptCompiler"
 
 version := "1.0"
 
