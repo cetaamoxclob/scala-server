@@ -1,6 +1,4 @@
-package com.tantalim.filter.compiler
-
-import com.tantalim.models.{DataType, ModelField, ModelStep, TableColumn}
+package com.tantalim.models
 
 trait FakeArtifacts {
   def fakeModelFieldMap(fieldName: String, dbName: String, dataType: DataType = DataType.String, step: Option[ModelStep] = None,

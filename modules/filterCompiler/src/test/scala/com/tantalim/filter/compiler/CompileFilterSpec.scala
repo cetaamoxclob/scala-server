@@ -1,6 +1,6 @@
 package com.tantalim.filter.compiler
 
-import com.tantalim.models.{DataType, ModelField}
+import com.tantalim.models.{FakeArtifacts, DataType, ModelField}
 import org.joda.time.DateTime
 import org.junit.runner.RunWith
 import org.specs2.mutable._

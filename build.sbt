@@ -9,20 +9,20 @@ lazy val app = (project in file("."))
 
 lazy val server = (project in file("modules/tantalimServer"))
   .enablePlugins(PlayScala)
-  .dependsOn(models, util, filterCompiler, scriptCompiler, nodes)
+  .dependsOn(filterCompiler, scriptCompiler, models % "test->test;compile->compile")
+
+lazy val filterCompiler = (project in file("modules/filterCompiler"))
+  .dependsOn(models % "test->test;compile->compile", util)
+
+lazy val scriptCompiler = (project in file("modules/scriptCompiler"))
+  .dependsOn(nodes)
+
+lazy val nodes = (project in file("modules/nodes"))
+  .dependsOn(models, util)
 
 lazy val models = project in file("modules/tantalimModels")
 
 lazy val util = project in file("modules/util")
-
-lazy val filterCompiler = (project in file("modules/filterCompiler"))
-  .dependsOn(models, util)
-
-lazy val scriptCompiler = (project in file("modules/scriptCompiler"))
-  .dependsOn(nodes, models, util)
-
-lazy val nodes = (project in file("modules/nodes"))
-  .dependsOn(models, util)
 
 scalaVersion := "2.11.1"
 

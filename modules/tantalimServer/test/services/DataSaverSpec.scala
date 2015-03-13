@@ -5,7 +5,7 @@ import java.sql._
 import com.tantalim.models._
 import com.tantalim.nodes.{TntInt, TntString, DataState, SmartNodeSet}
 import data._
-import mock.{FakeConnection, FakeArtifacts, FakeResultSet}
+import mock.{FakeConnection, FakeResultSet}
 import org.junit.runner.RunWith
 import org.specs2.mock._
 import org.specs2.mutable._
@@ -51,7 +51,7 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
 
     "do nothing" in {
       val saver = new DataSaver with Database {
-        override def getConnection(): Connection = new FakeConnection
+        override def getConnection: Connection = new FakeConnection
       }
       val saving = new SmartNodeSet(model)
       saver.saveAll(saving) must be equalTo saving
@@ -59,7 +59,7 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
 
     "insert one parent row" in {
       val saver = new DataSaver with Database {
-        override def getConnection(): Connection = new FakeConnection
+        override def getConnection: Connection = new FakeConnection
         override def insert(sql: String, numberedParameters: List[Any], connection: Connection): ResultSet = {
           sql must be equalTo "INSERT INTO `person` (`name`) VALUES (?)"
           numberedParameters must be equalTo List(TntString("Foo"))
@@ -81,7 +81,7 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
 
     "update one parent row" in {
       val saver = new DataSaver with Database {
-        override def getConnection(): Connection = new FakeConnection
+        override def getConnection: Connection = new FakeConnection
         override def update(sql: String, numberedParameters: List[Any], connection: Connection): Int = {
           sql must be equalTo "UPDATE `person` SET `name` = ? WHERE `person_id` = ?"
           numberedParameters must be equalTo List(TntString("Foo"), TntInt(12))
@@ -100,7 +100,7 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
 
     "delete one parent row" in {
       val saver = new DataSaver with Database {
-        override def getConnection(): Connection = new FakeConnection
+        override def getConnection: Connection = new FakeConnection
 
         override def update(sql: String, numberedParameters: List[Any], connection: Connection): Int = {
           sql must be equalTo "DELETE FROM `person` WHERE `person_id` = ?"
@@ -134,7 +134,7 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
 
     "update one child row" in {
       val saver = new DataSaver with Database {
-        override def getConnection(): Connection = new FakeConnection
+        override def getConnection: Connection = new FakeConnection
         override def update(sql: String, numberedParameters: List[Any], connection: Connection): Int = {
           sql must be equalTo "UPDATE `phone` SET `phone_number` = ? WHERE `phone_id` = ?"
           numberedParameters must be equalTo List("(123) 456-7890", 34)
