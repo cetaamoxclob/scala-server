@@ -47,7 +47,7 @@ trait DataReader extends Database {
               case None => -1
             }
           }
-          val filterForChildModel = childModel.parentLink.get.childField + " In " + parentIDs.mkString(",")
+          val filterForChildModel = childModel.parentLink.get.childField + " In (" + parentIDs.mkString(",") + ")"
           val childRows = queryModelData(childModel, 1, Some(filterForChildModel), childModel.orderBy)
           addChildRowsToParent(resultSet, childRows)
       }
@@ -56,7 +56,7 @@ trait DataReader extends Database {
   }
 
   private def parseFilterForSql(sqlBuilder: SqlBuilder, modelFields: Map[String, ModelField], filter: Option[String]): SqlBuilder = {
-    if (filter.isDefined) {
+    if (filter.isDefined && filter.get.trim.nonEmpty) {
       val compiler = new com.tantalim.filter.compiler.CompileFilter(filter.get, modelFields)
       compiler.parse() match {
         case CompiledFilter(where: String, params: List[Any]) => if (params.nonEmpty) {
