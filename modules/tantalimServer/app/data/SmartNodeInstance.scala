@@ -35,6 +35,8 @@ case class SmartNodeInstance(
                                * map of SmartNodeInstances representing the children of this node
                                */
                               children: mutable.HashMap[String, SmartNodeSet] = mutable.HashMap.empty) {
+  def isRoot = nodeSet.parentInstance.isEmpty
+
   def delete() = {
     state = DataState.Deleted
   }

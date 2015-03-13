@@ -1,5 +1,6 @@
 {
   "basisTable": "Table",
+  "preSave": "artifacts.TablePreSave",
   "fields": [
     {
       "name": "TableID",
@@ -112,8 +113,41 @@
           "name": "required",
           "basisColumn": "Required"
         }
+      ],
+      "children": [
+        {
+          "name": "columns",
+          "basisTable": "JoinColumn",
+          "parentLink": {
+            "parentField": "joinID",
+            "childField": "JoinColumnJoinID"
+          },
+          "fields": [
+            {
+              "name": "JoinColumnJoinColumnID",
+              "basisColumn": "JoinColumnID",
+              "export": false
+            },
+            {
+              "name": "JoinColumnJoinID",
+              "basisColumn": "JoinID",
+              "export": false
+            },
+            {
+              "name": "from",
+              "basisColumn": "FromColumn"
+            },
+            {
+              "name": "to",
+              "basisColumn": "ToColumn"
+            },
+            {
+              "name": "fromText",
+              "basisColumn": "FromText"
+            }
+          ]
+        }
       ]
     }
-  ],
-  "preSave": "artifacts.TablePreSave"
+  ]
 }
