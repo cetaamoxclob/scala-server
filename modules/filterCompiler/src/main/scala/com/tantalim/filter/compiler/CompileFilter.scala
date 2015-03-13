@@ -87,7 +87,8 @@ class CompileFilter(filter: String, fields: Map[String, ModelField]) extends Fil
         "If this was text then please wrap it in quotes. Otherwise double check the name of the field in: " + fields.keys.mkString(", ")
       )
     )
-    Value(Some(s"`t0`.`${field.basisColumn.dbName}`"), List(field))
+    val tableAlias = if(field.step.isDefined) field.step.get.tableAlias else 0
+    Value(Some(s"`t$tableAlias`.`${field.basisColumn.dbName}`"), List(field))
   }
 
   override def visitComparators(ctx: FilterParser.ComparatorsContext) = {
