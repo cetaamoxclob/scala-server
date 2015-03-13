@@ -4,3 +4,4 @@ target
 /.idea
 *.iml
 conf/application.prod.conf
+public/update_tantalim_client.sh
