@@ -23,6 +23,22 @@
     {
       "name": "TableDatabase",
       "basisColumn": "Database"
+    },
+    {
+      "name": "TablePrimaryKey",
+      "basisColumn": "PrimaryKey"
+    },
+    {
+      "name": "TableAllowInsert",
+      "basisColumn": "AllowInsert"
+    },
+    {
+      "name": "TableAllowUpdate",
+      "basisColumn": "AllowUpdate"
+    },
+    {
+      "name": "TableAllowDelete",
+      "basisColumn": "AllowDelete"
     }
   ],
   "children": [

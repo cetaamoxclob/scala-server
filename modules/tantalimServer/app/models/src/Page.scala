@@ -30,10 +30,10 @@ case class PageFieldJson(name: String,
                           )
 
 case class PageFieldSelectJson(model: String,
-                               targetID: String,
-                               sourceValue: String,
-                               where: Option[String],
-                               otherMappings: Option[String]
+                               sourceField: String,
+                               targetID: Option[String],
+                               fields: Option[Map[String, String]],
+                               filter: Option[String]
                                 )
 
 case class PageFieldLinkJson(page: String, filter: String)
@@ -73,10 +73,10 @@ object PageJson {
 
   implicit def selectReads: Reads[PageFieldSelectJson] = (
     (JsPath \ "model").read[String] and
-      (JsPath \ "targetID").read[String] and
-      (JsPath \ "sourceValue").read[String] and
-      (JsPath \ "where").readNullable[String] and
-      (JsPath \ "otherMappings").readNullable[String]
+      (JsPath \ "sourceField").read[String] and
+      (JsPath \ "targetID").readNullable[String] and
+      (JsPath \ "fields").readNullable[Map[String, String]] and
+      (JsPath \ "filter").readNullable[String]
     ).apply(PageFieldSelectJson.apply _)
 
   implicit def linkReads: Reads[PageFieldLinkJson] = (

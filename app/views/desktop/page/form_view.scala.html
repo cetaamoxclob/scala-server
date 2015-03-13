@@ -37,16 +37,18 @@
             }
             @if(field.fieldType == "select") {
                 <label class="control-label" for="@(page.model.name)-@field.name">@field.label</label>
-                <ui-select
-                current="data"
-                item-model="@field.select.get.model"
-                item-value="@field.select.get.sourceValue"
-                item-where="@field.select.get.where"
-                instance-model="@page.model.name"
-                instance-key="@field.select.get.targetID"
-                instance-value="@(field.name)"
-                other-mappings="@Html(field.select.get.otherMappings.toString)"
-                ></ui-select>
+                @defining(field.select.get) { select =>
+                    <ui-select
+                    current="data"
+                    source-model="@select.model"
+                    source-field="@select.sourceField"
+                    source-filter="@select.filter"
+                    target-model="@page.model.name"
+                    target-id="@select.targetID.getOrElse("")"
+                    target-field="@(field.name)"
+                    other-mappings="@Html(select.fields.toString())"
+                    ></ui-select>
+                }
             }
             @if(field.fieldType == "checkbox") {
                 <div class="checkbox">

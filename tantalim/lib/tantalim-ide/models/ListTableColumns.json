@@ -3,6 +3,9 @@
   "limit": 10,
   "orderBy": [
     {
+      "fieldName": "ColumnDisplayOrder"
+    },
+    {
       "fieldName": "ColumnTableName"
     },
     {
@@ -13,6 +16,10 @@
     {
       "name": "ColumnColumnID",
       "basisColumn": "ColumnID"
+    },
+    {
+      "name": "ColumnDisplayOrder",
+      "basisColumn": "DisplayOrder"
     },
     {
       "name": "ColumnName",
@@ -28,7 +35,7 @@
     },
     {
       "name": "ColumnTableName",
-      "fieldStepID": "t",
+      "step": "t",
       "basisColumn": "Name"
     }
   ],

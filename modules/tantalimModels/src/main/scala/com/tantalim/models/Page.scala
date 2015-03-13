@@ -84,10 +84,10 @@ case class PageField(
 }
 
 case class PageFieldSelect(model: String,
-                           sourceValue: String,
-                           targetID: String,
-                           where: Option[String],
-                           otherMappings: Option[String]
+                           sourceField: String,
+                           targetID: Option[String],
+                           fields: Map[String, String],
+                           filter: Option[String]
                             )
 
 case class PageFieldLink(page: ShallowPage, filter: String)

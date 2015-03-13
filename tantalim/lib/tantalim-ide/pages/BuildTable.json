@@ -12,6 +12,24 @@
     {
       "name": "TableDatabase",
       "showInFormView": false
+    },
+    {
+      "name": "TablePrimaryKey",
+      "fieldType": "select",
+      "select": {
+        "model": "ListTableColumns",
+        "sourceField": "ColumnName",
+        "filter": "ColumnTableID = ${TableTableID}"
+      }
+    },
+    {
+      "name": "TableAllowInsert"
+    },
+    {
+      "name": "TableAllowUpdate"
+    },
+    {
+      "name": "TableAllowDelete"
     }
   ],
   "children": [
@@ -24,7 +42,8 @@
           "name": "TableColumnDisplayOrder"
         },
         {
-          "name": "TableColumnName"
+          "name": "TableColumnName",
+          "showInNavigation": true
         },
         {
           "name": "TableColumnRequired",
@@ -55,8 +74,7 @@
           "fieldType": "select",
           "select": {
             "model": "ListTables",
-            "targetID": "TableJoinToTableID",
-            "sourceValue": "TableName"
+            "sourceField": "TableName"
           }
         },
         {
@@ -74,9 +92,8 @@
               "fieldType": "select",
               "select": {
                 "model": "ListTableColumns",
-                "targetID": "TableJoinJoinColumnFromColumn",
-                "sourceValue": "ColumnName",
-                "where": "ColumnTableID = TableTableID"
+                "sourceField": "ColumnName",
+                "filter": "ColumnTableID = ${TableTableID}"
               }
             },
             {
@@ -85,9 +102,8 @@
               "fieldType": "select",
               "select": {
                 "model": "ListTableColumns",
-                "targetID": "TableJoinJoinColumnToColumn",
-                "sourceValue": "ColumnName",
-                "where": "ColumnTableID = TableJoinToTableID"
+                "sourceField": "ColumnName",
+                "filter": "ColumnTableName = '${TableJoinToTableName}'"
               }
             },
             {

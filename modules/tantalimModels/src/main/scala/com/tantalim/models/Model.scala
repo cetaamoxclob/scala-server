@@ -22,7 +22,9 @@ case class ModelField(name: String,
                       required: Boolean = false,
                       fieldDefault: Option[FieldDefault] = None,
                       export: Boolean = true
-                       )
+                       ) {
+  def dataType: DataType = basisColumn.dataType
+}
 
 case class FieldDefault(value: String,
                         overwrite: Boolean,
