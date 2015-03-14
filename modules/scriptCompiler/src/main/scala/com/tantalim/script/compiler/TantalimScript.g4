@@ -1,5 +1,7 @@
 grammar TantalimScript;
 
+// Inspired by https://github.com/bkiers/Mu/blob/master/src/main/antlr4/mu/Mu.g4
+
 start
  : block EOF
  ;
@@ -10,11 +12,18 @@ block
 
 stat
  : print
+ | forBlock
  ;
 
 print
  : PRINT OPAR STRING CPAR
  ;
+
+forBlock
+ : FOR item=ID IN list=ID OBRACE block CBRACE
+ ;
+
+
 
 OR : 'or';
 AND : 'and';
@@ -43,6 +52,8 @@ FALSE : 'false';
 IF : 'if';
 ELSE : 'else';
 PRINT : 'print';
+FOR : 'for';
+IN : 'in';
 
 ID
  : [a-zA-Z_] [a-zA-Z_0-9]*

@@ -60,6 +60,18 @@ public class TantalimScriptBaseListener implements TantalimScriptListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitPrint(@NotNull TantalimScriptParser.PrintContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterForBlock(@NotNull TantalimScriptParser.ForBlockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitForBlock(@NotNull TantalimScriptParser.ForBlockContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

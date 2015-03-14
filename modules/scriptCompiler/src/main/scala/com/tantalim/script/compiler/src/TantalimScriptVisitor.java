@@ -35,4 +35,10 @@ public interface TantalimScriptVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitPrint(@NotNull TantalimScriptParser.PrintContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link TantalimScriptParser#forBlock}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitForBlock(@NotNull TantalimScriptParser.ForBlockContext ctx);
 }
