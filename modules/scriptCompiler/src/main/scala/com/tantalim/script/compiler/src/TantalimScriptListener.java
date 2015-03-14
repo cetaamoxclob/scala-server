@@ -39,13 +39,13 @@ public interface TantalimScriptListener extends ParseTreeListener {
 	 */
 	void exitStat(@NotNull TantalimScriptParser.StatContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link TantalimScriptParser#log}.
+	 * Enter a parse tree produced by {@link TantalimScriptParser#print}.
 	 * @param ctx the parse tree
 	 */
-	void enterLog(@NotNull TantalimScriptParser.LogContext ctx);
+	void enterPrint(@NotNull TantalimScriptParser.PrintContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link TantalimScriptParser#log}.
+	 * Exit a parse tree produced by {@link TantalimScriptParser#print}.
 	 * @param ctx the parse tree
 	 */
-	void exitLog(@NotNull TantalimScriptParser.LogContext ctx);
+	void exitPrint(@NotNull TantalimScriptParser.PrintContext ctx);
 }

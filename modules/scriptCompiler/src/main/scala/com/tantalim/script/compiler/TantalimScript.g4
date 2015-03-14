@@ -9,15 +9,15 @@ block
  ;
 
 stat
- : log
+ : print
  ;
 
-log
- : LOG SCOL
+print
+ : PRINT OPAR STRING CPAR
  ;
 
-OR : '||';
-AND : '&&';
+OR : 'or';
+AND : 'and';
 EQ : '==';
 NEQ : '!=';
 GT : '>';
@@ -32,7 +32,6 @@ MOD : '%';
 POW : '^';
 NOT : '!';
 
-SCOL : ';';
 ASSIGN : '=';
 OPAR : '(';
 CPAR : ')';
@@ -41,11 +40,9 @@ CBRACE : '}';
 
 TRUE : 'true';
 FALSE : 'false';
-NIL : 'nil';
 IF : 'if';
 ELSE : 'else';
-WHILE : 'while';
-LOG : 'log';
+PRINT : 'print';
 
 ID
  : [a-zA-Z_] [a-zA-Z_0-9]*

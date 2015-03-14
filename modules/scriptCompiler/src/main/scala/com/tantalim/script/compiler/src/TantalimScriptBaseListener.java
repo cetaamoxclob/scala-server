@@ -53,13 +53,13 @@ public class TantalimScriptBaseListener implements TantalimScriptListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLog(@NotNull TantalimScriptParser.LogContext ctx) { }
+	@Override public void enterPrint(@NotNull TantalimScriptParser.PrintContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLog(@NotNull TantalimScriptParser.LogContext ctx) { }
+	@Override public void exitPrint(@NotNull TantalimScriptParser.PrintContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

@@ -30,9 +30,9 @@ public interface TantalimScriptVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStat(@NotNull TantalimScriptParser.StatContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link TantalimScriptParser#log}.
+	 * Visit a parse tree produced by {@link TantalimScriptParser#print}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLog(@NotNull TantalimScriptParser.LogContext ctx);
+	T visitPrint(@NotNull TantalimScriptParser.PrintContext ctx);
 }
