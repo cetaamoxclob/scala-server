@@ -49,15 +49,29 @@ public interface TantalimScriptListener extends ParseTreeListener {
 	 */
 	void exitPrint(@NotNull TantalimScriptParser.PrintContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link TantalimScriptParser#assignment}.
+	 * Enter a parse tree produced by the {@code idAssignment}
+	 * labeled alternative in {@link TantalimScriptParser#assignment}.
 	 * @param ctx the parse tree
 	 */
-	void enterAssignment(@NotNull TantalimScriptParser.AssignmentContext ctx);
+	void enterIdAssignment(@NotNull TantalimScriptParser.IdAssignmentContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link TantalimScriptParser#assignment}.
+	 * Exit a parse tree produced by the {@code idAssignment}
+	 * labeled alternative in {@link TantalimScriptParser#assignment}.
 	 * @param ctx the parse tree
 	 */
-	void exitAssignment(@NotNull TantalimScriptParser.AssignmentContext ctx);
+	void exitIdAssignment(@NotNull TantalimScriptParser.IdAssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code fieldAssignment}
+	 * labeled alternative in {@link TantalimScriptParser#assignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterFieldAssignment(@NotNull TantalimScriptParser.FieldAssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code fieldAssignment}
+	 * labeled alternative in {@link TantalimScriptParser#assignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitFieldAssignment(@NotNull TantalimScriptParser.FieldAssignmentContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TantalimScriptParser#returnStat}.
 	 * @param ctx the parse tree

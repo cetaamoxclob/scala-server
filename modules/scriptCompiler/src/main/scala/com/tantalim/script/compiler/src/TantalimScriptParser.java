@@ -19,9 +19,9 @@ public class TantalimScriptParser extends Parser {
 	public static final int
 		OR=1, AND=2, EQ=3, NEQ=4, GT=5, LT=6, GTEQ=7, LTEQ=8, PLUS=9, MINUS=10, 
 		MULT=11, DIV=12, MOD=13, POW=14, NOT=15, ASSIGN=16, OPAR=17, CPAR=18, 
-		OBRACE=19, CBRACE=20, TRUE=21, FALSE=22, IF=23, ELSE=24, PRINT=25, RETURN=26, 
-		FOR=27, IN=28, ID=29, INT=30, FLOAT=31, STRING=32, COMMENT=33, SPACE=34, 
-		OTHER=35;
+		OBRACE=19, CBRACE=20, PERIOD=21, TRUE=22, FALSE=23, IF=24, ELSE=25, PRINT=26, 
+		RETURN=27, FOR=28, IN=29, ID=30, INT=31, DOUBLE=32, STRING=33, COMMENT=34, 
+		SPACE=35, OTHER=36;
 	public static final int
 		RULE_start = 0, RULE_block = 1, RULE_stat = 2, RULE_print = 3, RULE_assignment = 4, 
 		RULE_returnStat = 5, RULE_ifStat = 6, RULE_conditionBlock = 7, RULE_statBlock = 8, 
@@ -34,14 +34,14 @@ public class TantalimScriptParser extends Parser {
 	private static final String[] _LITERAL_NAMES = {
 		null, "'or'", "'and'", "'=='", "'!='", "'>'", "'<'", "'>='", "'<='", "'+'", 
 		"'-'", "'*'", "'/'", "'%'", "'^'", "'!'", "'='", "'('", "')'", "'{'", 
-		"'}'", "'true'", "'false'", "'if'", "'else'", "'print'", "'return'", "'for'", 
-		"'in'"
+		"'}'", "'.'", "'true'", "'false'", "'if'", "'else'", "'print'", "'return'", 
+		"'for'", "'in'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, "OR", "AND", "EQ", "NEQ", "GT", "LT", "GTEQ", "LTEQ", "PLUS", "MINUS", 
 		"MULT", "DIV", "MOD", "POW", "NOT", "ASSIGN", "OPAR", "CPAR", "OBRACE", 
-		"CBRACE", "TRUE", "FALSE", "IF", "ELSE", "PRINT", "RETURN", "FOR", "IN", 
-		"ID", "INT", "FLOAT", "STRING", "COMMENT", "SPACE", "OTHER"
+		"CBRACE", "PERIOD", "TRUE", "FALSE", "IF", "ELSE", "PRINT", "RETURN", 
+		"FOR", "IN", "ID", "INT", "DOUBLE", "STRING", "COMMENT", "SPACE", "OTHER"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -328,26 +328,59 @@ public class TantalimScriptParser extends Parser {
 	}
 
 	public static class AssignmentContext extends ParserRuleContext {
+		public AssignmentContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_assignment; }
+	 
+		public AssignmentContext() { }
+		public void copyFrom(AssignmentContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class IdAssignmentContext extends AssignmentContext {
 		public TerminalNode ID() { return getToken(TantalimScriptParser.ID, 0); }
 		public TerminalNode ASSIGN() { return getToken(TantalimScriptParser.ASSIGN, 0); }
 		public AtomContext atom() {
 			return getRuleContext(AtomContext.class,0);
 		}
-		public AssignmentContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_assignment; }
+		public IdAssignmentContext(AssignmentContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof TantalimScriptListener ) ((TantalimScriptListener)listener).enterAssignment(this);
+			if ( listener instanceof TantalimScriptListener ) ((TantalimScriptListener)listener).enterIdAssignment(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof TantalimScriptListener ) ((TantalimScriptListener)listener).exitAssignment(this);
+			if ( listener instanceof TantalimScriptListener ) ((TantalimScriptListener)listener).exitIdAssignment(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof TantalimScriptVisitor ) return ((TantalimScriptVisitor<? extends T>)visitor).visitAssignment(this);
+			if ( visitor instanceof TantalimScriptVisitor ) return ((TantalimScriptVisitor<? extends T>)visitor).visitIdAssignment(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class FieldAssignmentContext extends AssignmentContext {
+		public List<TerminalNode> ID() { return getTokens(TantalimScriptParser.ID); }
+		public TerminalNode ID(int i) {
+			return getToken(TantalimScriptParser.ID, i);
+		}
+		public TerminalNode PERIOD() { return getToken(TantalimScriptParser.PERIOD, 0); }
+		public TerminalNode ASSIGN() { return getToken(TantalimScriptParser.ASSIGN, 0); }
+		public AtomContext atom() {
+			return getRuleContext(AtomContext.class,0);
+		}
+		public FieldAssignmentContext(AssignmentContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof TantalimScriptListener ) ((TantalimScriptListener)listener).enterFieldAssignment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof TantalimScriptListener ) ((TantalimScriptListener)listener).exitFieldAssignment(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TantalimScriptVisitor ) return ((TantalimScriptVisitor<? extends T>)visitor).visitFieldAssignment(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -356,14 +389,36 @@ public class TantalimScriptParser extends Parser {
 		AssignmentContext _localctx = new AssignmentContext(_ctx, getState());
 		enterRule(_localctx, 8, RULE_assignment);
 		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(42); 
-			match(ID);
-			setState(43); 
-			match(ASSIGN);
-			setState(44); 
-			atom();
+			setState(50);
+			switch ( getInterpreter().adaptivePredict(_input,2,_ctx) ) {
+			case 1:
+				_localctx = new IdAssignmentContext(_localctx);
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(42); 
+				match(ID);
+				setState(43); 
+				match(ASSIGN);
+				setState(44); 
+				atom();
+				}
+				break;
+			case 2:
+				_localctx = new FieldAssignmentContext(_localctx);
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(45); 
+				match(ID);
+				setState(46); 
+				match(PERIOD);
+				setState(47); 
+				match(ID);
+				setState(48); 
+				match(ASSIGN);
+				setState(49); 
+				atom();
+				}
+				break;
 			}
 		}
 		catch (RecognitionException re) {
@@ -407,9 +462,9 @@ public class TantalimScriptParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(46); 
+			setState(52); 
 			match(RETURN);
-			setState(47); 
+			setState(53); 
 			atom();
 			}
 		}
@@ -469,37 +524,37 @@ public class TantalimScriptParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(49); 
+			setState(55); 
 			match(IF);
-			setState(50); 
+			setState(56); 
 			conditionBlock();
-			setState(56);
+			setState(62);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(51); 
+					setState(57); 
 					match(ELSE);
-					setState(52); 
+					setState(58); 
 					match(IF);
-					setState(53); 
+					setState(59); 
 					conditionBlock();
 					}
 					} 
 				}
-				setState(58);
+				setState(64);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
 			}
-			setState(61);
+			setState(67);
 			_la = _input.LA(1);
 			if (_la==ELSE) {
 				{
-				setState(59); 
+				setState(65); 
 				match(ELSE);
-				setState(60); 
+				setState(66); 
 				statBlock();
 				}
 			}
@@ -549,9 +604,9 @@ public class TantalimScriptParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(63); 
+			setState(69); 
 			expr(0);
-			setState(64); 
+			setState(70); 
 			statBlock();
 			}
 		}
@@ -598,16 +653,16 @@ public class TantalimScriptParser extends Parser {
 		StatBlockContext _localctx = new StatBlockContext(_ctx, getState());
 		enterRule(_localctx, 16, RULE_statBlock);
 		try {
-			setState(71);
+			setState(77);
 			switch (_input.LA(1)) {
 			case OBRACE:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(66); 
+				setState(72); 
 				match(OBRACE);
-				setState(67); 
+				setState(73); 
 				block();
-				setState(68); 
+				setState(74); 
 				match(CBRACE);
 				}
 				break;
@@ -617,7 +672,7 @@ public class TantalimScriptParser extends Parser {
 			case ID:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(70); 
+				setState(76); 
 				stat();
 				}
 				break;
@@ -675,19 +730,19 @@ public class TantalimScriptParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(73); 
-			match(FOR);
-			setState(74); 
-			((ForBlockContext)_localctx).item = match(ID);
-			setState(75); 
-			match(IN);
-			setState(76); 
-			((ForBlockContext)_localctx).list = match(ID);
-			setState(77); 
-			match(OBRACE);
-			setState(78); 
-			block();
 			setState(79); 
+			match(FOR);
+			setState(80); 
+			((ForBlockContext)_localctx).item = match(ID);
+			setState(81); 
+			match(IN);
+			setState(82); 
+			((ForBlockContext)_localctx).list = match(ID);
+			setState(83); 
+			match(OBRACE);
+			setState(84); 
+			block();
+			setState(85); 
 			match(CBRACE);
 			}
 		}
@@ -938,7 +993,7 @@ public class TantalimScriptParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(87);
+			setState(93);
 			switch (_input.LA(1)) {
 			case MINUS:
 				{
@@ -946,9 +1001,9 @@ public class TantalimScriptParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
-				setState(82); 
+				setState(88); 
 				match(MINUS);
-				setState(83); 
+				setState(89); 
 				expr(9);
 				}
 				break;
@@ -957,9 +1012,9 @@ public class TantalimScriptParser extends Parser {
 				_localctx = new NotExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(84); 
+				setState(90); 
 				match(NOT);
-				setState(85); 
+				setState(91); 
 				expr(8);
 				}
 				break;
@@ -968,13 +1023,13 @@ public class TantalimScriptParser extends Parser {
 			case FALSE:
 			case ID:
 			case INT:
-			case FLOAT:
+			case DOUBLE:
 			case STRING:
 				{
 				_localctx = new AtomExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(86); 
+				setState(92); 
 				atom();
 				}
 				break;
@@ -982,30 +1037,30 @@ public class TantalimScriptParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(109);
+			setState(115);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,8,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(107);
-					switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
+					setState(113);
+					switch ( getInterpreter().adaptivePredict(_input,7,_ctx) ) {
 					case 1:
 						{
 						_localctx = new MultiplicationExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(89);
+						setState(95);
 						if (!(precpred(_ctx, 7))) throw new FailedPredicateException(this, "precpred(_ctx, 7)");
-						setState(90);
+						setState(96);
 						((MultiplicationExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << MULT) | (1L << DIV) | (1L << MOD))) != 0)) ) {
 							((MultiplicationExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						consume();
-						setState(91); 
+						setState(97); 
 						expr(8);
 						}
 						break;
@@ -1013,16 +1068,16 @@ public class TantalimScriptParser extends Parser {
 						{
 						_localctx = new AdditiveExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(92);
+						setState(98);
 						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
-						setState(93);
+						setState(99);
 						((AdditiveExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==PLUS || _la==MINUS) ) {
 							((AdditiveExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						consume();
-						setState(94); 
+						setState(100); 
 						expr(7);
 						}
 						break;
@@ -1030,16 +1085,16 @@ public class TantalimScriptParser extends Parser {
 						{
 						_localctx = new RelationalExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(95);
+						setState(101);
 						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
-						setState(96);
+						setState(102);
 						((RelationalExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << GT) | (1L << LT) | (1L << GTEQ) | (1L << LTEQ))) != 0)) ) {
 							((RelationalExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						consume();
-						setState(97); 
+						setState(103); 
 						expr(6);
 						}
 						break;
@@ -1047,16 +1102,16 @@ public class TantalimScriptParser extends Parser {
 						{
 						_localctx = new EqualityExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(98);
+						setState(104);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-						setState(99);
+						setState(105);
 						((EqualityExprContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==EQ || _la==NEQ) ) {
 							((EqualityExprContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						consume();
-						setState(100); 
+						setState(106); 
 						expr(5);
 						}
 						break;
@@ -1064,11 +1119,11 @@ public class TantalimScriptParser extends Parser {
 						{
 						_localctx = new AndExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(101);
+						setState(107);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(102); 
+						setState(108); 
 						match(AND);
-						setState(103); 
+						setState(109); 
 						expr(4);
 						}
 						break;
@@ -1076,20 +1131,20 @@ public class TantalimScriptParser extends Parser {
 						{
 						_localctx = new OrExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(104);
+						setState(110);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(105); 
+						setState(111); 
 						match(OR);
-						setState(106); 
+						setState(112); 
 						expr(3);
 						}
 						break;
 					}
 					} 
 				}
-				setState(111);
+				setState(117);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,8,_ctx);
 			}
 			}
 		}
@@ -1172,7 +1227,7 @@ public class TantalimScriptParser extends Parser {
 	}
 	public static class NumberAtomContext extends AtomContext {
 		public TerminalNode INT() { return getToken(TantalimScriptParser.INT, 0); }
-		public TerminalNode FLOAT() { return getToken(TantalimScriptParser.FLOAT, 0); }
+		public TerminalNode DOUBLE() { return getToken(TantalimScriptParser.DOUBLE, 0); }
 		public NumberAtomContext(AtomContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
@@ -1212,28 +1267,28 @@ public class TantalimScriptParser extends Parser {
 		enterRule(_localctx, 22, RULE_atom);
 		int _la;
 		try {
-			setState(120);
+			setState(126);
 			switch (_input.LA(1)) {
 			case OPAR:
 				_localctx = new ParExprContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(112); 
+				setState(118); 
 				match(OPAR);
-				setState(113); 
+				setState(119); 
 				atom();
-				setState(114); 
+				setState(120); 
 				match(CPAR);
 				}
 				break;
 			case INT:
-			case FLOAT:
+			case DOUBLE:
 				_localctx = new NumberAtomContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(116);
+				setState(122);
 				_la = _input.LA(1);
-				if ( !(_la==INT || _la==FLOAT) ) {
+				if ( !(_la==INT || _la==DOUBLE) ) {
 				_errHandler.recoverInline(this);
 				}
 				consume();
@@ -1244,7 +1299,7 @@ public class TantalimScriptParser extends Parser {
 				_localctx = new BooleanAtomContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(117);
+				setState(123);
 				_la = _input.LA(1);
 				if ( !(_la==TRUE || _la==FALSE) ) {
 				_errHandler.recoverInline(this);
@@ -1256,7 +1311,7 @@ public class TantalimScriptParser extends Parser {
 				_localctx = new IdAtomContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(118); 
+				setState(124); 
 				match(ID);
 				}
 				break;
@@ -1264,7 +1319,7 @@ public class TantalimScriptParser extends Parser {
 				_localctx = new StringAtomContext(_localctx);
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(119); 
+				setState(125); 
 				match(STRING);
 				}
 				break;
@@ -1309,37 +1364,39 @@ public class TantalimScriptParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3%}\4\2\t\2\4\3\t\3"+
-		"\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f"+
-		"\t\f\4\r\t\r\3\2\3\2\3\2\3\3\7\3\37\n\3\f\3\16\3\"\13\3\3\4\3\4\3\4\3"+
-		"\4\5\4(\n\4\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3"+
-		"\b\7\b9\n\b\f\b\16\b<\13\b\3\b\3\b\5\b@\n\b\3\t\3\t\3\t\3\n\3\n\3\n\3"+
-		"\n\3\n\5\nJ\n\n\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\f\3\f\3\f\3"+
-		"\f\3\f\3\f\5\fZ\n\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3"+
-		"\f\3\f\3\f\3\f\3\f\3\f\7\fn\n\f\f\f\16\fq\13\f\3\r\3\r\3\r\3\r\3\r\3\r"+
-		"\3\r\3\r\5\r{\n\r\3\r\2\3\26\16\2\4\6\b\n\f\16\20\22\24\26\30\2\b\3\2"+
-		"\r\17\3\2\13\f\3\2\7\n\3\2\5\6\3\2 !\3\2\27\30\u0083\2\32\3\2\2\2\4 \3"+
-		"\2\2\2\6\'\3\2\2\2\b)\3\2\2\2\n,\3\2\2\2\f\60\3\2\2\2\16\63\3\2\2\2\20"+
-		"A\3\2\2\2\22I\3\2\2\2\24K\3\2\2\2\26Y\3\2\2\2\30z\3\2\2\2\32\33\5\4\3"+
-		"\2\33\34\7\2\2\3\34\3\3\2\2\2\35\37\5\6\4\2\36\35\3\2\2\2\37\"\3\2\2\2"+
-		" \36\3\2\2\2 !\3\2\2\2!\5\3\2\2\2\" \3\2\2\2#(\5\b\5\2$(\5\24\13\2%(\5"+
-		"\n\6\2&(\5\f\7\2\'#\3\2\2\2\'$\3\2\2\2\'%\3\2\2\2\'&\3\2\2\2(\7\3\2\2"+
-		"\2)*\7\33\2\2*+\5\30\r\2+\t\3\2\2\2,-\7\37\2\2-.\7\22\2\2./\5\30\r\2/"+
-		"\13\3\2\2\2\60\61\7\34\2\2\61\62\5\30\r\2\62\r\3\2\2\2\63\64\7\31\2\2"+
-		"\64:\5\20\t\2\65\66\7\32\2\2\66\67\7\31\2\2\679\5\20\t\28\65\3\2\2\29"+
-		"<\3\2\2\2:8\3\2\2\2:;\3\2\2\2;?\3\2\2\2<:\3\2\2\2=>\7\32\2\2>@\5\22\n"+
-		"\2?=\3\2\2\2?@\3\2\2\2@\17\3\2\2\2AB\5\26\f\2BC\5\22\n\2C\21\3\2\2\2D"+
-		"E\7\25\2\2EF\5\4\3\2FG\7\26\2\2GJ\3\2\2\2HJ\5\6\4\2ID\3\2\2\2IH\3\2\2"+
-		"\2J\23\3\2\2\2KL\7\35\2\2LM\7\37\2\2MN\7\36\2\2NO\7\37\2\2OP\7\25\2\2"+
-		"PQ\5\4\3\2QR\7\26\2\2R\25\3\2\2\2ST\b\f\1\2TU\7\f\2\2UZ\5\26\f\13VW\7"+
-		"\21\2\2WZ\5\26\f\nXZ\5\30\r\2YS\3\2\2\2YV\3\2\2\2YX\3\2\2\2Zo\3\2\2\2"+
-		"[\\\f\t\2\2\\]\t\2\2\2]n\5\26\f\n^_\f\b\2\2_`\t\3\2\2`n\5\26\f\tab\f\7"+
-		"\2\2bc\t\4\2\2cn\5\26\f\bde\f\6\2\2ef\t\5\2\2fn\5\26\f\7gh\f\5\2\2hi\7"+
-		"\4\2\2in\5\26\f\6jk\f\4\2\2kl\7\3\2\2ln\5\26\f\5m[\3\2\2\2m^\3\2\2\2m"+
-		"a\3\2\2\2md\3\2\2\2mg\3\2\2\2mj\3\2\2\2nq\3\2\2\2om\3\2\2\2op\3\2\2\2"+
-		"p\27\3\2\2\2qo\3\2\2\2rs\7\23\2\2st\5\30\r\2tu\7\24\2\2u{\3\2\2\2v{\t"+
-		"\6\2\2w{\t\7\2\2x{\7\37\2\2y{\7\"\2\2zr\3\2\2\2zv\3\2\2\2zw\3\2\2\2zx"+
-		"\3\2\2\2zy\3\2\2\2{\31\3\2\2\2\13 \':?IYmoz";
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3&\u0083\4\2\t\2\4"+
+		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
+		"\13\4\f\t\f\4\r\t\r\3\2\3\2\3\2\3\3\7\3\37\n\3\f\3\16\3\"\13\3\3\4\3\4"+
+		"\3\4\3\4\5\4(\n\4\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\5\6\65\n"+
+		"\6\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\7\b?\n\b\f\b\16\bB\13\b\3\b\3\b\5\b"+
+		"F\n\b\3\t\3\t\3\t\3\n\3\n\3\n\3\n\3\n\5\nP\n\n\3\13\3\13\3\13\3\13\3\13"+
+		"\3\13\3\13\3\13\3\f\3\f\3\f\3\f\3\f\3\f\5\f`\n\f\3\f\3\f\3\f\3\f\3\f\3"+
+		"\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\7\ft\n\f\f\f\16\fw"+
+		"\13\f\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u0081\n\r\3\r\2\3\26\16\2\4"+
+		"\6\b\n\f\16\20\22\24\26\30\2\b\3\2\r\17\3\2\13\f\3\2\7\n\3\2\5\6\3\2!"+
+		"\"\3\2\30\31\u008a\2\32\3\2\2\2\4 \3\2\2\2\6\'\3\2\2\2\b)\3\2\2\2\n\64"+
+		"\3\2\2\2\f\66\3\2\2\2\169\3\2\2\2\20G\3\2\2\2\22O\3\2\2\2\24Q\3\2\2\2"+
+		"\26_\3\2\2\2\30\u0080\3\2\2\2\32\33\5\4\3\2\33\34\7\2\2\3\34\3\3\2\2\2"+
+		"\35\37\5\6\4\2\36\35\3\2\2\2\37\"\3\2\2\2 \36\3\2\2\2 !\3\2\2\2!\5\3\2"+
+		"\2\2\" \3\2\2\2#(\5\b\5\2$(\5\24\13\2%(\5\n\6\2&(\5\f\7\2\'#\3\2\2\2\'"+
+		"$\3\2\2\2\'%\3\2\2\2\'&\3\2\2\2(\7\3\2\2\2)*\7\34\2\2*+\5\30\r\2+\t\3"+
+		"\2\2\2,-\7 \2\2-.\7\22\2\2.\65\5\30\r\2/\60\7 \2\2\60\61\7\27\2\2\61\62"+
+		"\7 \2\2\62\63\7\22\2\2\63\65\5\30\r\2\64,\3\2\2\2\64/\3\2\2\2\65\13\3"+
+		"\2\2\2\66\67\7\35\2\2\678\5\30\r\28\r\3\2\2\29:\7\32\2\2:@\5\20\t\2;<"+
+		"\7\33\2\2<=\7\32\2\2=?\5\20\t\2>;\3\2\2\2?B\3\2\2\2@>\3\2\2\2@A\3\2\2"+
+		"\2AE\3\2\2\2B@\3\2\2\2CD\7\33\2\2DF\5\22\n\2EC\3\2\2\2EF\3\2\2\2F\17\3"+
+		"\2\2\2GH\5\26\f\2HI\5\22\n\2I\21\3\2\2\2JK\7\25\2\2KL\5\4\3\2LM\7\26\2"+
+		"\2MP\3\2\2\2NP\5\6\4\2OJ\3\2\2\2ON\3\2\2\2P\23\3\2\2\2QR\7\36\2\2RS\7"+
+		" \2\2ST\7\37\2\2TU\7 \2\2UV\7\25\2\2VW\5\4\3\2WX\7\26\2\2X\25\3\2\2\2"+
+		"YZ\b\f\1\2Z[\7\f\2\2[`\5\26\f\13\\]\7\21\2\2]`\5\26\f\n^`\5\30\r\2_Y\3"+
+		"\2\2\2_\\\3\2\2\2_^\3\2\2\2`u\3\2\2\2ab\f\t\2\2bc\t\2\2\2ct\5\26\f\nd"+
+		"e\f\b\2\2ef\t\3\2\2ft\5\26\f\tgh\f\7\2\2hi\t\4\2\2it\5\26\f\bjk\f\6\2"+
+		"\2kl\t\5\2\2lt\5\26\f\7mn\f\5\2\2no\7\4\2\2ot\5\26\f\6pq\f\4\2\2qr\7\3"+
+		"\2\2rt\5\26\f\5sa\3\2\2\2sd\3\2\2\2sg\3\2\2\2sj\3\2\2\2sm\3\2\2\2sp\3"+
+		"\2\2\2tw\3\2\2\2us\3\2\2\2uv\3\2\2\2v\27\3\2\2\2wu\3\2\2\2xy\7\23\2\2"+
+		"yz\5\30\r\2z{\7\24\2\2{\u0081\3\2\2\2|\u0081\t\6\2\2}\u0081\t\7\2\2~\u0081"+
+		"\7 \2\2\177\u0081\7#\2\2\u0080x\3\2\2\2\u0080|\3\2\2\2\u0080}\3\2\2\2"+
+		"\u0080~\3\2\2\2\u0080\177\3\2\2\2\u0081\31\3\2\2\2\f \'\64@EO_su\u0080";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

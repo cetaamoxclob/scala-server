@@ -49,10 +49,10 @@ class CompileScriptSpec extends Specification with FakeArtifacts {
         val script = """return 1"""
         runScriptWithResult(script, 1)
       }
-//      "1" in {
-//        val script = """return 1"""
-//        runScriptWithResult(script, 1)
-//      }
+      "1.234" in {
+        val script = """return 1.234"""
+        runScriptWithResult(script, 1.234)
+      }
       "foo" in {
         val script = """return "foo" """
         runScriptWithResult(script, "foo")
@@ -76,8 +76,8 @@ class CompileScriptSpec extends Specification with FakeArtifacts {
       "for" in {
         val people = SmartNodeSet(model)
         val person = people.insert
-        // person.PersonName = "John Doe"
-        val script = """for person in people {  }"""
+        //
+        val script = """for person in people { person.PersonName = "John Doe" }"""
         new TantalimScriptInterpreter(script).run(Map("people" -> people))
         person.get("PersonName").get must be equalTo TntString("John Doe")
       }

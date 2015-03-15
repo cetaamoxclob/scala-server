@@ -1,6 +1,6 @@
 package com.tantalim.script.compiler
 
-import com.tantalim.nodes.{TntString, SmartNodeSet}
+import com.tantalim.nodes._
 import com.tantalim.script.compiler.src._
 import com.tantalim.util.TantalimException
 import org.antlr.v4.runtime.{ANTLRInputStream, CommonTokenStream}
@@ -34,17 +34,31 @@ class TantalimScriptInterpreter(script: String) extends TantalimScriptBaseVisito
     Value()
   }
 
-  override def visitAssignment(ctx: TantalimScriptParser.AssignmentContext) = {
+  override def visitIdAssignment(ctx: TantalimScriptParser.IdAssignmentContext) = {
     val variable = ctx.ID().getText
     params += variable -> visit(ctx.atom()).toResult
+    Value()
+  }
+
+  override def visitFieldAssignment(ctx: TantalimScriptParser.FieldAssignmentContext) = {
+    val modelName = ctx.ID(0).getText
+    val fieldName = ctx.ID(1).getText
+    val row = params.get(modelName).get.asInstanceOf[SmartNodeInstance]
+    val value = visit(ctx.atom()).toResult
+    row.set(fieldName, value match {
+      // TODO Convert other types
+      case doubleValue: Double => TntDecimal(doubleValue)
+      case intValue: Int => TntInt(intValue)
+      case _ => TntString(value.toString)
+    })
     Value()
   }
 
   override def visitNumberAtom(ctx: TantalimScriptParser.NumberAtomContext): Value = {
     val intNumber = ctx.INT()
     if (intNumber != null) return Value(intNumber.getText.toInt)
-    val floatNumber = ctx.FLOAT()
-    if (intNumber != null) return Value(intNumber.getText.toFloat)
+    val doubleNumber = ctx.DOUBLE()
+    if (doubleNumber != null) return Value(doubleNumber.getText.toDouble)
     Value()
   }
 
@@ -73,7 +87,6 @@ class TantalimScriptInterpreter(script: String) extends TantalimScriptBaseVisito
     people.foreach{ item =>
       params += itemName -> item
       visit(ctx.block())
-      item.set("PersonName", TntString("John Doe"))
       params -= itemName
     }
 

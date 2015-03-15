@@ -46,7 +46,14 @@ public class TantalimScriptBaseVisitor<T> extends AbstractParseTreeVisitor<T> im
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAssignment(@NotNull TantalimScriptParser.AssignmentContext ctx) { return visitChildren(ctx); }
+	@Override public T visitIdAssignment(@NotNull TantalimScriptParser.IdAssignmentContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitFieldAssignment(@NotNull TantalimScriptParser.FieldAssignmentContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

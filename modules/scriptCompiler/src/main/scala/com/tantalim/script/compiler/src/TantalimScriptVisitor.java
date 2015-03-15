@@ -36,11 +36,19 @@ public interface TantalimScriptVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPrint(@NotNull TantalimScriptParser.PrintContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link TantalimScriptParser#assignment}.
+	 * Visit a parse tree produced by the {@code idAssignment}
+	 * labeled alternative in {@link TantalimScriptParser#assignment}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAssignment(@NotNull TantalimScriptParser.AssignmentContext ctx);
+	T visitIdAssignment(@NotNull TantalimScriptParser.IdAssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code fieldAssignment}
+	 * labeled alternative in {@link TantalimScriptParser#assignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFieldAssignment(@NotNull TantalimScriptParser.FieldAssignmentContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TantalimScriptParser#returnStat}.
 	 * @param ctx the parse tree

@@ -22,7 +22,8 @@ print
  ;
 
 assignment
- : ID ASSIGN atom
+ : ID ASSIGN atom #idAssignment
+ | ID PERIOD ID ASSIGN atom #fieldAssignment
  ;
 
 returnStat
@@ -60,7 +61,7 @@ expr
 
 atom
  : OPAR atom CPAR #parExpr
- | (INT | FLOAT)  #numberAtom
+ | (INT | DOUBLE)  #numberAtom
  | (TRUE | FALSE) #booleanAtom
  | ID             #idAtom
  | STRING         #stringAtom
@@ -87,6 +88,7 @@ OPAR : '(';
 CPAR : ')';
 OBRACE : '{';
 CBRACE : '}';
+PERIOD : '.';
 
 TRUE : 'true';
 FALSE : 'false';
@@ -105,9 +107,8 @@ INT
  : [0-9]+
  ;
 
-FLOAT
- : [0-9]+ '.' [0-9]*
- | '.' [0-9]+
+DOUBLE
+ : [0-9]+ PERIOD [0-9]+
  ;
 
 STRING

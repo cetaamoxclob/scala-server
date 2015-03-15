@@ -65,13 +65,25 @@ public class TantalimScriptBaseListener implements TantalimScriptListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssignment(@NotNull TantalimScriptParser.AssignmentContext ctx) { }
+	@Override public void enterIdAssignment(@NotNull TantalimScriptParser.IdAssignmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAssignment(@NotNull TantalimScriptParser.AssignmentContext ctx) { }
+	@Override public void exitIdAssignment(@NotNull TantalimScriptParser.IdAssignmentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFieldAssignment(@NotNull TantalimScriptParser.FieldAssignmentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFieldAssignment(@NotNull TantalimScriptParser.FieldAssignmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
