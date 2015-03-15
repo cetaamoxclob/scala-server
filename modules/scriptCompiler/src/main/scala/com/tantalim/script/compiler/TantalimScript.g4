@@ -13,17 +13,58 @@ block
 stat
  : print
  | forBlock
+ | assignment
+ | returnStat
  ;
 
 print
- : PRINT OPAR STRING CPAR
+ : PRINT atom
+ ;
+
+assignment
+ : ID ASSIGN atom
+ ;
+
+returnStat
+ : RETURN atom
+;
+
+ifStat
+ : IF conditionBlock (ELSE IF conditionBlock)* (ELSE statBlock)?
+ ;
+
+conditionBlock
+ : expr statBlock
+ ;
+
+statBlock
+ : OBRACE block CBRACE
+ | stat
  ;
 
 forBlock
  : FOR item=ID IN list=ID OBRACE block CBRACE
  ;
 
+expr
+ : MINUS expr                           #unaryMinusExpr
+ | NOT expr                             #notExpr
+ | expr op=(MULT | DIV | MOD) expr      #multiplicationExpr
+ | expr op=(PLUS | MINUS) expr          #additiveExpr
+ | expr op=(LTEQ | GTEQ | LT | GT) expr #relationalExpr
+ | expr op=(EQ | NEQ) expr              #equalityExpr
+ | expr AND expr                        #andExpr
+ | expr OR expr                         #orExpr
+ | atom                                 #atomExpr
+ ;
 
+atom
+ : OPAR atom CPAR #parExpr
+ | (INT | FLOAT)  #numberAtom
+ | (TRUE | FALSE) #booleanAtom
+ | ID             #idAtom
+ | STRING         #stringAtom
+ ;
 
 OR : 'or';
 AND : 'and';
@@ -52,6 +93,7 @@ FALSE : 'false';
 IF : 'if';
 ELSE : 'else';
 PRINT : 'print';
+RETURN : 'return';
 FOR : 'for';
 IN : 'in';
 

@@ -27,19 +27,55 @@ class CompileScriptSpec extends Specification with FakeArtifacts {
   )
   "Script" should {
     "do the basics" in {
-      "printing" in {
-        val script = """print ("Hello World")"""
+
+      def runScriptWithUnit(script: String) = {
         val interpreter = new TantalimScriptInterpreter(script)
         val result = interpreter.run()
         result must be equalTo Unit
       }
+
+      "printing strings" in {
+        val script = """print "Hello World" """
+        runScriptWithUnit(script)
+      }
+      "printing strings" in {
+        val script = """print ("Hello World") """
+        runScriptWithUnit(script)
+      }
+      "assignments" in {
+        val script = """first = 1"""
+        runScriptWithUnit(script)
+      }
+      "assignments" in {
+        val script =
+          """
+            |first = 1
+            |""".stripMargin
+        runScriptWithUnit(script)
+      }
     }
+    "returns" in {
+      def runScriptWithResult(script: String, returnValue: Any) = {
+        val interpreter = new TantalimScriptInterpreter(script)
+        val result = interpreter.run()
+        result must be equalTo Value(returnValue)
+      }
+      "1" in {
+        val script = """return 1"""
+        runScriptWithResult(script, 1)
+      }
+      "foo" in {
+        val script = """return "foo""""
+        runScriptWithResult(script, "foo")
+      }
+    }
+
     "models" in {
       "for" in {
         val people = SmartNodeSet(model)
         val person = people.insert
         // person.PersonName = "John Doe"
-        val script = """for person in people { print(person) }"""
+        val script = """for person in people { print("sdf") }"""
         new TantalimScriptInterpreter(script).run(Map("people" -> people))
         person.get("PersonName").get must be equalTo TntString("John Doe")
       }
