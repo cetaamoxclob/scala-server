@@ -34,23 +34,8 @@ class CompileScriptSpec extends Specification with FakeArtifacts {
         result must be equalTo Unit
       }
 
-      "printing strings" in {
-        val script = """print "Hello World" """
-        runScriptWithUnit(script)
-      }
-      "printing strings" in {
+      "printing" in {
         val script = """print ("Hello World") """
-        runScriptWithUnit(script)
-      }
-      "assignments" in {
-        val script = """first = 1"""
-        runScriptWithUnit(script)
-      }
-      "assignments" in {
-        val script =
-          """
-            |first = 1
-            |""".stripMargin
         runScriptWithUnit(script)
       }
     }
@@ -58,16 +43,33 @@ class CompileScriptSpec extends Specification with FakeArtifacts {
       def runScriptWithResult(script: String, returnValue: Any) = {
         val interpreter = new TantalimScriptInterpreter(script)
         val result = interpreter.run()
-        result must be equalTo Value(returnValue)
+        result must be equalTo returnValue
       }
       "1" in {
         val script = """return 1"""
         runScriptWithResult(script, 1)
       }
+//      "1" in {
+//        val script = """return 1"""
+//        runScriptWithResult(script, 1)
+//      }
       "foo" in {
-        val script = """return "foo""""
+        val script = """return "foo" """
         runScriptWithResult(script, "foo")
       }
+      """("foo")""" in {
+        val script = """return ("foo")"""
+        runScriptWithResult(script, "foo")
+      }
+      "assignments" in {
+        val script =
+          """
+            |first = 2
+            |return first
+            |""".stripMargin
+        runScriptWithResult(script, 2)
+      }
+
     }
 
     "models" in {
@@ -75,7 +77,7 @@ class CompileScriptSpec extends Specification with FakeArtifacts {
         val people = SmartNodeSet(model)
         val person = people.insert
         // person.PersonName = "John Doe"
-        val script = """for person in people { print("sdf") }"""
+        val script = """for person in people {  }"""
         new TantalimScriptInterpreter(script).run(Map("people" -> people))
         person.get("PersonName").get must be equalTo TntString("John Doe")
       }

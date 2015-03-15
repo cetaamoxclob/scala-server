@@ -20,7 +20,8 @@ class TantalimScriptInterpreter(script: String) extends TantalimScriptBaseVisito
 
   def run(params: Map[String, Any] = Map.empty): Any = {
     this.params ++= params
-    visit(parser.start).toResult
+    val visitResult = visit(parser.start)
+    visitResult.toResult
   }
 
   override def visitStart(ctx: TantalimScriptParser.StartContext) = {
@@ -35,13 +36,9 @@ class TantalimScriptInterpreter(script: String) extends TantalimScriptBaseVisito
 
   override def visitAssignment(ctx: TantalimScriptParser.AssignmentContext) = {
     val variable = ctx.ID().getText
-    params += variable -> visit(ctx.atom())
+    params += variable -> visit(ctx.atom()).toResult
     Value()
   }
-
-//  override def visitAtom(ctx: TantalimScriptParser.AtomContext) = {
-//    visit(ctx)
-//  }
 
   override def visitNumberAtom(ctx: TantalimScriptParser.NumberAtomContext): Value = {
     val intNumber = ctx.INT()
@@ -51,8 +48,9 @@ class TantalimScriptInterpreter(script: String) extends TantalimScriptBaseVisito
     Value()
   }
 
-  override def visitParExpr(ctx: TantalimScriptParser.ParExprContext) = {
-    Value(visit(ctx.atom()))
+  override def visitIdAtom(ctx: TantalimScriptParser.IdAtomContext): Value = {
+    val variableName = ctx.ID().getText
+    Value(params.getOrElse(variableName, throw new TantalimException(variableName + " has not been defined", "Define the variable")))
   }
 
   override def visitStringAtom(ctx: TantalimScriptParser.StringAtomContext) = {
@@ -60,8 +58,12 @@ class TantalimScriptInterpreter(script: String) extends TantalimScriptBaseVisito
     Value(stringValue.substring(1, stringValue.length - 1))
   }
 
+  override def visitParExpr(ctx: TantalimScriptParser.ParExprContext) = {
+    visit(ctx.atom())
+  }
+
   override def visitReturnStat(ctx: TantalimScriptParser.ReturnStatContext) = {
-    Value(visit(ctx.atom()))
+    visit(ctx.atom())
   }
 
   override def visitForBlock(ctx: TantalimScriptParser.ForBlockContext) = {
