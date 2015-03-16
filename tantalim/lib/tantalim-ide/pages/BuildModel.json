@@ -19,6 +19,9 @@
           "name": "ModelPreSave"
         },
         {
+          "name": "ModelFilter"
+        },
+        {
           "name": "ModelAllowInsert"
         },
         {

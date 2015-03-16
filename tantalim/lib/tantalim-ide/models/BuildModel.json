@@ -34,6 +34,10 @@
       "basisColumn": "PreSave"
     },
     {
+      "name": "ModelFilter",
+      "basisColumn": "Filter"
+    },
+    {
       "name": "ModelAllowInsert",
       "basisColumn": "AllowInsert"
     },
