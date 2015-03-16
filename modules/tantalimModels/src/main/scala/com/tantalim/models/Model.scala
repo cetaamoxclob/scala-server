@@ -15,7 +15,11 @@ case class Model(name: String,
                  preSave: Option[String] = None,
                  filter: Option[String] = None,
                  children: collection.mutable.Map[String, Model] = scala.collection.mutable.Map.empty
-                  )
+                  ) {
+  def addChild(child: Model): Unit = {
+    this.children(child.name) = child.copy(parent = Some(this))
+  }
+}
 
 case class ModelField(name: String,
                       basisColumn: TableColumn,

@@ -14,17 +14,19 @@ class CompileScriptSpec extends Specification with FakeArtifacts {
     fields = Map(
       fakeModelFieldMap("PersonID", "person_id", DataType.Integer, updateable = false),
       fakeModelFieldMap("PersonName", "name", required = true)
-    ),
-    children = Map("Phones" -> new Model(
-      "PersonPhone",
-      basisTable = new ShallowTable("Phone", "phone"),
-      fields = Map(
-        fakeModelFieldMap("PersonPhoneID", "phone_id", DataType.Integer, updateable = false),
-        fakeModelFieldMap("PersonPhonePersonID", "person_id", DataType.Integer, updateable = false),
-        fakeModelFieldMap("PersonPhoneNumber", "phone_number", required = true)
-      )
-    ))
+    )
   )
+  model.addChild(new Model(
+    "PersonPhone",
+    basisTable = new ShallowTable("Phone", "phone"),
+    parent = Some(model),
+    fields = Map(
+      fakeModelFieldMap("PersonPhoneID", "phone_id", DataType.Integer, updateable = false),
+      fakeModelFieldMap("PersonPhonePersonID", "person_id", DataType.Integer, updateable = false),
+      fakeModelFieldMap("PersonPhoneNumber", "phone_number", required = true)
+    )
+  ))
+
   "Script" should {
     def runScriptWithResult(script: String, returnValue: Any) = {
       val interpreter = new TantalimScriptInterpreter(script)

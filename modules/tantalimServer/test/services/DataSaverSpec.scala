@@ -26,25 +26,24 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
       fields = Map(
         fakeModelFieldMap("PersonID", "person_id", DataType.Integer, updateable = false),
         fakeModelFieldMap("PersonName", "name", required = true)
-      ),
-      children = Map("PersonPhone" -> new Model(
-        "PersonPhone",
-        basisTable = new ShallowTable(
-          "Phone", "phone", columns = Map.empty
-        ),
-        limit = 100,
-        instanceID = Option("PersonPhoneID"),
-        parentLink = Some(new ModelParentLink("PersonID", "PersonPhonePersonID")),
-        fields = Map(
-          fakeModelFieldMap("PersonPhoneID", "phone_id", DataType.Integer, updateable = false),
-          fakeModelFieldMap("PersonPhonePersonID", "person_id", DataType.Integer, updateable = false),
-          fakeModelFieldMap("PersonPhoneNumber", "phone_number", required = true)
-        ),
-        children = Map.empty,
-        steps = Map.empty,
-        orderBy = Seq.empty
-      ))
+      )
     )
+    model.addChild(new Model(
+      "PersonPhone",
+      basisTable = new ShallowTable(
+        "Phone", "phone", columns = Map.empty
+      ),
+      limit = 100,
+      instanceID = Option("PersonPhoneID"),
+      parentLink = Some(new ModelParentLink("PersonID", "PersonPhonePersonID")),
+      fields = Map(
+        fakeModelFieldMap("PersonPhoneID", "phone_id", DataType.Integer, updateable = false),
+        fakeModelFieldMap("PersonPhonePersonID", "person_id", DataType.Integer, updateable = false),
+        fakeModelFieldMap("PersonPhoneNumber", "phone_number", required = true)
+      ),
+      steps = Map.empty,
+      orderBy = Seq.empty
+    ))
 
     "do nothing" in {
       val saver = new DataSaver with Database {
