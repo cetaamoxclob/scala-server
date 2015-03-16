@@ -137,11 +137,16 @@ class CompileScriptSpec extends Specification with FakeArtifacts {
         }
       }
     }
+    "if" in {
+      "simple" in {
+        val script = "if (true) return 1 else return 0"
+        runScriptWithResult(script, 1)
+      }
+    }
     "models" in {
       "for" in {
         val people = SmartNodeSet(model)
         val person = people.insert
-        //
         val script = """for person in people { person.PersonName = "John Doe" }"""
         new TantalimScriptInterpreter(script).run(Map("people" -> people))
         person.get("PersonName").get must be equalTo TntString("John Doe")
