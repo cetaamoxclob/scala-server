@@ -1,113 +1,118 @@
 {
   "title": "Build Table",
   "icon": "glyphicon-modal-window",
-  "fields": [
+  "sections": [
     {
-      "name": "TableName",
-      "showInNavigation": true
-    },
-    {
-      "name": "TableSQL"
-    },
-    {
-      "name": "TableDatabase",
-      "showInFormView": false
-    },
-    {
-      "name": "TablePrimaryKey",
-      "fieldType": "select",
-      "select": {
-        "model": "ListTableColumns",
-        "sourceField": "ColumnName",
-        "filter": "ColumnTableID = ${TableTableID}"
-      }
-    },
-    {
-      "name": "TableAllowInsert"
-    },
-    {
-      "name": "TableAllowUpdate"
-    },
-    {
-      "name": "TableAllowDelete"
-    }
-  ],
-  "children": [
-    {
-      "name": "TableColumns",
-      "title": "Columns",
-      "viewMode": "table",
+      "name": "BuildTable",
       "fields": [
         {
-          "name": "TableColumnDisplayOrder"
-        },
-        {
-          "name": "TableColumnName",
+          "name": "TableName",
           "showInNavigation": true
         },
         {
-          "name": "TableColumnRequired",
-          "fieldType": "checkbox"
+          "name": "TableSQL"
         },
         {
-          "name": "TableColumnDataType"
+          "name": "TableDatabase",
+          "showInFormView": false
         },
         {
-          "name": "TableColumnSQL"
-        },
-        {
-          "name": "TableColumnLabel",
-          "label": "Label"
-        }
-      ]
-    },
-    {
-      "name": "TableJoins",
-      "title": "Joins",
-      "fields": [
-        {
-          "name": "TableJoinName",
-          "showInNavigation": true
-        },
-        {
-          "name": "TableJoinToTableName",
+          "name": "TablePrimaryKey",
           "fieldType": "select",
           "select": {
-            "model": "ListTables",
-            "sourceField": "TableName"
+            "model": "ListTableColumns",
+            "sourceField": "ColumnName",
+            "filter": "ColumnTableID = ${TableTableID}"
           }
         },
         {
-          "name": "TableJoinRequired"
+          "name": "TableAllowInsert"
+        },
+        {
+          "name": "TableAllowUpdate"
+        },
+        {
+          "name": "TableAllowDelete"
         }
       ],
-      "children": [
+      "sections": [
         {
-          "name": "TableJoinColumns",
-          "title": "Join Columns",
+          "name": "TableColumns",
+          "title": "Columns",
+          "viewMode": "table",
           "fields": [
             {
-              "name": "TableJoinJoinColumnFromColumn",
-              "label": "From Column",
+              "name": "TableColumnDisplayOrder"
+            },
+            {
+              "name": "TableColumnName",
+              "showInNavigation": true
+            },
+            {
+              "name": "TableColumnRequired",
+              "fieldType": "checkbox"
+            },
+            {
+              "name": "TableColumnDataType"
+            },
+            {
+              "name": "TableColumnSQL"
+            },
+            {
+              "name": "TableColumnLabel",
+              "label": "Label"
+            }
+          ]
+        },
+        {
+          "name": "TableJoins",
+          "title": "Joins",
+          "fields": [
+            {
+              "name": "TableJoinName",
+              "showInNavigation": true
+            },
+            {
+              "name": "TableJoinToTableName",
               "fieldType": "select",
               "select": {
-                "model": "ListTableColumns",
-                "sourceField": "ColumnName",
-                "filter": "ColumnTableID = ${TableTableID}"
+                "model": "ListTables",
+                "sourceField": "TableName"
               }
             },
             {
-              "name": "TableJoinJoinColumnToColumn",
-              "label": "To Column",
-              "fieldType": "select",
-              "select": {
-                "model": "ListTableColumns",
-                "sourceField": "ColumnName",
-                "filter": "ColumnTableName = '${TableJoinToTableName}'"
-              }
-            },
+              "name": "TableJoinRequired"
+            }
+          ],
+          "sections": [
             {
-              "name": "TableJoinJoinColumnFromText"
+              "name": "TableJoinColumns",
+              "title": "Join Columns",
+              "fields": [
+                {
+                  "name": "TableJoinJoinColumnFromColumn",
+                  "label": "From Column",
+                  "fieldType": "select",
+                  "select": {
+                    "model": "ListTableColumns",
+                    "sourceField": "ColumnName",
+                    "filter": "ColumnTableID = ${TableTableID}"
+                  }
+                },
+                {
+                  "name": "TableJoinJoinColumnToColumn",
+                  "label": "To Column",
+                  "fieldType": "select",
+                  "select": {
+                    "model": "ListTableColumns",
+                    "sourceField": "ColumnName",
+                    "filter": "ColumnTableName = '${TableJoinToTableName}'"
+                  }
+                },
+                {
+                  "name": "TableJoinJoinColumnFromText"
+                }
+              ]
             }
           ]
         }

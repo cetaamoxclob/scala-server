@@ -3,22 +3,31 @@
   "model": "ListTables",
   "icon": "glyphicon-th",
   "viewMode": "table",
-  "fields": [
+  "sections": [
     {
-      "name": "TableName",
-      "links": [
+      "name": "ListTables",
+      "title": "Table Report",
+      "icon": "glyphicon-th",
+      "viewMode": "table",
+      "fields": [
         {
-          "title": "Build Table",
-          "page": "BuildTable",
-          "filter": "TableTableID Equals [TableTableID]"
+          "name": "TableName",
+          "links": [
+            {
+              "title": "Build Table",
+              "page": "BuildTable",
+              "filter": "TableTableID Equals [TableTableID]"
+            }
+          ]
+        },
+        {
+          "name": "TableSQL"
+        },
+        {
+          "name": "TableDatabase"
         }
       ]
-    },
-    {
-      "name": "TableSQL"
-    },
-    {
-      "name": "TableDatabase"
+
     }
   ]
 }

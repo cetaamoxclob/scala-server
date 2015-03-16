@@ -46,5 +46,8 @@
       "basisColumn": "AllowDelete"
     }
   ],
+  "children": [
+
+  ],
   "filter": "ModelParentID IsEmpty"
 }

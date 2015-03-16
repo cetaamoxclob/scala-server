@@ -1,5 +1,33 @@
 {
   "title": "Build Model",
 
-  "fields": []
+  "sections": [
+    {
+      "name": "Model",
+      "model": "BuildModel",
+      "fields": [
+        {
+          "name": "ModelName"
+        },
+        {
+          "name": "ModelBasisTable"
+        },
+        {
+          "name": "ModelLimit"
+        },
+        {
+          "name": "ModelPreSave"
+        },
+        {
+          "name": "ModelAllowInsert"
+        },
+        {
+          "name": "ModelAllowUpdate"
+        },
+        {
+          "name": "ModelAllowDelete"
+        }
+      ]
+    }
+  ]
 }

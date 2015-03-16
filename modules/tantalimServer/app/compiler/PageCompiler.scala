@@ -2,7 +2,7 @@ package compiler
 
 import com.tantalim.models._
 import com.tantalim.util.TantalimException
-import compiler.src.{PageFieldLinkJson, PageFieldSelectJson, PageFieldJson, PageJson}
+import compiler.src._
 import play.api.libs.json.{JsError, JsSuccess}
 import services.ArtifactService
 
@@ -15,12 +15,26 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
 
     getPage(name) match {
       case JsSuccess(pageJson, _) =>
-        val page = pageJson.copy(name = Option(name))
-        val modelName: String = page.model.getOrElse(page.name.get)
-        val model = compileModel(modelName)
-        compilePageView(page, model)
+        val pageSections: Seq[PageSection] = pageJson.sections match {
+          case Some(children) => children.map { section =>
+            val modelName = section.model.getOrElse(section.name)
+            val model = compileModel(modelName)
+            compilePageSection(section, model)
+          }
+          case None => Seq.empty
+        }
+        if (pageSections.isEmpty) {
+          throw new TantalimException(s"Page `$name` must have at least one section defined", "")
+        }
+        new Page(
+          name,
+          pageJson.title.getOrElse(name),
+          pageJson.icon,
+          pageJson.css,
+          sections = pageSections
+        )
       case JsError(err) =>
-        throw new TantalimException ("Failed to compile page " + name + " due to the following error:" + err.toString, "")
+        throw new TantalimException(s"Failed to compile page $name", s"Due to the following error: $err")
     }
   }
 
@@ -31,41 +45,39 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
       case JsSuccess(pageJson, _) =>
         new ShallowPage(
           name,
-          pageJson.title,
+          pageJson.title.getOrElse(name),
           pageJson.icon
         )
       case JsError(err) =>
-        throw new TantalimException ("Failed to compile page " + name, "The JSON parse error was found at: " + err.toString)
+        throw new TantalimException("Failed to compile page " + name, "The JSON parse error was found at: " + err.toString)
     }
   }
 
-  private def compilePageView(pageJson: PageJson, model: Model, parentPage: Option[Page] = None): Page = {
-    val fields = pageJson.fields.getOrElse(Seq.empty).map { f =>
+  private def compilePageSection(sectionJson: PageSectionJson, model: Model, parentPage: Option[PageSection] = None): PageSection = {
+    val fields = sectionJson.fields.getOrElse(Seq.empty).map { f =>
       val modelField = model.fields.getOrElse(f.name,
-        throw new TantalimException (s"Failed to find field named `${f.name}` in Model `${model.name}` ",
+        throw new TantalimException(s"Failed to find field named `${f.name}` in Model `${model.name}` ",
           s"found these fields: ${model.fields.keys.mkString(", ")}")
       )
       val pageField = compilePageField(f, modelField)
       validateFieldSelect(pageField, model)
       pageField
     }
-    new Page(
-      pageJson.name.get,
-      pageJson.title,
-      pageJson.icon,
-      pageJson.css,
-      viewMode = pageJson.viewMode.getOrElse("form"),
+    new PageSection(
+      sectionJson.name,
+      sectionJson.title.getOrElse(sectionJson.name),
+      viewMode = sectionJson.viewMode.getOrElse("form"),
       model = model,
       fields = fields,
       hasFormView = fields.exists(field => field.showInFormView),
       hasTableView = fields.exists(field => field.showInTableView),
       hasNavigation = fields.exists(field => field.showInNavigation),
-      parentPage = parentPage,
-      children = pageJson.children match {
+      parent = parentPage,
+      sections = sectionJson.sections match {
         case Some(childViews) => childViews.map { childView =>
-          val childModelName = childView.model.getOrElse(childView.name.get)
+          val childModelName = childView.model.getOrElse(childView.name)
           val childModel = model.children.get(childModelName).get
-          compilePageView(childView, childModel)
+          compilePageSection(childView, childModel)
         }
         case None => Seq.empty
       }
@@ -82,19 +94,19 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
           s"Change the page definition, `${pageField.name}`.select.model to match a valid model")
       }
       if (targetModel.fields.get(s.sourceField).isEmpty)
-        throw new TantalimException (
+        throw new TantalimException(
           s"Failed to find field named `${s.sourceField}` in Model `${targetModel.name}`",
           s"Change the page definition, `${pageField.name}`.select.sourceField to one of the following: ${targetModel.fields.keys.mkString(", ")}"
         )
-      s.fields.foreach{ case (from, to) =>
+      s.fields.foreach { case (from, to) =>
         // TODO Refactor all of these field gets
         if (model.fields.get(to).isEmpty)
-          throw new TantalimException (
+          throw new TantalimException(
             s"Failed to find field named `$to` in Model `${model.name}`",
             s"Change the page definition, `${pageField.name}`.select.targetID to one of the following: ${model.fields.keys.mkString(", ")}"
           )
         if (model.fields.get(from).isEmpty)
-          throw new TantalimException (
+          throw new TantalimException(
             s"Failed to find field named `$from` in Model `${model.name}`",
             s"Change the page definition, `${pageField.name}`.select.targetID to one of the following: ${model.fields.keys.mkString(", ")}"
           )
@@ -118,7 +130,8 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
       showInNavigation = field.showInNavigation.getOrElse(false),
       placeholder = if (field.placeholder.isDefined) field.placeholder else column.placeholder,
       help = if (field.help.isDefined) field.help else column.help,
-      filter = if (field.filter.isDefined) field.filter else {
+      filter = if (field.filter.isDefined) field.filter
+      else {
         modelField.dataType match {
           case DataType.Date => Some("date:'yyyy-MM-dd'")
           case DataType.DateTime => Some("date:'yyyy-MM-dd HH:mm:ss'")

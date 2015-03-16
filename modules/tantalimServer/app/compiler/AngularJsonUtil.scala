@@ -8,15 +8,22 @@ import scala.collection.mutable.ListBuffer
 object AngularJsonUtil {
   def toJson(page: Page): JsObject = JsObject(Seq(
     "name" -> JsString(page.name),
-    "model" -> toJson(page.model),
-    "viewMode" -> JsString(page.viewMode),
+    "sections" -> JsArray(
+      page.sections.toSeq.map(childPage => toJson(childPage))
+    )
+  ))
+
+  def toJson(section: PageSection): JsObject = JsObject(Seq(
+    "name" -> JsString(section.name),
+    "model" -> toJson(section.model),
+    "viewMode" -> JsString(section.viewMode),
     "fields" -> JsArray(
-      page.fields.zipWithIndex.map {
+      section.fields.zipWithIndex.map {
         case (field, order) => toJson(field, order)
       }
     ),
-    "children" -> JsArray(
-      page.children.toSeq.map(childPage => toJson(childPage))
+    "sections" -> JsArray(
+      section.sections.toSeq.map(childPage => toJson(childPage))
     )
   ))
 

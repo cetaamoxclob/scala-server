@@ -4,20 +4,33 @@ case class ShallowPage(name: String,
                        title: String,
                        icon: Option[String])
 
-case class Page(
-                 name: String,
-                 title: String,
-                 icon: Option[String],
-                 css: Option[String],
-                 model: Model,
-                 fields: Seq[PageField],
-                 hasFormView: Boolean,
-                 hasTableView: Boolean,
-                 hasNavigation: Boolean,
-                 viewMode: String,
-                 parentPage: Option[Page],
-                 children: Seq[Page]
-                 ) {
+case class Page(name: String,
+                title: String,
+                icon: Option[String],
+                css: Option[String],
+                sections: Seq[PageSection]
+                 )
+
+case class PageSection(name: String,
+                       title: String,
+                       model: Model,
+                       fields: Seq[PageField],
+                       hasFormView: Boolean,
+                       hasTableView: Boolean,
+                       hasNavigation: Boolean,
+                       viewMode: String,
+                       parent: Option[PageSection],
+                       sections: Seq[PageSection]
+                        ) {
+
+  private lazy val rootDepth: Int = 1
+
+  lazy val depth: Int = {
+    parent match {
+      case Some(section) => section.depth + 1
+      case None => rootDepth
+    }
+  }
 
   def fieldLengthInTableView: Int = {
     fields.count {
@@ -26,15 +39,7 @@ case class Page(
     }
   }
 
-  private val rootDepth: Int = 1
-
-  def depth: Int = {
-    parentPage match {
-      case Some(page) => page.depth + 1
-      case None => rootDepth
-    }
-  }
-
+  lazy val canSave = model.allowInsert || model.allowUpdate || model.allowDelete
 }
 
 case class PageField(
