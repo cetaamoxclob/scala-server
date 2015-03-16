@@ -1,14 +1,6 @@
-@(page: com.tantalim.models.Page, depth: Int)
+@(page: com.tantalim.models.PageSection, depth: Int)
 <div id="@page.name" class="childSection">
     @if(depth == 0) {
-        <div class="page-header">
-            <h1>@page.title</h1>
-            <span class="icon-indent glyphicon glyphicon-triangle-right" aria-hidden="true"
-            data-ng-click="hide@page.name = true" data-ng-hide="hide@page.name"></span>
-            <span class="icon-indent glyphicon glyphicon-triangle-bottom" aria-hidden="true"
-            data-ng-click="hide@page.name = false" data-ng-show="hide@page.name"></span>
-        </div>
-
         <nav data-ng-show="searchController.maxPages > 1">
             <ul class="nav navbar-nav navbar-right" style="margin-right: auto">
                 <button type="button" class="btn btn-xs"
@@ -180,7 +172,7 @@
             </div>
         </div>
 
-        @for(childPage <- page.children) {
+        @for(childPage <- page.sections) {
             @desktop.page.page_view(childPage, depth + 1)
         }
     </div>

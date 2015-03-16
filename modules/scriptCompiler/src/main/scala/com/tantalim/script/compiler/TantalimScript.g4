@@ -14,6 +14,7 @@ stat
  : print
  | forBlock
  | assignment
+ | ifStat
  | returnStat
  ;
 

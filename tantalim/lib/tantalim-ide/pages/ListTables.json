@@ -1,35 +1,41 @@
 {
   "title": "List Tables",
   "icon": "glyphicon-th-list",
-  "model": "ListTables",
-  "viewMode": "table",
-  "fields": [
+  "sections": [
     {
-      "name": "TableName",
-      "showInNavigation": true,
-      "links": [
+      "name": "Tables",
+      "model": "ListTables",
+      "viewMode": "table",
+      "fields": [
         {
-          "title": "Build Table",
-          "page": "BuildTable",
-          "filter": "TableName Equals \"[TableName]\""
+          "name": "TableName",
+          "showInNavigation": true,
+          "links": [
+            {
+              "title": "Build Table",
+              "page": "BuildTable",
+              "filter": "TableName Equals \"[TableName]\""
+            }
+          ]
+        },
+        {
+          "name": "TableSQL",
+          "showInNavigation": true
+        },
+        {
+          "name": "TableDatabase"
+        },
+        {
+          "name": "TableAllowInsert"
+        },
+        {
+          "name": "TableAllowUpdate"
+        },
+        {
+          "name": "TableAllowDelete"
         }
       ]
-    },
-    {
-      "name": "TableSQL",
-      "showInNavigation": true
-    },
-    {
-      "name": "TableDatabase"
-    },
-    {
-      "name": "TableAllowInsert"
-    },
-    {
-      "name": "TableAllowUpdate"
-    },
-    {
-      "name": "TableAllowDelete"
+
     }
   ]
 }

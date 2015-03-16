@@ -1,20 +1,27 @@
 @(page: com.tantalim.models.Page)
-<form id="form-view" role="form" name="TopPageForm" data-ng-hide="searchController.showSearch">
-    <div class="page-nav navbar navbar-inverse navbar-fixed-bottom">
-        <button type="button" data-ng-click="searchController.turnSearchOn()" class="btn btn-default">
-            <span class="glyphicon glyphicon-search"></span>
-            Search View
-        </button>
-        <button type="button" data-ng-click="refresh()" class="btn btn-default">
-            <span class="glyphicon glyphicon-refresh"></span>
-            Refresh
-        </button>
-        @if(page.model.allowInsert || page.model.allowUpdate || page.model.allowDelete) {
-            <button type="button" data-ng-click="save()" class="btn btn-success" data-ng-disabled="!ModelCursor.dirty() || TopPageForm.$invalid">
-                <span class="glyphicon glyphicon-floppy-disk"></span>
-                Save
-            </button>
-        }
+    <div class="page-header">
+        <h1>@page.title</h1>
     </div>
-    @desktop.page.page_view(page, 0)
-</form>
+
+    @for(section <- page.sections) {
+        <form id="form-view" role="form" name="TopPageForm" data-ng-hide="searchController.showSearch">
+            <div class="page-nav navbar navbar-inverse navbar-fixed-bottom">
+                <button type="button" data-ng-click="searchController.turnSearchOn()" class="btn btn-default">
+                    <span class="glyphicon glyphicon-search"></span>
+                    Search View
+                </button>
+                <button type="button" data-ng-click="refresh()" class="btn btn-default">
+                    <span class="glyphicon glyphicon-refresh"></span>
+                    Refresh
+                </button>
+                @if(section.canSave) {
+                    <button type="button" data-ng-click="save()" class="btn btn-success" data-ng-disabled="!ModelCursor.dirty() || TopPageForm.$invalid">
+                        <span class="glyphicon glyphicon-floppy-disk"></span>
+                        Save
+                    </button>
+                }
+            </div>
+            @desktop.page.page_view(section, 0)
+        </form>
+        @desktop.page.search(section)
+    }
