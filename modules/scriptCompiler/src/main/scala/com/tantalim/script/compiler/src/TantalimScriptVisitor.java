@@ -80,6 +80,13 @@ public interface TantalimScriptVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitForBlock(@NotNull TantalimScriptParser.ForBlockContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code parExpr}
+	 * labeled alternative in {@link TantalimScriptParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParExpr(@NotNull TantalimScriptParser.ParExprContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code andExpr}
 	 * labeled alternative in {@link TantalimScriptParser#expr}.
 	 * @param ctx the parse tree
@@ -143,12 +150,12 @@ public interface TantalimScriptVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNotExpr(@NotNull TantalimScriptParser.NotExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code parExpr}
+	 * Visit a parse tree produced by the {@code parAtom}
 	 * labeled alternative in {@link TantalimScriptParser#atom}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitParExpr(@NotNull TantalimScriptParser.ParExprContext ctx);
+	T visitParAtom(@NotNull TantalimScriptParser.ParAtomContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code numberAtom}
 	 * labeled alternative in {@link TantalimScriptParser#atom}.

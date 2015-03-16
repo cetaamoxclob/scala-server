@@ -123,6 +123,18 @@ public interface TantalimScriptListener extends ParseTreeListener {
 	 */
 	void exitForBlock(@NotNull TantalimScriptParser.ForBlockContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code parExpr}
+	 * labeled alternative in {@link TantalimScriptParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterParExpr(@NotNull TantalimScriptParser.ParExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code parExpr}
+	 * labeled alternative in {@link TantalimScriptParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitParExpr(@NotNull TantalimScriptParser.ParExprContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code andExpr}
 	 * labeled alternative in {@link TantalimScriptParser#expr}.
 	 * @param ctx the parse tree
@@ -231,17 +243,17 @@ public interface TantalimScriptListener extends ParseTreeListener {
 	 */
 	void exitNotExpr(@NotNull TantalimScriptParser.NotExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code parExpr}
+	 * Enter a parse tree produced by the {@code parAtom}
 	 * labeled alternative in {@link TantalimScriptParser#atom}.
 	 * @param ctx the parse tree
 	 */
-	void enterParExpr(@NotNull TantalimScriptParser.ParExprContext ctx);
+	void enterParAtom(@NotNull TantalimScriptParser.ParAtomContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code parExpr}
+	 * Exit a parse tree produced by the {@code parAtom}
 	 * labeled alternative in {@link TantalimScriptParser#atom}.
 	 * @param ctx the parse tree
 	 */
-	void exitParExpr(@NotNull TantalimScriptParser.ParExprContext ctx);
+	void exitParAtom(@NotNull TantalimScriptParser.ParAtomContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code numberAtom}
 	 * labeled alternative in {@link TantalimScriptParser#atom}.

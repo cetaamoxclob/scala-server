@@ -149,6 +149,18 @@ public class TantalimScriptBaseListener implements TantalimScriptListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterParExpr(@NotNull TantalimScriptParser.ParExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitParExpr(@NotNull TantalimScriptParser.ParExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAndExpr(@NotNull TantalimScriptParser.AndExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -257,13 +269,13 @@ public class TantalimScriptBaseListener implements TantalimScriptListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterParExpr(@NotNull TantalimScriptParser.ParExprContext ctx) { }
+	@Override public void enterParAtom(@NotNull TantalimScriptParser.ParAtomContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitParExpr(@NotNull TantalimScriptParser.ParExprContext ctx) { }
+	@Override public void exitParAtom(@NotNull TantalimScriptParser.ParAtomContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

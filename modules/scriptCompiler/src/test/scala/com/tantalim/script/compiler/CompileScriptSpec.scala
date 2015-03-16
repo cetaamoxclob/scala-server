@@ -26,31 +26,29 @@ class CompileScriptSpec extends Specification with FakeArtifacts {
     ))
   )
   "Script" should {
-    "do the basics" in {
+    def runScriptWithResult(script: String, returnValue: Any) = {
+      val interpreter = new TantalimScriptInterpreter(script)
+      val result = interpreter.run()
+      result must be equalTo returnValue
+    }
+    def runScriptWithUnit(script: String) = {
+      runScriptWithResult(script, Unit)
+    }
 
-      def runScriptWithUnit(script: String) = {
-        val interpreter = new TantalimScriptInterpreter(script)
-        val result = interpreter.run()
-        result must be equalTo Unit
-      }
+    "do the basics" in {
 
       "printing" in {
         val script = """print ("Hello World") """
         runScriptWithUnit(script)
       }
     }
-    "returns" in {
-      def runScriptWithResult(script: String, returnValue: Any) = {
-        val interpreter = new TantalimScriptInterpreter(script)
-        val result = interpreter.run()
-        result must be equalTo returnValue
-      }
+    "atom" in {
       "1" in {
-        val script = """return 1"""
+        val script = "return 1"
         runScriptWithResult(script, 1)
       }
       "1.234" in {
-        val script = """return 1.234"""
+        val script = "return 1.234"
         runScriptWithResult(script, 1.234)
       }
       "foo" in {
@@ -61,7 +59,15 @@ class CompileScriptSpec extends Specification with FakeArtifacts {
         val script = """return ("foo")"""
         runScriptWithResult(script, "foo")
       }
-      "assignments" in {
+      "true" in {
+        val script = "return true"
+        runScriptWithResult(script, true)
+      }
+      "false" in {
+        val script = "return false"
+        runScriptWithResult(script, false)
+      }
+      "variables" in {
         val script =
           """
             |first = 2
@@ -71,7 +77,66 @@ class CompileScriptSpec extends Specification with FakeArtifacts {
       }
 
     }
-
+    "expressions" in {
+      "parentheses" in {
+        "1 + 1 + 1 = 3" in {
+          val script = "return 1 + 1 + 1"
+          runScriptWithResult(script, 3)
+        }
+        "(1 - 1) + 1 = 1" in {
+          val script = "return (1 - 1) + 1"
+          runScriptWithResult(script, 1)
+        }
+        "1 - (1 + 1) = -1" in {
+          val script = "return 1 - (1 + 1)"
+          runScriptWithResult(script, -1)
+        }
+      }
+      "addition" in {
+        "1 + 1 = 2" in {
+          val script = "return 1 + 1"
+          runScriptWithResult(script, 2)
+        }
+        "1.2 + 3 = 4.2" in {
+          val script = "return 1.2 + 3"
+          runScriptWithResult(script, 4.2)
+        }
+        "a + b = ab" in {
+          val script = """return "a" + "b" """
+          runScriptWithResult(script, "ab")
+        }
+      }
+      "substraction" in {
+        "10 - 3 = 7" in {
+          val script = "return 10 - 3"
+          runScriptWithResult(script, 7)
+        }
+        "3 - 5.2 = -2.2" in {
+          val script = "return 3 - 5.2"
+          runScriptWithResult(script, -2.2)
+        }
+      }
+      "boolean" in {
+        "or" in {
+          val script = "return true or false"
+          runScriptWithResult(script, true)
+        }
+        "and false" in {
+          val script = "return true and false"
+          runScriptWithResult(script, false)
+        }
+        "and true" in {
+          val script = "return true and true"
+          runScriptWithResult(script, true)
+        }
+      }
+      "equality" in {
+        "==" in {
+          val script = "return 1 == 1"
+          runScriptWithResult(script, true)
+        }
+      }
+    }
     "models" in {
       "for" in {
         val people = SmartNodeSet(model)

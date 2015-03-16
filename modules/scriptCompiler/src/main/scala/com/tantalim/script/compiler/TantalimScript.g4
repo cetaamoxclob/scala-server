@@ -27,7 +27,7 @@ assignment
  ;
 
 returnStat
- : RETURN atom
+ : RETURN expr
 ;
 
 ifStat
@@ -48,7 +48,8 @@ forBlock
  ;
 
 expr
- : MINUS expr                           #unaryMinusExpr
+ : OPAR expr CPAR                       #parExpr
+ | MINUS expr                           #unaryMinusExpr
  | NOT expr                             #notExpr
  | expr op=(MULT | DIV | MOD) expr      #multiplicationExpr
  | expr op=(PLUS | MINUS) expr          #additiveExpr
@@ -60,7 +61,7 @@ expr
  ;
 
 atom
- : OPAR atom CPAR #parExpr
+ : OPAR atom CPAR #parAtom
  | (INT | DOUBLE)  #numberAtom
  | (TRUE | FALSE) #booleanAtom
  | ID             #idAtom

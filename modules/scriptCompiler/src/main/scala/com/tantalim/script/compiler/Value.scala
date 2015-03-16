@@ -1,8 +1,21 @@
 package com.tantalim.script.compiler
 
 case class Value(value: Any = Unit) {
+  def asBoolean = value.asInstanceOf[Boolean]
 
-  def getString = value.asInstanceOf[String]
+  def isBoolean = value.isInstanceOf[Boolean]
+
+  def asString = value.asInstanceOf[String]
+
+  def isInt = value.isInstanceOf[Int]
+
+  def asInt = value.asInstanceOf[Int]
+
+  def isDouble = value.isInstanceOf[Double]
+
+  def asDouble = if (isInt) asInt.toDouble else value.asInstanceOf[Double]
+
+  def isNumeric = isInt || isDouble
 
   def toResult: Any = {
     value match {
