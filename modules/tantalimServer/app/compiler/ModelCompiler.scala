@@ -11,25 +11,37 @@ import scala.collection.{Seq, Map}
 trait ModelCompiler extends ArtifactService with TableCompiler {
 
   def compileModel(name: String): Model = {
-    println("Compiling model " + name)
+    println("Compiling model set " + name)
     val json = getArtifactContentAndParseJson(ArtifactType.Model, name)
     json.validate[ModelJson] match {
       case JsSuccess(modelJson, _) =>
-        compileModelView(modelJson.copy(name = Option(name)))
+        compileModelView(modelJson.copy(name = Option(name)), None)
       case JsError(err) =>
         throw new TantalimException("Failed to compile model " + name, "See the following error:" + err.toString)
     }
   }
 
-  private def compileModelView(model: ModelJson): Model = {
-    println("Compiling model view " + model.name.getOrElse("unknown"))
-    val basisTable = getTableFromCache(model.basisTable).getOrElse {
-      val newTable = compileTable(model.basisTable)
+  private def extendModel(model: ModelJson, parent: Option[Model]): Model = {
+    println("Extending model " + model.extendModel.get)
+    val superModel = parent.get
+    superModel.copy(
+      parentLink = model.parentLink,
+      parent = parent,
+      filter = if (model.filter.isDefined) model.filter else superModel.filter,
+      preSave = model.preSave
+    )
+  }
+
+  private def compileModelView(model: ModelJson, parent: Option[Model]): Model = {
+    println("Compiling model " + model.name.get)
+
+    val basisTable = getTableFromCache(model.basisTable.get).getOrElse {
+      val newTable = compileTable(model.basisTable.get)
       addTableToCache(model.name.get, newTable)
       newTable
     }
     val instanceIdField = if (basisTable.primaryKey.isDefined) {
-      model.fields.find(f =>
+      model.fields.get.find(f =>
         f.basisColumn == basisTable.primaryKey.get.name // && f.step
       )
     } else None
@@ -51,12 +63,13 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
       step.name -> step.tableAlias.get
     }.toMap
 
-    new Model(
+    println("Sending Model " + model.name.get)
+    val newModel = new Model(
       model.name.get,
       basisTable,
       model.limit.getOrElse(0),
       instanceID = if (instanceIdField.isDefined) Option(instanceIdField.get.name) else None,
-      fields = model.fields.map(f => {
+      fields = model.fields.get.map(f => {
         if (f.step.isDefined) {
           val stepName = f.step.get
           val stepID = stepIntsByName.getOrElse(
@@ -74,13 +87,8 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
           f.name -> compileModelField(f, basisTable.getColumn(f.basisColumn), None)
         }
       }).toMap,
-      children = model.children match {
-        case Some(modelChildren) => modelChildren.map(childModel => {
-          childModel.name.get -> compileModelView(childModel)
-        }).toMap
-        case None => Map.empty
-      },
       parentLink = model.parentLink,
+      parent = parent,
       steps = stepsByInt,
       orderBy = compileOrderBy(model.orderBy),
       allowInsert = model.allowInsert.getOrElse(basisTable.allowInsert),
@@ -89,6 +97,15 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
       preSave = model.preSave,
       filter = model.filter
     )
+    if (model.children.isDefined) {
+      model.children.get.foreach { childJson =>
+        val childModel =
+          if (childJson.extendModel.isDefined) extendModel(childJson, Some(newModel))
+          else compileModelView(childJson, Some(newModel))
+        newModel.children(childModel.name) = childModel
+      }
+    }
+    newModel
   }
 
   private def buildModelSteps(model: ModelJson, basisTable: DeepTable): Seq[TempModelStep] = {

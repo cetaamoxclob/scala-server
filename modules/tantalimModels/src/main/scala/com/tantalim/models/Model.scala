@@ -5,15 +5,16 @@ case class Model(name: String,
                  limit: Int = 0,
                  instanceID: Option[String] = None,
                  fields: Map[String, ModelField],
-                 children: Map[String, Model] = Map.empty,
                  steps: scala.collection.Map[Int, ModelStep] = Map.empty, // I'm not sure why just ": Map[Int," ... won't work here
+                 parent: Option[Model] = None,
                  parentLink: Option[ModelParentLink] = None,
                  orderBy: Seq[ModelOrderBy] = Seq.empty,
                  allowInsert: Boolean = true,
                  allowUpdate: Boolean = true,
                  allowDelete: Boolean = true,
                  preSave: Option[String] = None,
-                 filter: Option[String] = None
+                 filter: Option[String] = None,
+                 children: collection.mutable.Map[String, Model] = scala.collection.mutable.Map.empty
                   )
 
 case class ModelField(name: String,

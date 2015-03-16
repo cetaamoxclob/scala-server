@@ -34,6 +34,10 @@
       "basisColumn": "PreSave"
     },
     {
+      "name": "ModelFilter",
+      "basisColumn": "Filter"
+    },
+    {
       "name": "ModelAllowInsert",
       "basisColumn": "AllowInsert"
     },
@@ -44,6 +48,17 @@
     {
       "name": "ModelAllowDelete",
       "basisColumn": "AllowDelete"
+    }
+  ],
+  "children": [
+    {
+      "extends": "BuildModel",
+      "basisTable": "Model",
+      "parentLink": {
+        "parentField": "ModelID",
+        "childField": "ModelParentID"
+      },
+      "filter": ""
     }
   ],
   "filter": "ModelParentID IsEmpty"

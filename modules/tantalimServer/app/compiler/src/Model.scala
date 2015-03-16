@@ -5,10 +5,11 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 
-case class ModelJson(basisTable: String,
-                     fields: Seq[ModelFieldJson],
+case class ModelJson(basisTable: Option[String],
+                     fields: Option[Seq[ModelFieldJson]],
                      limit: Option[Int],
                      name: Option[String],
+                     extendModel: Option[String],
                      children: Option[Seq[ModelJson]],
                      orderBy: Option[Seq[ModelOrderBy]],
                      parentLink: Option[ModelParentLink],
@@ -42,10 +43,11 @@ case class FieldDefaultJson(value: String,
 
 object ModelJson {
   implicit def modelReads: Reads[ModelJson] = (
-    (JsPath \ "basisTable").read[String] and
-      (JsPath \ "fields").read[Seq[ModelFieldJson]] and
+    (JsPath \ "basisTable").readNullable[String] and
+      (JsPath \ "fields").readNullable[Seq[ModelFieldJson]] and
       (JsPath \ "limit").readNullable[Int] and
       (JsPath \ "name").readNullable[String] and
+      (JsPath \ "extends").readNullable[String] and
       (JsPath \ "children").lazyReadNullable(Reads.seq[ModelJson](modelReads)) and
       (JsPath \ "orderBy").readNullable[Seq[ModelOrderBy]] and
       (JsPath \ "parentLink").readNullable[ModelParentLink] and
