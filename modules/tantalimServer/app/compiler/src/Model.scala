@@ -16,7 +16,8 @@ case class ModelJson(basisTable: String,
                      allowInsert: Option[Boolean],
                      allowUpdate: Option[Boolean],
                      allowDelete: Option[Boolean],
-                     preSave: Option[String]
+                     preSave: Option[String],
+                     filter: Option[String]
                       )
 
 case class ModelStepJson(name: String,
@@ -52,7 +53,8 @@ object ModelJson {
       (JsPath \ "allowInsert").readNullable[Boolean] and
       (JsPath \ "allowUpdate").readNullable[Boolean] and
       (JsPath \ "allowDelete").readNullable[Boolean] and
-      (JsPath \ "preSave").readNullable[String]
+      (JsPath \ "preSave").readNullable[String] and
+      (JsPath \ "filter").readNullable[String]
     ).apply(ModelJson.apply _)
 
   implicit def modelFieldReads: Reads[ModelFieldJson] = (

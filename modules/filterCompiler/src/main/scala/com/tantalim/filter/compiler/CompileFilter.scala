@@ -38,14 +38,18 @@ class CompileFilter(filter: String, fields: Map[String, ModelField]) extends Fil
   override def visitStatementPhrase(ctx: FilterParser.StatementPhraseContext) = {
     val leftField = visit(ctx.left)
     val comparator = visit(ctx.comparator)
-    val right = visit(ctx.right)
-
-    if (right.sql.isDefined) {
-      Value(sql = Some(leftField.sql.get + " " + comparator.sql.get + " " + right.sql.get), List.empty)
+    val sql = leftField.sql.get + " " + comparator.sql.get
+    if (comparator.getComparator.get == Comparator.IsEmpty) {
+      Value(sql = Some(sql), List.empty)
     } else {
-      val sql = getSql(comparator, right.values)
-      val params = getParams(leftField.getField.get.basisColumn.dataType, comparator, right)
-      Value(sql = Some(leftField.sql.get + " " + comparator.sql.get + " " + sql), params)
+      val right = visit(ctx.right)
+      if (right.sql.isDefined) {
+        Value(sql = Some(sql + " " + right.sql.get), List.empty)
+      } else {
+        val sqlRight = getSql(comparator, right.values)
+        val params = getParams(leftField.getField.get.basisColumn.dataType, comparator, right)
+        Value(sql = Some(sql + " " + sqlRight), params)
+      }
     }
   }
 

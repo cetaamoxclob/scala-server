@@ -4,7 +4,7 @@ start : phrase;
 
 phrase : left=phrase andor=andOrs right=phrase             #AndPhrase
       | '(' phrase ')'                                     #ParenthesisPhrase
-      | left=field comparator=comparators right=atom       #StatementPhrase
+      | left=field comparator=comparators right=atom?       #StatementPhrase
 ;
 
 andOrs : AND | OR;
@@ -49,6 +49,7 @@ comparators : '='
       | 'OnOrBefore'
       | 'After'
       | 'OnOrAfter'
+      | 'IsEmpty'
 ;
 
 dateMeasure : 's'|'m'|'h'|'D'|'W'|'M'|'Y';

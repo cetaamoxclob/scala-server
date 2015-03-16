@@ -15,6 +15,11 @@
       "label": "Model Name"
     },
     {
+      "name": "ParentID",
+      "dbName": "parentID",
+      "dataType": "Integer"
+    },
+    {
       "name": "BasisTable",
       "dbName": "basisTable",
       "required": true,
@@ -38,6 +43,11 @@
     {
       "name": "PreSave",
       "dbName": "preSave"
+    },
+    {
+      "name": "Filter",
+      "dbName": "filter",
+      "dataType": "String"
     },
     {
       "name": "AllowInsert",
