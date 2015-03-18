@@ -55,7 +55,7 @@ row = currentSet.getInstance();
                     <label class="control-label" class="ui-checkbox" for="@(page.model.name)-@(field.name)" data-ng-click="row.toggle('@(field.name)', @(field.required))">
                         <i data-ng-show="row.data.@(field.name) === true" class="fa fa-check-square-o fa-lg fa-fw"></i>
                         <i data-ng-show="row.data.@(field.name) === false" class="fa fa-square-o fa-lg fa-fw"></i>
-                        <i data-ng-show="row.data.@(field.name) === undefined || data.@(field.name) === null" class="fa fa-square-o fa-lg fa-fw disabled"></i>
+                        <i data-ng-show="row.data.@(field.name) === undefined || row.data.@(field.name) === null" class="fa fa-square-o fa-lg fa-fw disabled"></i>
                         @field.label
                     </label>
                 </div>

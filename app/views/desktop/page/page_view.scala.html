@@ -154,7 +154,7 @@
                         </thead>
                         <tbody>
                             <tr data-ng-repeat="row in currentSet.rows"
-                            data-ng-click="currentSet.select($index)"
+                            data-ng-click="currentSet.moveTo($index)"
                             data-ng-class="{success: row.id === currentSet.getInstance().id}">
                             @for(field <- page.fields) {
                                 @if(field.showInNavigation) {

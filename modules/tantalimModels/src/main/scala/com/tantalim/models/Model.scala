@@ -19,6 +19,18 @@ case class Model(name: String,
   def addChild(child: Model): Unit = {
     this.children(child.name) = child.copy(parent = Some(this))
   }
+
+  lazy val isRecursive: Boolean = {
+    isSameClassAsAncestors(this)
+  }
+
+  def isSameClassAsAncestors(childModel: Model): Boolean = {
+    if (parent.isEmpty) false
+    else if (parent.get.name == childModel.name) true
+    else parent.get.isSameClassAsAncestors(childModel)
+  }
+
+  override def toString: String = s"Model($name) fields(${fields.size}) children(${children.size})"
 }
 
 case class ModelField(name: String,
