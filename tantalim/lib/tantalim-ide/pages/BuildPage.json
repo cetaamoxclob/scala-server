@@ -1,4 +1,9 @@
 {
   "title": "Build Page",
-  "fields": []
+  "sections": [
+    {
+      "name": "BuildPage",
+      "fields": []
+    }
+  ]
 }

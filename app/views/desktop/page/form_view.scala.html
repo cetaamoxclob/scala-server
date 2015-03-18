@@ -1,17 +1,17 @@
 @(page: com.tantalim.models.PageSection)
 
+{{
+row = currentSet.getInstance();
+""
+}}
+
 @for(field <- page.fields) {
     @if(field.showInFormView) {
         <div class="form-group" ng-class="{'has-error': TopPageForm.@(field.name).$invalid}">
-            {{
-                row = current.instances.@(page.model.name);
-                data = row.data;
-                ""
-            }}
             @if(field.fieldType == "text") {
                 <label class="control-label" for="@(page.model.name)-@(field.name)">@field.label</label>
                 <input type="text" class="form-control" id="@(page.model.name)-@(field.name)" name="@(field.name)"
-                data-ng-model="data.@(field.name)"
+                data-ng-model="row.data.@(field.name)"
                 ng-change="row.update('@(field.name)')"
                 @if(field.blurFunction.isDefined) {
                     ng-blur="@Html(field.blurFunction.get)"
@@ -53,9 +53,9 @@
             @if(field.fieldType == "checkbox") {
                 <div class="checkbox">
                     <label class="control-label" class="ui-checkbox" for="@(page.model.name)-@(field.name)" data-ng-click="row.toggle('@(field.name)', @(field.required))">
-                        <i data-ng-show="data.@(field.name) === true" class="fa fa-check-square-o fa-lg fa-fw"></i>
-                        <i data-ng-show="data.@(field.name) === false" class="fa fa-square-o fa-lg fa-fw"></i>
-                        <i data-ng-show="data.@(field.name) === undefined || data.@(field.name) === null" class="fa fa-square-o fa-lg fa-fw disabled"></i>
+                        <i data-ng-show="row.data.@(field.name) === true" class="fa fa-check-square-o fa-lg fa-fw"></i>
+                        <i data-ng-show="row.data.@(field.name) === false" class="fa fa-square-o fa-lg fa-fw"></i>
+                        <i data-ng-show="row.data.@(field.name) === undefined || data.@(field.name) === null" class="fa fa-square-o fa-lg fa-fw disabled"></i>
                         @field.label
                     </label>
                 </div>

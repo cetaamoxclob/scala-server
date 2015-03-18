@@ -35,9 +35,14 @@ object AngularJsonUtil {
           case (fieldName, field) => fieldName -> toJson(field)
         }.toSeq
       ),
-      "children" -> JsArray(model.children.values.toSeq.map(childModel => {
-        toJson(childModel, Some(model))
-      }))
+      "children" -> JsArray(
+        model.children.values.toSeq.map(childModel =>
+          if (childModel.isRecursive) Json.obj(
+            "extends" -> JsString(childModel.name)
+          )
+          else toJson(childModel, Some(model))
+        )
+      )
     )
     if (parent.isDefined) {
       modelProperties.append("parent" -> JsString(parent.get.name))

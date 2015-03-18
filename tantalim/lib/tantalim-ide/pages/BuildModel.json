@@ -1,6 +1,5 @@
 {
   "title": "Build Model",
-
   "sections": [
     {
       "name": "Model",
@@ -29,6 +28,14 @@
         },
         {
           "name": "ModelAllowDelete"
+        }
+      ],
+      "sections": [
+        {
+          "name": "ChildModel",
+          "title": "Child Models",
+          "model": "BuildModel",
+          "extends": "BuildModel"
         }
       ]
     }

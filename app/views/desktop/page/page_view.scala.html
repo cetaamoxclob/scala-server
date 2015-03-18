@@ -1,5 +1,10 @@
 @(page: com.tantalim.models.PageSection, depth: Int)
 <div id="@page.name" class="childSection">
+    {{
+    level = 0;
+    currentSet = ModelCursor.getCurrentSet('@(page.model.name)', level);
+    ""
+    }}
     @if(depth == 0) {
         <nav data-ng-show="searchController.maxPages > 1">
             <ul class="nav navbar-nav navbar-right" style="margin-right: auto">
@@ -28,7 +33,7 @@
         data-ng-click="hide@page.name = false" data-ng-show="hide@page.name"></span>
         <h2>@page.title</h2>
     }
-    <div data-ng-hide="hide@page.name || action.length('@page.model.name')">
+    <div data-ng-hide="hide@page.name || currentSet.rows.length">
         @if(page.model.parentLink.isEmpty) {
             <div class="text-center">
                 <div class="alert alert-warning col-sm-6 col-sm-offset-3" role="alert">
@@ -44,7 +49,7 @@
                         <p><strong>No Records Exist</strong></p>
                         @if(page.model.allowInsert) {
                             <hr>
-                            <button type="button" class="btn btn-primary btn-sm" data-ng-click="action.insert('@page.model.name')">
+                            <button type="button" class="btn btn-primary btn-sm" data-ng-click="currentSet.insert()">
                                 <span class="glyphicon glyphicon-plus"></span>
                                 Insert New @page.title
                             </button>
@@ -54,19 +59,19 @@
             </div>
         } else {
             @if(page.model.allowInsert) {
-                <button type="button" class="btn btn-primary btn-sm" data-ng-click="action.insert('@page.model.name')">
+                <button type="button" class="btn btn-primary btn-sm" data-ng-click="currentSet.insert()">
                     <span class="glyphicon glyphicon-plus"></span>
                     Insert New @page.title
                 </button>
             }
         }
     </div>
-    <div data-ng-show="action.length('@page.model.name')">
+    <div data-ng-show="currentSet.rows.length">
         <div data-ng-hide="hide@page.name">
             <div class="form-group" data-ng-show="PageCursor.sections.@(page.name).viewMode === 'table'">
                 @if(page.model.allowInsert) {
                     <button type="button" class="btn btn-primary btn-xs"
-                    data-ng-click="action.insert('@page.model.name')"
+                    data-ng-click="currentSet.insert()"
                     data-ng-disabled="TopPageForm.$invalid">
                         <span class="glyphicon glyphicon-plus"></span>
                         Insert
@@ -74,14 +79,14 @@
                 }
                 @if(page.model.allowDelete) {
                     <button type="button" class="btn btn-danger btn-xs"
-                    data-ng-click="action.deleteSelected('@page.model.name')"
-                    data-ng-disabled="!action.deleteEnabled('@page.model.name')">
+                    data-ng-click="currentSet.delete()"
+                    data-ng-enabled="currentSet.deleteEnabled()">
                         <span class="glyphicon glyphicon-trash"></span>
                         Delete
                     </button>
                 }
                 @if(page.hasFormView) {
-                    <button type="button" class="btn btn-default btn-xs" data-ng-click="PageCursor.sections.@(page.name).viewMode = 'form'"
+                    <button type="button" class="btn btn-default btn-xs" data-ng-click="PageCursor.sections.@(page.name).viewMode = 'form'; currentSet.selectedRows.end = currentSet.selectedRows.start"
                     data-ng-show="PageCursor.sections.@(page.name).viewMode !== 'form'">
                         <span class="glyphicon glyphicon-file"></span>
                         Form View
@@ -91,7 +96,7 @@
             <div class="form-group" data-ng-show="PageCursor.sections.@(page.name).viewMode === 'form'">
                 @if(page.model.allowInsert) {
                     <button type="button" class="btn btn-primary btn-xs"
-                    data-ng-click="action.insert('@page.model.name')"
+                    data-ng-click="currentSet.insert()"
                     data-ng-disabled="TopPageForm.$invalid">
                         <span class="glyphicon glyphicon-plus"></span>
                         Insert
@@ -99,21 +104,21 @@
                 }
                 @if(page.model.allowDelete) {
                     <button type="button" class="btn btn-danger btn-xs"
-                    data-ng-click="action.delete('@page.model.name')"
-                    data-ng-disabled="!action.deleteEnabled('@page.model.name')">
+                    data-ng-click="currentSet.delete()"
+                    data-ng-enabled="currentSet.deleteEnabled()">
                         <span class="glyphicon glyphicon-trash"></span>
                         Delete
                     </button>
                 }
             <button type="button" class="btn btn-xs"
-            data-ng-click="action.previous('@page.model.name')"
-            data-ng-disabled="current.sets.@(page.model.name).currentIndex == 0 || TopPageForm.$invalid">
+            data-ng-click="currentSet.movePrevious()"
+            data-ng-disabled="currentSet.selectedRows.start == 0 || TopPageForm.$invalid">
                 <span class="glyphicon glyphicon-chevron-left"></span>
                 Previous
             </button>
             <button type="button" class="btn btn-xs"
-            data-ng-click="action.next('@page.model.name')"
-            data-ng-disabled="current.sets.@(page.model.name).currentIndex == current.sets.@(page.model.name).rows.length - 1 || TopPageForm.$invalid">
+            data-ng-click="currentSet.moveNext()"
+            data-ng-disabled="currentSet.selectedRows.start == currentSet.rows.length - 1 || TopPageForm.$invalid">
                 Next
                 <span class="glyphicon glyphicon-chevron-right"></span>
             </button>
@@ -124,17 +129,17 @@
                         Table View
                     </button>
                 }
-            <span class="instance-count" data-ng-show="current.sets.@(page.model.name).rows.length > 0">
-                <span data-ng-bind="current.sets.@(page.model.name).currentIndex + 1"></span> of <span
-            data-ng-bind="current.sets.@(page.model.name).rows.length"></span>
+            <span class="instance-count" data-ng-show="currentSet.rows.length > 0">
+                <span data-ng-bind="currentSet.selectedRows.start + 1"></span> of <span
+            data-ng-bind="currentSet.rows.length"></span>
             </span>
             </div>
 
-            <div class="" data-ng-if="PageCursor.sections.@(page.name).viewMode === 'table'" data-ng-click="chooseModel('@page.model.name')">
+            <div class="" data-ng-if="PageCursor.sections.@(page.name).viewMode === 'table'" data-ng-click="focusSet(currentSet)">
                 @desktop.page.grid_view(page)
             </div>
 
-            <div class="row" data-ng-if="PageCursor.sections.@(page.name).viewMode === 'form'" data-ng-click="chooseModel('@page.model.name')">
+            <div class="row" data-ng-if="PageCursor.sections.@(page.name).viewMode === 'form'" data-ng-click="focusSet(currentSet)">
             @if(page.hasNavigation) {
                 <div class="col-sm-3 hidden-xs">
                     <table class="tnt-grid table table-bordered col-sm-4">
@@ -148,9 +153,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="row in current.sets.@(page.model.name).rows"
-                            data-ng-click="action.select('@page.model.name', $index)"
-                            data-ng-class="{success: row.id === current.instances.@(page.model.name).id}">
+                            <tr data-ng-repeat="row in currentSet.rows"
+                            data-ng-click="currentSet.select($index)"
+                            data-ng-class="{success: row.id === currentSet.getInstance().id}">
                             @for(field <- page.fields) {
                                 @if(field.showInNavigation) {
                                     <td data-ng-bind="row.data.@(field.name) @if(field.filter.isDefined){ | @field.filter}" class="nav"/>
