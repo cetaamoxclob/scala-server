@@ -25,23 +25,24 @@
             <![endif]-->
         </head>
         <body class="desktop" data-ng-controller="PageController">
-            <div id="loading" class="text-center" data-ng-show="showLoadingScreen">
-                <div id="loadingMessage" class="col-sm-8 col-sm-offset-2">
+            <div id="loading" class="text-center" data-ng-show="SmartPage.showLoadingScreen">
+                <div id="loadingMessage" class="col-sm-8 col-sm-offset-2" data-ng-show="SmartPage.loadingFailed">
                     <h1>
-                        <i class="fa fa-spinner fa-spin" data-ng-hide="serverError"></i>
+                        Loading @page.title Failed
+                    </h1>
+                    <div class="alert alert-danger ng-cloak" data-ng-bind-html="Logger.getError()"></div>
+                </div>
+                <div id="loadingMessage" class="col-sm-8 col-sm-offset-2" data-ng-hide="SmartPage.loadingFailed">
+                    <h1>
+                        <i class="fa fa-spinner fa-spin"></i>
                         Loading @page.title
                     </h1>
-                    <div class="alert alert-danger ng-cloak" data-ng-show="serverError" data-ng-bind-html="serverError"></div>
-                    <button class="btn btn-default ng-cloak" data-ng-show="serverError" data-ng-click="showLoadingScreen = false">
-                        <i class="fa fa-times"></i>
-                        Close
-                    </button>
                 </div>
             </div>
-            <section class="content container ng-cloak" data-ng-show="!showLoadingScreen">
+            <section class="content container ng-cloak" data-ng-show="!SmartPage.showLoadingScreen">
                 <div id="page-body">
-                    <div id="server-status" class="alert alert-warning" data-ng-show="serverStatus" data-ng-bind="serverStatus"></div>
-                    <div id="server-error" class="alert alert-danger" data-ng-show="serverError" data-ng-bind-html="serverError"
+                    <div id="server-status" class="alert alert-warning" data-ng-show="Logger.getStatus()" data-ng-bind-html="Logger.getStatus()"></div>
+                    <div id="server-error" class="alert alert-danger" data-ng-show="Logger.getError()" data-ng-bind-html="Logger.getError()"
                     data-spy="affix-bottom"></div>
                     @desktop.page.page(page)
                     <a href="/m/@page.name/#/" class="btn btn-primary visible-xs col-xs-10 col-xs-offset-1">

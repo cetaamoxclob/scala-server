@@ -1,4 +1,4 @@
-@(page: com.tantalim.models.PageSection)
+@(page: com.tantalim.models.PageSection, depth: Int)
 
 <div class="table-responsive">
     <table class="tnt-grid table table-bordered">
@@ -14,17 +14,17 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="row in currentSet.rows">
+            <tr data-ng-repeat="row in SmartPage.getSection('@(page.name)', @depth).getCurrentSet().rows">
                 <td class="tnt-grid-left-nav" data-ng-bind="$index + 1"></td>
             @for(field <- page.fields) {
                 @if(field.showInTableView) {
                     <td class="text-display @if(field.alignCenter){text-center} @if(field.alignRight){text-right}"
-                        data-ng-class="{success: currentSet.cellIsSelected($index, '@field.name')}"
-                        data-ng-mousedown="currentSet.mousedown($index, '@field.name')"
-                        data-ng-mouseover="currentSet.mouseover($index, '@field.name')"
-                        data-ng-mouseup="currentSet.mouseup($index, '@field.name')"
+                        data-ng-class="{success: SmartPage.getSection('@(page.name)', @depth).getCurrentSet().cellIsSelected($index, '@field.name')}"
+                        data-ng-mousedown="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().mousedown($index, '@field.name')"
+                        data-ng-mouseover="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().mouseover($index, '@field.name')"
+                        data-ng-mouseup="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().mouseup($index, '@field.name')"
                         @if(field.fieldType != "checkbox") {
-                            data-ng-dblclick="currentSet.dblclick($index, '@field.name')"
+                            data-ng-dblclick="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().dblclick($index, '@field.name')"
                         }
                     >
                         @if(field.fieldType == "checkbox") {
@@ -40,16 +40,16 @@
                         } else {
                             <span class="text-view" data-ng-bind="row.data.@field.name @if(field.filter.isDefined){ | @field.filter}"></span>
                             <input type="text" class="text-edit" data-ng-model="row.data.@field.name"
-                            data-ng-show="currentSet.cellIsEditing($index, '@field.name')"
-                            data-ng-change="row.update($index, '@(field.name)')"
-                            focus-me="currentSet.focus($index, '@field.name')">
+                            data-ng-show="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().cellIsEditing($index, '@field.name')"
+                            data-ng-change="row.update('@(field.name)')"
+                            focus-me="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().focus($index, '@field.name')">
                         }
                     </td>
                 }
             }
                 <td></td>
             </tr>
-            <tr data-ng-hide="currentSet.rows.length">
+            <tr data-ng-hide="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().rows.length">
                 <td colspan="@page.fieldLengthInTableView">No Data Found</td>
             </tr>
         </tbody>

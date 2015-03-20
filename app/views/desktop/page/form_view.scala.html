@@ -1,9 +1,4 @@
-@(page: com.tantalim.models.PageSection)
-
-{{
-row = currentSet.getInstance();
-""
-}}
+@(page: com.tantalim.models.PageSection, depth: Int)
 
 @for(field <- page.fields) {
     @if(field.showInFormView) {
@@ -11,8 +6,8 @@ row = currentSet.getInstance();
             @if(field.fieldType == "text") {
                 <label class="control-label" for="@(page.model.name)-@(field.name)">@field.label</label>
                 <input type="text" class="form-control" id="@(page.model.name)-@(field.name)" name="@(field.name)"
-                data-ng-model="row.data.@(field.name)"
-                ng-change="row.update('@(field.name)')"
+                data-ng-model="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().data.@(field.name)"
+                ng-change="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().update('@(field.name)')"
                 @if(field.blurFunction.isDefined) {
                     ng-blur="@Html(field.blurFunction.get)"
                 }
@@ -20,9 +15,9 @@ row = currentSet.getInstance();
                     placeholder="@field.placeholder.get"
                 }
                 @if(field.required) {
-                    ng-required="row"
+                    ng-required="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance()"
                 }
-                ng-disabled="row.state !== 'INSERTED' && @if(field.modelField.updateable){false}else{true}"
+                ng-disabled="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().state !== 'INSERTED' && @if(field.modelField.updateable){false}else{true}"
                 @if(field.help.isDefined) {
                     aria-describedby="help-@(page.model.name)-@(field.name)"
                 }
@@ -52,10 +47,10 @@ row = currentSet.getInstance();
             }
             @if(field.fieldType == "checkbox") {
                 <div class="checkbox">
-                    <label class="control-label" class="ui-checkbox" for="@(page.model.name)-@(field.name)" data-ng-click="row.toggle('@(field.name)', @(field.required))">
-                        <i data-ng-show="row.data.@(field.name) === true" class="fa fa-check-square-o fa-lg fa-fw"></i>
-                        <i data-ng-show="row.data.@(field.name) === false" class="fa fa-square-o fa-lg fa-fw"></i>
-                        <i data-ng-show="row.data.@(field.name) === undefined || row.data.@(field.name) === null" class="fa fa-square-o fa-lg fa-fw disabled"></i>
+                    <label class="control-label" class="ui-checkbox" for="@(page.model.name)-@(field.name)" data-ng-click="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().toggle('@(field.name)', @(field.required))">
+                        <i data-ng-show="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().data.@(field.name) === true" class="fa fa-check-square-o fa-lg fa-fw"></i>
+                        <i data-ng-show="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().data.@(field.name) === false" class="fa fa-square-o fa-lg fa-fw"></i>
+                        <i data-ng-show="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().data.@(field.name) === undefined || SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().data.@(field.name) === null" class="fa fa-square-o fa-lg fa-fw disabled"></i>
                         @field.label
                     </label>
                 </div>

@@ -1,12 +1,12 @@
 @(page: com.tantalim.models.PageSection)
 @import data.ComparatorByDataType
-<div id="search-view" data-ng-show="searchController.showSearch">
+<div id="search-view" data-ng-show="SmartPage.showSearch">
     <h2>
         @page.title
     <small>Search</small>
     </h2>
     <div class="page-nav navbar navbar-inverse navbar-fixed-bottom">
-        <button data-ng-click="searchController.turnSearchOff()" class="btn btn-default">
+        <button data-ng-click="SmartPage.turnSearchOff()" class="btn btn-default">
             <i class="fa fa-times"></i>
             Cancel
         </button>
