@@ -34,11 +34,12 @@
                 <label class="control-label" for="@(page.model.name)-@field.name">@field.label</label>
                 @defining(field.select.get) { select =>
                     <ui-select
-                    current="data"
+                    current="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().data"
                     source-model="@select.model"
                     source-field="@select.sourceField"
                     source-filter="@select.filter"
                     target-model="@page.model.name"
+                    target-level="@depth"
                     target-id="@select.targetID.getOrElse("")"
                     target-field="@(field.name)"
                     other-mappings="@Html(select.fields.toString())"
