@@ -1,0 +1,28 @@
+{
+  "title": "List Models",
+  "icon": "glyphicon-th-list",
+  "sections": [
+    {
+      "name": "Models",
+      "model": "ListModels",
+      "viewMode": "table",
+      "fields": [
+        {
+          "name": "ModelName",
+          "showInNavigation": true,
+          "links": [
+            {
+              "title": "Build Model",
+              "page": "BuildModel",
+              "filter": "ModelName Equals \"[ModelName]\" AND ModelParentID IsEmpty"
+            }
+          ]
+        },
+        {
+          "name": "ModelBasisTable"
+        }
+      ]
+
+    }
+  ]
+}

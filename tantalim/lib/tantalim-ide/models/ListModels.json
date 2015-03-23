@@ -1,0 +1,22 @@
+{
+  "basisTable": "Model",
+  "fields": [
+    {
+      "name": "ModelID",
+      "basisColumn": "ModelID"
+    },
+    {
+      "name": "ModelName",
+      "basisColumn": "Name"
+    },
+    {
+      "name": "ModelParentID",
+      "basisColumn": "ParentID"
+    },
+    {
+      "name": "ModelBasisTable",
+      "basisColumn": "BasisTable"
+    }
+  ],
+  "filter": "ModelParentID IsEmpty"
+}

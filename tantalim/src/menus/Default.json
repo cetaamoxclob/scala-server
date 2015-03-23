@@ -32,6 +32,9 @@
           "page": "BuildTable"
         },
         {
+          "page": "ListModels"
+        },
+        {
           "page": "BuildModel"
         },
         {
