@@ -10,7 +10,7 @@ class ArtifactExport(artifactType: ArtifactType) extends DataReader with DataSav
   val artifactReader = compileModel("~" + artifactType.toString.toLowerCase)
 
   def readFromDatabaseAndWriteToSource(artifactName: String) = {
-    val artifact = queryModelData(artifactReader, filter = Some("name = " + artifactName))
+    val artifact = queryModelData(artifactReader, filter = Some(s"name = '$artifactName'"))
     val firstArtifact = artifact.rows.headOption.getOrElse(throw new Exception("Failed to find exactly one row matching = " + artifactName))
     convertSmartNodeInstanceToJsObject(firstArtifact)
   }

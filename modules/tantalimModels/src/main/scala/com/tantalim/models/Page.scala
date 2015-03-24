@@ -20,10 +20,15 @@ case class PageSection(name: String,
                        hasNavigation: Boolean,
                        viewMode: String,
                        parent: Option[PageSection],
-                       sections: Seq[PageSection]
+                       var sections: Seq[PageSection]
                         ) {
 
   private lazy val rootDepth: Int = 1
+
+  lazy val hasSibling: Boolean = {
+    if (parent.isEmpty) false
+    else parent.get.sections.length > 1
+  }
 
   lazy val depth: Int = {
     parent match {

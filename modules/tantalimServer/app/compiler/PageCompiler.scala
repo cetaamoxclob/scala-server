@@ -63,9 +63,9 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
       validateFieldSelect(pageField, model)
       pageField
     }
-    new PageSection(
+    val pageSection = new PageSection(
       sectionJson.name,
-      sectionJson.title.getOrElse(sectionJson.name),
+      sectionJson.title.getOrElse(""),
       viewMode = sectionJson.viewMode.getOrElse("form"),
       model = model,
       fields = fields,
@@ -73,15 +73,17 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
       hasTableView = fields.exists(field => field.showInTableView),
       hasNavigation = fields.exists(field => field.showInNavigation),
       parent = parentPage,
-      sections = sectionJson.sections match {
-        case Some(childViews) => childViews.map { childView =>
-          val childModelName = childView.model.getOrElse(childView.name)
-          val childModel = model.children.get(childModelName).get
-          compilePageSection(childView, childModel)
-        }
-        case None => Seq.empty
-      }
+      sections = null
     )
+    pageSection.sections = sectionJson.sections match {
+      case Some(childViews) => childViews.map { childView =>
+        val childModelName = childView.model.getOrElse(childView.name)
+        val childModel = model.children.get(childModelName).get
+        compilePageSection(childView, childModel, Some(pageSection))
+      }
+      case None => Seq.empty
+    }
+    pageSection
   }
 
   private def validateFieldSelect(pageField: PageField, model: Model) = {

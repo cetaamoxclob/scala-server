@@ -4,6 +4,7 @@ import java.sql.ResultSet
 
 import com.tantalim.filter.compiler.CompiledFilter
 import com.tantalim.nodes._
+import com.tantalim.util.TantalimException
 import data._
 import com.tantalim.models._
 
@@ -37,24 +38,32 @@ trait DataReader extends Database {
     sqlBuilder = parseFilterForSql(sqlBuilder, model.fields, model.filter)
     sqlBuilder = parseFilterForSql(sqlBuilder, model.fields, filter)
 
-    val rs = query(sqlBuilder.toPreparedStatement, sqlBuilder.parameters)
-    val resultSet = convertResultSetToDataRows(model, rs)
-    if (resultSet.rows.length > 0 && model.children.size > 0) {
-      model.children.map {
-        case (childModelName: String, childModel: Model) =>
-          val parentFieldName = childModel.parentLink.get.parentField
-          val parentIDs: Seq[Int] = resultSet.rows.map { row =>
-            row.get(parentFieldName) match {
-              case Some(parentFieldValue) => parentFieldValue.asInstanceOf[TntInt].value.toInt
-              case None => -1
+    try {
+      val rs = query(sqlBuilder.toPreparedStatement, sqlBuilder.parameters)
+      val resultSet = convertResultSetToDataRows(model, rs)
+
+      if (resultSet.rows.length > 0 && model.children.size > 0) {
+        model.children.map {
+          case (childModelName: String, childModel: Model) =>
+            val parentFieldName = childModel.parentLink.get.parentField
+            val parentIDs: Seq[Int] = resultSet.rows.map { row =>
+              row.get(parentFieldName) match {
+                case Some(parentFieldValue) => parentFieldValue.asInstanceOf[TntInt].value.toInt
+                case None => -1
+              }
             }
-          }
-          val filterForChildModel = childModel.parentLink.get.childField + " In (" + parentIDs.mkString(",") + ")"
-          val childRows = queryModelData(childModel, 1, Some(filterForChildModel), childModel.orderBy)
-          addChildRowsToParent(resultSet, childRows)
+            val filterForChildModel = childModel.parentLink.get.childField + " In (" + parentIDs.mkString(",") + ")"
+            val childRows = queryModelData(childModel, 1, Some(filterForChildModel), childModel.orderBy)
+            addChildRowsToParent(resultSet, childRows)
+        }
+      }
+      resultSet
+    } catch {
+      case e: Exception => {
+        val e2 = new TantalimException(e.getMessage, sqlBuilder.toPreparedStatement)
+        throw e2
       }
     }
-    resultSet
   }
 
   private def parseFilterForSql(sqlBuilder: SqlBuilder, modelFields: Map[String, ModelField], filter: Option[String]): SqlBuilder = {

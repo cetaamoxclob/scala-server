@@ -19,7 +19,11 @@ case class ModelJson(basisTable: Option[String],
                      allowDelete: Option[Boolean],
                      preSave: Option[String],
                      filter: Option[String]
-                      )
+                      ) {
+  override def toString = {
+    s"Model ($name on $basisTable) Fields ($fields) "
+  }
+}
 
 case class ModelStepJson(name: String,
                          join: String,
@@ -34,7 +38,11 @@ case class ModelFieldJson(name: String,
                           updateable: Option[Boolean],
                           fieldDefault: Option[FieldDefaultJson],
                           export: Option[Boolean]
-                           )
+                           ) {
+  override def toString = {
+    s"$basisColumn AS $name"
+  }
+}
 
 case class FieldDefaultJson(value: String,
                             overwrite: Option[Boolean],

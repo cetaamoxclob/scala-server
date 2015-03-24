@@ -33,6 +33,9 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
   }
 
   private def compileModelView(model: ModelJson, parent: Option[Model]): Model = {
+    if (model.name.isEmpty) {
+      throw new TantalimException("Model Name is missing", "Add name to " + model)
+    }
     println("Compiling model " + model.name.get)
 
     val basisTable = getTableFromCache(model.basisTable.get).getOrElse {
@@ -97,6 +100,18 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
       preSave = model.preSave,
       filter = model.filter
     )
+    if (model.parentLink.isDefined) {
+      val childField = newModel.fields.getOrElse(model.parentLink.get.childField,
+        throw new TantalimException(s"Could not find childField named ${model.parentLink.get.childField}",
+          "Model has the following fields: " + newModel.fields))
+      val parentField = parent.get.fields.getOrElse(model.parentLink.get.parentField,
+        throw new TantalimException(s"Could not find parentField named ${model.parentLink.get.parentField}",
+          "Model has the following fields: " + parent.get.fields))
+      if (childField.dataType != parentField.dataType) {
+        throw new TantalimException(s"parent and child fields are not of the same data type in ${model.name.get}",
+          s"${childField.name} is a ${childField.dataType} and ${parentField.name} is a ${parentField.dataType}")
+      }
+    }
     if (model.children.isDefined) {
       model.children.get.foreach { childJson =>
         val childModel =
