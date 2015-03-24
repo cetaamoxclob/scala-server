@@ -2,7 +2,7 @@ package com.tantalim.models
 
 case class ShallowPage(name: String,
                        title: String,
-                       icon: Option[String])
+                       icon: Option[String] = None)
 
 case class Page(name: String,
                 title: String,

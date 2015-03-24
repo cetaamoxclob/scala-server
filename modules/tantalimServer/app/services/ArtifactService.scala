@@ -29,7 +29,7 @@ trait ArtifactService {
       })
 
       libList.headOption.getOrElse {
-        throw new TantalimException(s"Failed to find source $artifactType named $name", "Create the json file")
+        throw new MissingArtifactException(artifactType, name)
       }
     }
   }

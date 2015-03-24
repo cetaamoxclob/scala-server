@@ -1,9 +1,10 @@
 package compiler
 
-import com.tantalim.models.{Icon, MenuItem, MenuContent, Menu}
+import com.tantalim.models._
+import com.tantalim.util.TantalimException
 import compiler.src.{MenuItemJson, MenuContentJson}
 import play.api.libs.json.{JsError, JsSuccess}
-import services.ArtifactService
+import services.{MissingArtifactException, ArtifactService}
 
 trait MenuCompiler extends ArtifactService with PageCompiler {
   def compileMenu(name: String): Menu = {
@@ -16,7 +17,7 @@ trait MenuCompiler extends ArtifactService with PageCompiler {
           menu.content.map(content => compileMenuContent(content))
         )
       case err: JsError =>
-        throw new Exception("Failed to compile menu " + name + " due to the following error:" + err.toString)
+        throw new TantalimException("Failed to compile menu " + name, "The following error:" + err.toString)
     }
   }
 
@@ -29,7 +30,18 @@ trait MenuCompiler extends ArtifactService with PageCompiler {
 
   private def compileMenuItem(itemJson: MenuItemJson): MenuItem = {
     if (itemJson.page.isDefined) {
-      val page = compileShallowPage(itemJson.page.get)
+      val page: ShallowPage = try {
+        compileShallowPage(itemJson.page.get)
+      } catch {
+        case e: MissingArtifactException => ShallowPage(
+          name = itemJson.page.get,
+          title = s"Missing (${itemJson.page.get})"
+        )
+        case e: TantalimException => ShallowPage(
+          name = itemJson.page.get,
+          title = s"Error (${itemJson.page.get})"
+        )
+      }
       new MenuItem(
         itemJson.title.getOrElse(page.title),
         "/page/" + itemJson.page.get + "/",
