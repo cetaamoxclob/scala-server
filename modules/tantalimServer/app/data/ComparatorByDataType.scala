@@ -25,7 +25,9 @@ object ComparatorByDataType {
         Comparator.LessThanOrEqual
       )
       case DataType.String => defaults ++: Seq(
-        Comparator.Contains
+        Comparator.Contains,
+        Comparator.BeginsWith,
+        Comparator.EndsWith
       )
     }
   }
