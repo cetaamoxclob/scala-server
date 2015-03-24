@@ -1,0 +1,24 @@
+{
+  "dbName": "model_step",
+  "primaryKey": "StepID",
+  "columns": [
+    {
+      "name": "StepID",
+      "updateable": false,
+      "dbName": "stepID",
+      "dataType": "Integer"
+    },
+    {
+      "name": "ModelID",
+      "dbName": "modelID",
+      "dataType": "Integer",
+      "required": true
+    },
+    {
+      "name": "Name",
+      "dbName": "name",
+      "label": "Model Name",
+      "required": true
+    }
+  ]
+}

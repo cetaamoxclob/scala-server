@@ -1,0 +1,72 @@
+{
+  "dbName": "model_field",
+  "primaryKey": "FieldID",
+  "columns": [
+    {
+      "name": "FieldID",
+      "dbName": "fieldID",
+      "dataType": "Integer",
+      "updateable": false
+    },
+    {
+      "name": "ModelID",
+      "dbName": "modelID",
+      "dataType": "Integer",
+      "required": true
+    },
+    {
+      "name": "Name",
+      "dbName": "name",
+      "required": true,
+      "label": "Field"
+    },
+    {
+      "name": "BasisColumn",
+      "dbName": "basisColumn",
+      "label": "Basis Column"
+    },
+    {
+      "name": "StepID",
+      "dataType": "Integer",
+      "dbName": "stepID"
+    },
+    {
+      "name": "Updateable",
+      "dbName": "updateable",
+      "dataType": "Boolean"
+    },
+    {
+      "name": "Required",
+      "dbName": "required",
+      "dataType": "Boolean"
+    },
+    {
+      "name": "Export",
+      "dbName": "export",
+      "dataType": "Boolean"
+    }
+  ],
+  "joins": [
+    {
+      "name": "Model",
+      "table": "Model",
+      "required": true,
+      "columns": [
+        {
+          "from": "ModelID",
+          "to": "ModelID"
+        }
+      ]
+    },
+    {
+      "name": "Step",
+      "table": "ModelStep",
+      "columns": [
+        {
+          "from": "StepID",
+          "to": "StepID"
+        }
+      ]
+    }
+  ]
+}

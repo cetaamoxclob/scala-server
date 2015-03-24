@@ -52,13 +52,76 @@
   ],
   "children": [
     {
-      "extends": "BuildModel",
+      "name": "ModelFields",
+      "basisTable": "ModelField",
       "parentLink": {
         "parentField": "ModelID",
-        "childField": "ModelParentID"
+        "childField": "ModelFieldModelID"
       },
-      "filter": ""
+      "fields": [
+        {
+          "name": "ModelFieldID",
+          "basisColumn": "FieldID"
+        },
+        {
+          "name": "ModelFieldModelID",
+          "basisColumn": "ModelID"
+        },
+        {
+          "name": "ModelFieldName",
+          "basisColumn": "Name"
+        },
+        {
+          "name": "ModelBasisColumn",
+          "basisColumn": "BasisColumn"
+        },
+        {
+          "name": "ModelFieldName",
+          "basisColumn": "Name"
+        },
+        {
+          "name": "ModelFieldName",
+          "basisColumn": "Name"
+        },
+        {
+          "name": "ModelFieldName",
+          "basisColumn": "Name"
+        }
+      ]
+    },
+    {
+      "name": "ChildModel",
+      "basisTable": "Model",
+      "parentLink": {
+        "parentField": "ModelID",
+        "childField": "ChildModelParentID"
+      },
+      "fields": [
+        {
+          "name": "ChildModelID",
+          "basisColumn": "ModelID"
+        },
+        {
+          "name": "ChildModelName",
+          "basisColumn": "Name"
+        },
+        {
+          "name": "ChildModelParentID",
+          "basisColumn": "ParentID"
+        },
+        {
+          "name": "ChildModelBasisTable",
+          "basisColumn": "BasisTable"
+        },
+        {
+          "name": "ChildModelParentField",
+          "basisColumn": "ParentField"
+        },
+        {
+          "name": "ChildModelChildField",
+          "basisColumn": "ChildField"
+        }
+      ]
     }
-  ],
-  "filter": "ModelParentID IsEmpty"
+  ]
 }

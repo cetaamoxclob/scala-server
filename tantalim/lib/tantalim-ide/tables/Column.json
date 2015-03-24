@@ -48,6 +48,7 @@
     },
     {
       "name": "Updateable",
+      "dataType": "Boolean",
       "dbName": "updateable"
     }
   ],

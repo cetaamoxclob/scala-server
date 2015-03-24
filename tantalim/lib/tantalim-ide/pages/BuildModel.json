@@ -32,10 +32,35 @@
       ],
       "sections": [
         {
+          "name": "ModelFields",
+          "title": "Fields",
+          "model": "ModelFields",
+          "fields": [
+            {
+              "name": "ModelFieldName",
+              "showInNavigation": true
+            }
+          ]
+        },
+        {
           "name": "ChildModel",
           "title": "Child Models",
-          "model": "BuildModel",
-          "extends": "BuildModel"
+          "model": "ChildModel",
+          "fields": [
+            {
+              "name": "ChildModelName",
+              "showInNavigation": true
+            },
+            {
+              "name": "ChildModelBasisTable"
+            },
+            {
+              "name": "ChildModelParentField"
+            },
+            {
+              "name": "ChildModelChildField"
+            }
+          ]
         }
       ]
     }
