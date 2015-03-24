@@ -4,7 +4,7 @@ import com.tantalim.nodes.{DataState, SmartNodeSet}
 import com.tantalim.util.{TantalimException, Timer, LoginStrategyType}
 import compiler.{MenuCompiler, TableCompiler, ModelCompiler, PageCompiler}
 import data.DataConverters
-import com.tantalim.models.{ArtifactType, ModelOrderBy, User}
+import com.tantalim.models.{PageSection, ArtifactType, ModelOrderBy, User}
 import play.api.libs.json._
 import play.api.mvc._
 import services._
@@ -84,14 +84,47 @@ object Application extends Controller with Timer {
     }
   }
 
+  def section(pageName: String, sectionName: String) = Action {
+
+    def findSection(haystack: Seq[PageSection], needle: String): Option[PageSection] = {
+      val found = haystack.find(p => p.name == needle)
+      if (found.isDefined) found
+      else {
+        haystack.flatMap(p => findSection(p.sections, needle)).headOption
+      }
+    }
+    def getNames(haystack: Seq[PageSection]): Seq[String] = {
+      val names = haystack.map(_.name).toSeq
+      val childNames = haystack.flatMap(p => getNames(p.sections))
+      names ++ childNames
+    }
+
+    timer("section") {
+      try {
+        val page = compiler.compilePage(pageName)
+        val foundChildren = findSection(page.sections, sectionName)
+        val section = if (foundChildren.headOption.isDefined) foundChildren.head
+        else {
+          val pageSections = getNames(page.sections).mkString(",")
+          throw new TantalimException(s"Failed to find Section named $sectionName", s"Use one of the following sections: $pageSections")
+        }
+        Ok(views.html.desktop.page.section(section, 0))
+      } catch {
+        case e: TantalimException => Ok(views.html.error(e))
+      }
+    }
+  }
+
   def mobile(name: String) = TODO
 
   def ddl(tableName: String) = Action {
-    implicit request =>
       val table = compiler.compileTable(tableName)
       val tableSchema = new TableSchema {}
       Ok(tableSchema.generateTableDDL(table))
   }
+
+//  def ddl_run(tableName: String) = Action {
+//  }
 
   def importList = Action {
     implicit request =>
