@@ -33,17 +33,20 @@
     {
       "name": "Updateable",
       "dbName": "updateable",
-      "dataType": "Boolean"
+      "dataType": "Boolean",
+      "fieldType": "checkbox"
     },
     {
       "name": "Required",
       "dbName": "required",
-      "dataType": "Boolean"
+      "dataType": "Boolean",
+      "fieldType": "checkbox"
     },
     {
       "name": "Export",
       "dbName": "export",
-      "dataType": "Boolean"
+      "dataType": "Boolean",
+      "fieldType": "checkbox"
     }
   ],
   "joins": [

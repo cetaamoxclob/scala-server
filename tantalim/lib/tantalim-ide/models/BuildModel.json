@@ -1,5 +1,6 @@
 {
   "basisTable": "Model",
+  "limit": 10,
   "fields": [
     {
       "name": "ModelID",
@@ -58,6 +59,12 @@
         "parentField": "ModelID",
         "childField": "ModelFieldModelID"
       },
+      "steps": [
+        {
+          "name": "Step",
+          "join": "Step"
+        }
+      ],
       "fields": [
         {
           "name": "ModelFieldID",
@@ -72,20 +79,70 @@
           "basisColumn": "Name"
         },
         {
-          "name": "ModelBasisColumn",
+          "name": "ModelFieldBasisColumn",
           "basisColumn": "BasisColumn"
         },
         {
-          "name": "ModelFieldName",
+          "name": "ModelFieldStepID",
+          "basisColumn": "StepID"
+        },
+        {
+          "name": "ModelFieldStepName",
+          "basisColumn": "Name",
+          "step": "Step"
+        },
+        {
+          "name": "ModelFieldUpdateable",
+          "basisColumn": "Updateable"
+        },
+        {
+          "name": "ModelFieldRequired",
+          "basisColumn": "Required"
+        },
+        {
+          "name": "ModelFieldExport",
+          "basisColumn": "Export"
+        }
+      ]
+    },
+    {
+      "name": "ModelSteps",
+      "basisTable": "ModelStep",
+      "parentLink": {
+        "parentField": "ModelID",
+        "childField": "ModelStepModelID"
+      },
+      "steps": [
+        {
+          "name": "Parent",
+          "join": "Parent"
+        }
+      ],
+      "fields": [
+        {
+          "name": "ModelStepID",
+          "basisColumn": "StepID"
+        },
+        {
+          "name": "ModelStepModelID",
+          "basisColumn": "ModelID"
+        },
+        {
+          "name": "ModelStepName",
           "basisColumn": "Name"
         },
         {
-          "name": "ModelFieldName",
-          "basisColumn": "Name"
+          "name": "ModelStepJoin",
+          "basisColumn": "Join"
         },
         {
-          "name": "ModelFieldName",
-          "basisColumn": "Name"
+          "name": "ModelStepParentID",
+          "basisColumn": "ParentID"
+        },
+        {
+          "name": "ModelStepParentName",
+          "basisColumn": "Name",
+          "step": "Parent"
         }
       ]
     },

@@ -1,0 +1,131 @@
+{
+  "basisTable": "Model",
+  "fields": [
+    {
+      "name": "ModelID",
+      "basisColumn": "ModelID",
+      "export": false
+    },
+    {
+      "name": "name",
+      "basisColumn": "Name",
+      "export": false
+    },
+    {
+      "name": "basisTable",
+      "basisColumn": "BasisTable"
+    },
+    {
+      "name": "ModelParentID",
+      "basisColumn": "ParentID"
+    },
+    {
+      "name": "limit",
+      "basisColumn": "Limit"
+    },
+    {
+      "name": "filter",
+      "basisColumn": "Filter"
+    },
+    {
+      "name": "allowInsert",
+      "basisColumn": "AllowInsert"
+    },
+    {
+      "name": "allowUpdate",
+      "basisColumn": "AllowUpdate"
+    },
+    {
+      "name": "allowDelete",
+      "basisColumn": "AllowDelete"
+    }
+  ],
+  "children": [
+    {
+      "name": "fields",
+      "basisTable": "ModelField",
+      "parentLink": {
+        "parentField": "ModelID",
+        "childField": "ModelFieldModelID"
+      },
+      "steps": [
+        {
+          "name": "Step",
+          "join": "Step"
+        }
+      ],
+      "fields": [
+        {
+          "name": "ModelFieldID",
+          "basisColumn": "FieldID",
+          "export": false
+        },
+        {
+          "name": "ModelFieldModelID",
+          "basisColumn": "ModelID",
+          "export": false
+        },
+        {
+          "name": "name",
+          "basisColumn": "Name"
+        },
+        {
+          "name": "basisColumn",
+          "basisColumn": "BasisColumn"
+        }
+      ]
+    },
+    {
+      "name": "steps",
+      "basisTable": "ModelStep",
+      "parentLink": {
+        "parentField": "ModelID",
+        "childField": "ModelStepModelID"
+      },
+      "steps": [
+        {
+          "name": "Parent",
+          "join": "Parent"
+        }
+      ],
+      "fields": [
+        {
+          "name": "ModelStepID",
+          "basisColumn": "StepID",
+          "export": false
+        },
+        {
+          "name": "ModelStepModelID",
+          "basisColumn": "ModelID",
+          "export": false
+        },
+        {
+          "name": "name",
+          "basisColumn": "Name"
+        },
+        {
+          "name": "join",
+          "basisColumn": "Join"
+        },
+        {
+          "name": "ModelStepParentID",
+          "basisColumn": "ParentID",
+          "export": false
+        },
+        {
+          "name": "parent",
+          "basisColumn": "Name",
+          "step": "Parent"
+        }
+      ]
+    },
+    {
+      "name": "children",
+      "extends": "~model",
+      "parentLink": {
+        "parentField": "ModelID",
+        "childField": "ModelParentID"
+      }
+    }
+  ]
+}

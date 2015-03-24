@@ -32,6 +32,25 @@
       ],
       "sections": [
         {
+          "name": "ModelSteps",
+          "title": "Steps",
+          "model": "ModelSteps",
+          "fields": [
+            {
+              "name": "ModelStepName",
+              "showInNavigation": true
+            },
+            {
+              "name": "ModelStepJoin",
+              "label": "Table Join"
+            },
+            {
+              "name": "ModelStepParentName",
+              "label": "Parent Step"
+            }
+          ]
+        },
+        {
           "name": "ModelFields",
           "title": "Fields",
           "model": "ModelFields",
@@ -39,6 +58,21 @@
             {
               "name": "ModelFieldName",
               "showInNavigation": true
+            },
+            {
+              "name": "ModelFieldBasisColumn"
+            },
+            {
+              "name": "ModelFieldStepName"
+            },
+            {
+              "name": "ModelFieldUpdateable"
+            },
+            {
+              "name": "ModelFieldRequired"
+            },
+            {
+              "name": "ModelFieldExport"
             }
           ]
         },
