@@ -1,0 +1,137 @@
+@(section: com.tantalim.models.PageSection, depth: Int)
+
+<div id="@section.name" class="childSection">
+    @if(section.sections.nonEmpty || (section.hasSibling)) {
+        <span class="icon-indent glyphicon glyphicon-triangle-right" aria-hidden="true"
+        data-ng-click="hide@section.name = true" data-ng-hide="hide@section.name"></span>
+        <span class="icon-indent glyphicon glyphicon-triangle-bottom" aria-hidden="true"
+        data-ng-click="hide@section.name = false" data-ng-show="hide@section.name"></span>
+    }
+    <h2>@section.title</h2>
+
+    @if(section.model.allowInsert) {
+        <div data-ng-hide="hide@section.name || SmartPage.getSection('@(section.name)', @depth).getCurrentSet().rows.length">
+            <button type="button" class="btn btn-primary btn-sm" data-ng-click="SmartPage.getSection('@(section.name)', @depth).getCurrentSet().insert()">
+                <span class="glyphicon glyphicon-plus"></span>
+                Insert New @section.title
+            </button>
+        </div>
+    }
+
+    <div data-ng-show="SmartPage.getSection('@(section.name)', @depth).getCurrentSet().rows.length">
+        <div data-ng-hide="hide@section.name">
+            <div class="form-group" data-ng-show="SmartPage.getSection('@(section.name)', @depth).viewMode === 'table'">
+                @if(section.model.allowInsert) {
+                    <button type="button" class="btn btn-primary btn-xs"
+                    data-ng-click="SmartPage.getSection('@(section.name)', @depth).getCurrentSet().insert()"
+                    data-ng-disabled="TopPageForm.$invalid">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Insert
+                    </button>
+                }
+                @if(section.model.allowDelete) {
+                    <button type="button" class="btn btn-danger btn-xs"
+                    data-ng-click="SmartPage.getSection('@(section.name)', @depth).getCurrentSet().delete()"
+                    data-ng-enabled="SmartPage.getSection('@(section.name)', @depth).getCurrentSet().deleteEnabled()">
+                        <span class="glyphicon glyphicon-trash"></span>
+                        Delete
+                    </button>
+                }
+                @if(section.hasFormView) {
+                    <button type="button" class="btn btn-default btn-xs" data-ng-click="SmartPage.getSection('@(section.name)', @depth).toggleViewMode()"
+                    data-ng-show="SmartPage.getSection('@(section.name)', @depth).viewMode !== 'form'">
+                        <span class="glyphicon glyphicon-file"></span>
+                        Form View
+                    </button>
+                }
+            </div>
+            <div class="form-group" data-ng-show="SmartPage.getSection('@(section.name)', @depth).viewMode === 'form'">
+                @if(section.model.allowInsert) {
+                    <button type="button" class="btn btn-primary btn-xs"
+                    data-ng-click="SmartPage.getSection('@(section.name)', @depth).getCurrentSet().insert()"
+                    data-ng-disabled="TopPageForm.$invalid">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Insert
+                    </button>
+                }
+                @if(section.model.allowDelete) {
+                    <button type="button" class="btn btn-danger btn-xs"
+                    data-ng-click="SmartPage.getSection('@(section.name)', @depth).getCurrentSet().delete()"
+                    data-ng-enabled="SmartPage.getSection('@(section.name)', @depth).getCurrentSet().deleteEnabled()">
+                        <span class="glyphicon glyphicon-trash"></span>
+                        Delete
+                    </button>
+                }
+                @if(section.hasTableView) {
+                    <button type="button" class="btn btn-default btn-xs" data-ng-click="SmartPage.getSection('@(section.name)', @depth).toggleViewMode()"
+                    data-ng-show="SmartPage.getSection('@(section.name)', @depth).viewMode !== 'table'">
+                        <span class="glyphicon glyphicon-th"></span>
+                        Table View
+                    </button>
+                }
+                <button type="button" class="btn btn-xs"
+                data-ng-click="SmartPage.getSection('@(section.name)', @depth).getCurrentSet().movePrevious()"
+                data-ng-disabled="SmartPage.getSection('@(section.name)', @depth).getCurrentSet().selectedRows.start == 0 || TopPageForm.$invalid">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                    Previous
+                </button>
+                <button type="button" class="btn btn-xs"
+                data-ng-click="SmartPage.getSection('@(section.name)', @depth).getCurrentSet().moveNext()"
+                data-ng-disabled="SmartPage.getSection('@(section.name)', @depth).getCurrentSet().selectedRows.start == SmartPage.getSection('@(section.name)', @depth).getCurrentSet().rows.length - 1 || TopPageForm.$invalid">
+                    Next
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </button>
+                <span class="instance-count" data-ng-show="SmartPage.getSection('@(section.name)', @depth).getCurrentSet().rows.length > 0">
+                    <span data-ng-bind="SmartPage.getSection('@(section.name)', @depth).getCurrentSet().selectedRows.start + 1"></span>
+                    of <span
+                data-ng-bind="SmartPage.getSection('@(section.name)', @depth).getCurrentSet().rows.length"></span>
+                </span>
+            </div>
+
+            <div class="" data-ng-if="SmartPage.getSection('@(section.name)', @depth).viewMode === 'table'" data-ng-click="SmartPage.focus(SmartPage.getSection('@(section.name)', @depth))">
+            @desktop.page.grid_view(section, depth)
+            </div>
+
+            <div class="row" data-ng-if="SmartPage.getSection('@(section.name)', @depth).viewMode === 'form'" data-ng-click="SmartPage.focus(SmartPage.getSection('@(section.name)', @depth))">
+            @if(section.hasNavigation) {
+                <div class="col-sm-3 hidden-xs">
+                    <table class="tnt-grid table table-bordered col-sm-4">
+                        <thead>
+                            <tr>
+                            @for(field <- section.fields) {
+                                @if(field.showInNavigation) {
+                                    <th>@field.label</th>
+                                }
+                            }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="row in SmartPage.getSection('@(section.name)', @depth).getCurrentSet().rows"
+                            data-ng-click="SmartPage.getSection('@(section.name)', @depth).getCurrentSet().moveTo($index)"
+                            data-ng-class="{success: row.id === SmartPage.getSection('@(section.name)', @depth).getCurrentSet().getInstance().id}">
+                            @for(field <- section.fields) {
+                                @if(field.showInNavigation) {
+                                    <td data-ng-bind="row.data.@(field.name) @if(field.filter.isDefined) { | @field.filter}" class="nav"/>
+                                }
+                            }
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-sm-9">
+                @desktop.page.form_view(section, depth)
+                </div>
+            } else {
+                <div class="col-xs-12">
+                @desktop.page.form_view(section, depth)
+                </div>
+            }
+
+            </div>
+        </div>
+
+        @for(childSection <- section.sections) {
+            @desktop.page.section(childSection, 0)
+        }
+    </div>
+</div>

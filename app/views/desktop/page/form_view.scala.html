@@ -4,57 +4,33 @@
     @if(field.showInFormView) {
         <div class="form-group" ng-class="{'has-error': TopPageForm.@(field.name).$invalid}">
             @if(field.fieldType == "text") {
-                <label class="control-label" for="@(page.model.name)-@(field.name)">@field.label</label>
-                <input type="text" class="form-control" id="@(page.model.name)-@(field.name)" name="@(field.name)"
-                data-ng-model="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().data.@(field.name)"
-                ng-change="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().update('@(field.name)')"
-                @if(field.blurFunction.isDefined) {
-                    ng-blur="@Html(field.blurFunction.get)"
-                }
-                @if(field.placeholder.isDefined) {
-                    placeholder="@field.placeholder.get"
-                }
-                @if(field.required) {
-                    ng-required="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance()"
-                }
-                ng-disabled="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().state !== 'INSERTED' && @if(field.modelField.updateable){false}else{true}"
-                @if(field.help.isDefined) {
-                    aria-describedby="help-@(page.model.name)-@(field.name)"
-                }
+                <tnt-textbox label="@field.label"
+                    current-instance="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance()"
+                    name="@field.modelField.name" placeholder="@field.placeholder" help="@field.help"
+                    @if(field.required) { required="true" }
                 >
-                @for(link <- field.links) {
-                    <i class="fa fa-link fa-rotate-90" data-ng-click=""></i>
-                    <a href="" data-ng-click="link('@link.page.name', '@link.filter', '@page.model.name')">@link.page.title</a>
-                }
-                @if(field.help.isDefined) {
-                    <span id="help-@(page.model.name)-@(field.name)" class="help-block">@Html(field.help.get)</span>
-                }
+                    @for(link <- field.links) {
+                        <zoom target="@link.page.name">@link.page.title</zoom>
+                    }
+                </tnt-textbox>
             }
             @if(field.fieldType == "select") {
-                <label class="control-label" for="@(page.model.name)-@field.name">@field.label</label>
                 @defining(field.select.get) { select =>
-                    <ui-select
-                    current="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().data"
+                    <tnt-select
+                    label="@field.label"
+                    current-instance="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance()"
                     source-model="@select.model"
                     source-field="@select.sourceField"
                     source-filter="@select.filter"
-                    target-model="@page.model.name"
-                    target-level="@depth"
                     target-id="@select.targetID.getOrElse("")"
                     target-field="@(field.name)"
                     other-mappings="@Html(select.fields.toString())"
-                    ></ui-select>
+                    ></tnt-select>
                 }
             }
             @if(field.fieldType == "checkbox") {
-                <div class="checkbox">
-                    <label class="control-label" class="ui-checkbox" for="@(page.model.name)-@(field.name)" data-ng-click="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().toggle('@(field.name)', @(field.required))">
-                        <i data-ng-show="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().data.@(field.name) === true" class="fa fa-check-square-o fa-lg fa-fw"></i>
-                        <i data-ng-show="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().data.@(field.name) === false" class="fa fa-square-o fa-lg fa-fw"></i>
-                        <i data-ng-show="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().data.@(field.name) === undefined || SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().data.@(field.name) === null" class="fa fa-square-o fa-lg fa-fw disabled"></i>
-                        @field.label
-                    </label>
-                </div>
+                <tnt-checkbox label="@field.label" current-instance="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance()"
+                    required="@(field.required)" target-field="@(field.name)"></tnt-checkbox>
             }
         </div>
     }

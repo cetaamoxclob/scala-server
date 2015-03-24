@@ -22,7 +22,54 @@
                 </button>
             }
         </div>
-        @desktop.page.page_view(section, 0)
+
+        <nav data-ng-show="SmartPage.maxPages > 1">
+            <ul class="nav navbar-nav navbar-right" style="margin-right: auto">
+                <button type="button" class="btn btn-xs"
+                data-ng-click="SmartPage.previousPage()"
+                data-ng-disabled="SmartPage.page() <= 1 || TopPageForm.$invalid">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                    Previous Page
+                </button>
+                <button type="button" class="btn btn-xs"
+                data-ng-click="SmartPage.nextPage()"
+                data-ng-disabled="SmartPage.page() >= SmartPage.maxPages || TopPageForm.$invalid">
+                    Next Page
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </button>
+                <span class="instance-count">
+                    Page <span data-ng-bind="SmartPage.page()"></span>
+                    of <span data-ng-bind="SmartPage.maxPages"></span>
+                </span>
+            </ul>
+        </nav>
+
+        <div data-ng-hide="hide@section.name || SmartPage.getSection('@(section.name)', 0).getCurrentSet().rows.length">
+            <div class="text-center">
+                <div class="alert alert-warning col-sm-6 col-sm-offset-3" role="alert">
+                    <span data-ng-show="filterString">
+                        <p><strong>No Records Found Using Filter:</strong> {{filterString}}</p>
+                        <hr>
+                        <button data-ng-click="SmartPage.turnSearchOn()" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-search"></span>
+                            Search Again
+                        </button>
+                    </span>
+                    <span data-ng-hide="filterString">
+                        <p><strong>No Records Exist</strong></p>
+                        @if(section.model.allowInsert) {
+                            <hr>
+                            <button type="button" class="btn btn-primary btn-sm" data-ng-click="SmartPage.getSection('@(section.name)', 0).getCurrentSet().insert()">
+                                <span class="glyphicon glyphicon-plus"></span>
+                                Insert New @section.title
+                            </button>
+                        }
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        @desktop.page.section(section, 0)
     </form>
     @desktop.page.search(section)
 }
