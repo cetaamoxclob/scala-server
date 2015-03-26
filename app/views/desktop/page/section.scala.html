@@ -9,7 +9,7 @@
     }
     <h2>@section.title</h2>
 
-    <nav data-ng-hide="hide@section.name">
+    <nav data-ng-hide="hide@section.name" class="no-select">
         <div data-ng-hide="SmartPage.getSection('@(section.name)').getCurrentSet().rows.length">
         @if(section.model.allowInsert) {
             <button type="button" class="btn btn-primary btn-sm" data-ng-click="SmartPage.getSection('@(section.name)').getCurrentSet().insert()">
@@ -23,7 +23,7 @@
         <ul class="nav navbar-nav" data-ng-show="SmartPage.getSection('@(section.name)').getCurrentSet().rows.length">
             @if(section.model.allowInsert) {
                 <button type="button" class="btn btn-primary btn-xs"
-                data-ng-click="SmartPage.getSection('@(section.name)').getCurrentSet().insert()"
+                data-ng-click="SmartPage.getSection('@(section.name)').insert()"
                 data-ng-disabled="TopPageForm.$invalid">
                     <span class="glyphicon glyphicon-plus"></span>
                     Insert
@@ -31,8 +31,8 @@
             }
             @if(section.model.allowDelete) {
                 <button type="button" class="btn btn-danger btn-xs"
-                data-ng-click="SmartPage.getSection('@(section.name)').getCurrentSet().delete()"
-                data-ng-enabled="SmartPage.getSection('@(section.name)').getCurrentSet().deleteEnabled()">
+                data-ng-click="SmartPage.getSection('@(section.name)').delete()"
+                data-ng-enabled="SmartPage.getSection('@(section.name)').deleteEnabled()">
                     <span class="glyphicon glyphicon-trash"></span>
                     Delete
                 </button>
@@ -47,18 +47,17 @@
                 Previous Page
             </button>
             <button type="button" class="btn btn-xs"
-            data-ng-click="SmartPage.getSection('@(section.name)').getCurrentSet().movePrevious()"
-            data-ng-disabled="SmartPage.getSection('@(section.name)').getCurrentSet().selectedRows.start == 0 || TopPageForm.$invalid">
+            data-ng-click="SmartPage.getSection('@(section.name)').moveToPreviousRow()"
+            data-ng-disabled="!SmartPage.getSection('@(section.name)').getCurrentSet().hasPrevious() || TopPageForm.$invalid">
                 <span class="glyphicon glyphicon-chevron-left"></span>
                 Previous
             </button>
             <span class="instance-count" data-ng-show="SmartPage.getSection('@(section.name)').getCurrentSet().rows.length > 0">
-                <span data-ng-bind="SmartPage.getSection('@(section.name)').getCurrentSet().selectedRows.start + 1"></span>
-                of <span
-            data-ng-bind="SmartPage.getSection('@(section.name)').getCurrentSet().rows.length"></span>
+                <span data-ng-bind="SmartPage.getSection('@(section.name)').getCurrentSet().index + 1"></span>
+                of <span data-ng-bind="SmartPage.getSection('@(section.name)').getCurrentSet().rows.length"></span>
             </span>
             <button type="button" class="btn btn-xs"
-            data-ng-click="SmartPage.getSection('@(section.name)').getCurrentSet().moveNext()"
+            data-ng-click="SmartPage.getSection('@(section.name)').moveToNextRow()"
             data-ng-disabled="SmartPage.getSection('@(section.name)').getCurrentSet().selectedRows.start == SmartPage.getSection('@(section.name)').getCurrentSet().rows.length - 1 || TopPageForm.$invalid">
                 Next
                 <span class="glyphicon glyphicon-chevron-right"></span>

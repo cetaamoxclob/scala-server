@@ -3,6 +3,8 @@
     <h1>@page.title</h1>
 </div>
 
+<textarea id="clipboard"></textarea>
+
 @for(section <- page.sections) {
     <form id="form-view" role="form" name="TopPageForm" data-ng-hide="SmartPage.showSearch">
         <div class="page-nav navbar navbar-inverse navbar-fixed-bottom">

@@ -1,30 +1,35 @@
 @(page: com.tantalim.models.PageSection, depth: Int)
 
-<div class="table-responsive">
+<div class="table-responsive no-select">
     <table class="tnt-grid table table-bordered">
         <thead>
             <tr>
                 <th class="tnt-grid-corner"></th>
             @for(field <- page.fields) {
                 @if(field.showInTableView) {
-                    <th class="text-center" width="@{field.tableWidth}%">@field.label</th>
+                    <th class="text-center" width="@{field.tableWidth}%" data-ng-click="SmartPage.getSection('@(page.name)').orderByField('@field.name')">
+                        @field.label
+                        <span class="glyphicon" aria-hidden="true"
+                            ng-class="{'glyphicon-chevron-down': SmartPage.getSection('@(page.name)').orderBy.direction, 'glyphicon-chevron-up': !SmartPage.getSection('@(page.name)').orderBy.direction}"
+                            data-ng-show="SmartPage.getSection('@(page.name)').orderBy.field === '@field.name'"></span>
+                    </th>
                 }
             }
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="row in SmartPage.getSection('@(page.name)', @depth).getCurrentSet().rows">
+            <tr data-ng-repeat="row in SmartPage.getSection('@(page.name)').getCurrentSet().rows">
                 <td class="tnt-grid-left-nav" data-ng-bind="$index + 1"></td>
-            @for(field <- page.fields) {
+            @for((field, fieldIndex) <- page.fields.zipWithIndex) {
                 @if(field.showInTableView) {
                     <td class="text-display @if(field.alignCenter){text-center} @if(field.alignRight){text-right}"
-                        data-ng-class="{success: SmartPage.getSection('@(page.name)', @depth).getCurrentSet().cellIsSelected($index, '@field.name')}"
-                        data-ng-mousedown="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().mousedown($index, '@field.name')"
-                        data-ng-mouseover="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().mouseover($index, '@field.name')"
-                        data-ng-mouseup="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().mouseup($index, '@field.name')"
+                        data-ng-class="{success: SmartPage.getSection('@(page.name)').cellIsSelected($index, @fieldIndex)}"
+                        data-ng-mousedown="SmartPage.getSection('@(page.name)').mousedown($index, @fieldIndex)"
+                        data-ng-mouseover="SmartPage.getSection('@(page.name)').mouseover($index, @fieldIndex)"
+                        data-ng-mouseup="SmartPage.getSection('@(page.name)').mouseup($index, @fieldIndex)"
                         @if(field.fieldType != "checkbox") {
-                            data-ng-dblclick="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().dblclick($index, '@field.name')"
+                            data-ng-dblclick="SmartPage.getSection('@(page.name)').dblclick($index, @fieldIndex)"
                         }
                     >
                         @if(field.fieldType == "checkbox") {
@@ -40,16 +45,16 @@
                         } else {
                             <span class="text-view" data-ng-bind="row.data.@field.name @if(field.filter.isDefined){ | @field.filter}"></span>
                             <input type="text" class="text-edit" data-ng-model="row.data.@field.name"
-                            data-ng-show="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().cellIsEditing($index, '@field.name')"
+                            data-ng-show="SmartPage.getSection('@(page.name)').cellIsEditing($index, @fieldIndex)"
                             data-ng-change="row.update('@(field.name)')"
-                            focus-me="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().focus($index, '@field.name')">
+                            focus-me="SmartPage.getSection('@(page.name)').focus($index, @fieldIndex)">
                         }
                     </td>
                 }
             }
                 <td></td>
             </tr>
-            <tr data-ng-hide="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().rows.length">
+            <tr data-ng-hide="SmartPage.getSection('@(page.name)').getCurrentSet().rows.length">
                 <td colspan="@page.fieldLengthInTableView">No Data Found</td>
             </tr>
         </tbody>
