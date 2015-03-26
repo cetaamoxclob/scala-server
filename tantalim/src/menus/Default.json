@@ -5,6 +5,9 @@
       "title": "PICS",
       "items": [
         {
+          "page": "ManageDocumentTypes"
+        },
+        {
           "page": "ManageWorkflows"
         }
       ]

@@ -1,0 +1,20 @@
+{
+  "title": "Manage Document Types",
+  "model": "DocumentTypes",
+  "sections": [
+    {
+      "name": "DocumentTypes",
+      "title": "Document Types",
+      "fields": [
+        {
+          "name": "DocumentTypeID",
+          "showInNavigation": true
+        },
+        {
+          "name": "DocumentTypeSlug",
+          "showInNavigation": true
+        }
+      ]
+    }
+  ]
+}

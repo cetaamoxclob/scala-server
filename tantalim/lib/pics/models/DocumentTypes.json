@@ -1,0 +1,17 @@
+{
+  "basisTable": "DocumentType",
+  "limit": 10,
+  "orderBy": [{
+    "fieldName": "DocumentTypeID"
+  }],
+  "fields": [
+    {
+      "name": "DocumentTypeID",
+      "basisColumn": "DocumentTypeID"
+    },
+    {
+      "name": "DocumentTypeSlug",
+      "basisColumn": "Slug"
+    }
+  ]
+}
