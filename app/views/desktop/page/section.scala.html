@@ -58,7 +58,7 @@
             </span>
             <button type="button" class="btn btn-xs"
             data-ng-click="SmartPage.getSection('@(section.name)').moveToNextRow()"
-            data-ng-disabled="SmartPage.getSection('@(section.name)').getCurrentSet().selectedRows.start == SmartPage.getSection('@(section.name)').getCurrentSet().rows.length - 1 || TopPageForm.$invalid">
+            data-ng-disabled="!SmartPage.getSection('@(section.name)').getCurrentSet().hasNext() || TopPageForm.$invalid">
                 Next
                 <span class="glyphicon glyphicon-chevron-right"></span>
             </button>
