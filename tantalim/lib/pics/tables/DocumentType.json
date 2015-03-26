@@ -1,0 +1,48 @@
+{
+  "dbName": "audit_type",
+  "primaryKey": "DocumentTypeID",
+  "columns": [
+    {
+      "name": "DocumentTypeID",
+      "dbName": "id",
+      "dataType": "Integer",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "Slug",
+      "dbName": "slug",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "ClassType",
+      "required": true
+    },
+    {
+      "name": "DisplayOrder",
+      "dataType": "Integer",
+      "required": true
+    },
+    {
+      "name": "Description"
+    },
+    {
+      "name": "WorkflowID",
+      "dataType": "Integer",
+      "required": true
+    },
+    {
+      "name": "HasMultiple",
+      "dataType": "Boolean",
+      "required": true,
+      "fieldType": "checkbox"
+    },
+    {
+      "name": "IsScheduled",
+      "dataType": "Boolean",
+      "required": true,
+      "fieldType": "checkbox"
+    }
+  ]
+}

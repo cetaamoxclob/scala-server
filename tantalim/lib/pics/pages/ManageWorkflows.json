@@ -59,6 +59,16 @@
               "name": "WorkflowStepNoteRequired"
             }
           ]
+        },
+        {
+          "name": "DocumentType",
+          "title": "Document Types",
+          "viewMode": "form",
+          "fields": [
+            {
+              "name": "DocumentTypeSlug"
+            }
+          ]
         }
       ]
     }

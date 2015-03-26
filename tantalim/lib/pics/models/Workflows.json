@@ -87,6 +87,28 @@
           "basisColumn": "NoteRequired"
         }
       ]
+    },
+    {
+      "name": "DocumentType",
+      "basisTable": "DocumentType",
+      "parentLink": {
+        "parentField": "WorkflowID",
+        "childField": "DocumentTypeWorkflowID"
+      },
+      "fields": [
+        {
+          "name": "DocumentTypeID",
+          "basisColumn": "DocumentTypeID"
+        },
+        {
+          "name": "DocumentTypeWorkflowID",
+          "basisColumn": "WorkflowID"
+        },
+        {
+          "name": "DocumentTypeSlug",
+          "basisColumn": "Slug"
+        }
+      ]
     }
   ]
 }
