@@ -1,0 +1,66 @@
+{
+  "title": "Manage Workflows",
+  "model": "Workflows",
+  "sections": [
+    {
+      "name": "Workflows",
+      "viewMode": "table",
+      "title": "Workflows",
+      "fields": [
+        {
+          "name": "WorkflowName",
+          "showInNavigation": true
+        },
+        {
+          "name": "WorkflowHasVerification"
+        },
+        {
+          "name": "WorkflowHasRequirements"
+        }
+      ],
+      "sections": [
+        {
+          "name": "WorkflowState",
+          "title": "States",
+          "viewMode": "table",
+          "fields": [
+            {
+              "name": "WorkflowStateStatus",
+              "showInNavigation": true
+            },
+            {
+              "name": "WorkflowStateHasRequirements"
+            },
+            {
+              "name": "WorkflowStateContractorCanEdit"
+            },
+            {
+              "name": "WorkflowStateOperatorCanEdit"
+            }
+          ]
+        },
+        {
+          "name": "WorkflowStep",
+          "title": "Steps",
+          "viewMode": "table",
+          "fields": [
+            {
+              "name": "WorkflowStepOldStatus",
+              "showInNavigation": true
+            },
+            {
+              "name": "WorkflowStepNewStatus",
+              "showInNavigation": true
+            },
+            {
+              "name": "WorkflowStepEmailTemplateID"
+            },
+            {
+              "name": "WorkflowStepNoteRequired"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

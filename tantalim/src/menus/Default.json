@@ -1,25 +1,23 @@
 {
-  "appTitle": "SLHP Medical Code Review",
+  "appTitle": "Tantalim Demo",
   "content": [
     {
-      "title": "Review",
+      "title": "PICS",
+      "items": [
+        {
+          "page": "ManageWorkflows"
+        }
+      ]
+    },
+    {
+      "title": "SLHP",
       "items": [
         {
           "page": "ReviewClaims"
-        }
-      ]
-    },
-    {
-      "title": "Reference",
-      "items": [
+        },
         {
           "page": "AttachmentTypes"
         }
-      ]
-    },
-    {
-      "title": "Data Warehouse",
-      "items": [
       ]
     },
     {

@@ -1,0 +1,45 @@
+{
+  "dbName": "workflow_state",
+  "primaryKey": "StateID",
+  "columns": [
+    {
+      "name": "StateID",
+      "dbName": "id",
+      "dataType": "Integer",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "WorkflowID",
+      "dbName": "workflowID",
+      "dataType": "Integer",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "Status",
+      "required": true
+    },
+    {
+      "name": "HasRequirements",
+      "label": "Has Requirements",
+      "dataType": "Boolean",
+      "required": true,
+      "fieldType": "checkbox"
+    },
+    {
+      "name": "ContractorCanEdit",
+      "label": "Contractor Can Edit",
+      "dataType": "Boolean",
+      "required": true,
+      "fieldType": "checkbox"
+    },
+    {
+      "name": "OperatorCanEdit",
+      "label": "Operator Can Edit",
+      "dataType": "Boolean",
+      "required": true,
+      "fieldType": "checkbox"
+    }
+  ]
+}

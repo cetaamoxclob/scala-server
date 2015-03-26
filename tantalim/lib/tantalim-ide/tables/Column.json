@@ -49,7 +49,8 @@
     {
       "name": "Updateable",
       "dataType": "Boolean",
-      "dbName": "updateable"
+      "dbName": "updateable",
+      "fieldType": "checkbox"
     }
   ],
   "joins": [

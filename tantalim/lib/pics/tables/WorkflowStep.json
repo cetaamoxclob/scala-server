@@ -1,0 +1,41 @@
+{
+  "dbName": "workflow_step",
+  "primaryKey": "StepID",
+  "columns": [
+    {
+      "name": "StepID",
+      "dbName": "id",
+      "dataType": "Integer",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "WorkflowID",
+      "dbName": "workflowID",
+      "dataType": "Integer",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "OldStatus",
+      "label": "Old Status"
+    },
+    {
+      "name": "NewStatus",
+      "label": "New Status",
+      "required": true
+    },
+    {
+      "name": "EmailTemplateID",
+      "dataType": "Boolean",
+      "required": true,
+      "fieldType": "checkbox"
+    },
+    {
+      "name": "NoteRequired",
+      "dataType": "Boolean",
+      "required": true,
+      "fieldType": "checkbox"
+    }
+  ]
+}

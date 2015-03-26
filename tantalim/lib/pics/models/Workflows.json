@@ -1,0 +1,92 @@
+{
+  "basisTable": "Workflow",
+  "limit": 10,
+  "fields": [
+    {
+      "name": "WorkflowID",
+      "basisColumn": "WorkflowID"
+    },
+    {
+      "name": "WorkflowName",
+      "basisColumn": "Name"
+    },
+    {
+      "name": "WorkflowHasVerification",
+      "basisColumn": "HasVerification"
+    },
+    {
+      "name": "WorkflowHasRequirements",
+      "basisColumn": "HasRequirements"
+    }
+  ],
+  "children": [
+    {
+      "name": "WorkflowState",
+      "basisTable": "WorkflowState",
+      "parentLink": {
+        "parentField": "WorkflowID",
+        "childField": "WorkflowStateWorkflowID"
+      },
+      "fields": [
+        {
+          "name": "WorkflowStateStateID",
+          "basisColumn": "StateID"
+        },
+        {
+          "name": "WorkflowStateWorkflowID",
+          "basisColumn": "WorkflowID"
+        },
+        {
+          "name": "WorkflowStateStatus",
+          "basisColumn": "Status"
+        },
+        {
+          "name": "WorkflowStateHasRequirements",
+          "basisColumn": "HasRequirements"
+        },
+        {
+          "name": "WorkflowStateContractorCanEdit",
+          "basisColumn": "ContractorCanEdit"
+        },
+        {
+          "name": "WorkflowStateOperatorCanEdit",
+          "basisColumn": "OperatorCanEdit"
+        }
+      ]
+    },
+    {
+      "name": "WorkflowStep",
+      "basisTable": "WorkflowStep",
+      "parentLink": {
+        "parentField": "WorkflowID",
+        "childField": "WorkflowStepWorkflowID"
+      },
+      "fields": [
+        {
+          "name": "WorkflowStepStepID",
+          "basisColumn": "StepID"
+        },
+        {
+          "name": "WorkflowStepWorkflowID",
+          "basisColumn": "WorkflowID"
+        },
+        {
+          "name": "WorkflowStepOldStatus",
+          "basisColumn": "OldStatus"
+        },
+        {
+          "name": "WorkflowStepNewStatus",
+          "basisColumn": "NewStatus"
+        },
+        {
+          "name": "WorkflowStepEmailTemplateID",
+          "basisColumn": "EmailTemplateID"
+        },
+        {
+          "name": "WorkflowStepNoteRequired",
+          "basisColumn": "NoteRequired"
+        }
+      ]
+    }
+  ]
+}

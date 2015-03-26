@@ -1,0 +1,31 @@
+{
+  "dbName": "workflow",
+  "primaryKey": "WorkflowID",
+  "columns": [
+    {
+      "name": "WorkflowID",
+      "dbName": "id",
+      "dataType": "Integer",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "Name",
+      "dbName": "name",
+      "required": true
+    },
+    {
+      "name": "HasVerification",
+      "dbName": "hasVerification",
+      "dataType": "Boolean",
+      "required": true,
+      "fieldType": "checkbox"
+    },
+    {
+      "name": "HasRequirements",
+      "dataType": "Boolean",
+      "required": true,
+      "fieldType": "checkbox"
+    }
+  ]
+}

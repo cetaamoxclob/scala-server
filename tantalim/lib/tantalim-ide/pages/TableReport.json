@@ -6,8 +6,6 @@
   "sections": [
     {
       "name": "ListTables",
-      "title": "Table Report",
-      "icon": "glyphicon-th",
       "viewMode": "table",
       "fields": [
         {
