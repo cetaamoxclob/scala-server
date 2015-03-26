@@ -1,19 +1,48 @@
 {
   "title": "Manage Document Types",
-  "model": "DocumentTypes",
   "sections": [
     {
       "name": "DocumentTypes",
       "title": "Document Types",
       "fields": [
         {
-          "name": "DocumentTypeID",
-          "showInNavigation": true
+          "name": "DocumentTypeID"
         },
         {
-          "name": "DocumentTypeSlug",
-          "showInNavigation": true
+          "name": "DocumentTypeSlug"
+        },
+        {
+          "name": "DocumentTypeClassType"
+        },
+        {
+          "name": "DocumentTypeDisplayOrder"
+        },
+        {
+          "name": "DocumentTypeDescription"
+        },
+        {
+          "name": "DocumentTypeWorkflowName",
+          "label": "Workflow"
+        },
+        {
+          "name": "DocumentTypeHasMultiple"
+        },
+        {
+          "name": "DocumentTypeIsScheduled"
         }
+      ],
+      "sections": [
+        {
+          "name": "Categories",
+          "viewMode": "table",
+          "title": "Categories",
+          "fields": [
+            {
+              "name": "DocumentCategoryNumber"
+            }
+          ]
+        }
+
       ]
     }
   ]

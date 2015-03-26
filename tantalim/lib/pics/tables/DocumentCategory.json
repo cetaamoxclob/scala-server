@@ -1,0 +1,37 @@
+{
+  "dbName": "audit_category",
+  "primaryKey": "CategoryID",
+  "columns": [
+    {
+      "name": "CategoryID",
+      "dbName": "id",
+      "dataType": "Integer",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "DocumentTypeID",
+      "dbName": "auditTypeID",
+      "dataType": "Integer",
+      "required": true,
+      "updateable": false
+    },
+    {
+      "name": "ParentID",
+      "dataType": "Integer",
+      "updateable": false
+    },
+    {
+      "name": "Number",
+      "dataType": "Integer"
+    },
+    {
+      "name": "NumRequired",
+      "dataType": "Integer"
+    },
+    {
+      "name": "NumQuestions",
+      "dataType": "Integer"
+    }
+  ]
+}

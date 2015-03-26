@@ -44,5 +44,18 @@
       "required": true,
       "fieldType": "checkbox"
     }
+  ],
+  "joins": [
+    {
+      "name": "Workflow",
+      "table": "Workflow",
+      "required": false,
+      "columns": [
+        {
+          "from": "WorkflowID",
+          "to": "WorkflowID"
+        }
+      ]
+    }
   ]
 }
