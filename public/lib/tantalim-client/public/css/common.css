@@ -148,3 +148,20 @@ table.tnt-grid td.tnt-grid-left-nav {
 body.desktop {
     padding-bottom: 500px;
 }
+
+.childSection nav {
+    height: 30px;
+}
+
+.childSection nav ul {
+    margin-right: auto
+}
+
+.sectionContent {
+    clear: both;
+}
+
+table.tnt-grid th span.glyphicon {
+    float: right;
+    color: #777777;
+}

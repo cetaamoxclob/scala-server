@@ -1,26 +1,6 @@
 'use strict';
 // Source: public/js/page/_app.js
-angular.module('tantalim.desktop', ['tantalim.common', 'ngRoute', 'ui.bootstrap', 'ngSanitize', 'tantalim.select']);
-
-// Source: public/js/page/focusMe.js
-/* global angular */
-
-angular.module('tantalim.desktop')
-    .directive('focusMe', function ($timeout) {
-        return {
-            scope: {trigger: '=focusMe'},
-            link: function (scope, element) {
-                scope.$watch('trigger', function (value) {
-                    if (value === true) {
-                        $timeout(function () {
-                            element[0].focus();
-                            element[0].select();
-                        });
-                    }
-                });
-            }
-        };
-    });
+angular.module('tantalim.desktop', ['tantalim.common', 'ngRoute', 'ui.bootstrap', 'ngSanitize']);
 
 // Source: public/js/page/keyboardManager.js
 /* istanbul ignore next */
@@ -149,19 +129,19 @@ angular.module('tantalim.desktop')
                 var modifiers = {
                     shift: {
                         wanted: false,
-                        pressed: e.shiftKey ? true : false
+                        pressed: !!e.shiftKey
                     },
                     ctrl: {
                         wanted: false,
-                        pressed: e.ctrlKey ? true : false
+                        pressed: !!e.ctrlKey
                     },
                     alt: {
                         wanted: false,
-                        pressed: e.altKey ? true : false
+                        pressed: !!e.altKey
                     },
                     meta: { //Meta is Mac specific
                         wanted: false,
-                        pressed: e.metaKey ? true : false
+                        pressed: !!e.metaKey
                     }
                 };
                 // Foreach keys in label (split on +)
@@ -261,18 +241,146 @@ angular.module('tantalim.desktop')
 
 angular.module('tantalim.desktop')
     .controller('PageController',
-    function ($scope, $log, $location, PageDefinition, PageService, ModelCursor, ModelSaver, PageCursor, keyboardManager, $window) {
-        $scope.showLoadingScreen = true;
+    function ($scope, $log, $location, PageDefinition, PageService, ModelCursor, keyboardManager, ModelSaver, $window, Logger) {
 
-        var topModel = PageDefinition.page.sections[0].model;
+        /**
+         * You can only edit a single cell in a single section at a time so this is a global var (page level at least)
+         * @type {null}
+         */
+        var editSection = null;
+        var MOUSE = {
+            LEFT: 1,
+            RIGHT: 3
+        };
 
-        function SearchController() {
+        var Selector = function () {
+            var selector = {
+                start: 0,
+                end: 0,
+                getStart: function () {
+                    return selector.start < selector.end ? selector.start : selector.end;
+                },
+                getEnd: function () {
+                    return selector.start < selector.end ? selector.end : selector.start;
+                },
+                between: function (value) {
+                    return selector.getStart() <= value && value <= selector.getEnd();
+                },
+                length: function() {
+                    return selector.getEnd() - selector.getStart();
+                }
+            };
+            return selector;
+        };
+
+        var SmartPage = function (page) {
             var searchPath = '/search';
             var self = {
-                showSearch: undefined,
-                initialize: function () {
-                    self.showSearch = $location.path() === searchPath;
+                /**
+                 * A pointer to the currently selected section. Useful for key binding and such.
+                 */
+                current: null,
+                topSection: null,
+                /**
+                 * A list of each section on the page
+                 */
+                sections: {},
+                getSection: function (sectionName) {
+                    if (!self.sections[sectionName]) {
+                        $log.info('self.sections[sectionName] has not been created yet');
+                        return;
+                    }
+                    return self.sections[sectionName];
                 },
+                showLoadingScreen: true,
+                loadingFailed: false,
+                loadData: function () {
+                    Logger.info('Loading data...');
+                    Logger.error('');
+
+                    var topModel = self.topSection.model;
+                    PageService.readModelData(topModel.name, self.filter(), self.page())
+                        .then(function (d) {
+                            Logger.info('');
+                            if (d.status !== 200) {
+                                Logger.error('Failed to reach server. Try refreshing.');
+                                self.loadingFailed = true;
+                                return;
+                            }
+                            if (d.data.error) {
+                                Logger.error('Error reading data from server: ' + d.data.error.message);
+                                self.loadingFailed = true;
+                                return;
+                            }
+                            self.maxPages = d.data.maxPages;
+                            ModelCursor.setRoot(topModel, d.data.rows);
+                            self.turnSearchOff();
+                            self.showLoadingScreen = false;
+                        });
+                },
+
+                refresh: function () {
+                    $log.debug('refresh()');
+                    if (ModelCursor.dirty() && !Logger.getStatus()) {
+                        Logger.info('There are unsaved changes. Click [Refresh] again to discard those changes.');
+                        return;
+                    }
+                    self.loadData();
+                },
+                save: function () {
+                    Logger.info('Saving...');
+                    ModelSaver.save(self.topSection.model, ModelCursor.root, function (error) {
+                        Logger.info('');
+                        Logger.error(error);
+                    });
+                },
+                focus: function (section) {
+                    if (self.current) self.current.unbindHotKeys();
+                    self.current = section;
+                    section.bindHotKeys();
+                },
+                bind: function () {
+                    keyboardManager.bind('ctrl+s', function () {
+                        self.save();
+                    });
+                    keyboardManager.bind('meta+s', function () {
+                        self.save();
+                    });
+                    keyboardManager.bind('ctrl+shift+d', function () {
+                        self.toConsole();
+                    });
+                },
+                toConsole: function () {
+                    console.log('SmartPage.current', self.current);
+                    console.log('SmartPage.sections', self.sections);
+                    ModelCursor.toConsole();
+                },
+                initialize: function (p) {
+                    $log.debug('SmartPage.initialize()', p);
+                    _.forEach(p.sections, function (section) {
+                        new SmartSection(section, self.sections);
+                    });
+
+                    self.topSection = self.sections[PageDefinition.page.sections[0].name];
+                    self.showSearch = $location.path() === searchPath;
+
+                    angular.forEach(self.topSection.fields, function (field) {
+                        switch (field.fieldType) {
+                            case 'checkbox':
+                                self.filterValues[field.name] = null;
+                                self.filterComparators[field.name] = 'Equals';
+                                break;
+                            default:
+                                self.filterComparators[field.name] = 'Contains';
+                        }
+                    });
+                    self.filter();
+                    self.focus(self.topSection);
+                },
+                showSearch: undefined,
+                filterString: '',
+                filterValues: {},
+                filterComparators: {},
                 turnSearchOn: function () {
                     $location.path(searchPath);
                     self.showSearch = true;
@@ -281,18 +389,34 @@ angular.module('tantalim.desktop')
                     $location.path('/');
                     self.showSearch = false;
                 },
+                runSearch: function () {
+                    $log.debug('runSearch()');
+                    if (self.filterString) {
+                        self.filter(self.filterString);
+                    } else {
+                        $location.search({});
+                    }
+                    self.loadData();
+                },
                 filter: function (newFilter) {
                     if (newFilter) {
+                        console.info('Updating filter', newFilter);
                         $location.search('filter', newFilter);
                     }
                     return $location.search().filter;
                 },
-                maxPages: 99, // TODO get the max from server
+                maxPages: 99,
                 page: function (newPage) {
                     if (newPage) {
+                        console.info('Updating page', newPage);
                         $location.search('page', newPage);
                     }
                     return parseInt($location.search().page || 1);
+                },
+                showPagingOnSection: function (sectionName) {
+                    if (self.maxPages > 1) {
+                        return self.topSection.name === sectionName;
+                    } else return false;
                 },
                 previousPage: function () {
                     var currentPage = self.page();
@@ -306,143 +430,324 @@ angular.module('tantalim.desktop')
                         self.page(currentPage + 1);
                     }
                 }
+
             };
+            self.initialize(page);
             return self;
-        }
-
-        var searchController = new SearchController();
-        $scope.searchController = searchController;
-
-        function loadData() {
-            $log.info('loadData()');
-            $scope.serverStatus = 'Loading data...';
-            $scope.serverError = '';
-
-            PageService.readModelData(topModel.name, searchController.filter(), searchController.page())
-                .then(function (d) {
-                    $scope.serverStatus = '';
-                    if (d.status !== 200) {
-                        $scope.serverError = 'Failed to reach server. Try refreshing.';
-                        return;
-                    }
-                    if (d.data.error) {
-                        $scope.serverError = 'Error reading data from server: ' + d.data.error.message;
-                        return;
-                    }
-                    $scope.filterString = searchController.filter();
-                    $scope.pageNumber = searchController.page();
-                    searchController.maxPages = d.data.maxPages;
-                    ModelCursor.setRoot(topModel, d.data.rows);
-
-                    $scope.ModelCursor = ModelCursor;
-                    $scope.current = ModelCursor.current;
-                    $scope.action = ModelCursor.action;
-                    searchController.turnSearchOff();
-                    $scope.showLoadingScreen = false;
-                });
-        }
-
-        PageCursor.initialize(PageDefinition.page);
-        $scope.PageCursor = PageCursor;
-
-        $scope.chooseModel = function (model) {
-            $scope.currentModel = model;
         };
 
-        // Only support a single page section at the top
-        $scope.chooseModel(PageDefinition.page.sections[0].model.name);
+        var SmartSection = function (pageSection, sections) {
+            $log.debug('Creating SmartSection ', pageSection);
+            var VIEWMODE = {FORM: 'form', TABLE: 'table'};
+            var self = {
+                name: pageSection.name,
+                viewMode: pageSection.viewMode,
+                model: pageSection.model,
+                fields: pageSection.fields,
+                orderBy: {},
+                orderByField: function (field) {
+                    self.orderBy = {
+                        field: field,
+                        direction: (field === self.orderBy.field) ? !self.orderBy.direction : false
+                    };
+                    self.getCurrentSet().sort(self.orderBy.field, self.orderBy.direction);
+                },
+                toggleViewMode: function () {
+                    if (self.viewMode === VIEWMODE.FORM) {
+                        self.viewMode = VIEWMODE.TABLE;
+                    } else {
+                        self.selectedRows.end = self.selectedRows.start;
+                        self.viewMode = VIEWMODE.FORM;
+                    }
+                    self.unbindHotKeys();
+                    self.bindHotKeys();
+                },
+                copy: function () {
+                    var rowsToCopy = self.getCurrentSet().rows.slice(
+                        self.selectedRows.getStart(),
+                        self.selectedRows.getEnd() + 1);
 
-        (function setupHotKeys() {
-            keyboardManager.bind('up', function () {
-                if ($scope.currentModel) {
-                    $scope.action.previous($scope.currentModel);
-                }
-            });
-            keyboardManager.bind('down', function () {
-                if ($scope.currentModel) {
-                    $scope.action.next($scope.currentModel);
-                }
-            });
-            keyboardManager.bind('ctrl+d', function () {
-                if ($scope.currentModel) {
-                    $scope.action.delete($scope.currentModel);
-                }
-            });
-            keyboardManager.bind('ctrl+n', function () {
-                if ($scope.currentModel) {
-                    $scope.action.insert($scope.currentModel);
-                }
-            });
+                    $scope.clipboard = [];
+                    angular.forEach(rowsToCopy, function (row) {
+                        var rowCopy = [];
+                        angular.forEach(self.fields, function (field, colIndex) {
+                            if (self.selectedColumns.between(colIndex)) {
+                                rowCopy.push(row.data[field.name]);
+                            }
+                        });
+                        $scope.clipboard.push(rowCopy);
+                    });
+                },
+                paste: function () {
+                    if ($scope.clipboard.length > 0) {
+                        var rowsToPaste = self.getCurrentSet().rows.slice(
+                            self.selectedRows.getStart(),
+                            self.selectedRows.getEnd() + 1);
 
-            keyboardManager.bind('ctrl+s', function () {
-                $scope.save();
-            });
-            keyboardManager.bind('meta+s', function () {
-                $scope.save();
-            });
-            keyboardManager.bind('meta+c', function () {
-                $scope.action.copy();
-            });
-            keyboardManager.bind('meta+v', function () {
-                $scope.action.paste();
-            });
-            keyboardManager.bind('ctrl+shift+d', function () {
-                console.log('DEBUGGING');
-                ModelCursor.toConsole();
-                PageCursor.toConsole();
-            });
+                        var rowCounter = 0,
+                            clipboardRowLength = $scope.clipboard.length,
+                            clipboardColumnLength = $scope.clipboard[0].length;
 
-        })();
+                        if (clipboardColumnLength > self.selectedColumns.length()) {
 
-        (function addFormMethodsToScope() {
-            $scope.refresh = function () {
-                $log.debug('refresh()');
-                if (ModelCursor.dirty() && !$scope.serverStatus) {
-                    $scope.serverStatus = 'There are unsaved changes. Click [Refresh] again to discard those changes.';
-                    return;
+                        }
+                        angular.forEach(rowsToPaste, function (targetRow) {
+                            var sourceRow = $scope.clipboard[rowCounter];
+                            var colCounter = 0;
+                            angular.forEach(self.fields, function (field, colIndex) {
+                                if (self.selectedColumns.between(colIndex)) {
+                                    targetRow.update(field.name, sourceRow[colCounter]);
+                                    colCounter++;
+                                    if (clipboardColumnLength === colCounter) {
+                                        colCounter = 0;
+                                    }
+                                }
+                            });
+                            rowCounter++;
+                            if (clipboardRowLength === rowCounter) {
+                                rowCounter = 0;
+                            }
+                        });
+                    }
+                },
+                getCurrentSet: function () {
+                    return ModelCursor.getCurrentSet(self.model.name);
+                },
+                unbindHotKeys: function () {
+                    _.forEach(keyboardManager.keyboardEvent, function (key, value) {
+                        keyboardManager.unbind(value);
+                    });
+                },
+                bindHotKeys: function () {
+                    if (self.viewMode === VIEWMODE.TABLE) {
+                        keyboardManager.bind('up', function () {
+                            self.moveToPreviousRow();
+                        });
+                        keyboardManager.bind('down', function () {
+                            self.moveToNextRow();
+                        });
+                        keyboardManager.bind('right', function () {
+                            self.moveNextColumn();
+                        });
+                        keyboardManager.bind('tab', function () {
+                            self.moveNextColumn();
+                        });
+                        keyboardManager.bind('left', function () {
+                            self.movePreviousColumn();
+                        });
+                        keyboardManager.bind('shift+tab', function () {
+                            self.movePreviousColumn();
+                        });
+                        keyboardManager.bind('shift+up', function () {
+                            self.selectUp();
+                        });
+                        keyboardManager.bind('shift+down', function () {
+                            self.selectDown();
+                        });
+                        keyboardManager.bind('meta+c', function () {
+                            self.copy();
+                        });
+                        keyboardManager.bind('meta+v', function () {
+                            self.paste();
+                        });
+                        self.stopEditing();
+                    }
+                    keyboardManager.bind('ctrl+t', function () {
+                        self.toggleViewMode();
+                    });
+                    keyboardManager.bind('ctrl+d', function () {
+                        self.getCurrentSet().delete();
+                    });
+                    keyboardManager.bind('ctrl+n', function () {
+                        self.getCurrentSet().insert();
+                    });
+                },
+                selectedRows: new Selector(),
+                selectedColumns: new Selector(),
+                cellIsSelected: function (row, column) {
+                    return self.selectedRows.between(row) && self.selectedColumns.between(column);
+                },
+                moveToPreviousRow: function () {
+                    self.selectedRows.start--;
+                    self.selectedRows.end = self.selectedRows.start;
+                    self.selectedColumns.end = self.selectedColumns.start;
+                    self.fixSelectedRows();
+                },
+                moveToNextRow: function () {
+                    self.selectedRows.start++;
+                    self.selectedRows.end = self.selectedRows.start;
+                    self.selectedColumns.end = self.selectedColumns.start;
+                    self.fixSelectedRows();
+                },
+                mousedown: function (row, column) {
+                    if (event.which === MOUSE.LEFT) {
+                        if (self.cellIsEditing(row, column)) {
+                            return;
+                        } else {
+                            editSection = null;
+                        }
+                        self.selectedRows.selecting = true;
+                        self.selectedRows.start = self.selectedRows.end = row;
+                        self.selectedColumns.start = self.selectedColumns.end = column;
+                        self.mouseover(row, column);
+                    }
+                },
+                mouseover: function (row, column) {
+                    if (event.which === MOUSE.LEFT) {
+                        if (self.cellIsEditing(row, column)) {
+                            return;
+                        }
+                        if (self.selectedRows.selecting) {
+                            self.selectedRows.end = row;
+                            self.selectedColumns.end = column;
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                    }
+                },
+                mouseup: function () {
+                    if (event.which === MOUSE.LEFT) {
+                        self.selectedRows.selecting = false;
+                        self.fixSelectedRows();
+                    }
+                },
+                dblclick: function (row, column) {
+                    if (event.which !== MOUSE.LEFT) {
+                        return;
+                    }
+                    self.startEditing(row, column);
+                },
+                startEditing: function (row, column) {
+                    row = row || self.selectedRows.start;
+                    column = column || self.selectedColumns.start;
+
+                    var currentField = self.fields[column];
+                    // TODO We need to solve the issue when we start editing an editable field and then tab to one that's not
+                    var currentInstance = self.getCurrentSet().getInstance(row);
+                    if (!currentInstance.isFieldEditable(currentField.name)) {
+                        console.warn(currentField.name + ' is not editable');
+                        return;
+                    }
+                    editSection = self.name;
+                    keyboardManager.bind('esc', function () {
+                        self.stopEditing();
+                    });
+                    keyboardManager.bind('enter', function () {
+                    });
+                },
+                stopEditing: function () {
+                    editSection = null;
+                    keyboardManager.unbind('esc');
+                    keyboardManager.bind('enter', function () {
+                        self.startEditing();
+                    });
+                },
+
+                getSelectedRows: function () {
+                    return _.slice(this.rows, this.selectedRows.start, this.selectedRows.end);
+                },
+                delete: function () {
+                    if (this.rows.length <= 0) {
+                        return;
+                    }
+
+                    for (var index = this.selectedRows.start; index <= this.selectedRows.end; index++) {
+                        var row = this.rows[index];
+                        if (row.state !== 'INSERTED') {
+                            // Only delete previously saved records
+                            this.deleted.push(row);
+                            row.updateParent();
+                        }
+                    }
+                    this.rows.splice(this.selectedRows.start, 1 + this.selectedRows.end - this.selectedRows.start);
+
+                    this.fixSelectedRows();
+                },
+                selectUp: function () {
+                    self.selectedRows.end--;
+                },
+                selectDown: function () {
+                    self.selectedRows.end++;
+                },
+                moveNextColumn: function () {
+                    if (self.selectedColumns.start >= self.fields.length - 1) {
+                        return;
+                    }
+                    if (!self.selectedColumns) {
+                        self.selectedColumns.start = -1;
+                    }
+                    self.selectedColumns.start++;
+                    self.selectedColumns.end = self.selectedColumns.start;
+                    self.selectedRows.end = self.selectedRows.start;
+                },
+                movePreviousColumn: function () {
+                    if (self.selectedColumns.start === 0) {
+                        return;
+                    }
+                    self.selectedColumns.start--;
+                    self.selectedColumns.end = self.selectedColumns.start;
+                    self.selectedRows.end = self.selectedRows.start;
+                },
+                cellIsEditing: function (row, column) {
+                    return editSection === self.name
+                        && self.selectedRows.start === row
+                        && self.selectedColumns.start === column;
+                },
+                focus: function (row, column) {
+                    if (self.cellIsEditing(row, column)) {
+                        return true;
+                    }
+                    return false;
+                },
+                fixSelectedRows: function () {
+                    function constrainVariableBetween(current, low, high) {
+                        if (current === undefined) return low;
+                        if (current < low) return low;
+                        if (current > high) return high;
+                        return current;
+                    }
+
+                    if (self.getCurrentSet().rows.length === 0) {
+                        self.selectedRows.start = self.selectedRows.end = -1;
+                    } else {
+                        var maxEnd = self.getCurrentSet().rows.length - 1;
+                        self.selectedRows.start = constrainVariableBetween(self.selectedRows.start, 0, maxEnd);
+                        self.selectedRows.end = constrainVariableBetween(self.selectedRows.end, 0, maxEnd);
+                    }
+                    self.getCurrentSet().index = self.selectedRows.start;
+                    ModelCursor.resetCurrents(self.getCurrentSet());
                 }
-                loadData();
             };
 
-            $scope.save = function () {
-                $scope.serverStatus = 'Saving...';
-                ModelSaver.save(topModel, ModelCursor.root, function (error) {
-                    $scope.serverStatus = '';
-                    $scope.serverError = error;
-                });
-            };
-        })();
+            if (!sections) {
+                sections = {};
+            }
+            sections[self.name] = self;
 
-        (function initializeSearchPage() {
-            $scope.filterValues = {};
-            $scope.filterComparators = {};
-
-            angular.forEach(topModel.fields, function (field) {
-                $scope.filterComparators[field.name] = 'Contains';
+            _.forEach(pageSection.sections, function (section) {
+                new SmartSection(section, sections);
             });
+        };
 
-            $scope.runSearch = function () {
-                $log.debug('runSearch()');
-                if ($scope.filterString) {
-                    searchController.filter($scope.filterString);
-                } else {
-                    $location.search({});
-                }
-                loadData();
-            };
+        /**
+         * Global clipboard
+         * @type {null}
+         */
+        $scope.clipboard = null;
 
-            $scope.$watch('filterValues', function (newVal) {
-                setFilterString(newVal, $scope.filterComparators);
+        function initializeSearchPage() {
+            $scope.$watch('SmartPage.filterValues', function (newVal) {
+                setFilterString(newVal, $scope.SmartPage.filterComparators);
             }, true);
 
-            $scope.$watch('filterComparators', function (newVal) {
-                setFilterString($scope.filterValues, newVal);
+            $scope.$watch('SmartPage.filterComparators', function (newVal) {
+                setFilterString($scope.SmartPage.filterValues, newVal);
             }, true);
 
             var setFilterString = function (filterValues, filterComparators) {
                 var filterString = '';
 
-                angular.forEach($scope.filterValues, function (value, fieldName) {
+                angular.forEach(filterValues, function (value, fieldName) {
                     if (value) {
                         if (filterString.length > 0) {
                             filterString += ' AND ';
@@ -452,81 +757,461 @@ angular.module('tantalim.desktop')
                     }
                 });
 
-                $scope.filterString = filterString;
+                $scope.SmartPage.filterString = filterString;
             };
 
-            $scope.filterString = '';
-        })();
+            setFilterString($scope.SmartPage.filterValues, $scope.SmartPage.filterComparators);
+        }
 
         $scope.link = function (targetPage, filter, modelName) {
-            var data = ModelCursor.current.instances[modelName];
+            var data = ModelCursor.getCurrentSet(modelName, 0).getSelectedRows();
             _.forEach(data.data, function (value, key) {
                 filter = filter.replace('[' + key + ']', data.data[key]);
             });
             $window.location.href = '/page/' + targetPage + '/?filter=' + filter;
         };
 
-        function initializePage() {
-            $log.debug('initializePage()');
-            searchController.initialize();
-            if (searchController.showSearch) {
-                $scope.showLoadingScreen = false;
-            } else {
-                loadData();
-            }
-        }
+        var page = new SmartPage(PageDefinition.page);
+        $scope.SmartPage = page;
+        initializeSearchPage();
+        $scope.Logger = Logger;
 
-        // $locationChangeSuccess apparently gets called automatically, so don't initialize explicitly
-        // initializePage();
         $scope.$on('$locationChangeSuccess', function () {
-            initializePage();
+            $log.debug('$locationChangeSuccess()');
+            if (page.showSearch) {
+                page.showLoadingScreen = false;
+            } else {
+                page.loadData();
+            }
         });
+
     });
 
-// Source: public/js/page/pageCursor.js
+// Source: public/js/page/ui/checkbox.js
+angular.module('tantalim.desktop')
+    .directive('tntCheckbox', function () {
+        return {
+            restrict: 'E',
+            controllerAs: '$checkbox',
+            controller: function ($scope, $attrs) {
+
+                var ctrl = this;
+                ctrl.value = null;
+                ctrl.label = $attrs.label;
+
+                var targetField = $attrs.targetField;
+                var required = $attrs.required === 'true';
+                ctrl.toggle = function () {
+                    $scope.currentInstance.toggle(targetField, required);
+                    setValue($scope.currentInstance);
+                };
+
+                function setValue(instance) {
+                    if (instance) {
+                        ctrl.value = instance.data[targetField];
+                    } else {
+                        ctrl.value = null;
+                    }
+                }
+
+                $scope.$watch('currentInstance', setValue);
+            },
+            scope: {
+                currentInstance: '='
+            },
+
+            template: '<div class="checkbox"><label class="control-label" class="ui-checkbox" for="{{$checkbox.id}}" data-ng-click="$checkbox.toggle()">' +
+            '<i data-ng-show="$checkbox.value === true" class="fa fa-lg fa-fw fa-check-square-o"></i>' +
+            '<i data-ng-show="$checkbox.value === false" class="fa fa-lg fa-fw fa-square-o"></i>' +
+            '<i data-ng-show="$checkbox.value === null" class="fa fa-lg fa-fw fa-square-o disabled"></i>' +
+            ' {{$checkbox.label}} </label></div>'
+        };
+    })
+;
+
+// Source: public/js/page/ui/focusMe.js
+/* global angular */
+
+angular.module('tantalim.desktop')
+    .directive('focusMe', function ($timeout) {
+        return {
+            scope: {trigger: '=focusMe'},
+            link: function (scope, element) {
+                scope.$watch('trigger', function (value) {
+                    if (value === true) {
+                        $timeout(function () {
+                            element[0].focus();
+                            element[0].select();
+                        });
+                    }
+                });
+            }
+        };
+    });
+
+// Source: public/js/page/ui/section.js
+angular.module('tantalim.desktop')
+    .directive('tntSection', function () {
+        return {
+            restrict: 'E',
+            controllerAs: '$section',
+            controller: function ($scope, $attrs) {
+                var ctrl = this;
+                ctrl.id = $attrs.id;
+                ctrl.title = $attrs.title;
+                ctrl.current = $attrs.current;
+            },
+            transclude: true,
+            template: '<div id="{{$section.id}}" class="tntSection childSection">' +
+            '<h2>{{$section.title}}</h2>' +
+            '<div data-ng-hide="hide{{$section.id}} || {{$section.current}}.getCurrentSet().rows.length">' +
+            '<div ng-transclude></div>' +
+            '</div>'
+        };
+    })
+    .directive('tntForm', function () {
+        return {
+            restrict: 'E',
+            controllerAs: '$form',
+            controller: function ($scope, $attrs) {
+                var ctrl = this;
+                ctrl.id = $attrs.id;
+            },
+            transclude: true,
+            template: '<div id="$section.id" class="tntSection childSection">' +
+            '<div ng-transclude></div>' +
+            '</div>'
+        };
+    })
+;
+
+// Source: public/js/page/ui/select.js
 /* global _ */
 
 angular.module('tantalim.desktop')
-    .factory('PageCursor', function ($log) {
-        $log.debug('Starting PageCursor');
+    .directive('tntSelect', function () {
+        return {
+            restrict: 'E',
+            controllerAs: '$select',
+            controller: function ($scope, $timeout, $attrs, $element, $location, focus, PageService) {
 
-        var cursor = {
+                var EMPTY_SEARCH = '';
+
+                var ctrl = this;
+                ctrl.empty = false;
+                ctrl.open = false;
+                ctrl.activeIndex = undefined;
+                ctrl.items = undefined;
+
+                ctrl.label = $attrs.label;
+                var sourceField = $attrs.sourceField;
+                ctrl.sourceField = $attrs.sourceField; // sourceField is referenced in the template so it has to be part of ctrl
+                var targetId = $attrs.targetId;
+                var targetField = $attrs.targetField;
+                var otherMappings;
+                if ($attrs.otherMappings) {
+                    console.info('Eval ' + $attrs.otherMappings);
+                    otherMappings = $scope.$eval($attrs.otherMappings);
+                }
+                var previousFilter = '';
+                ctrl.id = targetField;
+
+                var openItems = function () {
+                    ctrl.open = true;
+                    ctrl.activeIndex = undefined;
+                    var currentInstance = $scope.currentInstance;
+                    if (currentInstance) {
+                        for (var i = 0; i < ctrl.items.length; i++) {
+                            var item = ctrl.items[i];
+                            if (targetId) {
+                                if (item.id === currentInstance.data[targetId]) {
+                                    ctrl.activeIndex = i;
+                                }
+                            } else {
+                                if (item.data[sourceField] === currentInstance.data[targetField]) {
+                                    ctrl.activeIndex = i;
+                                }
+                            }
+                        }
+                    }
+                };
+
+                ctrl.activate = function () {
+                    var sourceItemText = $attrs.sourceItems;
+                    if (sourceItemText) {
+                        if (ctrl.items === undefined) {
+                            ctrl.items = $scope.$eval(sourceItemText);
+                        }
+                        openItems();
+                        return;
+                    }
+
+                    var sourceFilter = $attrs.sourceFilter;
+                    if (sourceFilter) {
+                        var pat = /\${(\w+)}/gi;
+                        sourceFilter = sourceFilter.replace(pat, function (match, fieldName) {
+                            var currentValue = $scope.currentInstance.getValue(fieldName);
+                            if (currentValue === undefined) {
+                                throw new Error('You must select ' + fieldName + ' first');
+                            }
+                            return currentValue;
+                        });
+                    }
+                    if (ctrl.items === undefined || previousFilter !== sourceFilter) {
+                        ctrl.loading = true;
+                        ctrl.filter = EMPTY_SEARCH;
+                        // TODO Support filtering the list if it's really long
+                        //if (ctrl.filter) {
+                        //    whereClause.push({ctrl.filter});
+                        //}
+                        console.info('readModelData where', sourceFilter);
+                        PageService.readModelData($attrs.sourceModel, sourceFilter).then(function (d) {
+                            ctrl.loading = false;
+                            if (d.status !== 200) {
+                                // TODO Need to figure out how to bubble up these error messages to global
+                                // We should probably create a global Error Message handler
+                                $scope.serverError = 'Failed to reach server. Try refreshing.';
+                                console.error('Failed to reach server. Try refreshing.');
+                                console.error(d);
+                                return;
+                            }
+                            if (d.data.error) {
+                                $scope.serverError = 'Error reading data from server: ' + d.data.error;
+                                console.error('Error reading data from server:', d.data.error);
+                                return;
+                            }
+                            ctrl.items = d.data.rows;
+                            previousFilter = sourceFilter;
+                            openItems();
+                        });
+                    } else {
+                        openItems();
+                    }
+                    focus('select-search-' + ctrl.id);
+                };
+
+                ctrl.choose = function (item) {
+                    var currentInstance = $scope.currentInstance;
+                    currentInstance.update(targetField, item.data[sourceField]);
+                    ctrl.display = currentInstance.data[targetField];
+                    if (targetId) {
+                        currentInstance.data[targetId] = item.id;
+                    }
+
+                    if (otherMappings) {
+                        console.info('updating otherMappings ', otherMappings);
+                        _.forEach(otherMappings, function (mapping) {
+                            currentInstance.update(mapping.target, item.data[mapping.source]);
+                        });
+                    }
+                    ctrl.open = false;
+                    ctrl.empty = false;
+                    focus('select-button-' + ctrl.id);
+                };
+
+                var Key = {
+                    Enter: 13,
+                    Tab: 9,
+                    Up: 38,
+                    Down: 40,
+                    Escape: 27
+                };
+
+                ctrl.keydown = function (key) {
+                    switch (key) {
+                        case Key.Down:
+                            if (ctrl.activeIndex < ctrl.items.length - 1) {
+                                ctrl.activeIndex++;
+                            } else {
+                                ctrl.activeIndex = 0;
+                            }
+                            break;
+                        case Key.Up:
+                            if (ctrl.activeIndex > 0) {
+                                ctrl.activeIndex--;
+                            } else {
+                                ctrl.activeIndex = ctrl.items.length - 1;
+                            }
+                            break;
+                        case Key.Tab:
+                        case Key.Enter:
+                            ctrl.choose(ctrl.items[ctrl.activeIndex]);
+                            break;
+                        case Key.Escape:
+                            ctrl.open = false;
+                            focus('select-button-' + ctrl.id);
+                            break;
+                        default:
+                            return false;
+                    }
+                    return true;
+                };
+
+                var _scrollToActiveRow = function () {
+                    if (ctrl.open && ctrl.items.length > 0 && ctrl.activeIndex !== undefined) {
+                        var container = $element[0].querySelectorAll('.ui-select-choices-content')[0];
+                        var rows = container.querySelectorAll('.ui-select-choices-row');
+
+                        if (rows.length === 0) {
+                            // the rows aren't there before it opens generated yet
+                            container.scrollTop = 0;
+                            return;
+                        }
+                        var highlighted = rows[ctrl.activeIndex];
+                        var posY = highlighted.offsetTop + highlighted.clientHeight - container.scrollTop;
+                        var height = container.offsetHeight;
+
+                        if (posY > height) {
+                            container.scrollTop += posY - height;
+                        } else if (posY < highlighted.clientHeight) {
+                            container.scrollTop -= highlighted.clientHeight - posY;
+                        }
+                    }
+                };
+
+                $scope.$watch('$select.activeIndex', function () {
+                    _scrollToActiveRow();
+                });
+
+                $scope.$watch('currentInstance', function (newValue) {
+                    if (_.isEmpty(newValue)) {
+                        ctrl.display = '';
+                        ctrl.empty = true;
+                    } else {
+                        ctrl.display = newValue.data[targetField];
+                        ctrl.empty = false;
+                    }
+                    //ctrl.open = false;
+                });
+            },
+            scope: {
+                currentInstance: '='
+            },
+            template: '<label class="control-label" for="@(page.model.name)-@field.name">{{$select.label}}</label><div class="ui-select-bootstrap dropdown" ng-class="{open: $select.open}">' +
+            '<button type="button" class="btn btn-default dropdown-toggle form-control ui-select-match" focus-on="select-button-{{$select.id}}" data-ng-hide="$select.open" data-ng-click="$select.activate()">' +
+            '<span ng-hide="$select.empty">{{$select.display}}</span><span ng-show="$select.empty" class="text-muted">Select...</span>' +
+            '<i class="loading fa fa-spinner fa-spin" data-ng-show="$select.loading"></i><span class="caret"></span>' +
+            '</button>' +
+            '<button class="btn btn-xs btn-default ui-select-close" data-ng-show="$select.open" data-ng-click="$select.open = false"><i class="fa fa-times"></i></button>' +
+            '<input class="form-control" data-ng-show="$select.open" focus-on="select-search-{{$select.id}}" data-ng-model="$select.filter" select-keydown>' +
+            '<ul class="ui-select-choices ui-select-choices-content dropdown-menu" role="menu" ng-show="$select.items.length> 0">' +
+            '<li class="ui-select-choices-row" data-ng-repeat="item in $select.items" ng-class="{active: $select.activeIndex===$index}" ng-mouseenter="$select.activeIndex = $index">' +
+            '<a href="" data-ng-click="$select.choose(item)">{{item.data[$select.sourceField]}}</a></li>' +
+            '</ul>' +
+            '</div>'
+        };
+    })
+    // TODO Consider moving this to a util module
+    .directive('selectKeydown', function () {
+        return function (scope, element) {
+            element.bind('keydown keypress', function (event) {
+                scope.$apply(function () {
+                    var processed = scope.$select.keydown(event.which, scope.current);
+                    if (processed) {
+                        event.preventDefault();
+                    }
+                });
+            });
+        };
+    })
+    // TODO Consider moving this to a util module
+    .directive('focusOn', function () {
+        return function (scope, elem, attr) {
+            scope.$on('focusOn', function (e, name) {
+                if (name === attr.focusOn) {
+                    elem[0].focus();
+                }
+            });
+        };
+    })
+    // TODO Consider moving this to a util module
+    .factory('focus', function ($rootScope, $timeout) {
+        return function (name) {
+            $timeout(function () {
+                $rootScope.$broadcast('focusOn', name);
+            });
+        };
+    })
+;
+
+// Source: public/js/page/ui/textbox.js
+angular.module('tantalim.desktop')
+    .directive('tntTextbox', function () {
+        return {
+            restrict: 'E',
+            controllerAs: '$textbox',
+            controller: function ($scope, $attrs) {
+
+                var ctrl = this;
+                ctrl.value = null;
+                ctrl.label = $attrs.label;
+                ctrl.placeholder = $attrs.placeholder;
+                ctrl.help = $attrs.help;
+
+                var fieldName = $attrs.name;
+                ctrl.id = fieldName;
+                ctrl.name = fieldName;
+
+                ctrl.change = function() {
+                    $scope.currentInstance.update(fieldName);
+                };
+                ctrl.disabled = function () {
+                    // This section still needs some work
+                    if ($attrs.disabled === 'true') return true;
+                    var notUpdateable = $attrs.updateable === 'false';
+                    return $scope.state !== 'INSERTED' && notUpdateable;
+                };
+
+                //$scope.$watch('currentInstance', setValue);
+            },
+
+            scope: {
+                currentInstance: '='
+            },
+            template: '<label class="control-label" for="{{$textbox.id}}">{{$textbox.label}}</label>' +
+            '<input type="text" class="form-control" id="{{$textbox.id}}" name="{{$textbox.name}}"' +
+            'data-ng-model="currentInstance.data[$textbox.name]" ng-focus=""' +
+            'ng-change="$textbox.change()"' +
+            'ng-disabled="$textbox.disabled()"' +
+            'placeholder="{{$textbox.placeholder}}" select-on-click>' +
+            '<span data-ng-show="$textbox.help" class="help-block">{{$textbox.help}}</span>' +
+            '<ul><tntLink ng-repeat="member in collection" member="member"></tntLink></ul>'
+
             /**
-             * A pointer to the currently selected section. Useful for key binding and such.
+             ng-change="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().update('@(field.name)')"
+             @if(field.blurFunction.isDefined) {
+                    ng-blur="@Html(field.blurFunction.get)"
+             }
+             @if(field.required) {
+                    ng-required="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance()"
+             }
+             >
+             @for(link <- field.links) {
+                    <i class="fa fa-link fa-rotate-90" data-ng-click=""></i>
+                    <a href="" data-ng-click="link('@link.page.name', '@link.filter', '@page.model.name')">@link.page.title</a>
+             }
+             *
              */
-            current: null,
-            /**
-             * A list of each section on the page
-             */
-            sections: {},
-            toConsole: function() {
-                console.log('PageCursor.current', cursor.current);
-                console.log('PageCursor.sections', cursor.sections);
+
+        };
+    })
+    .directive('selectOnClick', function () {
+        return {
+            restrict: 'A',
+            link: function (scope, element) {
+                element.on('click', function () {
+                    this.select();
+                });
             }
         };
-
-        var SmartSection = function (pageSection) {
-            var self = {
-                name: pageSection.name,
-                viewMode: pageSection.viewMode
-            };
-            cursor.sections[pageSection.name] = self;
-            _.forEach(pageSection.sections, function (section) {
-                new SmartSection(section);
-            });
+    })
+    .directive('tntLink', function () {
+        return {
+            restrict: 'E',
+            template: 'asdf'
         };
-
-        cursor.initialize = function (p) {
-            $log.debug('initializing PageCursor', p);
-            _.forEach(p.sections, function (section) {
-                new SmartSection(section);
-            });
-        };
-
-        return cursor;
-    }
-);
-
+    })
+;
 // Source: public/js/common/_app.js
 /* global angular */
 
@@ -566,26 +1251,59 @@ angular.module('tantalim.common')
 
 // Source: public/js/common/logger.js
 /**
- * Logger.log(Message({});
+ * Logger.error("Error here");
+ * Logger.log({
+ *  message: "Or like this",
+ *  type: Logger.TYPE.WARN,
+ *  source: 'ModelCursor.js Line 123',
+ *  details: 'Should fix it here.'
+ * });
  */
 angular.module('tantalim.common')
     .factory('Logger', [
         function () {
-            var messages = [];
 
             var _self = {
-                Message: function (content) {
-                    var defaults = {
+                TYPE: {INFO: 'info', WARN: 'warn', ERROR: 'warn', DEBUG: 'debug'},
+                history: [],
+                log: function (content, messageType) {
+                    content = normalizeContent(content);
+                    content.type = messageType || _self.TYPE.INFO;
 
-                    };
+                    if (content.type === _self.TYPE.ERROR) {
+                        _self._error = content.message
+                    } else {
+                        _self._status = content.message
+                    }
 
-                    // merge content and defaults
-                    return this;
+                    _self.history.push(content);
                 },
-                log: function (message) {
-                    messages.push(message);
+                info: function (content) {
+                    _self.log(content);
+                },
+                warn: function (content) {
+                    _self.log(content, _self.TYPE.WARN);
+                },
+                debug: function (content) {
+                    _self.log(content, _self.TYPE.DEBUG);
+                },
+                error: function (content) {
+                    _self.log(content, _self.TYPE.ERROR);
+                },
+                getStatus: function (status) {
+                    return _self._status;
+                },
+                getError: function () {
+                    return _self._error;
                 }
             };
+
+            function normalizeContent(content) {
+                if (typeof content === 'string') {
+                    return {message: content};
+                } else return content;
+            }
+
             return _self;
         }
     ]);
@@ -599,58 +1317,20 @@ angular.module('tantalim.common')
             var rootSet;
             var current;
             var modelMap;
-            var clipboard;
 
             var clear = function () {
                 rootSet = null;
-                current = {sets: {}, instances: {}, gridSelection: {}, editing: {}};
+                current = []; // {sets: {}, gridSelection: {}, editing: {}}
                 modelMap = {};
-                clipboard = {};
             };
             clear();
 
-            var MOUSE = {
-                LEFT: 1,
-                RIGHT: 3
-            };
-
             var fillModelMap = function (model, parentName) {
                 modelMap[model.name] = model;
-                model.parent = parentName; //
+                model.parent = parentName;
                 _.forEach(model.children, function (childModel) {
                     fillModelMap(childModel, model.name);
                 });
-            };
-
-            var resetCurrents = function (value, modelName) {
-                if (!modelName && value) {
-                    modelName = value.model.modelName;
-                }
-                var thisModel = modelMap[modelName];
-
-                current.sets[modelName] = value;
-
-                var nextInstance = null;
-                if (value) {
-                    nextInstance = value.getInstance();
-                }
-                current.instances[modelName] = nextInstance;
-
-                if (thisModel && thisModel.children) {
-
-                    var getNextSet = function (modelName) {
-                        if (nextInstance && nextInstance.childModels) {
-                            return nextInstance.childModels[modelName];
-                        }
-                        return null;
-                    };
-
-                    _.forEach(thisModel.children, function (childModel) {
-                        var childModelName = childModel.name;
-                        var childSet = getNextSet(childModelName);
-                        resetCurrents(childSet, childModelName);
-                    });
-                }
             };
 
             /**
@@ -660,7 +1340,7 @@ angular.module('tantalim.common')
              * @param nodeSet
              */
             var SmartNodeInstance = function (model, row, nodeSet) {
-                $log.debug('Adding SmartNodeInstance id:%s for model `%s` onto set ', row.id, model.name, nodeSet);
+                //$log.debug('Adding SmartNodeInstance id:%s for model `%s` onto set ', row.id, model.name, nodeSet);
                 var defaults = {
                     _type: 'SmartNodeInstance',
                     /**
@@ -717,7 +1397,7 @@ angular.module('tantalim.common')
                         // We could consider checking child models first before dying
                         throw new Error('Cannot find field called ' + fieldName);
                     },
-                    update: function (fieldName, newValue, oldValue) {
+                    update: function (fieldName, newValue) {
                         var field = modelMap[nodeSet.model.modelName].fields[fieldName];
                         if (!field) {
                             console.error("Failed to find field named " + fieldName + " in ", modelMap[nodeSet.model.modelName].fields);
@@ -741,13 +1421,17 @@ angular.module('tantalim.common')
                     },
                     updateParent: function () {
                         if (!this.nodeSet) return;
-                        console.info(this);
                         var parent = this.nodeSet.parentInstance;
                         if (parent && parent.state === 'NO_CHANGE') {
                             parent.state = 'CHILD_UPDATED';
                             parent.updateParent();
                         }
 
+                    },
+                    isFieldEditable: function() {
+                        //.state !== "INSERTED" && !currentField.updateable
+
+                        return true;
                     }
                 };
 
@@ -798,7 +1482,7 @@ angular.module('tantalim.common')
                 }
 
                 newInstance.addChildModel = function (childModelName, childDataSet) {
-                    var smartSet = new SmartNodeSet(modelMap[childModelName], childDataSet, newInstance);
+                    var smartSet = new SmartNodeSet(modelMap[childModelName], childDataSet, newInstance, nodeSet.depth + 1);
                     newInstance.childModels[childModelName] = smartSet;
                 };
 
@@ -808,7 +1492,7 @@ angular.module('tantalim.common')
                     });
                 }
 
-                $log.debug('Done creating newInstance');
+                //$log.debug('Done creating newInstance');
                 return newInstance;
             };
 
@@ -817,10 +1501,10 @@ angular.module('tantalim.common')
              * @param model
              * @param data
              * @param parentInstance
+             * @param depth
              */
-            var SmartNodeSet = function (model, data, parentInstance) {
-                $log.debug('Adding SmartNodeSet for ' + model.name);
-                //console.debug(model);
+            var SmartNodeSet = function (model, data, parentInstance, depth) {
+                //$log.debug('Adding SmartNodeSet for ' + model.name + ' at depth ' + depth);
                 var defaults = {
                     _type: 'SmartNodeSet',
                     model: {
@@ -850,7 +1534,6 @@ angular.module('tantalim.common')
                         instance: null,
                         model: null
                     },
-                    currentIndex: -1,
                     /**
                      * Array of SmartNodeInstances
                      */
@@ -859,13 +1542,11 @@ angular.module('tantalim.common')
                      * Array of SmartNodeInstances
                      */
                     deleted: [],
+                    depth: depth || 0, // Will probably remove level
+                    index: -1,
 
-                    sort: function (reverse) {
-                        var orderBy = this.model.orderBy;
-                        if (angular.isString(orderBy)) {
-                            orderBy = 'data.' + orderBy;
-                        }
-                        this.rows = $filter('orderBy')(this.rows, orderBy, reverse);
+                    sort: function (field, direction) {
+                        this.rows = $filter('orderBy')(this.rows, 'data.' + field, direction);
                     },
                     sortReverse: function () {
                         this.sort(true);
@@ -877,20 +1558,20 @@ angular.module('tantalim.common')
                         if (index >= this.rows.length) {
                             return;
                         }
-                        this.currentIndex = index;
-                        resetCurrents(this);
-                    },
-                    moveNext: function () {
-                        this.moveTo(this.currentIndex + 1);
+                        this.index = index;
+                        self.resetCurrents(this);
                     },
                     movePrevious: function () {
-                        this.moveTo(this.currentIndex - 1);
+                        this.moveTo(this.index - 1);
                     },
-                    moveToTop: function () {
-                        this.moveTo(0);
+                    moveNext: function () {
+                        this.moveTo(this.index + 1);
                     },
-                    moveToBottom: function () {
-                        this.moveTo(this.rows.length - 1);
+                    hasPrevious: function () {
+                        return this.index > 0;
+                    },
+                    hasNext: function () {
+                        return this.index + 1 < this.rows.length;
                     },
                     findIndex: function (id) {
                         return _.findIndex(this.rows, function (row) {
@@ -906,38 +1587,22 @@ angular.module('tantalim.common')
                         return !_.isEmpty(dirtyRow);
                     },
                     delete: function (index) {
-                        if (this.rows.length <= 0) {
-                            return;
+                        var row = this.rows[index];
+                        if (row.state !== 'INSERTED') {
+                            // Only delete previously saved records
+                            this.deleted.push(row);
+                            row.updateParent();
                         }
-                        var rowID = this.getInstance(index).id;
-                        var removed = _.remove(this.rows, function (row) {
-                            return row.id === rowID;
-                        });
-
-                        removed = _.remove(removed, function (row) {
-                            // Don't bother deleting newly inserted records
-                            return row.state !== 'INSERTED';
-                        });
-
-                        if (removed && removed.length > 0) {
-                            removed[0].updateParent();
-                            this.deleted.push(removed[0]);
-                        }
-                        if (this.currentIndex >= this.rows.length) {
-                            this.currentIndex = this.rows.length - 1;
-                        }
-                        resetCurrents(this);
+                        delete this.rows[index];
+                    },
+                    deleteEnabled: function() {
+                        return this.getInstance() !== null;
                     },
                     getInstance: function (index) {
-                        if (!index) {
-                            index = this.currentIndex;
-                        }
-                        if (!index || index < 0) {
-                            index = 0;
-                        }
                         if (!this.rows || this.rows.length === 0) {
                             return null;
                         }
+                        index = index || this.index || 0;
                         return this.rows[index];
                     },
                     reloadFromServer: function (newData) {
@@ -985,11 +1650,12 @@ angular.module('tantalim.common')
                 newSet.model.orderBy = model.orderBy;
                 newSet.parentInstance = parentInstance;
                 newSet.insert = function () {
-                    $log.debug('Inserting new instance with model')
+                    $log.debug('Inserting new instance with model');
                     var smartInstance = new SmartNodeInstance(model, {}, newSet);
                     newSet.rows.push(smartInstance);
-                    newSet.moveToBottom();
+                    newSet.index = newSet.rows.length - 1;
                     smartInstance.updateParent();
+                    //self.resetCurrents(newSet);
                     return smartInstance;
                 };
 
@@ -998,9 +1664,7 @@ angular.module('tantalim.common')
                         var smartInstance = new SmartNodeInstance(model, row, newSet);
                         newSet.rows.push(smartInstance);
                     });
-                    if (newSet.rows.length) {
-                        newSet.currentIndex = 0;
-                    }
+                    self.resetCurrents(newSet);
                 }
 
                 return newSet;
@@ -1011,8 +1675,8 @@ angular.module('tantalim.common')
                 current: current,
                 setRoot: function (model, data) {
                     $log.debug('Setting Root data');
-                    //$log.debug(model);
-                    //$log.debug(data);
+                    $log.debug(model);
+                    $log.debug(data);
                     clear();
                     if (_.isEmpty(model)) {
                         console.warn("setRoot called with empty model, exiting");
@@ -1021,184 +1685,64 @@ angular.module('tantalim.common')
                     fillModelMap(model);
                     rootSet = new SmartNodeSet(model, data);
                     self.root = rootSet;
-                    resetCurrents(rootSet);
+                    self.resetCurrents(rootSet);
                     self.current = current;
-                    //console.log('setRoot done: current=', current);
                 },
-                getCurrentInstance: function (modelName) {
-                    return current.instances[modelName];
-                },
-                getCurrentSet: function (modelName) {
-                    if (current.sets[modelName] === undefined) {
-                        $log.debug('current set for %s hasn\'t been created yet, creating now.', modelName);
-                        var parentName = modelMap[modelName].parent;
-                        var parentInstance = current.instances[parentName];
-                        parentInstance.addChildModel(modelName);
-                        resetCurrents(self.root);
+                getCurrentSet: function (modelName, level) {
+                    //console.info('getCurrentSet', modelName, level);
+                    level = level || 0;
+                    level = 0; // Will probably remove level
+                    if (!current[level]) {
+                        current[level] = {};
                     }
-                    return current.sets[modelName];
+                    var currentLevel = current[level];
+                    if (currentLevel[modelName] === undefined && modelMap[modelName]) {
+                        return undefined;
+                    }
+                    return currentLevel[modelName];
+                },
+                resetCurrents: function (thisSet) {
+                    if (!thisSet || thisSet._type !== 'SmartNodeSet') {
+                        throw new Error('resetCurrents() requires a SmartNodeSet but got', thisSet);
+                    }
+
+                    var modelName = thisSet.model.modelName;
+                    var level = 0; // thisSet.depth will probably remove level
+                    if (!current[level]) {
+                        current[level] = {};
+                    }
+
+                    var thisModel = modelMap[modelName];
+
+                    current[level][modelName] = thisSet;
+                    // Remove all child levels below than this one
+                    for(var i = level + 1; i < current.length; i++) {
+                        delete current[i];
+                    }
+
+                    var nextInstance = thisSet.getInstance();
+
+                    if (thisModel && thisModel.children) {
+                        _.forEach(thisModel.children, function (childModel) {
+                            if (nextInstance && nextInstance.childModels) {
+                                var childSet = nextInstance.childModels[childModel.name];
+                                if (childSet) {
+                                    self.resetCurrents(childSet);
+                                }
+                            }
+                        });
+                    }
                 },
                 dirty: function () {
+                    if (!rootSet) return false;
                     return rootSet.isDirty();
                 },
                 toConsole: function () {
                     console.log('ModelCursor.rootSet', self.root);
                     console.log('ModelCursor.modelMap', modelMap);
                     console.log('ModelCursor.current', self.current);
-                },
-                action: {
-                    length: function (modelName) {
-                        if (_.isEmpty(current.sets[modelName])) {
-                            return 0;
-                        }
-                        return current.sets[modelName].rows.length;
-                    },
-                    insert: function (modelName) {
-                        var newInstance = self.getCurrentSet(modelName).insert();
-                        return newInstance;
-                    },
-                    delete: function (modelName, index) {
-                        current.sets[modelName].delete(index);
-                    },
-                    deleteSelected: function (modelName) {
-                        if (current.gridSelection.model === modelName) {
-                            for (var row = current.gridSelection.rows.start; row <= current.gridSelection.rows.end; row++) {
-                                current.sets[modelName].delete(current.gridSelection.rows.start);
-                            }
-                            if (current.sets[modelName].rows.length > 0) {
-                                current.gridSelection.rows.end = current.gridSelection.rows.start;
-                            } else {
-                                current.gridSelection = {};
-                            }
-                        }
-                    },
-                    deleteEnabled: function (modelName) {
-                        return current.instances[modelName] !== null;
-                    },
-                    choose: function (modelName, id) {
-                        var index = current.sets[modelName].findIndex(id);
-                        current.sets[modelName].moveTo(index);
-                    },
-                    select: function (modelName, index) {
-                        current.sets[modelName].moveTo(index);
-                    },
-                    previous: function (modelName) {
-                        current.sets[modelName].movePrevious();
-                    },
-                    next: function (modelName) {
-                        current.sets[modelName].moveNext();
-                    },
-                    dblclick: function (modelName, row, column) {
-                        if (event.which !== MOUSE.LEFT) {
-                            return;
-                        }
-                        var currentField = modelMap[modelName].fields[column];
-                        var currentInstance = current.sets[modelName].getInstance(row);
-                        console.info(currentInstance);
-                        console.info(currentField);
-                        if (currentInstance.state !== "INSERTED" && !currentField.updateable) {
-                            return;
-                        }
-                        current.editing = {};
-                        current.editing[modelName] = {
-                            row: row,
-                            column: column
-                        };
-                        current.focus = modelName + "_" + column + "_" + row;
-                    },
-                    focus: function(modelName, row, column) {
-                        if (self.action.cellIsEditing(modelName, row, column)) {
-                            return current.focus === modelName + "_" + column + "_" + row;
-                        }
-                        return false;
-                    },
-                    cellIsEditing: function (modelName, row, column) {
-                        //return true;
-                        return current.editing[modelName]
-                            && current.editing[modelName].row === row
-                            && current.editing[modelName].column === column;
-                    },
-                    escape: function () {
-                        current.editing = {};
-                    },
-                    mousedown: function (modelName, row, column) {
-                        if (event.which === MOUSE.LEFT) {
-                            if (self.action.cellIsEditing(modelName, row, column)) {
-                                return;
-                            } else {
-                                current.editing = {};
-                            }
-                            current.gridSelection = {
-                                selecting: true,
-                                model: modelName,
-                                rows: {
-                                    start: row,
-                                    end: row
-                                },
-                                columns: {}
-                            };
-                            self.action.mouseover(modelName, row, column);
-                            self.action.select(modelName, row);
-                        }
-                    },
-                    mouseover: function (modelName, row, column) {
-                        if (event.which === MOUSE.LEFT) {
-                            if (self.action.cellIsEditing(modelName, row, column)) {
-                                return;
-                            }
-                            if (current.gridSelection.selecting) {
-                                if (modelName === current.gridSelection.model) {
-                                    current.gridSelection.rows.end = row;
-                                    current.gridSelection.columns[column] = true;
-                                }
-                                event.preventDefault();
-                                event.stopPropagation();
-                            }
-                        }
-                    },
-                    mouseup: function (modelName, row, column) {
-                        if (event.which === MOUSE.LEFT) {
-                            current.gridSelection.selecting = false;
-                        }
-                    },
-                    cellIsSelected: function (modelName, row, column) {
-                        return current.gridSelection.model === modelName
-                            && current.gridSelection.rows.start <= row
-                            && current.gridSelection.rows.end >= row
-                            && current.gridSelection.columns[column]
-                            ;
-                    },
-                    copy: function () {
-                        if (current.gridSelection) {
-                            clipboard = _.cloneDeep(current.gridSelection);
-                        }
-                    },
-                    paste: function () {
-                        if (clipboard && current.gridSelection) {
-                            var fromRows = getRows(clipboard);
-                            var toRows = getRows(current.gridSelection);
-
-                            var counter = 0;
-                            _.forEach(toRows, function (targetRow) {
-                                if (counter >= fromRows.length) counter = 0;
-                                var fromRow = fromRows[counter];
-                                _.forEach(current.gridSelection.columns, function (yes, columnName) {
-                                    targetRow.update(columnName, fromRow.data[columnName]);
-                                });
-                                counter++;
-                            });
-                        }
-                    }
                 }
             };
-
-            function getRows(clipboard, minRows) {
-                var copyStart = clipboard.rows.start;
-                var copyEnd = 1 + clipboard.rows.end;
-                if (minRows > copyEnd - copyStart) copyEnd = copyStart + minRows;
-                var from = current.sets[clipboard.model].rows;
-                return _.slice(from, copyStart, copyEnd);
-            }
 
             return self;
         }

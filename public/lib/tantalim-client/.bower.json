@@ -10,6 +10,7 @@
     "test"
   ],
   "dependencies": {
+    "zeroclipboard": "~2.2.0",
     "lodash": "3.1.0",
     "bootstrap": "~3.3.2",
     "fontawesome": "~4.3.0",
@@ -28,11 +29,11 @@
     "angular": ">= 1.3"
   },
   "homepage": "https://github.com/tantalim/tantalim-client",
-  "_release": "e5ccd538a1",
+  "_release": "524d93649f",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "e5ccd538a10243d881c9f4c4c543eb7656666907"
+    "commit": "524d93649f5a6a498072a4b72877d0854b97ad87"
   },
   "_source": "https://github.com/tantalim/tantalim-client.git",
   "_target": "master",

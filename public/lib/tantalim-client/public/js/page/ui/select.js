@@ -1,11 +1,12 @@
 'use strict';
+/* global _ */
 
-angular.module('tantalim.select', [])
-    .directive('uiSelect', function () {
+angular.module('tantalim.desktop')
+    .directive('tntSelect', function () {
         return {
             restrict: 'E',
             controllerAs: '$select',
-            controller: function ($scope, $timeout, $attrs, $element, $location, focus, PageService, ModelCursor) {
+            controller: function ($scope, $timeout, $attrs, $element, $location, focus, PageService) {
 
                 var EMPTY_SEARCH = '';
 
@@ -15,36 +16,32 @@ angular.module('tantalim.select', [])
                 ctrl.activeIndex = undefined;
                 ctrl.items = undefined;
 
-                var sourceModel = $attrs.sourceModel;
+                ctrl.label = $attrs.label;
                 var sourceField = $attrs.sourceField;
-                ctrl.sourceField = sourceField; // Don't remember why we have to set this here.
-                var targetModel = $attrs.targetModel;
+                ctrl.sourceField = $attrs.sourceField; // sourceField is referenced in the template so it has to be part of ctrl
                 var targetId = $attrs.targetId;
                 var targetField = $attrs.targetField;
-                var sourceFilter = $attrs.sourceFilter;
-                var otherMappings = undefined;
+                var otherMappings;
                 if ($attrs.otherMappings) {
-                    console.info("Eval " + $attrs.otherMappings);
+                    console.info('Eval ' + $attrs.otherMappings);
                     otherMappings = $scope.$eval($attrs.otherMappings);
                 }
-                var refresh = $attrs.refresh;
+                var previousFilter = '';
                 ctrl.id = targetField;
 
                 var openItems = function () {
                     ctrl.open = true;
-                    var items = ctrl.items;
                     ctrl.activeIndex = undefined;
-                    console.log("targetId = ", targetId);
-                    var current = _getCurrent();
-                    if (current) {
-                        for (var i = 0; i < items.length; i++) {
-                            var item = items[i];
+                    var currentInstance = $scope.currentInstance;
+                    if (currentInstance) {
+                        for (var i = 0; i < ctrl.items.length; i++) {
+                            var item = ctrl.items[i];
                             if (targetId) {
-                                if (item.id === current.data[targetId]) {
+                                if (item.id === currentInstance.data[targetId]) {
                                     ctrl.activeIndex = i;
                                 }
                             } else {
-                                if (item.data[sourceField] === current.data[targetField]) {
+                                if (item.data[sourceField] === currentInstance.data[targetField]) {
                                     ctrl.activeIndex = i;
                                 }
                             }
@@ -53,22 +50,35 @@ angular.module('tantalim.select', [])
                 };
 
                 ctrl.activate = function () {
-                    var _promise = undefined;
-                    ctrl.filter = EMPTY_SEARCH;
-                    if (sourceFilter) {
-                        console.info("sourceFilter = ", sourceFilter);
-                        var pat = /\${(\w+)}/gi;
-                        sourceFilter = sourceFilter.replace(pat, function(match, fieldName) {
-                            return ModelCursor.current.instances[targetModel].getValue(fieldName);
-                        });
+                    var sourceItemText = $attrs.sourceItems;
+                    if (sourceItemText) {
+                        if (ctrl.items === undefined) {
+                            ctrl.items = $scope.$eval(sourceItemText);
+                        }
+                        openItems();
+                        return;
                     }
 
-                    if (ctrl.items === undefined) {
+                    var sourceFilter = $attrs.sourceFilter;
+                    if (sourceFilter) {
+                        var pat = /\${(\w+)}/gi;
+                        sourceFilter = sourceFilter.replace(pat, function (match, fieldName) {
+                            var currentValue = $scope.currentInstance.getValue(fieldName);
+                            if (currentValue === undefined) {
+                                throw new Error('You must select ' + fieldName + ' first');
+                            }
+                            return currentValue;
+                        });
+                    }
+                    if (ctrl.items === undefined || previousFilter !== sourceFilter) {
                         ctrl.loading = true;
-                        if (ctrl.filter) {
-                            //whereClause.push({ctrl.filter});
-                        }
-                        _promise = PageService.readModelData(sourceModel, sourceFilter).then(function (d) {
+                        ctrl.filter = EMPTY_SEARCH;
+                        // TODO Support filtering the list if it's really long
+                        //if (ctrl.filter) {
+                        //    whereClause.push({ctrl.filter});
+                        //}
+                        console.info('readModelData where', sourceFilter);
+                        PageService.readModelData($attrs.sourceModel, sourceFilter).then(function (d) {
                             ctrl.loading = false;
                             if (d.status !== 200) {
                                 // TODO Need to figure out how to bubble up these error messages to global
@@ -84,32 +94,32 @@ angular.module('tantalim.select', [])
                                 return;
                             }
                             ctrl.items = d.data.rows;
+                            previousFilter = sourceFilter;
                             openItems();
                         });
                     } else {
                         openItems();
                     }
-                    focus("select-search-" + ctrl.id);
-                };
-                var _getCurrent = function () {
-                    return ModelCursor.getCurrentInstance(targetModel);
+                    focus('select-search-' + ctrl.id);
                 };
 
                 ctrl.choose = function (item) {
-                    // TODO if current hasn't been added then add it first
-                    var current = _getCurrent();
-                    console.info("updating targetField `" + targetField + "` to " + item.data[sourceField]);
-                    current.update(targetField, item.data[sourceField]);
-                    ctrl.display = current.data[targetField];
+                    var currentInstance = $scope.currentInstance;
+                    currentInstance.update(targetField, item.data[sourceField]);
+                    ctrl.display = currentInstance.data[targetField];
+                    if (targetId) {
+                        currentInstance.data[targetId] = item.id;
+                    }
+
                     if (otherMappings) {
-                        console.info("updating otherMappings ", otherMappings);
+                        console.info('updating otherMappings ', otherMappings);
                         _.forEach(otherMappings, function (mapping) {
-                            current.update(mapping.target, item.data[mapping.source]);
+                            currentInstance.update(mapping.target, item.data[mapping.source]);
                         });
                     }
                     ctrl.open = false;
                     ctrl.empty = false;
-                    focus("select-button-" + ctrl.id);
+                    focus('select-button-' + ctrl.id);
                 };
 
                 var Key = {
@@ -120,7 +130,7 @@ angular.module('tantalim.select', [])
                     Escape: 27
                 };
 
-                ctrl.keydown = function (key, current) {
+                ctrl.keydown = function (key) {
                     switch (key) {
                         case Key.Down:
                             if (ctrl.activeIndex < ctrl.items.length - 1) {
@@ -142,7 +152,7 @@ angular.module('tantalim.select', [])
                             break;
                         case Key.Escape:
                             ctrl.open = false;
-                            focus("select-button-" + ctrl.id);
+                            focus('select-button-' + ctrl.id);
                             break;
                         default:
                             return false;
@@ -172,32 +182,33 @@ angular.module('tantalim.select', [])
                     }
                 };
 
-                $scope.$watch('$select.activeIndex', function (newValue) {
+                $scope.$watch('$select.activeIndex', function () {
                     _scrollToActiveRow();
                 });
 
-                $scope.$watch("current", function (newValue) {
+                $scope.$watch('currentInstance', function (newValue) {
                     if (_.isEmpty(newValue)) {
-                        ctrl.display = "";
+                        ctrl.display = '';
                         ctrl.empty = true;
                     } else {
-                        ctrl.display = newValue[targetField];
+                        ctrl.display = newValue.data[targetField];
                         ctrl.empty = false;
                     }
-                    ctrl.open = false;
+                    //ctrl.open = false;
                 });
             },
             scope: {
-                current: "="
+                currentInstance: '='
             },
-            template: '<div class="ui-select-bootstrap dropdown" ng-class="{open: $select.open}" current="current">' +
+            template: '<label class="control-label" for="@(page.model.name)-@field.name">{{$select.label}}</label><div class="ui-select-bootstrap dropdown" ng-class="{open: $select.open}">' +
             '<button type="button" class="btn btn-default dropdown-toggle form-control ui-select-match" focus-on="select-button-{{$select.id}}" data-ng-hide="$select.open" data-ng-click="$select.activate()">' +
             '<span ng-hide="$select.empty">{{$select.display}}</span><span ng-show="$select.empty" class="text-muted">Select...</span>' +
             '<i class="loading fa fa-spinner fa-spin" data-ng-show="$select.loading"></i><span class="caret"></span>' +
             '</button>' +
+            '<button class="btn btn-xs btn-default ui-select-close" data-ng-show="$select.open" data-ng-click="$select.open = false"><i class="fa fa-times"></i></button>' +
             '<input class="form-control" data-ng-show="$select.open" focus-on="select-search-{{$select.id}}" data-ng-model="$select.filter" select-keydown>' +
             '<ul class="ui-select-choices ui-select-choices-content dropdown-menu" role="menu" ng-show="$select.items.length> 0">' +
-            '<li class="ui-select-choices-row" data-ng-repeat="item in $select.items | filter:$select.filter" ng-class="{active: $select.activeIndex===$index}" ng-mouseenter="$select.activeIndex = $index">' +
+            '<li class="ui-select-choices-row" data-ng-repeat="item in $select.items" ng-class="{active: $select.activeIndex===$index}" ng-mouseenter="$select.activeIndex = $index">' +
             '<a href="" data-ng-click="$select.choose(item)">{{item.data[$select.sourceField]}}</a></li>' +
             '</ul>' +
             '</div>'
@@ -206,7 +217,7 @@ angular.module('tantalim.select', [])
     // TODO Consider moving this to a util module
     .directive('selectKeydown', function () {
         return function (scope, element) {
-            element.bind("keydown keypress", function (event) {
+            element.bind('keydown keypress', function (event) {
                 scope.$apply(function () {
                     var processed = scope.$select.keydown(event.which, scope.current);
                     if (processed) {
@@ -232,6 +243,6 @@ angular.module('tantalim.select', [])
             $timeout(function () {
                 $rootScope.$broadcast('focusOn', name);
             });
-        }
+        };
     })
 ;
