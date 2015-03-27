@@ -10,8 +10,22 @@
                     disabled="@field.disabled"
                     @if(field.required) { required="true" }
                 >
-                    @for(link <- field.links) {
-                        <zoom target="@link.page.name">@link.page.title</zoom>
+                    @if(field.links.nonEmpty) {
+                        <div class="dropdown tnt-links">
+                            <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
+                                <span class="glyphicon glyphicon-option-vertical"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
+                                <li role="presentation"></li>
+                                @for(link <- field.links) {
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
+                                        data-ng-click="link('@link.page.name', '@link.filter', '@(page.name)')">
+                                        <i class="fa fa-link fa-rotate-90"></i>
+                                        @link.page.title</a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
                     }
                 </tnt-textbox>
             }

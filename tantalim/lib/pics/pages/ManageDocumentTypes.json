@@ -22,7 +22,13 @@
         },
         {
           "name": "DocumentTypeWorkflowName",
-          "label": "Workflow"
+          "label": "Workflow",
+          "links": [
+            {
+              "page": "ManageWorkflows",
+              "filter": "WorkflowID Equals ${DocumentTypeWorkflowID}"
+            }
+          ]
         },
         {
           "name": "DocumentTypeHasMultiple"
