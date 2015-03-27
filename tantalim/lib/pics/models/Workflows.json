@@ -11,10 +11,6 @@
       "basisColumn": "Name"
     },
     {
-      "name": "WorkflowHasVerification",
-      "basisColumn": "HasVerification"
-    },
-    {
       "name": "WorkflowHasRequirements",
       "basisColumn": "HasRequirements"
     }

@@ -1,0 +1,75 @@
+{
+  "basisTable": "DocumentCategory",
+  "limit": 10,
+  "orderBy": [
+    {
+      "fieldName": "Number"
+    }
+  ],
+  "fields": [
+    {
+      "name": "CategoryID",
+      "basisColumn": "CategoryID"
+    },
+    {
+      "name": "DocumentTypeID",
+      "basisColumn": "DocumentTypeID"
+    },
+    {
+      "name": "DocumentTypeSlug",
+      "basisColumn": "Slug",
+      "step": "DocumentType"
+    },
+    {
+      "name": "ParentID",
+      "basisColumn": "ParentID"
+    },
+    {
+      "name": "Number",
+      "basisColumn": "Number"
+    },
+    {
+      "name": "NumRequired",
+      "basisColumn": "NumRequired"
+    },
+    {
+      "name": "NumQuestions",
+      "basisColumn": "NumQuestions"
+    }
+  ],
+  "steps": [
+    {
+      "name": "DocumentType",
+      "join": "DocumentType"
+    }
+  ],
+  "children": [
+    {
+      "name": "Subcategories",
+      "basisTable": "DocumentCategory",
+      "orderBy": [
+        {
+          "fieldName": "SubcategoriesNumber"
+        }
+      ],
+      "parentLink": {
+        "parentField": "CategoryID",
+        "childField": "SubcategoriesParentID"
+      },
+      "fields": [
+        {
+          "name": "SubcategoriesCategoryID",
+          "basisColumn": "CategoryID"
+        },
+        {
+          "name": "SubcategoriesParentID",
+          "basisColumn": "ParentID"
+        },
+        {
+          "name": "SubcategoriesNumber",
+          "basisColumn": "Number"
+        }
+      ]
+    }
+  ]
+}

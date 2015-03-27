@@ -8,6 +8,9 @@
           "page": "ManageDocumentTypes"
         },
         {
+          "page": "ManageCategories"
+        },
+        {
           "page": "ManageWorkflows"
         }
       ]

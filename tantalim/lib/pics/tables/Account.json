@@ -1,0 +1,39 @@
+{
+  "dbName": "accounts",
+  "primaryKey": "AccountID",
+  "columns": [
+    {
+      "name": "AccountID",
+      "dbName": "id",
+      "updateable": false
+    },
+    {
+      "name": "Type",
+      "dbName": "type",
+      "updateable": false
+    },
+    {
+      "name": "Name",
+      "required": true
+    },
+    {
+      "name": "Status",
+      "required": true
+    },
+    {
+      "name": "City"
+    },
+    {
+      "name": "Country"
+    },
+    {
+      "name": "CountrySubdivision"
+    },
+    {
+      "name": "Zip"
+    },
+    {
+      "name": "CurrencyCode"
+    }
+  ]
+}

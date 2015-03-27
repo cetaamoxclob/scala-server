@@ -1,0 +1,43 @@
+{
+  "title": "Manage Categories",
+  "sections": [
+    {
+      "name": "DocumentCategories",
+      "viewMode": "form",
+      "title": "Categories",
+      "fields": [
+        {
+          "name": "DocumentTypeSlug",
+          "label": "Document Type Slug",
+          "links": [
+            {
+              "page": "ManageDocumentTypes",
+              "filter": "DocumentTypeID Equals ${DocumentTypeID}"
+            }
+          ]
+        },
+        {
+          "name": "Number"
+        }
+      ],
+      "sections": [
+        {
+          "name": "Subcategories",
+          "title": "Subcategories",
+          "viewMode": "table",
+          "fields": [
+            {
+              "name": "SubcategoriesNumber",
+              "links": [
+                {
+                  "page": "ManageCategories",
+                  "filter": "CategoryID Equals ${SubcategoriesCategoryID}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

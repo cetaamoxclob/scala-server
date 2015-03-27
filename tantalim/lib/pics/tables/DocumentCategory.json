@@ -33,5 +33,18 @@
       "name": "NumQuestions",
       "dataType": "Integer"
     }
+  ],
+  "joins": [
+    {
+      "name": "DocumentType",
+      "table": "DocumentType",
+      "required": false,
+      "columns": [
+        {
+          "from": "DocumentTypeID",
+          "to": "DocumentTypeID"
+        }
+      ]
+    }
   ]
 }

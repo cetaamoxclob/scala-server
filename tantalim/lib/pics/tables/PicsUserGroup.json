@@ -1,0 +1,46 @@
+{
+  "dbName": "usergroup",
+  "primaryKey": "UserGroupID",
+  "columns": [
+    {
+      "name": "UserGroupID",
+      "dbName": "id",
+      "dataType": "Integer",
+      "updateable": false
+    },
+    {
+      "name": "UserID",
+      "dataType": "Integer",
+      "updateable": false
+    },
+    {
+      "name": "GroupID",
+      "dataType": "Integer",
+      "updateable": false
+    }
+  ],
+  "joins": [
+    {
+      "name": "User",
+      "table": "PicsUser",
+      "required": true,
+      "columns": [
+        {
+          "from": "UserID",
+          "to": "UserID"
+        }
+      ]
+    },
+    {
+      "name": "Group",
+      "table": "PicsUser",
+      "required": true,
+      "columns": [
+        {
+          "from": "GroupID",
+          "to": "UserID"
+        }
+      ]
+    }
+  ]
+}

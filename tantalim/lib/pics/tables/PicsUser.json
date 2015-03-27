@@ -1,0 +1,63 @@
+{
+  "dbName": "users",
+  "primaryKey": "UserID",
+  "columns": [
+    {
+      "name": "UserID",
+      "dbName": "id",
+      "dataType": "Integer",
+      "updateable": false
+    },
+    {
+      "name": "AccountID",
+      "dataType": "Integer",
+      "updateable": false
+    },
+    {
+      "name": "IsGroup"
+    },
+    {
+      "name": "IsActive",
+      "label": "Active"
+    },
+    {
+      "name": "DisplayName",
+      "label": "Display Name",
+      "dbName": "name",
+      "required": true
+    },
+    {
+      "name": "FirstName",
+      "label": "First Name",
+      "required": true
+    },
+    {
+      "name": "LastName",
+      "label": "Last Name",
+      "required": true
+    },
+    {
+      "name": "Registered",
+      "dbName": "registered"
+    },
+    {
+      "name": "LastLogin",
+      "dbName": "lastLogin",
+      "label": "Last Login"
+    }
+  ],
+  "joins": [
+    {
+      "name": "Account",
+      "table": "Account",
+      "required": true,
+      "columns": [
+        {
+          "from": "AccountID",
+          "to": "AccountID"
+        }
+      ]
+
+    }
+  ]
+}

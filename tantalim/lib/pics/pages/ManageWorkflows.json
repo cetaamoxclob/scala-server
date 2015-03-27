@@ -12,9 +12,6 @@
           "showInNavigation": true
         },
         {
-          "name": "WorkflowHasVerification"
-        },
-        {
           "name": "WorkflowHasRequirements"
         }
       ],
