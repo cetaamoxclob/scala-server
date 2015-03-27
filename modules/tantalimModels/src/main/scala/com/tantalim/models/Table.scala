@@ -1,5 +1,7 @@
 package com.tantalim.models
 
+import com.tantalim.util.TantalimException
+
 abstract class Table {
   def name: String
 
@@ -11,7 +13,7 @@ abstract class Table {
 
   def getColumn(name: String) = columns.getOrElse(
     name,
-    throw new Exception(f"failed to find column named `$name` in table `${this.name}` but found: ${this.columns.keys}")
+    throw new TantalimException(f"failed to find column named `$name` in table `${this.name}`", s"found: ${this.columns.keys}")
   )
 }
 

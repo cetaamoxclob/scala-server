@@ -117,6 +117,9 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
         val childModel =
           if (childJson.extendModel.isDefined) extendModel(childJson, Some(newModel))
           else compileModelView(childJson, Some(newModel))
+        if (childModel.parentLink.isEmpty) {
+          throw new TantalimException(s"Child model named ${childModel.name} is missing parentLink", "")
+        }
         newModel.children(childModel.name) = childModel
       }
     }
@@ -149,8 +152,8 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
       if (step.tableJoin.isEmpty && parentStepMatches(step.parentName, parentStep)) {
         step.parent = parentStep
         step.tableJoin = fromTable.joins.get(step.join)
-        if (step.required.isEmpty) step.required = Some(step.tableJoin.get.required)
-        val tableJoin = step.tableJoin.getOrElse(throw new TantalimException(s"Could not find join named `${step.join}` in `${fromTable.name}`", "Add it"))
+        val tableJoin = step.tableJoin.getOrElse(throw new TantalimException(s"Could not find join named `${step.join}` in `${fromTable.name}`", s"Found the following joins: ${fromTable.joins.keys}"))
+        if (step.required.isEmpty) step.required = Some(tableJoin.required)
         val deepTable = compileTable(tableJoin.table.name)
         addTableJoinsToSteps(tempSteps, Some(step), deepTable)
       }

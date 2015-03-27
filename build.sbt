@@ -20,7 +20,8 @@ lazy val scriptCompiler = (project in file("modules/scriptCompiler"))
 lazy val nodes = (project in file("modules/nodes"))
   .dependsOn(models, util)
 
-lazy val models = project in file("modules/tantalimModels")
+lazy val models = (project in file("modules/tantalimModels"))
+  .dependsOn(util)
 
 lazy val util = project in file("modules/util")
 
