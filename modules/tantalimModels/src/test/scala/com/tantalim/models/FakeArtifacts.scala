@@ -19,4 +19,5 @@ trait FakeArtifacts {
                       dbName: String, dataType: DataType) =
     new TableColumn(name = name, dbName = dbName, order = 0, dataType = dataType, label = name)
 
+  def fakeModule() = new Module("Default", new Database("Default"))
 }

@@ -9,6 +9,25 @@ import scala.collection.Map
 
 trait TableCompiler extends ArtifactService with TableCache {
 
+  def compileModule(moduleName: Option[String]): Module = {
+    if (moduleName.isEmpty) {
+      Module(
+        "Default",
+        Database("Default", None)
+      )
+    } else {
+      val database = if (moduleName.get.toLowerCase.startsWith("tantalim")) {
+        Database(moduleName.get, Some("tantalim_meta"))
+      } else {
+        Database(moduleName.get, None)
+      }
+      Module(
+        "Default",
+        database
+      )
+    }
+  }
+
   def compileTable(name: String): DeepTable = {
     println("Compiling table " + name)
     val json = getArtifactContentAndParseJson(ArtifactType.Table, name)
@@ -18,6 +37,7 @@ trait TableCompiler extends ArtifactService with TableCache {
         new DeepTable(
           name,
           table.dbName.getOrElse(name),
+          module = compileModule(table.module),
           primaryKey = if (table.primaryKey.isDefined) columns.get(table.primaryKey.get) else None,
           columns = columns,
           joins = if (table.joins.isDefined) {
@@ -41,6 +61,7 @@ trait TableCompiler extends ArtifactService with TableCache {
         new ShallowTable(
           name,
           table.dbName.getOrElse(name),
+          module = compileModule(table.module),
           primaryKey = if (table.primaryKey.isDefined) columns.get(table.primaryKey.get) else None,
           columns = columns
         )

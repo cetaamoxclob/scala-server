@@ -15,6 +15,6 @@ trait TableCache {
   }
 
   def addTableToCache(name: String, table: DeepTable): Unit = {
-      Cache.set(name, table, Duration(5, TimeUnit.MINUTES))
+      Cache.set(name, table, Duration(10, TimeUnit.SECONDS))
   }
 }

@@ -6,7 +6,6 @@ import play.api.libs.json._
 
 case class TableJson(dbName: Option[String],
                      module: Option[String],
-                     database: Option[String],
                      primaryKey: Option[String],
                      columns: Seq[TableColumnJson],
                      joins: Option[Seq[TableJoinJson]],
@@ -40,7 +39,6 @@ object TableJson {
   implicit def tableReads: Reads[TableJson] = (
     (JsPath \ "dbName").readNullable[String] and
       (JsPath \ "module").readNullable[String] and
-      (JsPath \ "database").readNullable[String] and
       (JsPath \ "primaryKey").readNullable[String] and
       (JsPath \ "columns").read[Seq[TableColumnJson]] and
       (JsPath \ "joins").readNullable[Seq[TableJoinJson]] and

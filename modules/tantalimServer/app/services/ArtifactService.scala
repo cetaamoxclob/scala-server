@@ -15,22 +15,32 @@ trait ArtifactService {
 
   private def tantalimRoot = "tantalim"
 
-  private def getSourceLocation(artifactType: ArtifactType, name: String): String = {
+  private def defaultModule = "default"
+
+  case class SourceLocation(filePath: String, module: String = defaultModule)
+
+  private def getSourceLocation(artifactType: ArtifactType, name: String): SourceLocation = {
     val fileNameAndPartialDirLocation = artifactType.getDirectory + "/" + name + ".json"
     val srcDir = tantalimRoot + "/src/" + fileNameAndPartialDirLocation
-    if (fileExists(srcDir)) srcDir
+    if (fileExists(srcDir)) SourceLocation(srcDir)
     else {
       val libDirLocation = tantalimRoot + "/lib/"
       val libDir = new File(libDirLocation)
-      val libList: Array[String] = libDir.listFiles.flatMap(d => {
+      val libList: Array[SourceLocation] = libDir.listFiles.flatMap(d => {
         val libSrcDir = d.toString + "/" + fileNameAndPartialDirLocation
-        if (d.isDirectory && fileExists(libSrcDir)) Some(libSrcDir)
+        val moduleName = d.toString.substring(libDirLocation.length)
+        if (d.isDirectory && fileExists(libSrcDir)) Some(SourceLocation(filePath = libSrcDir, module = moduleName))
         else None
       })
 
-      libList.headOption.getOrElse {
+      if (libList.length == 0) {
         throw new MissingArtifactException(artifactType, name)
       }
+      if (libList.length > 1) {
+        println(s"WARN: $artifactType $name was found in more than one location. Using the 'first'")
+      }
+
+      libList.headOption.get
     }
   }
 
@@ -40,17 +50,20 @@ trait ArtifactService {
   }
 
   def getArtifactContentAndParseJson(artifactType: ArtifactType, name: String): JsValue = {
-    val fileName = getSourceLocation(artifactType, name)
-    val artifactContent = Files.toString(Play.getFile(fileName), Charsets.UTF_8)
+    val sourceLocation = getSourceLocation(artifactType, name)
+    val artifactContent = Files.toString(Play.getFile(sourceLocation.filePath), Charsets.UTF_8)
 
     if (artifactContent.isEmpty)
-      throw new TantalimException(s"Artifact $artifactType named `$name` is empty", "Edit the file: " + fileName + artifactContent)
+      throw new TantalimException(s"Artifact $artifactType named `$name` is empty", "Edit the file: " + sourceLocation.filePath + artifactContent)
 
     try {
-      Json.parse(artifactContent)
+      val result = Json.parse(artifactContent).asInstanceOf[JsObject]
+      val newResult = result + ("module" -> JsString(sourceLocation.module))
+      println("module after " + newResult \ "module")
+      newResult
     } catch {
       case e: Exception => throw new TantalimException(
-        s"Failed to parse $artifactType named `$name`",
+        s"Failed to parse json for $artifactType named `$name`",
         e.getMessage
       )
     }
@@ -93,7 +106,7 @@ trait ArtifactService {
     ArtifactType.values().flatMap { artifactType: ArtifactType =>
       val localFiles = getArtifactsFromDir(tantalimRoot + "/src", artifactType, None)
 
-      new File(tantalimRoot + "/lib/").listFiles().foldLeft(localFiles){(acc, libDir) =>
+      new File(tantalimRoot + "/lib/").listFiles().foldLeft(localFiles) { (acc, libDir) =>
         if (libDir.isDirectory) {
           val localFiles = getArtifactsFromDir(libDir.getCanonicalPath, artifactType, Some(libDir.getName))
           acc ++ localFiles

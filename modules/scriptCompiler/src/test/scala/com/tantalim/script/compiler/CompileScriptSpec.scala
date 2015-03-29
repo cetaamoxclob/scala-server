@@ -10,7 +10,7 @@ import org.specs2.runner._
 class CompileScriptSpec extends Specification with FakeArtifacts {
   val model = new Model(
     "Person",
-    basisTable = new ShallowTable("Persons", "person"),
+    basisTable = new DeepTable("Persons", "person", fakeModule()),
     fields = Map(
       fakeModelFieldMap("PersonID", "person_id", DataType.Integer, updateable = false),
       fakeModelFieldMap("PersonName", "name", required = true)
@@ -18,7 +18,7 @@ class CompileScriptSpec extends Specification with FakeArtifacts {
   )
   model.addChild(new Model(
     "PersonPhone",
-    basisTable = new ShallowTable("Phone", "phone"),
+    basisTable = new DeepTable("Phone", "phone", fakeModule()),
     parent = Some(model),
     fields = Map(
       fakeModelFieldMap("PersonPhoneID", "phone_id", DataType.Integer, updateable = false),

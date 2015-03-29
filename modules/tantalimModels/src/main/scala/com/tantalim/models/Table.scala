@@ -7,6 +7,8 @@ abstract class Table {
 
   def dbName: String
 
+  def module: Module
+
   def primaryKey: Option[TableColumn]
 
   def columns: Map[String, TableColumn]
@@ -20,6 +22,7 @@ abstract class Table {
 case class ShallowTable(
                          name: String,
                          dbName: String,
+                         module: Module,
                          primaryKey: Option[TableColumn] = None,
                          columns: Map[String, TableColumn] = Map.empty
                          ) extends Table
@@ -27,9 +30,10 @@ case class ShallowTable(
 case class DeepTable(
                       name: String,
                       dbName: String,
-                      primaryKey: Option[TableColumn],
-                      columns: Map[String, TableColumn],
-                      joins: Map[String, TableJoin],
+                      module: Module,
+                      primaryKey: Option[TableColumn] = None,
+                      columns: Map[String, TableColumn] = Map.empty,
+                      joins: Map[String, TableJoin] = Map.empty,
                       allowInsert: Boolean = true,
                       allowUpdate: Boolean = true,
                       allowDelete: Boolean = true

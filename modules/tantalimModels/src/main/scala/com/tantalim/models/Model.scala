@@ -1,7 +1,7 @@
 package com.tantalim.models
 
 case class Model(name: String,
-                 basisTable: Table,
+                 basisTable: DeepTable,
                  limit: Int = 0,
                  instanceID: Option[String] = None,
                  fields: Map[String, ModelField],

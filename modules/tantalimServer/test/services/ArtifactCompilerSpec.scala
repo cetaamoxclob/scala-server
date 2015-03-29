@@ -64,6 +64,7 @@ class ArtifactCompilerSpec extends Specification with Mockito with FakeArtifacts
         basisTable = new DeepTable(
           "Person",
           "tbl_person",
+          module = Module("Default", Database("Default", None)),
           primaryKey = None,
           columns = Map("PersonID" -> new TableColumn(
             "PersonID",

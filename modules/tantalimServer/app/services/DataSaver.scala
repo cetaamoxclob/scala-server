@@ -6,7 +6,7 @@ import com.tantalim.nodes._
 import data._
 import com.tantalim.models.{DataType, FieldDefaultType, ModelField, Model}
 
-trait DataSaver extends DataReader with Database {
+trait DataSaver extends DataReader with DatabaseConnection {
   def saveAll(dataToSave: SmartNodeSet): Unit = {
     if (dataToSave.model.instanceID.isEmpty)
       throw new Exception("Cannot insert/update/delete an instance without an instanceID for " + dataToSave.model.name)
@@ -124,7 +124,7 @@ trait DataSaver extends DataReader with Database {
     val setColumnPhrase = columnNames.map(fieldName => f"`$fieldName`").mkString(", ")
     val boundVars = List.fill(columnNames.size)("?").mkString(",")
 
-    (f"INSERT INTO `${model.basisTable.dbName}` " +
+    (f"INSERT INTO ${SqlBuilder.getTableSql(model.basisTable)} " +
       f"($setColumnPhrase) " +
       f"VALUES ($boundVars)", columnValues.toList)
   }

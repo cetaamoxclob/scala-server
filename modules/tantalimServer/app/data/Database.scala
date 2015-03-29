@@ -6,7 +6,7 @@ import com.tantalim.nodes._
 import play.api.Play.current
 import play.api.db.DB
 
-trait Database {
+trait DatabaseConnection {
 
   private def connect[T](f: Connection => T): T = {
     val connection = DB.getConnection()

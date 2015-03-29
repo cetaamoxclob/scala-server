@@ -1,9 +1,9 @@
 package data
 
-import com.tantalim.models.{ModelOrderBy, ModelStep, ModelField}
+import com.tantalim.models._
 
 case class SqlBuilder(
-                       from: String,
+                       from: Table,
                        fields: Map[String, ModelField],
                        steps: scala.collection.Map[Int, ModelStep],
                        where: Option[String] = None,
@@ -13,7 +13,7 @@ case class SqlBuilder(
                        limit: Int = 0) {
 
   def toPreparedStatement: String = {
-    f"SELECT $getFields \nFROM `$from` AS `t0` $getJoins $getWhere $getOrderBy $getLimits"
+    f"SELECT $getFields \nFROM ${SqlBuilder.getTableSql(from)} AS `t0` $getJoins $getWhere $getOrderBy $getLimits"
   }
 
   /**
@@ -24,7 +24,7 @@ case class SqlBuilder(
    */
   def toCalcRowsStatement: String = {
     // TODO we might be able to make this faster if getJoins only returns required joins
-    f"SELECT COUNT(*) total FROM `$from` AS `t0` $getJoins $getWhere"
+    f"SELECT COUNT(*) total FROM ${SqlBuilder.getTableSql(from)} AS `t0` $getJoins $getWhere"
   }
 
   private def getFields: String = {
@@ -52,7 +52,7 @@ case class SqlBuilder(
       }.mkString(" AND ")
       val columnClause = if (columns.isEmpty) ""
       else "ON " + columns
-      s"$join `${step.join.table.dbName}` AS `$to` $columnClause"
+      s"$join ${SqlBuilder.getTableSql(step.join.table)} AS `$to` $columnClause"
     }.toSeq.mkString("\n")
   }
 
@@ -79,6 +79,14 @@ case class SqlBuilder(
       }
       else s"LIMIT $limit"
     } else ""
+  }
+}
+
+object SqlBuilder {
+  def getTableSql(table: Table): String = {
+    val db = table.module.database.dbName
+    if (db.isEmpty) s"`${table.dbName}`"
+    else s"`${db.get}`.`${table.dbName}`"
   }
 }
 

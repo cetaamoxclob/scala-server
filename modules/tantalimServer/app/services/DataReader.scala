@@ -8,12 +8,12 @@ import com.tantalim.util.TantalimException
 import data._
 import com.tantalim.models._
 
-trait DataReader extends Database {
+trait DataReader extends DatabaseConnection {
 
   def calcTotalRows(model: Model, filter: Option[String]): Long = {
     if (model.limit == 0) return 1
     var sqlBuilder = new SqlBuilder(
-      from = model.basisTable.dbName,
+      from = model.basisTable,
       steps = model.steps,
       fields = model.fields,
       limit = model.limit)
@@ -28,7 +28,7 @@ trait DataReader extends Database {
 
   def queryModelData(model: Model, page: Int = 1, filter: Option[String] = None, orderBy: Seq[ModelOrderBy] = Seq.empty): SmartNodeSet = {
     var sqlBuilder = new SqlBuilder(
-      from = model.basisTable.dbName,
+      from = model.basisTable,
       steps = model.steps,
       fields = model.fields,
       page = page,
@@ -59,10 +59,9 @@ trait DataReader extends Database {
       }
       resultSet
     } catch {
-      case e: Exception => {
+      case e: Exception =>
         val e2 = new TantalimException(e.getMessage, sqlBuilder.toPreparedStatement)
         throw e2
-      }
     }
   }
 
@@ -144,10 +143,3 @@ trait DataReader extends Database {
   }
 
 }
-
-//
-//case class DataReaderClass(model: Model, page: Int = 1, filter: Option[String] = None, orderBy: Seq[ModelOrderBy] = Seq.empty) extends DataReader {
-//  def calcTotalRows = calcTotalRows(model, filter)
-//  def queryModelData = queryModelData(model, page, filter, orderBy)
-//  def getSql = getSql(model, page, filter, orderBy)
-//}
