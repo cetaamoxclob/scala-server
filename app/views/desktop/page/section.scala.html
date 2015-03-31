@@ -1,7 +1,7 @@
 @(section: com.tantalim.models.PageSection, depth: Int)
 
 <div id="@section.name" class="childSection">
-    @if(section.sections.nonEmpty || (section.hasSibling)) {
+    @if(section.sections.nonEmpty || section.hasSibling) {
         <span class="icon-indent glyphicon glyphicon-triangle-right" aria-hidden="true"
         data-ng-click="hide@section.name = true" data-ng-hide="hide@section.name"></span>
         <span class="icon-indent glyphicon glyphicon-triangle-bottom" aria-hidden="true"
@@ -17,14 +17,13 @@
                 Insert New @section.title
             </button>
         } else {
-            <span>No @section.title found</span>
+            <span>No @(if (section.title.isEmpty) { "records" } else {section.title}) found</span>
         }
         </div>
         <ul class="nav navbar-nav" data-ng-show="SmartPage.getSection('@(section.name)').getCurrentSet().rows.length">
             @if(section.model.allowInsert) {
                 <button type="button" class="btn btn-primary btn-xs"
-                data-ng-click="SmartPage.getSection('@(section.name)').insert()"
-                data-ng-disabled="TopPageForm.$invalid">
+                data-ng-click="SmartPage.getSection('@(section.name)').insert()">
                     <span class="glyphicon glyphicon-plus"></span>
                     Insert
                 </button>
@@ -48,7 +47,7 @@
             </button>
             <button type="button" class="btn btn-xs"
             data-ng-click="SmartPage.getSection('@(section.name)').moveToPreviousRow()"
-            data-ng-disabled="!SmartPage.getSection('@(section.name)').getCurrentSet().hasPrevious() || TopPageForm.$invalid">
+            data-ng-disabled="!SmartPage.getSection('@(section.name)').getCurrentSet().hasPrevious()">
                 <span class="glyphicon glyphicon-chevron-left"></span>
                 Previous
             </button>
@@ -58,14 +57,14 @@
             </span>
             <button type="button" class="btn btn-xs"
             data-ng-click="SmartPage.getSection('@(section.name)').moveToNextRow()"
-            data-ng-disabled="!SmartPage.getSection('@(section.name)').getCurrentSet().hasNext() || TopPageForm.$invalid">
+            data-ng-disabled="!SmartPage.getSection('@(section.name)').getCurrentSet().hasNext()">
                 Next
                 <span class="glyphicon glyphicon-chevron-right"></span>
             </button>
             <button type="button" class="btn btn-xs"
             data-ng-click="SmartPage.nextPage()"
             data-ng-show="SmartPage.showPagingOnSection('@(section.name)')"
-            data-ng-disabled="SmartPage.page() >= SmartPage.maxPages || TopPageForm.$invalid">
+            data-ng-disabled="SmartPage.page() >= SmartPage.maxPages">
                 Next Page
                 <span class="glyphicon glyphicon-chevron-right"></span>
             </button>

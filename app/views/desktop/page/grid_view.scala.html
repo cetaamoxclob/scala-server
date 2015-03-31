@@ -5,53 +5,100 @@
         <thead>
             <tr>
                 <th class="tnt-grid-corner"></th>
-            @for(field <- page.fields) {
-                @if(field.showInTableView) {
-                    <th class="text-center" width="@{field.tableWidth}%" data-ng-click="SmartPage.getSection('@(page.name)').orderByField('@field.name')">
-                        @field.label
-                        <span class="glyphicon" aria-hidden="true"
+                @for((field, fieldIndex) <- page.fields.zipWithIndex) {
+                    @if(field.showInTableView) {
+                        <th class="text-center"
+                        width="@{
+                            field.tableWidth
+                        }%"
+                        data-ng-mouseenter="SmartPage.getSection('@(page.name)').mouseover(-1, @fieldIndex)"
+                        data-ng-click="SmartPage.getSection('@(page.name)').orderByField('@field.name')">
+                            <span class="glyphicon" aria-hidden="true"
                             ng-class="{'glyphicon-chevron-down': SmartPage.getSection('@(page.name)').orderBy.direction, 'glyphicon-chevron-up': !SmartPage.getSection('@(page.name)').orderBy.direction}"
                             data-ng-show="SmartPage.getSection('@(page.name)').orderBy.field === '@field.name'"></span>
-                    </th>
+                            @field.label
+                            @if(field.help.isDefined) {
+                                <span data-ng-show="SmartPage.getSection('@(page.name)').isHoveredOverCell(-1, @fieldIndex)" class="help">
+                                    <tnt-help label="@field.label">@field.help</tnt-help>
+                                </span>
+                            }
+                        </th>
+                    }
                 }
-            }
-                <th></th>
-            </tr>
+                    <th></th>
+                </tr>
         </thead>
         <tbody>
             <tr data-ng-repeat="row in SmartPage.getSection('@(page.name)').getCurrentSet().rows">
                 <td class="tnt-grid-left-nav" data-ng-bind="$index + 1"></td>
-            @for((field, fieldIndex) <- page.fields.zipWithIndex) {
-                @if(field.showInTableView) {
-                    <td class="text-display @if(field.alignCenter){text-center} @if(field.alignRight){text-right}"
+                @for((field, fieldIndex) <- page.fields.zipWithIndex) {
+                    @if(field.showInTableView) {
+                        <td class="text-display @if(field.alignCenter) {text-center} @if(field.alignRight) {text-right}"
                         data-ng-class="{success: SmartPage.getSection('@(page.name)').cellIsSelected($index, @fieldIndex)}"
                         data-ng-mousedown="SmartPage.getSection('@(page.name)').mousedown($index, @fieldIndex)"
                         data-ng-mouseover="SmartPage.getSection('@(page.name)').mouseover($index, @fieldIndex)"
                         data-ng-mouseup="SmartPage.getSection('@(page.name)').mouseup($index, @fieldIndex)"
-                        @if(field.fieldType != "checkbox") {
-                            data-ng-dblclick="SmartPage.getSection('@(page.name)').dblclick($index, @fieldIndex)"
-                        }
-                    >
-                        @if(field.fieldType == "checkbox") {
-                            <i class="fa fa-check-square-o fa-lg"
-                                data-ng-show="row.data.@field.name === true"
-                                data-ng-click="row.toggle('@(field.name)', @(field.required))"></i>
-                            <i class="fa fa-square-o fa-lg"
-                                data-ng-show="row.data.@field.name === false"
-                                data-ng-click="row.toggle('@(field.name)', @(field.required))"></i>
-                            <i class="fa fa-square-o fa-lg disabled"
-                                data-ng-show="row.data.@field.name === undefined || row.data.@field.name === null"
-                                data-ng-click="row.toggle('@(field.name)', @(field.required))"></i>
-                        } else {
-                            <span class="text-view" data-ng-bind="row.data.@field.name @if(field.filter.isDefined){ | @field.filter}"></span>
-                            <input type="text" class="text-edit" data-ng-model="row.data.@field.name"
-                            data-ng-show="SmartPage.getSection('@(page.name)').cellIsEditing($index, @fieldIndex)"
-                            data-ng-change="row.update('@(field.name)')"
-                            focus-me="SmartPage.getSection('@(page.name)').focus($index, @fieldIndex)">
-                        }
-                    </td>
+                            @if(field.fieldType != "checkbox") {
+                                data-ng-dblclick="SmartPage.getSection('@(page.name)').dblclick($index, @fieldIndex)"
+                                }
+                        >
+
+                            @field.fieldType match {
+                                case "checkbox" => {
+                                    <i class="fa fa-check-square-o fa-lg"
+                                    data-ng-show="row.data.@field.name === true"
+                                    data-ng-click="row.toggle('@(field.name)', @(field.required))"></i>
+                                    <i class="fa fa-square-o fa-lg"
+                                    data-ng-show="row.data.@field.name === false"
+                                    data-ng-click="row.toggle('@(field.name)', @(field.required))"></i>
+                                    <i class="fa fa-square-o fa-lg disabled"
+                                    data-ng-show="row.data.@field.name === undefined || row.data.@field.name === null"
+                                    data-ng-click="row.toggle('@(field.name)', @(field.required))"></i>
+                                }
+                                case "select" => {
+                                    @defining(field.select.get) { select =>
+                                        <tnt-select
+                                        current-instance="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance()"
+                                        source-model="@select.model"
+                                        source-field="@select.sourceField"
+                                        source-filter="@select.filter"
+                                        target-id="@select.targetID.getOrElse("")"
+                                        target-field="@(field.name)"
+                                        other-mappings="@Html(select.fields.toString())"
+                                        >
+                                        @if(field.links.nonEmpty) {
+                                            <tnt-links>
+                                            @for(link <- field.links) {
+                                                <tnt-link target="@link.page.name" filter="@link.filter" section="@page.name" label="@link.page.title"></tnt-link>
+                                            }
+                                            </tnt-links>
+                                        }
+                                        </tnt-select>
+                                    }
+                                }
+                                case _ => {
+                                    <span data-ng-show="SmartPage.getSection('@(page.name)').isHoveredOverCell($index, @fieldIndex)" style="float: right; margin: -1px;">
+                                        <button class="btn btn-default btn-xs" data-ng-click="SmartPage.getSection('@(page.name)').startEditing($index, @fieldIndex)">
+                                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                        </button>
+                                        @if(field.links.nonEmpty) {
+                                            <tnt-links>
+                                            @for(link <- field.links) {
+                                                <tnt-link target="@link.page.name" filter="@link.filter" section="@page.name" label="@link.page.title"></tnt-link>
+                                            }
+                                            </tnt-links>
+                                        }
+                                    </span>
+                                    <span class="text-view" data-ng-bind="row.data.@field.name @if(field.filter.isDefined) { | @field.filter}"></span>
+                                    <input type="text" class="text-edit" data-ng-model="row.data.@field.name"
+                                    data-ng-show="SmartPage.getSection('@(page.name)').cellIsEditing($index, @fieldIndex)"
+                                    data-ng-change="row.update('@(field.name)')"
+                                    focus-me="SmartPage.getSection('@(page.name)').focus($index, @fieldIndex)">
+                                }
+                            }
+                        </td>
+                    }
                 }
-            }
                 <td></td>
             </tr>
             <tr data-ng-hide="SmartPage.getSection('@(page.name)').getCurrentSet().rows.length">

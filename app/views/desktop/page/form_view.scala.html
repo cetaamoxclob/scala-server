@@ -2,31 +2,23 @@
 
 @for(field <- page.fields) {
     @if(field.showInFormView) {
-        <div class="form-group" ng-class="{'has-error': TopPageForm.@(field.name).$invalid}">
+        <div class="form-group col-xs-6" ng-class="{'has-error': TopPageForm.@(field.name).$invalid}">
             @if(field.fieldType == "text") {
                 <tnt-textbox label="@field.label"
                     current-instance="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance()"
-                    name="@field.modelField.name" placeholder="@field.placeholder" help="@field.help"
-                    disabled="@field.disabled"
+                    name="@field.modelField.name" placeholder="@field.placeholder" disabled="@field.disabled"
                     @if(field.required) { required="true" }
                 >
-                    @if(field.links.nonEmpty) {
-                        <div class="dropdown tnt-links">
-                            <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
-                                <span class="glyphicon glyphicon-option-vertical"></span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
-                                <li role="presentation"></li>
-                                @for(link <- field.links) {
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
-                                        data-ng-click="link('@link.page.name', '@link.filter', '@(page.name)')">
-                                        <i class="fa fa-link fa-rotate-90"></i>
-                                        @link.page.title</a>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-                    }
+                @if(field.help.nonEmpty) {
+                    <tnt-help label="@field.label">@field.help</tnt-help>
+                }
+                @if(field.links.nonEmpty) {
+                    <tnt-links>
+                        @for(link <- field.links) {
+                            <tnt-link target="@link.page.name" filter="@link.filter" section="@page.name" label="@link.page.title"></tnt-link>
+                        }
+                    </tnt-links>
+                }
                 </tnt-textbox>
             }
             @if(field.fieldType == "select") {
@@ -40,12 +32,24 @@
                     target-id="@select.targetID.getOrElse("")"
                     target-field="@(field.name)"
                     other-mappings="@Html(select.fields.toString())"
-                    ></tnt-select>
+                    >
+                    @if(field.links.nonEmpty) {
+                        <tnt-links>
+                        @for(link <- field.links) {
+                            <tnt-link target="@link.page.name" filter="@link.filter" section="@page.name" label="@link.page.title"></tnt-link>
+                        }
+                        </tnt-links>
+                    }
+                    </tnt-select>
                 }
             }
             @if(field.fieldType == "checkbox") {
                 <tnt-checkbox label="@field.label" current-instance="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance()"
-                    required="@(field.required)" target-field="@(field.name)"></tnt-checkbox>
+                    required="@(field.required)" target-field="@(field.name)">
+                    @if(field.help.nonEmpty) {
+                        <tnt-help label="@field.label">@field.help</tnt-help>
+                    }
+                </tnt-checkbox>
             }
         </div>
     }

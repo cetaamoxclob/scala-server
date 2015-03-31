@@ -37,7 +37,7 @@
                         </button>
                     </span>
                     <span data-ng-hide="SmartPage.filterString">
-                        <p><strong>No @section.title Exist</strong></p>
+                        <p><strong>No @(if (section.title.isEmpty) { "Records" } else {section.title}) Exist</strong></p>
                         @if(section.model.allowInsert) {
                             <hr>
                             <button type="button" class="btn btn-primary btn-sm" data-ng-click="SmartPage.getSection('@(section.name)', 0).getCurrentSet().insert()">
@@ -47,6 +47,7 @@
                         }
                     </span>
                 </div>
+                <div class="col-sm-12">&nbsp;</div>
             </div>
         </div>
 
