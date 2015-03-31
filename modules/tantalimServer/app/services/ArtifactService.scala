@@ -4,7 +4,7 @@ import java.io.File
 
 import com.google.common.base.Charsets
 import com.google.common.io.Files
-import com.tantalim.models.{ArtifactStub, ArtifactType}
+import com.tantalim.models.{Module, ArtifactStub, ArtifactType}
 import com.tantalim.util.TantalimException
 import compiler.src._
 import play.api.Play.current
@@ -15,9 +15,7 @@ trait ArtifactService {
 
   private def tantalimRoot = "tantalim"
 
-  private def defaultModule = "default"
-
-  case class SourceLocation(filePath: String, module: String = defaultModule)
+  case class SourceLocation(filePath: String, module: String = Module.default)
 
   private def getSourceLocation(artifactType: ArtifactType, name: String): SourceLocation = {
     val fileNameAndPartialDirLocation = artifactType.getDirectory + "/" + name + ".json"
@@ -58,9 +56,7 @@ trait ArtifactService {
 
     try {
       val result = Json.parse(artifactContent).asInstanceOf[JsObject]
-      val newResult = result + ("module" -> JsString(sourceLocation.module))
-      println("module after " + newResult \ "module")
-      newResult
+      result + ("module" -> JsString(sourceLocation.module))
     } catch {
       case e: Exception => throw new TantalimException(
         s"Failed to parse json for $artifactType named `$name`",

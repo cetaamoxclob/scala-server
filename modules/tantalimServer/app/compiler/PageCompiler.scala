@@ -92,8 +92,8 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
       val targetModel = try {
         compileModel(s.model)
       } catch {
-        case e: TantalimException => throw new TantalimException("Failed to find model named " + s.model,
-          s"Change the page definition, `${pageField.name}`.select.model to match a valid model")
+        case e: TantalimException => throw new TantalimException(s"Failed to find or parse model named ${s.model} on ${pageField.name}",
+          e.getMessage)
       }
       if (targetModel.fields.get(s.sourceField).isEmpty)
         throw new TantalimException(

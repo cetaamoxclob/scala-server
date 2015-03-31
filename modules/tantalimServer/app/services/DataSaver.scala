@@ -193,7 +193,7 @@ trait DataSaver extends DataReader with DatabaseConnection {
 
     val setColumnPhrase = columnNames.map(fieldName => f"`$fieldName` = ?").mkString(", ")
 
-    (f"UPDATE `${model.basisTable.dbName}` " +
+    (f"UPDATE ${SqlBuilder.getTableSql(model.basisTable)} " +
       f"SET $setColumnPhrase " +
       f"WHERE `${primaryKey.basisColumn.dbName}` = ?", columnValues.toList :+ primaryKeyValue)
   }
@@ -203,7 +203,7 @@ trait DataSaver extends DataReader with DatabaseConnection {
     val primaryKey = getPrimaryKey(model)
     val primaryKeyValue = getPrimaryKeyValue(primaryKey.name, row)
 
-    (f"DELETE FROM `${model.basisTable.dbName}` " +
+    (f"DELETE FROM ${SqlBuilder.getTableSql(model.basisTable)} " +
       f"WHERE `${primaryKey.basisColumn.dbName}` = ?", List(primaryKeyValue))
   }
 

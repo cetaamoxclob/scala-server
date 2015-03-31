@@ -10,20 +10,19 @@ import scala.collection.Map
 trait TableCompiler extends ArtifactService with TableCache {
 
   def compileModule(moduleName: Option[String]): Module = {
+    // TODO
     if (moduleName.isEmpty) {
       Module(
-        "Default",
+        Module.default,
         Database("Default", None)
       )
     } else {
-      val database = if (moduleName.get.toLowerCase.startsWith("tantalim")) {
-        Database(moduleName.get, Some("tantalim_meta"))
-      } else {
-        Database(moduleName.get, None)
-      }
       Module(
-        "Default",
-        database
+        moduleName.get,
+        Database(moduleName.get,
+          if (moduleName.get.toLowerCase.startsWith("tantalim")) Some("tantalim_meta")
+          else None
+        )
       )
     }
   }
