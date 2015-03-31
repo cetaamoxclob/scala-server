@@ -9,7 +9,18 @@
           "name": "ModelName"
         },
         {
-          "name": "ModelBasisTable"
+          "name": "ModelBasisTable",
+          "fieldType": "select",
+          "select": {
+            "model": "ListTables",
+            "sourceField": "TableName"
+          },
+          "links": [
+            {
+              "page": "BuildTable",
+              "filter": "TableName Equals '${ModelBasisTable}'"
+            }
+          ]
         },
         {
           "name": "ModelLimit"
@@ -38,11 +49,18 @@
           "fields": [
             {
               "name": "ModelStepName",
+              "label": "Step Name",
               "showInNavigation": true
             },
             {
               "name": "ModelStepJoin",
-              "label": "Table Join"
+              "label": "Table Join",
+              "fieldType": "select",
+              "select": {
+                "model": "ListTableJoins",
+                "sourceField": "TableJoinName",
+                "filter": "TableJoinFromTableName = '${ModelBasisTable}'"
+              }
             },
             {
               "name": "ModelStepParentName",
@@ -57,6 +75,7 @@
           "fields": [
             {
               "name": "ModelFieldName",
+              "label": "Field Name",
               "showInNavigation": true
             },
             {

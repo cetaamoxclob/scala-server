@@ -10,16 +10,23 @@
         {
           "name": "ModelName",
           "showInNavigation": true,
+          "help": "The name of the model",
           "links": [
             {
               "title": "Build Model",
               "page": "BuildModel",
-              "filter": "ModelName Equals \"[ModelName]\" AND ModelParentID IsEmpty"
+              "filter": "ModelName Equals '${ModelName}' AND ModelParentID IsEmpty"
             }
           ]
         },
         {
-          "name": "ModelBasisTable"
+          "name": "ModelBasisTable",
+          "links": [
+            {
+              "page": "BuildTable",
+              "filter": "TableName Equals '${ModelBasisTable}'"
+            }
+          ]
         }
       ]
 

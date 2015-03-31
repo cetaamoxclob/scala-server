@@ -70,6 +70,15 @@
           "title": "Users"
         }
       ]
+    },
+    {
+      "title": "Debug",
+      "items": [
+        {
+          "title": "Samples",
+          "href": "/assets/lib/tantalim-client/public/samples/"
+        }
+      ]
     }
   ]
 }

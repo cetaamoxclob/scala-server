@@ -142,6 +142,7 @@
         {
           "name": "ModelStepParentName",
           "basisColumn": "Name",
+          "required": false,
           "step": "Parent"
         }
       ]

@@ -1,0 +1,41 @@
+{
+  "basisTable": "Join",
+  "orderBy": [
+    {
+      "fieldName": "TableJoinName"
+    }
+  ],
+  "fields": [
+    {
+      "name": "TableJoinID",
+      "basisColumn": "JoinID"
+    },
+    {
+      "name": "TableJoinFromTableID",
+      "basisColumn": "FromTableID"
+    },
+    {
+      "name": "TableJoinFromTableName",
+      "basisColumn": "Name",
+      "step": "FromTable"
+    },
+    {
+      "name": "TableJoinName",
+      "basisColumn": "Name"
+    },
+    {
+      "name": "TableJoinToTableName",
+      "basisColumn": "ToTableName"
+    },
+    {
+      "name": "TableJoinRequired",
+      "basisColumn": "Required"
+    }
+  ],
+  "steps": [
+    {
+      "name": "FromTable",
+      "join": "FromTable"
+    }
+  ]
+}

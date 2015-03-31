@@ -34,21 +34,24 @@
       "dbName": "allowInsert",
       "label": "Allow Insert",
       "dataType": "Boolean",
-      "fieldType": "checkbox"
+      "fieldType": "checkbox",
+      "help": "If true, models based on this table will allow inserts. Can be overridden at the model level. Defaults to true if not set."
     },
     {
       "name": "AllowUpdate",
       "dbName": "allowUpdate",
       "label": "Allow Update",
       "dataType": "Boolean",
-      "fieldType": "checkbox"
+      "fieldType": "checkbox",
+      "help": "If true, models based on this table will allow changes. Can be overridden at the model level. Defaults to true if not set."
     },
     {
       "name": "AllowDelete",
       "dbName": "allowDelete",
       "label": "Allow Delete",
       "dataType": "Boolean",
-      "fieldType": "checkbox"
+      "fieldType": "checkbox",
+      "help": "If true, models based on this table will allow inserts. Can be overridden at the model level. Defaults to true if not set."
     }
   ]
 }

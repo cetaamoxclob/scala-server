@@ -14,7 +14,7 @@
             {
               "title": "Build Table",
               "page": "BuildTable",
-              "filter": "TableName Equals \"[TableName]\""
+              "filter": "TableName Equals '${TableName}'"
             }
           ]
         },

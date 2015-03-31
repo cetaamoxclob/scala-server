@@ -8,7 +8,17 @@
       "fields": [
         {
           "name": "TableName",
-          "showInNavigation": true
+          "showInNavigation": true,
+          "links": [
+            {
+              "page": "ListModels",
+              "filter": "ModelBasisTable Equals '${TableName}'"
+            },
+            {
+              "page": "BuildModel",
+              "filter": "ModelBasisTable Equals '${TableName}'"
+            }
+          ]
         },
         {
           "name": "TableSQL"
@@ -79,7 +89,13 @@
               "select": {
                 "model": "ListTables",
                 "sourceField": "TableName"
-              }
+              },
+              "links": [
+                {
+                  "page": "BuildTable",
+                  "filter": "TableName Equals '${TableJoinToTableName}'"
+                }
+              ]
             },
             {
               "name": "TableJoinRequired"
