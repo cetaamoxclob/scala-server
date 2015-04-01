@@ -8,8 +8,7 @@
     },
     {
       "name": "name",
-      "basisColumn": "Name",
-      "export": false
+      "basisColumn": "Name"
     },
     {
       "name": "basisTable",
@@ -17,7 +16,8 @@
     },
     {
       "name": "ModelParentID",
-      "basisColumn": "ParentID"
+      "basisColumn": "ParentID",
+      "export": false
     },
     {
       "name": "limit",
@@ -38,6 +38,14 @@
     {
       "name": "allowDelete",
       "basisColumn": "AllowDelete"
+    },
+    {
+      "name": "parentField",
+      "basisColumn": "ParentField"
+    },
+    {
+      "name": "childField",
+      "basisColumn": "ChildField"
     }
   ],
   "children": [

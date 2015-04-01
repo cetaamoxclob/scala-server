@@ -18,6 +18,14 @@
       "name": "Title",
       "dbName": "title",
       "required": true
+    },
+    {
+      "name": "Icon",
+      "dbName": "icon"
+    },
+    {
+      "name": "Css",
+      "dbName": "css"
     }
   ]
 }
