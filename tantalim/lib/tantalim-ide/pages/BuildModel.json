@@ -23,6 +23,15 @@
           ]
         },
         {
+          "name": "ModelParentName",
+          "links": [
+            {
+              "page": "BuildModel",
+              "filter": "ModelID Equals ${ModelParentID}"
+            }
+          ]
+        },
+        {
           "name": "ModelLimit"
         },
         {
@@ -79,10 +88,22 @@
               "showInNavigation": true
             },
             {
-              "name": "ModelFieldBasisColumn"
+              "name": "ModelFieldBasisColumn",
+              "fieldType": "select",
+              "select": {
+                "model": "ListTableColumns",
+                "sourceField": "ColumnName",
+                "filter": "ColumnTableName Equals '${ModelBasisTable}'"
+              }
             },
             {
-              "name": "ModelFieldStepName"
+              "name": "ModelFieldStepName",
+              "fieldType": "select",
+              "select": {
+                "model": "ListModelSteps",
+                "sourceField": "ModelStepName",
+                "filter": "ModelStepModelID Equals ${ModelID}"
+              }
             },
             {
               "name": "ModelFieldUpdateable"
@@ -102,16 +123,45 @@
           "fields": [
             {
               "name": "ChildModelName",
-              "showInNavigation": true
+              "showInNavigation": true,
+              "links": [
+                {
+                  "page": "BuildModel",
+                  "filter": "ModelID Equals ${ChildModelID}"
+                }
+              ]
             },
             {
-              "name": "ChildModelBasisTable"
+              "name": "ChildModelBasisTable",
+              "fieldType": "select",
+              "select": {
+                "model": "ListTables",
+                "sourceField": "TableName"
+              },
+              "links": [
+                {
+                  "page": "BuildTable",
+                  "filter": "TableName Equals '${ChildModelBasisTable}'"
+                }
+              ]
             },
             {
-              "name": "ChildModelParentField"
+              "name": "ChildModelParentField",
+              "fieldType": "select",
+              "select": {
+                "model": "ListModelFields",
+                "sourceField": "FieldName",
+                "filter": "FieldModelID Equals ${ModelID}"
+              }
             },
             {
-              "name": "ChildModelChildField"
+              "name": "ChildModelChildField",
+              "fieldType": "select",
+              "select": {
+                "model": "ListModelFields",
+                "sourceField": "FieldName",
+                "filter": "FieldModelID Equals ${ChildModelID}"
+              }
             }
           ]
         }

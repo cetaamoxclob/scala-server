@@ -1,6 +1,18 @@
 {
   "dbName": "model",
   "primaryKey": "ModelID",
+  "joins": [
+    {
+      "name": "Parent",
+      "table": "Model",
+      "columns": [
+        {
+          "from": "ParentID",
+          "to": "ModelID"
+        }
+      ]
+    }
+  ],
   "columns": [
     {
       "name": "ModelID",

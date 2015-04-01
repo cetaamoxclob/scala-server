@@ -15,6 +15,13 @@
       "basisColumn": "ParentID"
     },
     {
+      "name": "ModelParentName",
+      "basisColumn": "Name",
+      "step": "Parent",
+      "required": false,
+      "updateable": false
+    },
+    {
       "name": "ModelBasisTable",
       "basisColumn": "BasisTable"
     },
@@ -49,6 +56,12 @@
     {
       "name": "ModelAllowDelete",
       "basisColumn": "AllowDelete"
+    }
+  ],
+  "steps": [
+    {
+      "name": "Parent",
+      "join": "Parent"
     }
   ],
   "children": [
@@ -89,6 +102,7 @@
         {
           "name": "ModelFieldStepName",
           "basisColumn": "Name",
+          "required": false,
           "step": "Step"
         },
         {

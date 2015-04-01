@@ -1,0 +1,24 @@
+{
+  "basisTable": "ModelField",
+  "limit": 100,
+  "orderBy": [
+    {
+      "fieldName": "FieldName"
+    }
+  ],
+  "fields": [
+    {
+      "name": "FieldID",
+      "basisColumn": "FieldID"
+    },
+    {
+      "name": "FieldModelID",
+      "basisColumn": "ModelID"
+    },
+    {
+      "name": "FieldName",
+      "basisColumn": "Name"
+    }
+  ],
+  "steps": []
+}
