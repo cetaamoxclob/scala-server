@@ -34,7 +34,7 @@
             @for(artifact <- artifactList) {
                 <tr>
                     <td>@artifact.artifactType</td>
-                    <td>@artifact.module.getOrElse("local")</td>
+                    <td>@artifact.module</td>
                     <td>@artifact.name</td>
                     <td>
                     @helper.form(action = routes.Application.importArtifact(artifact.artifactType.toString, artifact.name)) {

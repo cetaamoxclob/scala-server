@@ -118,20 +118,25 @@ object Application extends Controller with Timer {
   def mobile(name: String) = TODO
 
   def ddl(tableName: String) = Action {
-      val table = compiler.compileTable(tableName)
-      val tableSchema = new TableSchema {}
-      Ok(tableSchema.generateTableDDL(table))
+    val table = compiler.compileTable(tableName)
+    val tableSchema = new TableSchema {}
+    Ok(tableSchema.generateTableDDL(table))
   }
 
-//  def ddl_run(tableName: String) = Action {
-//  }
+  //  def ddl_run(tableName: String) = Action {
+  //  }
 
   def importList = Action {
     implicit request =>
       val menu = compiler.compileMenu(applicationMenu)
-      val artifactList = new ArtifactServiceService().findArtifacts
+      val artifactList = new ArtifactService {}.findArtifacts
       val user = new User("12345", "trevorallred", "Trevor Allred")
       Ok(views.html.desktop.importList(menu, user, artifactList))
+  }
+
+  def artifactList = Action {
+    val artifactList = new ArtifactLister {}.getArtifactList
+    Ok(artifactList)
   }
 
   def importArtifact(artifactType: String, name: String) = Action {

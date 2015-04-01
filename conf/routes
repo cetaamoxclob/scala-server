@@ -18,6 +18,7 @@ GET         /data/:name                         controllers.Application.readData
 POST        /data/:name                         controllers.Application.saveData(name)
 
 GET         /ddl/:tableName                     controllers.Application.ddl(tableName)
+GET         /custom/artifactList                  controllers.Application.artifactList
 GET         /import/                            controllers.Application.importList
 POST        /import/:artifactType/:name         controllers.Application.importArtifact(artifactType, name)
 GET         /export/:artifactType/:name         controllers.Application.exportArtifact(artifactType, name)

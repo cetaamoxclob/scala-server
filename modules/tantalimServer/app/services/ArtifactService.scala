@@ -13,16 +13,14 @@ import play.api.libs.json._
 
 trait ArtifactService {
 
-  private def tantalimRoot = "tantalim"
-
   case class SourceLocation(filePath: String, module: String = Module.default)
 
   private def getSourceLocation(artifactType: ArtifactType, name: String): SourceLocation = {
     val fileNameAndPartialDirLocation = artifactType.getDirectory + "/" + name + ".json"
-    val srcDir = tantalimRoot + "/src/" + fileNameAndPartialDirLocation
+    val srcDir = ArtifactService.tantalimRoot + "/src/" + fileNameAndPartialDirLocation
     if (fileExists(srcDir)) SourceLocation(srcDir)
     else {
-      val libDirLocation = tantalimRoot + "/lib/"
+      val libDirLocation = ArtifactService.tantalimRoot + "/lib/"
       val libDir = new File(libDirLocation)
       val libList: Array[SourceLocation] = libDir.listFiles.flatMap(d => {
         val libSrcDir = d.toString + "/" + fileNameAndPartialDirLocation
@@ -85,6 +83,7 @@ trait ArtifactService {
     artifactJson.validate[TableJson]
   }
 
+  @deprecated
   def findArtifacts: Seq[ArtifactStub] = {
     def artifactName(rootPath: String, filePath: String): String = {
       filePath.replace(rootPath, "").replace(".json", "").replace("/", "")
@@ -94,15 +93,15 @@ trait ArtifactService {
       val artifactDir = new File(moduleLocation + "/" + artifactType.getDirectory)
       if (artifactDir.isDirectory) {
         artifactDir.listFiles().map(f =>
-          ArtifactStub(artifactType, artifactName(artifactDir.getAbsolutePath, f.getCanonicalPath), moduleName)
+          ArtifactStub(artifactType, artifactName(artifactDir.getAbsolutePath, f.getCanonicalPath), moduleName.getOrElse(Module.default))
         )
       } else Seq.empty
     }
 
     ArtifactType.values().flatMap { artifactType: ArtifactType =>
-      val localFiles = getArtifactsFromDir(tantalimRoot + "/src", artifactType, None)
+      val localFiles = getArtifactsFromDir(ArtifactService.tantalimRoot + "/src", artifactType, None)
 
-      new File(tantalimRoot + "/lib/").listFiles().foldLeft(localFiles) { (acc, libDir) =>
+      new File(ArtifactService.tantalimRoot + "/lib/").listFiles().foldLeft(localFiles) { (acc, libDir) =>
         if (libDir.isDirectory) {
           val localFiles = getArtifactsFromDir(libDir.getCanonicalPath, artifactType, Some(libDir.getName))
           acc ++ localFiles
@@ -110,6 +109,9 @@ trait ArtifactService {
       }
     }.toSeq
   }
+
 }
 
-class ArtifactServiceService extends ArtifactService
+object ArtifactService {
+  val tantalimRoot = "tantalim"
+}

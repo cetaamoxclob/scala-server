@@ -1,6 +1,6 @@
 {
   "basisTable": "__MOCK_TABLE__",
-  "customUrlSource": "/assets/modules.json",
+  "customUrlSource": "/custom/artifactList",
   "fields": [
     {
       "name": "ModuleName",
