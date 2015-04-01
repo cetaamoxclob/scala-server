@@ -26,7 +26,8 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
     val superModel = parent.get
     superModel.copy(
       name = model.name.get,
-      parentLink = model.parentLink,
+      parentField = if (model.parentField.isDefined) model.parentField else Some(model.parentLink.get.parentField),
+      childField = if (model.childField.isDefined) model.parentField else Some(model.parentLink.get.childField),
       parent = parent,
       filter = if (model.filter.isDefined) model.filter else superModel.filter,
       preSave = model.preSave
@@ -44,7 +45,7 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
       addTableToCache(model.name.get, newTable)
       newTable
     }
-    val instanceIdField = if (basisTable.primaryKey.isDefined) {
+    val instanceIdField = if (basisTable.primaryKey.isDefined && model.fields.isDefined) {
       model.fields.get.find(f =>
         f.basisColumn == basisTable.primaryKey.get.name // && f.step
       )
@@ -73,7 +74,8 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
       basisTable,
       model.limit.getOrElse(0),
       instanceID = if (instanceIdField.isDefined) Option(instanceIdField.get.name) else None,
-      fields = model.fields.get.map(f => {
+      fields = if (model.fields.isEmpty) Map.empty
+      else model.fields.get.map(f => {
         if (f.step.isDefined) {
           val stepName = f.step.get
           val stepID = stepIntsByName.getOrElse(
@@ -91,7 +93,11 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
           f.name -> compileModelField(f, basisTable.getColumn(f.basisColumn), None)
         }
       }).toMap,
-      parentLink = model.parentLink,
+      parentField = if (model.parentLink.isDefined) {
+        println(s"Warning parentLink in ${model.name.get} was deprecated and should be replaced with parentField and childField")
+        Some(model.parentLink.get.parentField)
+      } else model.parentField,
+      childField = if (model.parentLink.isDefined) Some(model.parentLink.get.childField) else model.childField,
       parent = parent,
       steps = stepsByInt,
       orderBy = compileOrderBy(model.orderBy),
@@ -118,9 +124,15 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
         val childModel =
           if (childJson.extendModel.isDefined) extendModel(childJson, Some(newModel))
           else compileModelView(childJson, Some(newModel))
-        if (childModel.parentLink.isEmpty) {
-          throw new TantalimException(s"Child model named ${childModel.name} is missing parentLink", "")
+        if (childModel.parentField.isEmpty) {
+          // We could try to guess based on the parent model's identifier field
+          throw new TantalimException(s"Child model named ${childModel.name} is missing parentField", "")
         }
+        if (childModel.childField.isEmpty) {
+          throw new TantalimException(s"Child model named ${childModel.name} is missing childField", "")
+        }
+        // TODO check to make sure the parentField actually exists
+        // TODO check to make sure the childField actually exists
         newModel.children(childModel.name) = childModel
       }
     }

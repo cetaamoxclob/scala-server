@@ -112,9 +112,9 @@ trait DataSaver extends DataReader with DatabaseConnection {
         }
       }
 
-      if (row.model.parentLink.isDefined) {
-        valueMap += row.model.fields.get(row.model.parentLink.get.childField).get.basisColumn.dbName ->
-          row.nodeSet.parentInstance.get.get(row.model.parentLink.get.parentField).get
+      if (row.model.childField.isDefined && row.model.parentField.isDefined) {
+        valueMap += row.model.fields.get(row.model.childField.get).get.basisColumn.dbName ->
+          row.nodeSet.parentInstance.get.get(row.model.parentField.get).get
       }
       valueMap.result()
     }

@@ -7,7 +7,8 @@ case class Model(name: String,
                  fields: Map[String, ModelField],
                  steps: scala.collection.Map[Int, ModelStep] = Map.empty, // I'm not sure why just ": Map[Int," ... won't work here
                  parent: Option[Model] = None,
-                 parentLink: Option[ModelParentLink] = None,
+                 parentField: Option[String] = None,
+                 childField: Option[String] = None,
                  orderBy: Seq[ModelOrderBy] = Seq.empty,
                  allowInsert: Boolean = true,
                  allowUpdate: Boolean = true,
@@ -57,5 +58,3 @@ case class ModelStep(name: String,
 
 case class ModelOrderBy(fieldName: String,
                         ascending: Option[Boolean])
-
-case class ModelParentLink(parentField: String, childField: String)

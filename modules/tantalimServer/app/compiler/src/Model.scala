@@ -1,6 +1,6 @@
 package compiler.src
 
-import com.tantalim.models.{ModelOrderBy, ModelParentLink}
+import com.tantalim.models.ModelOrderBy
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
@@ -13,6 +13,8 @@ case class ModelJson(basisTable: Option[String],
                      children: Option[Seq[ModelJson]],
                      orderBy: Option[Seq[ModelOrderBy]],
                      parentLink: Option[ModelParentLink],
+                     parentField: Option[String],
+                     childField: Option[String],
                      steps: Option[Seq[ModelStepJson]],
                      allowInsert: Option[Boolean],
                      allowUpdate: Option[Boolean],
@@ -49,6 +51,9 @@ case class FieldDefaultJson(value: String,
                             defaultType: Option[String],
                             watch: Option[Seq[String]])
 
+@deprecated
+case class ModelParentLink(parentField: String, childField: String)
+
 object ModelJson {
   implicit def modelReads: Reads[ModelJson] = (
     (JsPath \ "basisTable").readNullable[String] and
@@ -59,6 +64,8 @@ object ModelJson {
       (JsPath \ "children").lazyReadNullable(Reads.seq[ModelJson](modelReads)) and
       (JsPath \ "orderBy").readNullable[Seq[ModelOrderBy]] and
       (JsPath \ "parentLink").readNullable[ModelParentLink] and
+      (JsPath \ "parentField").readNullable[String] and
+      (JsPath \ "childField").readNullable[String] and
       (JsPath \ "steps").readNullable[Seq[ModelStepJson]] and
       (JsPath \ "allowInsert").readNullable[Boolean] and
       (JsPath \ "allowUpdate").readNullable[Boolean] and

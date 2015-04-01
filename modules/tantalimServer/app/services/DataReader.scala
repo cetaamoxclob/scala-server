@@ -45,14 +45,14 @@ trait DataReader extends DatabaseConnection {
       if (resultSet.rows.length > 0 && model.children.size > 0) {
         model.children.map {
           case (childModelName: String, childModel: Model) =>
-            val parentFieldName = childModel.parentLink.get.parentField
+            val parentFieldName = childModel.parentField.get
             val parentIDs: Seq[Int] = resultSet.rows.map { row =>
               row.get(parentFieldName) match {
                 case Some(parentFieldValue) => parentFieldValue.asInstanceOf[TntInt].value.toInt
                 case None => -1
               }
             }
-            val filterForChildModel = childModel.parentLink.get.childField + " In (" + parentIDs.mkString(",") + ")"
+            val filterForChildModel = childModel.childField.get + " In (" + parentIDs.mkString(",") + ")"
             val childRows = queryModelData(childModel, 1, Some(filterForChildModel), childModel.orderBy)
             addChildRowsToParent(resultSet, childRows)
         }
@@ -124,12 +124,13 @@ trait DataReader extends DatabaseConnection {
   private def addChildRowsToParent(parentRows: SmartNodeSet,
                                    childRows: SmartNodeSet): Unit = {
 
-    val parentLink = childRows.model.parentLink.get
     var remainingChildRows = childRows.rows
+    val parentField = childRows.model.parentField.get
+    val childField = childRows.model.childField.get
     parentRows.rows.foreach { parentRow =>
-      val parentID = parentRow.get(parentLink.parentField).get
+      val parentID = parentRow.get(parentField).get
       val (matching, nonMatching) = remainingChildRows.partition { childRow =>
-        parentID == childRow.get(parentLink.childField).get
+        parentID == childRow.get(childField).get
       }
       remainingChildRows = nonMatching
       val childSet = new SmartNodeSet(childRows.model, parentInstance = Some(parentRow))
@@ -137,7 +138,8 @@ trait DataReader extends DatabaseConnection {
       parentRow.children += (childRows.model.name -> childSet)
     }
     if (remainingChildRows.length > 0) {
-      throw new Exception(s"Failed to match ${remainingChildRows.length} ${childRows.model.name} records. Check datatypes of $parentLink")
+      throw new TantalimException(s"Failed to match ${remainingChildRows.length} ${childRows.model.name} records.",
+        "Check datatypes of $parentField and $childField")
     }
 
   }

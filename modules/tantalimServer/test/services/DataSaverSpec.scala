@@ -3,7 +3,7 @@ package services
 import java.sql._
 
 import com.tantalim.models._
-import com.tantalim.nodes.{TntInt, TntString, DataState, SmartNodeSet}
+import com.tantalim.nodes.{DataState, SmartNodeSet, TntInt, TntString}
 import data._
 import mock.{FakeConnection, FakeResultSet}
 import org.junit.runner.RunWith
@@ -33,7 +33,8 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
       ),
       limit = 100,
       instanceID = Option("PersonPhoneID"),
-      parentLink = Some(new ModelParentLink("PersonID", "PersonPhonePersonID")),
+      parentField = Some("PersonID"),
+      childField = Some("PersonPhonePersonID"),
       fields = Map(
         fakeModelFieldMap("PersonPhoneID", "phone_id", DataType.Integer, updateable = false),
         fakeModelFieldMap("PersonPhonePersonID", "person_id", DataType.Integer, updateable = false),
@@ -54,11 +55,13 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
     "insert one parent row" in {
       val saver = new DataSaver with DatabaseConnection {
         override def getConnection: Connection = new FakeConnection
+
         override def insert(sql: String, numberedParameters: List[Any], connection: Connection): ResultSet = {
           sql must be equalTo "INSERT INTO `person` (`name`) VALUES (?)"
           numberedParameters must be equalTo List(TntString("Foo"))
           new FakeResultSet {
             override def next(): Boolean = true
+
             override def getInt(columnIndex: Int): Int = 1
           }
         }
@@ -76,6 +79,7 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
     "update one parent row" in {
       val saver = new DataSaver with DatabaseConnection {
         override def getConnection: Connection = new FakeConnection
+
         override def update(sql: String, numberedParameters: List[Any], connection: Connection): Int = {
           sql must be equalTo "UPDATE `person` SET `name` = ? WHERE `person_id` = ?"
           numberedParameters must be equalTo List(TntString("Foo"), TntInt(12))
@@ -129,6 +133,7 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
     "update one child row" in {
       val saver = new DataSaver with DatabaseConnection {
         override def getConnection: Connection = new FakeConnection
+
         override def update(sql: String, numberedParameters: List[Any], connection: Connection): Int = {
           sql must be equalTo "UPDATE `phone` SET `phone_number` = ? WHERE `phone_id` = ?"
           numberedParameters must be equalTo List("(123) 456-7890", 34)
@@ -162,35 +167,35 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
     }
 
     "insert one parent and child row" in pending {
-//      val saver = new DataSaver with Database {
-//        override def insert(sql: String, numberedParameters: List[Any]): ResultSet = {
-//          sql must be equalTo "INSERT INTO `person` (`name`) VALUES (?)"
-//          numberedParameters must be equalTo List("Foo")
-//          new FakeResultSet {
-//            override def next(): Boolean = {
-//              return true
-//            }
-//
-//            override def getLong(columnIndex: Int): Long = {
-//              return 1
-//            }
-//          }
-//        }
-//      }
-//
-//      val _fakeID = "1"
-//      val saving = new DataInstance(
-//        data = Json.obj(
-//          ("PersonName", "Foo")
-//        ),
-//        children = Map(
-//          ("phones", Seq(
-//
-//          ))
-//        )
-//      )
-//      val result = saver.insertSingleRow(model, saving)
-//      result must be equalTo saving
+      //      val saver = new DataSaver with Database {
+      //        override def insert(sql: String, numberedParameters: List[Any]): ResultSet = {
+      //          sql must be equalTo "INSERT INTO `person` (`name`) VALUES (?)"
+      //          numberedParameters must be equalTo List("Foo")
+      //          new FakeResultSet {
+      //            override def next(): Boolean = {
+      //              return true
+      //            }
+      //
+      //            override def getLong(columnIndex: Int): Long = {
+      //              return 1
+      //            }
+      //          }
+      //        }
+      //      }
+      //
+      //      val _fakeID = "1"
+      //      val saving = new DataInstance(
+      //        data = Json.obj(
+      //          ("PersonName", "Foo")
+      //        ),
+      //        children = Map(
+      //          ("phones", Seq(
+      //
+      //          ))
+      //        )
+      //      )
+      //      val result = saver.insertSingleRow(model, saving)
+      //      result must be equalTo saving
       "" must be equalTo ""
     }
 

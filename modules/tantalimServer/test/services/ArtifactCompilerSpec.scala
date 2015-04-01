@@ -79,7 +79,6 @@ class ArtifactCompilerSpec extends Specification with Mockito with FakeArtifacts
           joins = Map()
         ),
         limit = 0,
-        parentLink = None,
         instanceID = None,
         fields = Map(fakeModelFieldMap("PersonID", "person_id", DataType.String)),
         steps = Map.empty,
