@@ -102,31 +102,29 @@ trait DataSaver extends DataReader with DatabaseConnection {
 
   private def createSqlForInsert(row: SmartNodeInstance): (String, List[TntValue]) = {
     val model = row.nodeSet.model
-    val (columnNames, columnValues) = {
-      val columnNames = List.newBuilder[String]
-      val columnValues = List.newBuilder[TntValue]
+    val valueMap = {
+      val valueMap = Map.newBuilder[String, TntValue]
 
       model.fields.values.foreach { field =>
         val value = getValueForInsert(row, field)
         if (value.isDefined) {
-          columnNames += field.basisColumn.dbName
-          columnValues += value.get
+          valueMap += field.basisColumn.dbName -> value.get
         }
       }
 
       if (row.model.parentLink.isDefined) {
-        columnNames += row.model.fields.get(row.model.parentLink.get.childField).get.basisColumn.dbName
-        columnValues += row.nodeSet.parentInstance.get.get(row.model.parentLink.get.parentField).get
+        valueMap += row.model.fields.get(row.model.parentLink.get.childField).get.basisColumn.dbName ->
+          row.nodeSet.parentInstance.get.get(row.model.parentLink.get.parentField).get
       }
-      (columnNames.result(), columnValues.result())
+      valueMap.result()
     }
 
-    val setColumnPhrase = columnNames.map(fieldName => f"`$fieldName`").mkString(", ")
-    val boundVars = List.fill(columnNames.size)("?").mkString(",")
+    val setColumnPhrase = valueMap.keys.map(fieldName => f"`$fieldName`").mkString(", ")
+    val boundVars = List.fill(valueMap.size)("?").mkString(",")
 
     (f"INSERT INTO ${SqlBuilder.getTableSql(model.basisTable)} " +
       f"($setColumnPhrase) " +
-      f"VALUES ($boundVars)", columnValues.toList)
+      f"VALUES ($boundVars)", valueMap.values.toList)
   }
 
   private def getValueForInsert(row: SmartNodeInstance, field: ModelField): Option[TntValue] = {
@@ -174,28 +172,25 @@ trait DataSaver extends DataReader with DatabaseConnection {
     val primaryKey = getPrimaryKey(model)
     val primaryKeyValue = getPrimaryKeyValue(primaryKey.name, row)
 
-    val (columnNames, columnValues) = {
-      val columnNames = List.newBuilder[String]
-      val columnValues = List.newBuilder[TntValue]
+    val valueMap = {
+      val valueMap = Map.newBuilder[String, TntValue]
 
       model.fields.values.foreach { field =>
         if (field.updateable && field.step.isEmpty) {
           val value = row.get(field.name)
-          columnNames += field.basisColumn.dbName
-          columnValues += value.getOrElse(
+          valueMap += field.basisColumn.dbName -> value.getOrElse(
             TntNull()
           )
         }
       }
-
-      (columnNames.result(), columnValues.result())
+      valueMap.result()
     }
 
-    val setColumnPhrase = columnNames.map(fieldName => f"`$fieldName` = ?").mkString(", ")
+    val setColumnPhrase = valueMap.keys.map(fieldName => f"`$fieldName` = ?").mkString(", ")
 
     (f"UPDATE ${SqlBuilder.getTableSql(model.basisTable)} " +
       f"SET $setColumnPhrase " +
-      f"WHERE `${primaryKey.basisColumn.dbName}` = ?", columnValues.toList :+ primaryKeyValue)
+      f"WHERE `${primaryKey.basisColumn.dbName}` = ?", valueMap.values.toList :+ primaryKeyValue)
   }
 
   private def createSqlForDelete(row: SmartNodeInstance): (String, List[Any]) = {
