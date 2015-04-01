@@ -119,7 +119,8 @@ trait DataSaver extends DataReader with DatabaseConnection {
       valueMap.result()
     }
 
-    val setColumnPhrase = valueMap.keys.map(fieldName => f"`$fieldName`").mkString(", ")
+    val fieldList = valueMap.keys.toList
+    val setColumnPhrase = fieldList.map(fieldName => f"`$fieldName`").mkString(", ")
     val boundVars = List.fill(valueMap.size)("?").mkString(",")
 
     (f"INSERT INTO ${SqlBuilder.getTableSql(model.basisTable)} " +
@@ -172,7 +173,7 @@ trait DataSaver extends DataReader with DatabaseConnection {
     val primaryKey = getPrimaryKey(model)
     val primaryKeyValue = getPrimaryKeyValue(primaryKey.name, row)
 
-    val valueMap = {
+    val valueMap: Map[String, TntValue] = {
       val valueMap = Map.newBuilder[String, TntValue]
 
       model.fields.values.foreach { field =>
@@ -186,11 +187,13 @@ trait DataSaver extends DataReader with DatabaseConnection {
       valueMap.result()
     }
 
-    val setColumnPhrase = valueMap.keys.map(fieldName => f"`$fieldName` = ?").mkString(", ")
+    val fieldList = valueMap.keys.map(fieldName => fieldName).toList
+
+    val setColumnPhrase = fieldList.map(fieldName => f"`$fieldName` = ?").mkString(", ")
 
     (f"UPDATE ${SqlBuilder.getTableSql(model.basisTable)} " +
       f"SET $setColumnPhrase " +
-      f"WHERE `${primaryKey.basisColumn.dbName}` = ?", valueMap.values.toList :+ primaryKeyValue)
+      f"WHERE `${primaryKey.basisColumn.dbName}` = ?", fieldList.map(fieldName => valueMap.get(fieldName).get).toList :+ primaryKeyValue)
   }
 
   private def createSqlForDelete(row: SmartNodeInstance): (String, List[Any]) = {
