@@ -1,0 +1,48 @@
+{
+  "title": "Module Management",
+  "sections": [
+    {
+      "name": "Module",
+      "model": "ModuleManagement",
+      "title": "Modules",
+      "viewMode": "table",
+      "fields": [
+        {
+          "name": "ModuleName",
+          "label": "Module Name",
+          "showInFormView": false
+        }
+      ],
+      "sections": [
+        {
+          "name": "ArtifactTypes",
+          "model": "ArtifactTypes",
+          "title": "Artifact Types",
+          "viewMode": "table",
+          "fields": [
+            {
+              "name": "ArtifactType",
+              "label": "Artifact Type",
+              "showInFormView": false
+            }
+          ],
+          "sections": [
+            {
+              "name": "ModuleArtifacts",
+              "model": "ModuleArtifacts",
+              "title": "Artifacts",
+              "viewMode": "table",
+              "fields": [
+                {
+                  "name": "ArtifactName",
+                  "label": "Artifact Name",
+                  "showInFormView": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

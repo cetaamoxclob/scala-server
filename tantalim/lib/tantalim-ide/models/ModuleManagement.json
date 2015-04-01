@@ -1,0 +1,35 @@
+{
+  "basisTable": "__MOCK_TABLE__",
+  "customUrlSource": "/assets/modules.json",
+  "fields": [
+    {
+      "name": "ModuleName",
+      "basisColumn": "__MOCK_STRING__"
+    }
+  ],
+  "children": [
+    {
+      "name": "ArtifactTypes",
+      "basisTable": "__MOCK_TABLE__",
+      "fields": [
+        {
+          "name": "ArtifactType",
+          "basisColumn": "__MOCK_STRING__"
+        }
+      ],
+      "children": [
+        {
+          "name": "ModuleArtifacts",
+          "basisTable": "__MOCK_TABLE__",
+          "fields": [
+            {
+              "name": "ArtifactName",
+              "basisColumn": "__MOCK_STRING__"
+            }
+          ]
+        }
+      ]
+    }
+
+  ]
+}

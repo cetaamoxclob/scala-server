@@ -1,0 +1,28 @@
+{
+  "basisTable": "Page",
+  "fields": [
+    {
+      "name": "PageID",
+      "basisColumn": "PageID",
+      "export": false
+    },
+    {
+      "name": "name",
+      "basisColumn": "Name"
+    },
+    {
+      "name": "title",
+      "basisColumn": "Title"
+    },
+    {
+      "name": "icon",
+      "basisColumn": "Icon"
+    },
+    {
+      "name": "css",
+      "basisColumn": "Css"
+    }
+  ],
+  "children": [
+  ]
+}

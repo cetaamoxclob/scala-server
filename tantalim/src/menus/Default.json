@@ -51,6 +51,9 @@
           "page": "TableReport"
         },
         {
+          "page": "ModuleManagement"
+        },
+        {
           "title": "Import",
           "href": "/import/",
           "icon": "fa-sign-in"
