@@ -65,19 +65,11 @@
         },
         {
           "name": "TableColumnTableID",
-          "basisColumn": "TableID",
-          "fieldDefault": {
-            "overwrite": true,
-            "type": "field",
-            "value": "TableTableID"
-          }
+          "basisColumn": "TableID"
         },
         {
           "name": "TableColumnRequired",
-          "basisColumn": "Required",
-          "fieldDefault": {
-            "value": "true"
-          }
+          "basisColumn": "Required"
         },
         {
           "name": "TableColumnDisplayOrder",
@@ -90,11 +82,7 @@
         },
         {
           "name": "TableColumnDataType",
-          "basisColumn": "DataType",
-          "fieldDefault": {
-            "updateable": false,
-            "value": "String"
-          }
+          "basisColumn": "DataType"
         },
         {
           "name": "TableColumnSQL",

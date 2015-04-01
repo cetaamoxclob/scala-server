@@ -1,6 +1,6 @@
 {
   "basisTable": "Column",
-  "limit": 10,
+  "limit": 100,
   "orderBy": [
     {
       "fieldName": "ColumnDisplayOrder"
