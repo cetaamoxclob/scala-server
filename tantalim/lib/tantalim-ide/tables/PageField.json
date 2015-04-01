@@ -1,37 +1,29 @@
 {
-  "dbName": "model_field",
-  "primaryKey": "FieldID",
-  "columns": [
-    {
-      "name": "FieldID",
-      "dbName": "fieldID",
-      "dataType": "Integer",
-      "updateable": false
-    },
-    {
-      "name": "SectionID",
-      "dbName": "sectionID",
-      "dataType": "Integer",
-      "required": true
-    },
-    {
-      "name": "Name",
-      "dbName": "name",
-      "required": true,
-      "label": "Field"
-    }
-  ],
-  "joins": [
-    {
-      "name": "Section",
-      "table": "Section",
-      "required": true,
-      "columns": [
-        {
-          "from": "SectionID",
-          "to": "SectionID"
-        }
-      ]
-    }
-  ]
+  "dbName" : "model_field",
+  "primaryKey" : "FieldID",
+  "joins" : [ {
+    "name" : "Section",
+    "required" : true,
+    "table" : "Section",
+    "columns" : [ {
+      "to" : "SectionID",
+      "from" : "SectionID"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "FieldID",
+    "updateable" : false,
+    "dbName" : "fieldID",
+    "dataType" : "Integer"
+  }, {
+    "name" : "SectionID",
+    "dbName" : "sectionID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Name",
+    "dbName" : "name",
+    "label" : "Field",
+    "required" : true
+  } ]
 }
