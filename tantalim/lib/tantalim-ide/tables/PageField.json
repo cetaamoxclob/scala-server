@@ -14,7 +14,8 @@
     "name" : "FieldID",
     "updateable" : false,
     "dbName" : "fieldID",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : true
   }, {
     "name" : "SectionID",
     "dbName" : "sectionID",
@@ -25,5 +26,55 @@
     "dbName" : "name",
     "label" : "Field",
     "required" : true
+  }, {
+    "name" : "ShowInFormView",
+    "dbName" : "showInFormView",
+    "label" : "In Form",
+    "dataType" : "Boolean"
+  }, {
+    "name" : "ShowInTableView",
+    "dbName" : "showInTableView",
+    "label" : "In Table",
+    "dataType" : "Boolean"
+  }, {
+    "name" : "ShowInNavigation",
+    "dbName" : "showInNavigation",
+    "label" : "In Navigation",
+    "dataType" : "Boolean"
+  }, {
+    "name" : "Label",
+    "dbName" : "label",
+    "label" : "",
+    "dataType" : ""
+  }, {
+    "name" : "FieldType",
+    "dbName" : "fieldType",
+    "label" : "Field Type",
+    "dataType" : ""
+  }, {
+    "name" : "Help",
+    "dbName" : "help",
+    "dataType" : ""
+  }, {
+    "name" : "Placeholder",
+    "dbName" : "placeholder",
+    "dataType" : ""
+  }, {
+    "name" : "Filter",
+    "dbName" : "filter",
+    "dataType" : ""
+  }, {
+    "name" : "BlurFunction",
+    "dbName" : "blurFunction",
+    "label" : "Blur Function",
+    "dataType" : ""
+  }, {
+    "name" : "Disabled",
+    "dbName" : "disabled",
+    "dataType" : "Boolean"
+  }, {
+    "name" : "Searchable",
+    "dbName" : "searchable",
+    "dataType" : "Boolean"
   } ]
 }
