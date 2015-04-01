@@ -1,66 +1,48 @@
 {
-  "name": "BuildPage",
-  "basisTable": "Page",
-  "children": [
-    {
-      "name": "PageSection",
-      "basisTable": "Section",
-      "parentLink": {
-        "parentField": "PagePageID",
-        "childField": "SectionPageID"
-      },
-      "fields": [
-        {
-          "name": "SectionSectionID",
-          "basisColumn": "SectionID"
-        },
-        {
-          "name": "SectionName",
-          "basisColumn": "Name"
-        },
-        {
-          "name": "SectionPageID",
-          "basisColumn": "PageID"
-        },
-        {
-          "name": "SectionTitle",
-          "basisColumn": "Title"
-        },
-        {
-          "name": "SectionModel",
-          "basisColumn": "Model"
-        },
-        {
-          "name": "SectionViewMode",
-          "basisColumn": "ViewMode"
-        },
-        {
-          "name": "SectionParentID",
-          "basisColumn": "ParentID"
-        }
-      ]
-    }
-  ],
-  "fields": [
-    {
-      "name": "PagePageID",
-      "basisColumn": "PageID"
-    },
-    {
-      "name": "PageName",
-      "basisColumn": "Name"
-    },
-    {
-      "name": "PageTitle",
-      "basisColumn": "Title"
-    },
-    {
-      "name": "PageIcon",
-      "basisColumn": "Icon"
-    },
-    {
-      "name": "PageCss",
-      "basisColumn": "Css"
-    }
-  ]
+  "name" : "BuildPage",
+  "basisTable" : "Page",
+  "children" : [ {
+    "name" : "PageSection",
+    "parentField" : "PagePageID",
+    "basisTable" : "Section",
+    "childField" : "SectionPageID",
+    "fields" : [ {
+      "name" : "SectionSectionID",
+      "basisColumn" : "SectionID"
+    }, {
+      "name" : "SectionName",
+      "basisColumn" : "Name"
+    }, {
+      "name" : "SectionPageID",
+      "basisColumn" : "PageID"
+    }, {
+      "name" : "SectionTitle",
+      "basisColumn" : "Title"
+    }, {
+      "name" : "SectionModel",
+      "basisColumn" : "Model"
+    }, {
+      "name" : "SectionViewMode",
+      "basisColumn" : "ViewMode"
+    }, {
+      "name" : "SectionParentID",
+      "basisColumn" : "ParentID"
+    } ]
+  } ],
+  "fields" : [ {
+    "name" : "PagePageID",
+    "basisColumn" : "PageID"
+  }, {
+    "name" : "PageName",
+    "basisColumn" : "Name"
+  }, {
+    "name" : "PageTitle",
+    "basisColumn" : "Title"
+  }, {
+    "name" : "PageIcon",
+    "basisColumn" : "Icon"
+  }, {
+    "name" : "PageCss",
+    "basisColumn" : "Css"
+  } ]
 }
