@@ -25,6 +25,7 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
     println("Extending model " + model.extendModel.get)
     val superModel = parent.get
     superModel.copy(
+      name = model.name.get,
       parentLink = model.parentLink,
       parent = parent,
       filter = if (model.filter.isDefined) model.filter else superModel.filter,
