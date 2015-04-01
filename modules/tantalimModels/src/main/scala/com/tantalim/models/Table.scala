@@ -11,6 +11,8 @@ abstract class Table {
 
   def primaryKey: Option[TableColumn]
 
+  def isMock = Table.isMock(name)
+
   def columns: Map[String, TableColumn]
 
   def getColumn(name: String) = columns.getOrElse(
@@ -62,3 +64,47 @@ case class TableJoin(
 case class TableJoinColumn(to: TableColumn,
                            from: Option[TableColumn],
                            fromText: Option[String])
+
+object Table {
+  val Mock = "__MOCK_TABLE__"
+
+  def isMock(name: String) = Table.Mock == name
+
+  def createMock: DeepTable = {
+    new DeepTable(
+      Mock,
+      dbName = null, // this should never be used
+      module = null, // this should never be used
+      columns = Map(
+        TableColumn.createMock(DataType.String),
+        TableColumn.createMock(DataType.Boolean),
+        TableColumn.createMock(DataType.Date)
+      ),
+      allowInsert = false,
+      allowUpdate = false,
+      allowDelete = false
+    )
+  }
+}
+
+object TableColumn {
+  def createMock(dataType: DataType): (String, TableColumn) = {
+    val columnName = s"__MOCK_${dataType.toString.toUpperCase}__"
+
+    (columnName, new TableColumn(
+      name = columnName,
+      dbName = null,
+      order = 0,
+      dataType = dataType,
+      updateable = false,
+      required = false,
+      label = "Mock " + dataType.toString,
+      fieldType = (dataType match {
+        case DataType.Boolean => FieldDisplay.Checkbox
+        case DataType.Date => FieldDisplay.Date
+        case DataType.DateTime => FieldDisplay.DateTime
+        case _ => FieldDisplay.Text
+      }).toString.toLowerCase
+    ))
+  }
+}

@@ -40,11 +40,16 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
     }
     println("Compiling model " + model.name.get)
 
-    val basisTable = getTableFromCache(model.basisTable.get).getOrElse {
-      val newTable = compileTable(model.basisTable.get)
-      addTableToCache(model.name.get, newTable)
-      newTable
-    }
+    val basisTable: DeepTable =
+      if (Table.isMock(model.basisTable)) {
+        Table.createMock
+      } else {
+        getTableFromCache(model.basisTable).getOrElse {
+          val newTable = compileTable(model.basisTable)
+          addTableToCache(model.name.get, newTable)
+          newTable
+        }
+      }
     val instanceIdField = if (basisTable.primaryKey.isDefined && model.fields.isDefined) {
       model.fields.get.find(f =>
         f.basisColumn == basisTable.primaryKey.get.name // && f.step
@@ -59,7 +64,7 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
         join = step.tableJoin.getOrElse(throw new TantalimException(s"tableJoin for $step is still missing", "Add or rename the step")),
         required = step.required.get,
         parentAlias = step.parent match {
-          case Some(parent) => parent.tableAlias.get
+          case Some(p) => p.tableAlias.get
           case _ => 0
         }
       )
@@ -105,7 +110,8 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
       allowUpdate = model.allowUpdate.getOrElse(basisTable.allowUpdate),
       allowDelete = model.allowDelete.getOrElse(basisTable.allowDelete),
       preSave = model.preSave,
-      filter = model.filter
+      filter = model.filter,
+      customUrlSource = model.customUrlSource
     )
     if (model.parentLink.isDefined) {
       val childField = newModel.fields.getOrElse(model.parentLink.get.childField,
@@ -124,15 +130,17 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
         val childModel =
           if (childJson.extendModel.isDefined) extendModel(childJson, Some(newModel))
           else compileModelView(childJson, Some(newModel))
-        if (childModel.parentField.isEmpty) {
-          // We could try to guess based on the parent model's identifier field
-          throw new TantalimException(s"Child model named ${childModel.name} is missing parentField", "")
+        if (!newModel.basisTable.isMock) {
+          if (childModel.parentField.isEmpty) {
+            // We could try to guess based on the parent model's identifier field
+            throw new TantalimException(s"Child model named ${childModel.name} is missing parentField", "")
+          }
+          if (childModel.childField.isEmpty) {
+            throw new TantalimException(s"Child model named ${childModel.name} is missing childField", "")
+          }
+          // TODO check to make sure the parentField actually exists
+          // TODO check to make sure the childField actually exists
         }
-        if (childModel.childField.isEmpty) {
-          throw new TantalimException(s"Child model named ${childModel.name} is missing childField", "")
-        }
-        // TODO check to make sure the parentField actually exists
-        // TODO check to make sure the childField actually exists
         newModel.children(childModel.name) = childModel
       }
     }

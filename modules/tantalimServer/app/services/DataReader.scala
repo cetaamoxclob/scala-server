@@ -27,6 +27,9 @@ trait DataReader extends DatabaseConnection {
   private def calcMaxPages(rows: Long, limit: Int) = Math.ceil(rows.toDouble / limit).toInt
 
   def queryModelData(model: Model, page: Int = 1, filter: Option[String] = None, orderBy: Seq[ModelOrderBy] = Seq.empty): SmartNodeSet = {
+    if (model.basisTable.isMock) {
+      throw new TantalimException(s"Model ${model.name} is based on a Mock Table and cannot query the database.", "Check the calling function.")
+    }
     var sqlBuilder = new SqlBuilder(
       from = model.basisTable,
       steps = model.steps,

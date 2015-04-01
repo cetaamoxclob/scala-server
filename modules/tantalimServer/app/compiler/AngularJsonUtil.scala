@@ -47,6 +47,9 @@ object AngularJsonUtil {
     if (parent.isDefined) {
       modelProperties.append("parent" -> JsString(parent.get.name))
     }
+    if (model.customUrlSource.isDefined) {
+      modelProperties.append("customUrlSource" -> JsString(model.customUrlSource.get))
+    }
     JsObject(modelProperties)
   }
 

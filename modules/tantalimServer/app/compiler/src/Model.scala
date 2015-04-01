@@ -5,7 +5,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 
-case class ModelJson(basisTable: Option[String],
+case class ModelJson(basisTable: String,
                      fields: Option[Seq[ModelFieldJson]],
                      limit: Option[Int],
                      name: Option[String],
@@ -20,7 +20,8 @@ case class ModelJson(basisTable: Option[String],
                      allowUpdate: Option[Boolean],
                      allowDelete: Option[Boolean],
                      preSave: Option[String],
-                     filter: Option[String]
+                     filter: Option[String],
+                     customUrlSource: Option[String]
                       ) {
   override def toString = {
     s"Model ($name on $basisTable) Fields ($fields) "
@@ -56,7 +57,7 @@ case class ModelParentLink(parentField: String, childField: String)
 
 object ModelJson {
   implicit def modelReads: Reads[ModelJson] = (
-    (JsPath \ "basisTable").readNullable[String] and
+    (JsPath \ "basisTable").read[String] and
       (JsPath \ "fields").readNullable[Seq[ModelFieldJson]] and
       (JsPath \ "limit").readNullable[Int] and
       (JsPath \ "name").readNullable[String] and
@@ -71,7 +72,8 @@ object ModelJson {
       (JsPath \ "allowUpdate").readNullable[Boolean] and
       (JsPath \ "allowDelete").readNullable[Boolean] and
       (JsPath \ "preSave").readNullable[String] and
-      (JsPath \ "filter").readNullable[String]
+      (JsPath \ "filter").readNullable[String] and
+      (JsPath \ "customUrlSource").readNullable[String]
     ).apply(ModelJson.apply _)
 
   implicit def modelFieldReads: Reads[ModelFieldJson] = (

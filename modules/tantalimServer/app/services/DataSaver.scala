@@ -3,13 +3,17 @@ package services
 import java.sql.{SQLException, Connection}
 
 import com.tantalim.nodes._
+import com.tantalim.util.TantalimException
 import data._
 import com.tantalim.models.{DataType, FieldDefaultType, ModelField, Model}
 
 trait DataSaver extends DataReader with DatabaseConnection {
   def saveAll(dataToSave: SmartNodeSet): Unit = {
+    if (dataToSave.model.basisTable.isMock) {
+      throw new TantalimException(s"Model ${dataToSave.model.name} is based on a Mock Table and cannot query the database.", "Check the calling function.")
+    }
     if (dataToSave.model.instanceID.isEmpty)
-      throw new Exception("Cannot insert/update/delete an instance without an instanceID for " + dataToSave.model.name)
+      throw new TantalimException("Cannot insert/update/delete an instance without an instanceID for " + dataToSave.model.name, "")
 
     val connection = getConnection
     try {

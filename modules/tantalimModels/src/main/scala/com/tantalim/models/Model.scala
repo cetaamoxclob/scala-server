@@ -15,6 +15,7 @@ case class Model(name: String,
                  allowDelete: Boolean = true,
                  preSave: Option[String] = None,
                  filter: Option[String] = None,
+                 customUrlSource: Option[String] = None,
                  children: collection.mutable.Map[String, Model] = scala.collection.mutable.Map.empty
                   ) {
   def addChild(child: Model): Unit = {
