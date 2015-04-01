@@ -12,7 +12,7 @@
     <nav data-ng-hide="hide@section.name" class="no-select">
         <div data-ng-hide="SmartPage.getSection('@(section.name)').getCurrentSet().rows.length">
         @if(section.model.allowInsert) {
-            <button type="button" class="btn btn-primary btn-sm" data-ng-click="SmartPage.getSection('@(section.name)').getCurrentSet().insert()">
+            <button type="button" class="btn btn-primary btn-sm" data-ng-click="SmartPage.getSection('@(section.name)').insert()">
                 <span class="glyphicon glyphicon-plus"></span>
                 Insert New @section.title
             </button>
@@ -37,7 +37,7 @@
                 </button>
             }
         </ul>
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-right" data-ng-show="SmartPage.getSection('@(section.name)').getCurrentSet().rows.length">
             <button type="button" class="btn btn-xs"
             data-ng-click="SmartPage.previousPage()"
             data-ng-show="SmartPage.showPagingOnSection('@(section.name)')"

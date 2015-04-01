@@ -124,7 +124,7 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
       modelField = modelField,
       fieldType = field.fieldType.getOrElse(column.fieldType),
       required = modelField.required,
-      disabled = field.disabled.getOrElse(!column.updateable),
+      disabled = field.disabled.getOrElse(!modelField.updateable),
       label = field.label.getOrElse(column.label),
       searchable = true,
       showInFormView = field.showInFormView.getOrElse(true),
