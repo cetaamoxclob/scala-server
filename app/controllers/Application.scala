@@ -145,11 +145,17 @@ object Application extends Controller with Timer {
         val tableImport = new ArtifactImport(ArtifactType.valueOf(artifactType))
         val result = tableImport.readFromSourceAndWriteToDatabase(name)
         val message = if (result.state == DataState.Done) {
-          "success" -> s"$artifactType($name) was imported"
+          Json.obj(
+            "status" -> "success",
+            "message" -> s"$artifactType($name) was imported"
+          )
         } else {
-          "failure" -> s"$artifactType($name) failed to import"
+          Json.obj(
+            "status" -> "failure",
+            "message" -> s"$artifactType($name) failed to import"
+          )
         }
-        Redirect(controllers.routes.Application.importList()).flashing(message)
+        Ok(message)
       } catch {
         case e: TantalimException => Ok(views.html.error(e))
       }
