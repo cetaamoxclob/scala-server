@@ -36,6 +36,16 @@
                     Delete
                 </button>
             }
+            @for(button <- section.buttons) {
+                <button type="button" class="btn btn-default btn-xs" data-ng-click="buttons['@(button.label)'](SmartPage.getSection('@(section.name)'), $http)">
+                    <script>
+                        buttons['@(button.label)'] = function(section, $http) {
+                            @Html(button.function)
+                        };
+                    </script>
+                    @button.label
+                </button>
+            }
         </ul>
         <ul class="nav navbar-nav navbar-right" data-ng-show="SmartPage.getSection('@(section.name)').getCurrentSet().rows.length">
             <button type="button" class="btn btn-xs"
