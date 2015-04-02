@@ -12,6 +12,7 @@ case class ModelJson(basisTable: String,
                      extendModel: Option[String],
                      children: Option[Seq[ModelJson]],
                      orderBy: Option[Seq[ModelOrderBy]],
+                    @deprecated
                      parentLink: Option[ModelParentLink],
                      parentField: Option[String],
                      childField: Option[String],

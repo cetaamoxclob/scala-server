@@ -20,6 +20,7 @@ case class PageSection(name: String,
                        hasNavigation: Boolean,
                        viewMode: String,
                        parent: Option[PageSection],
+                       buttons: Seq[Button],
                        var sections: Seq[PageSection]
                         ) {
 
@@ -102,3 +103,4 @@ case class PageFieldSelect(model: String,
 
 case class PageFieldLink(page: ShallowPage, filter: String)
 
+case class Button(label: String, function: String)

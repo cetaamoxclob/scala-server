@@ -73,6 +73,8 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
       hasTableView = fields.exists(field => field.showInTableView),
       hasNavigation = fields.exists(field => field.showInNavigation),
       parent = parentPage,
+      buttons = if (sectionJson.buttons.isEmpty) Seq.empty
+      else sectionJson.buttons.get.map(b => compileButton(b)),
       sections = null
     )
     pageSection.sections = sectionJson.sections match {
@@ -167,6 +169,13 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
     new PageFieldLink(
       page = compileShallowPage(linkJson.page),
       filter = linkJson.filter
+    )
+  }
+
+  private def compileButton(buttonJson: PageButtonJson): Button = {
+    new Button(
+      buttonJson.label,
+      buttonJson.function
     )
   }
 

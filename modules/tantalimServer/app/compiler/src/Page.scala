@@ -7,14 +7,17 @@ import play.api.libs.json._
 case class PageJson(title: Option[String],
                     icon: Option[String],
                     css: Option[String],
-                    sections: Option[Seq[PageSectionJson]])
+                    sections: Option[Seq[PageSectionJson]]
+                     )
 
 case class PageSectionJson(name: String,
                            title: Option[String],
                            model: Option[String],
                            viewMode: Option[String],
                            fields: Option[Seq[PageFieldJson]],
-                           sections: Option[Seq[PageSectionJson]])
+                           buttons: Option[Seq[PageButtonJson]],
+                           sections: Option[Seq[PageSectionJson]]
+                            )
 
 case class PageFieldJson(name: String,
                          showInFormView: Option[Boolean],
@@ -41,6 +44,8 @@ case class PageFieldSelectJson(model: String,
 
 case class PageFieldLinkJson(page: String, filter: String)
 
+case class PageButtonJson(label: String, function: String)
+
 object PageJson {
   implicit def pageReads: Reads[PageJson] = (
     (JsPath \ "title").readNullable[String] and
@@ -55,6 +60,7 @@ object PageJson {
       (JsPath \ "model").readNullable[String] and
       (JsPath \ "viewMode").readNullable[String] and
       (JsPath \ "fields").readNullable[Seq[PageFieldJson]] and
+      (JsPath \ "buttons").readNullable[Seq[PageButtonJson]] and
       (JsPath \ "sections").lazyReadNullable(Reads.seq[PageSectionJson](pageSectionReads))
     ).apply(PageSectionJson.apply _)
 
@@ -87,5 +93,10 @@ object PageJson {
     (JsPath \ "page").read[String] and
       (JsPath \ "filter").read[String]
     ).apply(PageFieldLinkJson.apply _)
+
+  implicit def buttonReads: Reads[PageButtonJson] = (
+    (JsPath \ "label").read[String] and
+      (JsPath \ "fxn").read[String]
+    ).apply(PageButtonJson.apply _)
 
 }

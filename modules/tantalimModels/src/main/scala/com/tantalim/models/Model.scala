@@ -1,5 +1,7 @@
 package com.tantalim.models
 
+import com.tantalim.util.TantalimException
+
 case class Model(name: String,
                  basisTable: DeepTable,
                  limit: Int = 0,
@@ -33,6 +35,15 @@ case class Model(name: String,
   }
 
   override def toString: String = s"Model($name) fields(${fields.size}) children(${children.size})"
+
+  def getField(fieldName: String): ModelField = {
+    val field = fields.get(fieldName)
+    if (field.isEmpty) {
+      throw new TantalimException(s"Failed to get field named `$fieldName` from model `$name`",
+        s"Try using one of the following: ${fields.keys.mkString(", ")}")
+    }
+    field.get
+  }
 }
 
 case class ModelField(name: String,
