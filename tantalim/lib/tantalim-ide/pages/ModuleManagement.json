@@ -6,6 +6,16 @@
       "model": "ModuleManagement",
       "title": "Modules",
       "viewMode": "table",
+      "buttons": [
+        {
+          "label": "Import All Artifacts",
+          "fxn": "var rows = _.map(section.getSelectedRows(), function(row) { row.update('ModuleName', 'asdf', true); return row.getValue('ModuleName'); }); console.info(rows);"
+        },
+        {
+          "label": "Create All Tables",
+          "fxn": ""
+        }
+      ],
       "fields": [
         {
           "name": "ModuleName",
@@ -32,10 +42,43 @@
               "model": "ModuleArtifacts",
               "title": "Artifacts",
               "viewMode": "table",
+              "buttons": [
+                {
+                  "label": "Import Artifact(s)",
+                  "fxn": "_.forEach(section.getSelectedRows(), function(row) { var artifact = row.getValue('ArtifactName'); var artifactType = row.getValue('ArtifactType'); row.update('ArtifactOutput', 'STARTING', true); $http.post('/import/' + artifactType + '/' + artifact).success(function(data) { row.update('ArtifactOutput', data.message || data, true); }).error(function(data) { row.update('ArtifactOutput', data, true); }); });"
+                },
+                {
+                  "label": "Create Table(s)",
+                  "fxn": ""
+                }
+              ],
               "fields": [
                 {
                   "name": "ArtifactName",
                   "label": "Artifact Name",
+                  "showInFormView": false,
+                  "links": [
+                    {
+                      "page": "BuildTable",
+                      "filter": "TableName Equals '${ArtifactName}'"
+                    },
+                    {
+                      "page": "BuildModel",
+                      "filter": "ModelName Equals '${ArtifactName}'"
+                    },
+                    {
+                      "page": "BuildPage",
+                      "filter": "PageName Equals '${ArtifactName}'"
+                    },
+                    {
+                      "page": "BuildMenu",
+                      "filter": "MenuName Equals '${ArtifactName}'"
+                    }
+                  ]
+                },
+                {
+                  "name": "ArtifactOutput",
+                  "label": "Output",
                   "showInFormView": false
                 }
               ]

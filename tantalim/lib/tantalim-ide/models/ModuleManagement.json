@@ -25,6 +25,10 @@
             {
               "name": "ArtifactName",
               "basisColumn": "__MOCK_STRING__"
+            },
+            {
+              "name": "ArtifactOutput",
+              "basisColumn": "__MOCK_STRING__"
             }
           ]
         }
