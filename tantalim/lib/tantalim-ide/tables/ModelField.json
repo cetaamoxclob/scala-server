@@ -1,75 +1,59 @@
 {
-  "dbName": "model_field",
-  "primaryKey": "FieldID",
-  "columns": [
-    {
-      "name": "FieldID",
-      "dbName": "fieldID",
-      "dataType": "Integer",
-      "updateable": false
-    },
-    {
-      "name": "ModelID",
-      "dbName": "modelID",
-      "dataType": "Integer",
-      "required": true
-    },
-    {
-      "name": "Name",
-      "dbName": "name",
-      "required": true,
-      "label": "Field"
-    },
-    {
-      "name": "BasisColumn",
-      "dbName": "basisColumn",
-      "label": "Basis Column"
-    },
-    {
-      "name": "StepID",
-      "dataType": "Integer",
-      "dbName": "stepID"
-    },
-    {
-      "name": "Updateable",
-      "dbName": "updateable",
-      "dataType": "Boolean",
-      "fieldType": "checkbox"
-    },
-    {
-      "name": "Required",
-      "dbName": "required",
-      "dataType": "Boolean",
-      "fieldType": "checkbox"
-    },
-    {
-      "name": "Export",
-      "dbName": "export",
-      "dataType": "Boolean",
-      "fieldType": "checkbox"
-    }
-  ],
-  "joins": [
-    {
-      "name": "Model",
-      "table": "Model",
-      "required": true,
-      "columns": [
-        {
-          "from": "ModelID",
-          "to": "ModelID"
-        }
-      ]
-    },
-    {
-      "name": "Step",
-      "table": "ModelStep",
-      "columns": [
-        {
-          "from": "StepID",
-          "to": "StepID"
-        }
-      ]
-    }
-  ]
+  "dbName" : "model_field",
+  "primaryKey" : "FieldID",
+  "joins" : [ {
+    "name" : "Model",
+    "required" : true,
+    "table" : "Model",
+    "columns" : [ {
+      "to" : "ModelID",
+      "from" : "ModelID"
+    } ]
+  }, {
+    "name" : "Step",
+    "table" : "ModelStep",
+    "columns" : [ {
+      "to" : "StepID",
+      "from" : "StepID"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "FieldID",
+    "updateable" : false,
+    "dbName" : "fieldID",
+    "dataType" : "Integer"
+  }, {
+    "name" : "ModelID",
+    "dbName" : "modelID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Name",
+    "dbName" : "name",
+    "label" : "Field",
+    "required" : true
+  }, {
+    "name" : "BasisColumn",
+    "dbName" : "basisColumn",
+    "label" : "Basis Column"
+  }, {
+    "name" : "StepID",
+    "dbName" : "stepID",
+    "dataType" : "Integer"
+  }, {
+    "name" : "Updateable",
+    "dbName" : "updateable",
+    "fieldType" : "checkbox",
+    "dataType" : "Boolean"
+  }, {
+    "name" : "Required",
+    "dbName" : "required",
+    "fieldType" : "checkbox",
+    "dataType" : "Boolean"
+  }, {
+    "name" : "Export",
+    "dbName" : "export",
+    "fieldType" : "checkbox",
+    "dataType" : "Boolean"
+  } ]
 }

@@ -1,31 +1,25 @@
 {
-  "dbName": "page",
-  "primaryKey": "PageID",
-  "columns": [
-    {
-      "name": "PageID",
-      "dbName": "pageID",
-      "dataType": "Integer",
-      "updateable": false
-    },
-    {
-      "name": "Name",
-      "dbName": "name",
-      "required": true,
-      "label": "Page Name"
-    },
-    {
-      "name": "Title",
-      "dbName": "title",
-      "required": true
-    },
-    {
-      "name": "Icon",
-      "dbName": "icon"
-    },
-    {
-      "name": "Css",
-      "dbName": "css"
-    }
-  ]
+  "dbName" : "page",
+  "primaryKey" : "PageID",
+  "columns" : [ {
+    "name" : "PageID",
+    "updateable" : false,
+    "dbName" : "pageID",
+    "dataType" : "Integer"
+  }, {
+    "name" : "Name",
+    "dbName" : "name",
+    "label" : "Page Name",
+    "required" : true
+  }, {
+    "name" : "Title",
+    "dbName" : "title",
+    "required" : true
+  }, {
+    "name" : "Icon",
+    "dbName" : "icon"
+  }, {
+    "name" : "Css",
+    "dbName" : "css"
+  } ]
 }

@@ -1,89 +1,70 @@
 {
-  "dbName": "table_column",
-  "primaryKey": "ColumnID",
-  "columns": [
-    {
-      "name": "ColumnID",
-      "dataType": "Integer",
-      "dbName": "columnID",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "TableID",
-      "dataType": "Integer",
-      "required": true,
-      "dbName": "tableID"
-    },
-    {
-      "name": "Name",
-      "dbName": "name",
-      "required": true,
-      "label": "Column Name"
-    },
-    {
-      "name": "Required",
-      "dataType": "Boolean",
-      "dbName": "required"
-    },
-    {
-      "name": "DataType",
-      "dbName": "dataType",
-      "label": "Data Type"
-    },
-    {
-      "name": "Length",
-      "dataType": "Integer",
-      "dbName": "columnLength"
-    },
-    {
-      "name": "FieldType",
-      "dbName": "fieldType"
-    },
-    {
-      "name": "DisplayOrder",
-      "dataType": "Integer",
-      "dbName": "displayOrder",
-      "label": "Order"
-    },
-    {
-      "name": "SQL",
-      "dbName": "dbName"
-    },
-    {
-      "name": "Label",
-      "dbName": "label"
-    },
-    {
-      "name": "Updateable",
-      "dataType": "Boolean",
-      "dbName": "updateable"
-    },
-    {
-      "name": "Help",
-      "dbName": "help",
-      "length": 1000
-    },
-    {
-      "name": "Placeholder",
-      "dbName": "placeholder"
-    },
-    {
-      "name": "ColumnDefault",
-      "dbName": "columnDefault"
-    }
-  ],
-  "joins": [
-    {
-      "name": "Table",
-      "table": "Table",
-      "required": true,
-      "columns": [
-        {
-          "from": "TableID",
-          "to": "TableID"
-        }
-      ]
-    }
-  ]
+  "dbName" : "table_column",
+  "primaryKey" : "ColumnID",
+  "joins" : [ {
+    "name" : "Table",
+    "required" : true,
+    "table" : "Table",
+    "columns" : [ {
+      "to" : "TableID",
+      "from" : "TableID"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "ColumnID",
+    "updateable" : false,
+    "dbName" : "columnID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "TableID",
+    "dbName" : "tableID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Name",
+    "dbName" : "name",
+    "label" : "Column Name",
+    "required" : true
+  }, {
+    "name" : "Required",
+    "dbName" : "required",
+    "dataType" : "Boolean"
+  }, {
+    "name" : "DataType",
+    "dbName" : "dataType",
+    "label" : "Data Type"
+  }, {
+    "name" : "Length",
+    "dbName" : "columnLength",
+    "dataType" : "Integer"
+  }, {
+    "name" : "FieldType",
+    "dbName" : "fieldType"
+  }, {
+    "name" : "DisplayOrder",
+    "dbName" : "displayOrder",
+    "label" : "Order",
+    "dataType" : "Integer"
+  }, {
+    "name" : "SQL",
+    "dbName" : "dbName"
+  }, {
+    "name" : "Label",
+    "dbName" : "label"
+  }, {
+    "name" : "Updateable",
+    "dbName" : "updateable",
+    "dataType" : "Boolean"
+  }, {
+    "name" : "Help",
+    "dbName" : "help",
+    "length" : 1000
+  }, {
+    "name" : "Placeholder",
+    "dbName" : "placeholder"
+  }, {
+    "name" : "ColumnDefault",
+    "dbName" : "columnDefault"
+  } ]
 }

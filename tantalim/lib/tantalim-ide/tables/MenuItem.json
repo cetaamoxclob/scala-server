@@ -1,40 +1,32 @@
 {
-  "dbName": "menu_item",
-  "primaryKey": "ItemID",
-  "columns": [
-    {
-      "name": "ItemID",
-      "dbName": "itemID",
-      "dataType": "Integer",
-      "updateable": false
-    },
-    {
-      "name": "ContentID",
-      "dbName": "contentID",
-      "dataType": "Integer",
-      "required": true
-    },
-    {
-      "name": "DisplayOrder",
-      "dataType": "Integer",
-      "dbName": "displayOrder",
-      "label": "Order"
-    },
-    {
-      "name": "Page",
-      "dbName": "page"
-    },
-    {
-      "name": "Title",
-      "dbName": "title"
-    },
-    {
-      "name": "Link",
-      "dbName": "href"
-    },
-    {
-      "name": "Icon",
-      "dbName": "icon"
-    }
-  ]
+  "dbName" : "menu_item",
+  "primaryKey" : "ItemID",
+  "columns" : [ {
+    "name" : "ItemID",
+    "updateable" : false,
+    "dbName" : "itemID",
+    "dataType" : "Integer"
+  }, {
+    "name" : "ContentID",
+    "dbName" : "contentID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "DisplayOrder",
+    "dbName" : "displayOrder",
+    "label" : "Order",
+    "dataType" : "Integer"
+  }, {
+    "name" : "Page",
+    "dbName" : "page"
+  }, {
+    "name" : "Title",
+    "dbName" : "title"
+  }, {
+    "name" : "Link",
+    "dbName" : "href"
+  }, {
+    "name" : "Icon",
+    "dbName" : "icon"
+  } ]
 }

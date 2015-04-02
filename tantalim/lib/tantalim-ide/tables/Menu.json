@@ -1,23 +1,19 @@
 {
-  "dbName": "menu",
-  "primaryKey": "MenuID",
-  "columns": [
-    {
-      "name": "MenuID",
-      "dbName": "menuID",
-      "dataType": "Integer",
-      "updateable": false
-    },
-    {
-      "name": "Name",
-      "dbName": "name",
-      "required": true,
-      "label": "Menu Name"
-    },
-    {
-      "name": "Title",
-      "dbName": "title",
-      "required": true
-    }
-  ]
+  "dbName" : "menu",
+  "primaryKey" : "MenuID",
+  "columns" : [ {
+    "name" : "MenuID",
+    "updateable" : false,
+    "dbName" : "menuID",
+    "dataType" : "Integer"
+  }, {
+    "name" : "Name",
+    "dbName" : "name",
+    "label" : "Menu Name",
+    "required" : true
+  }, {
+    "name" : "Title",
+    "dbName" : "title",
+    "required" : true
+  } ]
 }

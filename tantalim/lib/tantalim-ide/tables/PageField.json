@@ -27,28 +27,28 @@
     "label" : "Field",
     "required" : true
   }, {
-    "name": "DisplayOrder",
-    "dataType": "Integer",
-    "dbName": "displayOrder",
-    "label": "Order"
+    "name" : "DisplayOrder",
+    "dbName" : "displayOrder",
+    "label" : "Order",
+    "dataType" : "Integer"
   }, {
     "name" : "ShowInFormView",
     "dbName" : "showInFormView",
     "label" : "In Form",
-    "dataType" : "Boolean",
-    "fieldType": "checkbox"
+    "fieldType" : "checkbox",
+    "dataType" : "Boolean"
   }, {
     "name" : "ShowInTableView",
     "dbName" : "showInTableView",
     "label" : "In Table",
-    "dataType" : "Boolean",
-    "fieldType": "checkbox"
+    "fieldType" : "checkbox",
+    "dataType" : "Boolean"
   }, {
     "name" : "ShowInNavigation",
     "dbName" : "showInNavigation",
     "label" : "In Navigation",
-    "dataType" : "Boolean",
-    "fieldType": "checkbox"
+    "fieldType" : "checkbox",
+    "dataType" : "Boolean"
   }, {
     "name" : "Label",
     "dbName" : "label"
@@ -72,12 +72,12 @@
   }, {
     "name" : "Disabled",
     "dbName" : "disabled",
-    "dataType" : "Boolean",
-    "fieldType": "checkbox"
+    "fieldType" : "checkbox",
+    "dataType" : "Boolean"
   }, {
     "name" : "Searchable",
     "dbName" : "searchable",
-    "dataType" : "Boolean",
-    "fieldType": "checkbox"
+    "fieldType" : "checkbox",
+    "dataType" : "Boolean"
   } ]
 }

@@ -1,57 +1,48 @@
 {
-  "dbName": "table",
-  "primaryKey": "TableID",
-  "columns": [
-    {
-      "name": "TableID",
-      "dbName": "tableID",
-      "dataType": "Integer",
-      "updateable": false
-    },
-    {
-      "name": "Name",
-      "dbName": "name",
-      "required": true,
-      "label": "Table Name",
-      "placeholder": "Enter a table name",
-      "help": "Enter the name of the table"
-    },
-    {
-      "name": "SQL",
-      "dbName": "dbName",
-      "required": true
-    },
-    {
-      "name": "Module",
-      "dbName": "module"
-    },
-    {
-      "name": "PrimaryKey",
-      "dbName": "primaryKey"
-    },
-    {
-      "name": "AllowInsert",
-      "dbName": "allowInsert",
-      "label": "Allow Insert",
-      "dataType": "Boolean",
-      "fieldType": "checkbox",
-      "help": "If true, models based on this table will allow inserts. Can be overridden at the model level. Defaults to true if not set."
-    },
-    {
-      "name": "AllowUpdate",
-      "dbName": "allowUpdate",
-      "label": "Allow Update",
-      "dataType": "Boolean",
-      "fieldType": "checkbox",
-      "help": "If true, models based on this table will allow changes. Can be overridden at the model level. Defaults to true if not set."
-    },
-    {
-      "name": "AllowDelete",
-      "dbName": "allowDelete",
-      "label": "Allow Delete",
-      "dataType": "Boolean",
-      "fieldType": "checkbox",
-      "help": "If true, models based on this table will allow inserts. Can be overridden at the model level. Defaults to true if not set."
-    }
-  ]
+  "dbName" : "table",
+  "primaryKey" : "TableID",
+  "columns" : [ {
+    "name" : "TableID",
+    "updateable" : false,
+    "dbName" : "tableID",
+    "dataType" : "Integer"
+  }, {
+    "name" : "Name",
+    "dbName" : "name",
+    "label" : "Table Name",
+    "placeholder" : "Enter a table name",
+    "help" : "Enter the name of the table",
+    "required" : true
+  }, {
+    "name" : "SQL",
+    "dbName" : "dbName",
+    "required" : true
+  }, {
+    "name" : "Module",
+    "dbName" : "module"
+  }, {
+    "name" : "PrimaryKey",
+    "dbName" : "primaryKey"
+  }, {
+    "name" : "AllowInsert",
+    "dbName" : "allowInsert",
+    "label" : "Allow Insert",
+    "help" : "If true, models based on this table will allow inserts. Can be overridden at the model level. Defaults to true if not set.",
+    "fieldType" : "checkbox",
+    "dataType" : "Boolean"
+  }, {
+    "name" : "AllowUpdate",
+    "dbName" : "allowUpdate",
+    "label" : "Allow Update",
+    "help" : "If true, models based on this table will allow changes. Can be overridden at the model level. Defaults to true if not set.",
+    "fieldType" : "checkbox",
+    "dataType" : "Boolean"
+  }, {
+    "name" : "AllowDelete",
+    "dbName" : "allowDelete",
+    "label" : "Allow Delete",
+    "help" : "If true, models based on this table will allow inserts. Can be overridden at the model level. Defaults to true if not set.",
+    "fieldType" : "checkbox",
+    "dataType" : "Boolean"
+  } ]
 }

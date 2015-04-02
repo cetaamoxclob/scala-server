@@ -1,28 +1,23 @@
 {
-  "dbName": "menu_content",
-  "primaryKey": "ContentID",
-  "columns": [
-    {
-      "name": "ContentID",
-      "dbName": "contentID",
-      "dataType": "Integer",
-      "updateable": false
-    },
-    {
-      "name": "MenuID",
-      "dbName": "menuID",
-      "dataType": "Integer"
-    },
-    {
-      "name": "DisplayOrder",
-      "dataType": "Integer",
-      "dbName": "displayOrder",
-      "label": "Order"
-    },
-    {
-      "name": "Title",
-      "dbName": "title",
-      "required": true
-    }
-  ]
+  "dbName" : "menu_content",
+  "primaryKey" : "ContentID",
+  "columns" : [ {
+    "name" : "ContentID",
+    "updateable" : false,
+    "dbName" : "contentID",
+    "dataType" : "Integer"
+  }, {
+    "name" : "MenuID",
+    "dbName" : "menuID",
+    "dataType" : "Integer"
+  }, {
+    "name" : "DisplayOrder",
+    "dbName" : "displayOrder",
+    "label" : "Order",
+    "dataType" : "Integer"
+  }, {
+    "name" : "Title",
+    "dbName" : "title",
+    "required" : true
+  } ]
 }

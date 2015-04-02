@@ -1,46 +1,36 @@
 {
-  "dbName": "table_join_column",
-  "primaryKey": "JoinColumnID",
-  "columns": [
-    {
-      "name": "JoinColumnID",
-      "dbName": "joinColumnID",
-      "dataType": "Integer",
-      "updateable": false,
-      "required": true
-    },
-    {
-      "name": "JoinID",
-      "required": true,
-      "dataType": "Integer",
-      "dbName": "joinID",
-      "updateable": false
-    },
-    {
-      "name": "FromColumn",
-      "dbName": "fromColumn"
-    },
-    {
-      "name": "FromText",
-      "dbName": "fromText",
-      "label": "From Text"
-    },
-    {
-      "name": "ToColumn",
-      "required": true,
-      "dbName": "toColumn"
-    }
-  ],
-  "joins": [
-    {
-      "name": "Join",
-      "table": "Join",
-      "columns": [
-        {
-          "from": "JoinID",
-          "to": "JoinID"
-        }
-      ]
-    }
-  ]
+  "dbName" : "table_join_column",
+  "primaryKey" : "JoinColumnID",
+  "joins" : [ {
+    "name" : "Join",
+    "table" : "Join",
+    "columns" : [ {
+      "to" : "JoinID",
+      "from" : "JoinID"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "JoinColumnID",
+    "updateable" : false,
+    "dbName" : "joinColumnID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "JoinID",
+    "updateable" : false,
+    "dbName" : "joinID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "FromColumn",
+    "dbName" : "fromColumn"
+  }, {
+    "name" : "FromText",
+    "dbName" : "fromText",
+    "label" : "From Text"
+  }, {
+    "name" : "ToColumn",
+    "dbName" : "toColumn",
+    "required" : true
+  } ]
 }

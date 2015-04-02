@@ -1,24 +1,18 @@
 {
-  "dbName": "db_database",
-  "primaryKey": "DatabaseID",
-  "columns": [
-    {
-      "name": "DatabaseID",
-      "dbName": "databaseID",
-      "dataType": "Integer",
-      "updateable": false,
-      "columnDefault": "GUID"
-    },
-    {
-      "name": "Name",
-      "dbName": "name"
-    },
-    {
-      "name": "AppID",
-      "dataType": "Integer",
-      "dbName": "appID"
-    }
-  ],
-  "joins": [
-  ]
+  "dbName" : "db_database",
+  "primaryKey" : "DatabaseID",
+  "columns" : [ {
+    "name" : "DatabaseID",
+    "updateable" : false,
+    "dbName" : "databaseID",
+    "dataType" : "Integer",
+    "columnDefault" : "GUID"
+  }, {
+    "name" : "Name",
+    "dbName" : "name"
+  }, {
+    "name" : "AppID",
+    "dbName" : "appID",
+    "dataType" : "Integer"
+  } ]
 }
