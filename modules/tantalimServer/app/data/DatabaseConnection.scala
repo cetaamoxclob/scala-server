@@ -39,6 +39,14 @@ trait DatabaseConnection {
     }
   }
 
+
+  def update(sql: String, numberedParameters: List[Any] = List.empty): Int = {
+    connect {
+      connection =>
+        update(sql, numberedParameters, connection)
+    }
+  }
+
   def update(sql: String, numberedParameters: List[Any], connection: Connection): Int = {
     if (numberedParameters.isEmpty) {
       val stmt = connection.createStatement
@@ -63,9 +71,9 @@ trait DatabaseConnection {
     } else {
       val stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
       println("Executing Prepared Insert: " + sql)
-//      if (stmt.getParameterMetaData.getParameterCount > 0) {
-//        println(" with " + stmt.getParameterMetaData.getParameterType(1))
-//      }
+      //      if (stmt.getParameterMetaData.getParameterCount > 0) {
+      //        println(" with " + stmt.getParameterMetaData.getParameterType(1))
+      //      }
 
       if (numberedParameters.nonEmpty) {
         setParameters(stmt, numberedParameters)

@@ -35,6 +35,7 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
   }
 
   private def compileModelView(model: ModelJson, parent: Option[Model]): Model = {
+    // TODO split up this method...it's too long
     if (model.name.isEmpty) {
       throw new TantalimException("Model Name is missing", "Add name to " + model)
     }
@@ -113,7 +114,7 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
       filter = model.filter,
       customUrlSource = model.customUrlSource
     )
-    if (newModel.parent.isDefined) {
+    if (newModel.parent.isDefined && !newModel.basisTable.isMock) {
       val childField = newModel.getField(newModel.childField.get)
       val parentField = newModel.parent.get.getField(newModel.parentField.get)
       if (childField.dataType != parentField.dataType) {

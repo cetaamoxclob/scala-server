@@ -129,6 +129,7 @@
     },
     {
       "name": "children",
+      "basisTable": "Model",
       "extends": "~model",
       "parentLink": {
         "parentField": "ModelID",

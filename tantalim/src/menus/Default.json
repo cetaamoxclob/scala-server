@@ -52,16 +52,6 @@
         },
         {
           "page": "ModuleManagement"
-        },
-        {
-          "title": "Import",
-          "href": "/import/",
-          "icon": "fa-sign-in"
-        },
-        {
-          "title": "Export",
-          "href": "/exportAll",
-          "icon": "fa-sign-out"
         }
       ]
     },

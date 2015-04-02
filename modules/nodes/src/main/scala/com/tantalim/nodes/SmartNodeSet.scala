@@ -6,7 +6,8 @@ import scala.collection.mutable.ListBuffer
 
 case class SmartNodeSet(model: Model,
                         rows: ListBuffer[SmartNodeInstance] = ListBuffer.empty[SmartNodeInstance],
-                        parentInstance: Option[SmartNodeInstance] = None
+                        parentInstance: Option[SmartNodeInstance] = None,
+                        var sql: String = ""
                          ) {
 
   def insert = {

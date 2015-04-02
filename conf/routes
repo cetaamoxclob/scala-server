@@ -8,7 +8,6 @@ GET         /m/:name                            controllers.Application.mobile(n
 GET         /m/:name/                           controllers.Application.mobile(name)
 GET         /page/:name/                        controllers.Application.desktop(name)
 GET         /page/:name/search                  controllers.Application.desktop(name)
-GET         /page/:page/section/:section        controllers.Application.section(page, section)
 
 GET         /login                              controllers.Application.login
 GET         /logout                             controllers.Application.logout
@@ -17,11 +16,10 @@ GET         /auth/:strategy                     controllers.Application.auth(str
 GET         /data/:name                         controllers.Application.readData(name, page: Int ?= 1, filter: Option[String])
 POST        /data/:name                         controllers.Application.saveData(name)
 
-GET         /ddl/:tableName                     controllers.Application.ddl(tableName)
-GET         /custom/artifactList                  controllers.Application.artifactList
-GET         /import/                            controllers.Application.importList
+GET         /custom/artifactList                controllers.Application.artifactList
+POST        /ddl/:tableName                     controllers.Application.ddl(tableName)
 POST        /import/:artifactType/:name         controllers.Application.importArtifact(artifactType, name)
-GET         /export/:artifactType/:name         controllers.Application.exportArtifact(artifactType, name)
+POST        /export/:artifactType/:name         controllers.Application.exportArtifact(artifactType, name)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                       controllers.Assets.at(path="/public", file)

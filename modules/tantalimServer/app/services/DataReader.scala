@@ -44,6 +44,7 @@ trait DataReader extends DatabaseConnection {
     try {
       val rs = query(sqlBuilder.toPreparedStatement, sqlBuilder.parameters)
       val resultSet = convertResultSetToDataRows(model, rs)
+      resultSet.sql = sqlBuilder.toPreparedStatement
 
       if (resultSet.rows.length > 0 && model.children.size > 0) {
         model.children.map {

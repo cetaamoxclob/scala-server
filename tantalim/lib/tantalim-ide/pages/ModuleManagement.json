@@ -1,5 +1,6 @@
 {
   "title": "Module Management",
+  "icon": "fa-cog",
   "sections": [
     {
       "name": "Module",
@@ -45,11 +46,11 @@
               "buttons": [
                 {
                   "label": "Import Artifact(s)",
-                  "fxn": "_.forEach(section.getSelectedRows(), function(row) { var artifact = row.getValue('ArtifactName'); var artifactType = row.getValue('ArtifactType'); row.update('ArtifactOutput', 'STARTING', true); $http.post('/import/' + artifactType + '/' + artifact).success(function(data) { row.update('ArtifactOutput', data.message || data, true); }).error(function(data) { row.update('ArtifactOutput', data, true); }); });"
+                  "fxn": "_.forEach(section.getSelectedRows(), function(row) { var artifact = row.getValue('ArtifactName'); var artifactType = row.getValue('ArtifactType'); row.update('ArtifactOutput', 'STARTING IMPORT', true); $http.post('/import/' + artifactType + '/' + artifact).success(function(data) { row.update('ArtifactOutput', data.message || data, true); }).error(function(data) { row.update('ArtifactOutput', data, true); }); });"
                 },
                 {
                   "label": "Create Table(s)",
-                  "fxn": ""
+                  "fxn": "_.forEach(section.getSelectedRows(), function(row) { var table = row.getValue('ArtifactName'); if (row.getValue('ArtifactType') !== 'Table') { return } row.update('ArtifactOutput', 'CREATING TABLE', true); $http.post('/ddl/' + table).success(function(data) { row.update('ArtifactOutput', data.message || data, true); }).error(function(data) { row.update('ArtifactOutput', data, true); }); });"
                 }
               ],
               "fields": [
