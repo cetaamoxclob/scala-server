@@ -1,18 +1,40 @@
 package services
 
-import com.tantalim.models.ArtifactType
+import java.io.File
+import java.nio.charset.{StandardCharsets, Charset}
+import java.nio.file.{StandardOpenOption, FileSystems, Files}
+
+import com.tantalim.models.{Module, ArtifactType}
 import com.tantalim.nodes._
 import compiler.ModelCompiler
-import data._
 import play.api.libs.json._
 
 class ArtifactExport(artifactType: ArtifactType) extends DataReader with DataSaver with ModelCompiler {
   val artifactReader = compileModel("~" + artifactType.toString.toLowerCase)
 
-  def readFromDatabaseAndWriteToSource(artifactName: String) = {
+  def readFromDatabaseAndWriteToSource(module: String, artifactName: String) = {
+    val artifactInstance = getArtifactInstanceFromDatabase(artifactName)
+    val moduleName = artifactInstance.get("module")
+    val jsObject = convertSmartNodeInstanceToJsObject(artifactInstance)
+    writeToSource(moduleName, artifactName, Json.prettyPrint(jsObject))
+  }
+
+  private def getArtifactInstanceFromDatabase(artifactName: String): SmartNodeInstance = {
     val artifact = queryModelData(artifactReader, filter = Some(s"name = '$artifactName'"))
-    val firstArtifact = artifact.rows.headOption.getOrElse(throw new Exception("Failed to find exactly one row matching = " + artifactName))
-    convertSmartNodeInstanceToJsObject(firstArtifact)
+    artifact.rows.headOption.getOrElse(throw new Exception("Failed to find exactly one row matching = " + artifactName))
+  }
+
+  private def writeToSource(moduleName: Option[TntValue], artifactName: String, artifactContent: String) = {
+    val module = if (moduleName.isDefined) moduleName.get.rawString
+    else Module.default
+
+    val moduleDirLocation = ArtifactService.tantalimRoot + (if (moduleName.isDefined) "/lib/" + moduleName.get.rawString else "/src") + "/" + artifactType.getDirectory
+
+    val fileLocation = moduleDirLocation + "/" + artifactName + ".json"
+
+    val artifactPath = FileSystems.getDefault.getPath(".", fileLocation)
+
+    Files.write(artifactPath, artifactContent.getBytes(ArtifactService.charSet), StandardOpenOption.CREATE)
   }
 
   private def convertSmartNodeInstanceToJsObject(instance: SmartNodeInstance): JsObject = {

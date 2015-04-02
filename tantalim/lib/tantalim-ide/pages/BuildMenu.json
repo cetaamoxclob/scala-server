@@ -1,53 +1,61 @@
 {
   "title": "Build Menu",
   "icon": "fa-bars",
-  "fields": [
+  "sections": [
     {
-      "name": "MenuName",
-      "showInNavigation": true
-    },
-    {
-      "name": "MenuTitle"
-    }
-  ],
-  "children": [
-    {
-      "name": "MenuContent",
-      "title": "Content",
+      "name": "Menu",
+      "model": "BuildMenu",
+      "title": "Menu",
       "fields": [
         {
-          "name": "MenuContentDisplayOrder"
+          "name": "MenuName",
+          "showInNavigation": true
         },
         {
-          "name": "MenuContentTitle",
-          "showInNavigation": true
+          "name": "MenuTitle"
         }
       ],
-      "children": [
+      "sections": [
         {
-          "name": "MenuItem",
-          "title": "Items",
-          "viewMode": "table",
+          "name": "MenuContent",
+          "model": "MenuContent",
+          "title": "Content",
           "fields": [
             {
-              "name": "MenuItemDisplayOrder"
+              "name": "MenuContentDisplayOrder"
             },
             {
-              "name": "MenuItemPage"
-            },
+              "name": "MenuContentTitle",
+              "showInNavigation": true
+            }
+          ],
+          "sections": [
             {
-              "name": "MenuItemTitle"
-            },
-            {
-              "name": "MenuItemLink"
-            },
-            {
-              "name": "MenuItemIcon"
+              "name": "MenuItem",
+              "model": "MenuItem",
+              "title": "Items",
+              "viewMode": "table",
+              "fields": [
+                {
+                  "name": "MenuItemDisplayOrder"
+                },
+                {
+                  "name": "MenuItemPage"
+                },
+                {
+                  "name": "MenuItemTitle"
+                },
+                {
+                  "name": "MenuItemLink"
+                },
+                {
+                  "name": "MenuItemIcon"
+                }
+              ]
             }
           ]
         }
       ]
     }
   ]
-
 }

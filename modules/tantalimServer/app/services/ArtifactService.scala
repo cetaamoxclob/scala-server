@@ -1,6 +1,7 @@
 package services
 
 import java.io.File
+import java.nio.charset.StandardCharsets
 
 import com.google.common.base.Charsets
 import com.google.common.io.Files
@@ -13,12 +14,12 @@ import play.api.libs.json._
 
 trait ArtifactService {
 
-  case class SourceLocation(filePath: String, module: String = Module.default)
+  case class SourceLocation(filePath: String, module: String)
 
   private def getSourceLocation(artifactType: ArtifactType, name: String): SourceLocation = {
     val fileNameAndPartialDirLocation = artifactType.getDirectory + "/" + name + ".json"
     val srcDir = ArtifactService.tantalimRoot + "/src/" + fileNameAndPartialDirLocation
-    if (fileExists(srcDir)) SourceLocation(srcDir)
+    if (fileExists(srcDir)) SourceLocation(srcDir, Module.default)
     else {
       val libDirLocation = ArtifactService.tantalimRoot + "/lib/"
       val libDir = new File(libDirLocation)
@@ -113,5 +114,6 @@ trait ArtifactService {
 }
 
 object ArtifactService {
+  val charSet = StandardCharsets.UTF_8
   val tantalimRoot = "tantalim"
 }

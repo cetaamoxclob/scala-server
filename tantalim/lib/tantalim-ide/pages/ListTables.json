@@ -23,7 +23,7 @@
           "showInNavigation": true
         },
         {
-          "name": "TableDatabase"
+          "name": "TableModule"
         },
         {
           "name": "TableAllowInsert"

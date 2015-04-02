@@ -13,8 +13,9 @@
       "export": false
     },
     {
-      "name": "database",
-      "basisColumn": "Database"
+      "name": "module",
+      "basisColumn": "Module",
+      "export": false
     },
     {
       "name": "dbName",

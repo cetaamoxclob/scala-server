@@ -11,10 +11,6 @@
         {
           "label": "Import All Artifacts",
           "fxn": "var rows = _.map(section.getSelectedRows(), function(row) { row.update('ModuleName', 'asdf', true); return row.getValue('ModuleName'); }); console.info(rows);"
-        },
-        {
-          "label": "Create All Tables",
-          "fxn": ""
         }
       ],
       "fields": [
@@ -46,7 +42,11 @@
               "buttons": [
                 {
                   "label": "Import Artifact(s)",
-                  "fxn": "_.forEach(section.getSelectedRows(), function(row) { var artifact = row.getValue('ArtifactName'); var artifactType = row.getValue('ArtifactType'); row.update('ArtifactOutput', 'STARTING IMPORT', true); $http.post('/import/' + artifactType + '/' + artifact).success(function(data) { row.update('ArtifactOutput', data.message || data, true); }).error(function(data) { row.update('ArtifactOutput', data, true); }); });"
+                  "fxn": "_.forEach(section.getSelectedRows(), function(row) { var artifact = row.getValue('ArtifactName'); var moduleName = row.getValue('ModuleName'); var artifactType = row.getValue('ArtifactType'); row.update('ArtifactOutput', 'STARTING IMPORT', true); $http.post('/import/' + moduleName + '/' + artifactType + '/' + artifact).success(function(data) { row.update('ArtifactOutput', data.message || data, true); }).error(function(data) { row.update('ArtifactOutput', data, true); }); });"
+                },
+                {
+                  "label": "Export Artifact(s)",
+                  "fxn": "_.forEach(section.getSelectedRows(), function(row) { var artifact = row.getValue('ArtifactName'); var moduleName = row.getValue('ModuleName'); var artifactType = row.getValue('ArtifactType'); row.update('ArtifactOutput', 'STARTING EXPORT', true); $http.post('/export/' + moduleName + '/' + artifactType + '/' + artifact).success(function(data) { row.update('ArtifactOutput', data.message || data, true); }).error(function(data) { row.update('ArtifactOutput', data, true); }); });"
                 },
                 {
                   "label": "Create Table(s)",

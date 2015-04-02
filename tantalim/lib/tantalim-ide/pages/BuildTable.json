@@ -24,8 +24,7 @@
           "name": "TableSQL"
         },
         {
-          "name": "TableDatabase",
-          "showInFormView": false
+          "name": "TableModule"
         },
         {
           "name": "TablePrimaryKey",

@@ -3,7 +3,7 @@ package controllers
 import com.tantalim.nodes.{DataState, SmartNodeSet}
 import com.tantalim.util.{TantalimException, Timer, LoginStrategyType}
 import compiler.{MenuCompiler, TableCompiler, ModelCompiler, PageCompiler}
-import data.{DatabaseConnection, DataConverters}
+import data.{SqlBuilder, DataConverters}
 import com.tantalim.models.{ArtifactType, ModelOrderBy, User}
 import play.api.libs.json._
 import play.api.mvc._
@@ -100,7 +100,7 @@ object Application extends Controller with Timer {
       tableSchema.create(table)
       Ok(Json.obj(
         "status" -> "success",
-        "message" -> s"$tableName was (re)created"
+        "message" -> s"${SqlBuilder.getTableSql(table)} was (re)created"
       ))
     } catch {
       case e: TantalimException => Ok(Json.obj(
@@ -115,36 +115,52 @@ object Application extends Controller with Timer {
     Ok(artifactList)
   }
 
-  def importArtifact(artifactType: String, name: String) = Action {
+  def importArtifact(module: String, artifactType: String, name: String) = Action {
     timer("importArtifact") {
       try {
         val tableImport = new ArtifactImport(ArtifactType.valueOf(artifactType))
-        val result = tableImport.readFromSourceAndWriteToDatabase(name)
+        val result = tableImport.readFromSourceAndWriteToDatabase(module, name)
         val message = if (result.state == DataState.Done) {
           Json.obj(
             "status" -> "success",
-            "message" -> s"$artifactType($name) was imported"
+            "message" -> s"$artifactType($module.$name) was imported"
           )
         } else {
           Json.obj(
             "status" -> "failure",
-            "message" -> s"$artifactType($name) failed to import"
+            "message" -> s"$artifactType($module.$name) failed to import"
           )
         }
         Ok(message)
+
       } catch {
+        case e: Exception => Ok(Json.obj(
+          "status" -> "failure",
+          "message" -> e.getMessage
+        ))
         case e: TantalimException => Ok(Json.obj(
           "status" -> "failure",
           "message" -> e.getMessage
         ))
+        case _ => Ok("Unknown error")
       }
     }
   }
 
-  def exportArtifact(artifactType: String, name: String) = Action {
-    val tableExport = new ArtifactExport(ArtifactType.valueOf(artifactType))
-    val output = tableExport.readFromDatabaseAndWriteToSource(name)
-    Ok(Json.prettyPrint(output))
+  def exportArtifact(module: String, artifactType: String, name: String) = Action {
+    try {
+      val tableExport = new ArtifactExport(ArtifactType.valueOf(artifactType))
+      tableExport.readFromDatabaseAndWriteToSource(module, name)
+      Ok(Json.obj(
+        "status" -> "success",
+        "message" -> s"$artifactType($module.$name) was exported"
+      ))
+    } catch {
+      case e: Exception => Ok(Json.obj(
+        "status" -> "failure",
+        "message" -> e.getMessage
+      ))
+    }
   }
 
   def login = Action {

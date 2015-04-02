@@ -22,8 +22,8 @@
       "required": true
     },
     {
-      "name": "Database",
-      "dbName": "databaseName"
+      "name": "Module",
+      "dbName": "module"
     },
     {
       "name": "PrimaryKey",

@@ -20,8 +20,8 @@
       "basisColumn": "SQL"
     },
     {
-      "name": "TableDatabase",
-      "basisColumn": "Database"
+      "name": "TableModule",
+      "basisColumn": "Module"
     },
     {
       "name": "TableAllowInsert",

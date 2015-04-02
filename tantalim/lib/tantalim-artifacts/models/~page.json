@@ -24,5 +24,38 @@
     }
   ],
   "children": [
+    {
+      "name": "sections",
+      "basisTable": "Section",
+      "parentLink": {
+        "parentField": "PageID",
+        "childField": "SectionPageID"
+      },
+      "fields" : [ {
+        "name" : "SectionSectionID",
+        "basisColumn" : "SectionID",
+        "export": false
+      }, {
+        "name" : "SectionPageID",
+        "basisColumn" : "PageID",
+        "export": false
+      }, {
+        "name" : "SectionParentID",
+        "basisColumn" : "ParentID",
+        "export": false
+      }, {
+        "name" : "name",
+        "basisColumn" : "Name"
+      }, {
+        "name" : "title",
+        "basisColumn" : "Title"
+      }, {
+        "name" : "model",
+        "basisColumn" : "Model"
+      }, {
+        "name" : "viewMode",
+        "basisColumn" : "ViewMode"
+      } ]
+    }
   ]
 }
