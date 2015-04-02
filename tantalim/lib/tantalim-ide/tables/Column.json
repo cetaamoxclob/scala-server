@@ -1,7 +1,5 @@
 {
   "dbName": "table_column",
-  "module": "Tables",
-  "database": "TantalimMeta",
   "primaryKey": "ColumnID",
   "columns": [
     {
@@ -33,6 +31,15 @@
       "label": "Data Type"
     },
     {
+      "name": "Length",
+      "dataType": "Integer",
+      "dbName": "columnLength"
+    },
+    {
+      "name": "FieldType",
+      "dbName": "fieldType"
+    },
+    {
       "name": "DisplayOrder",
       "dataType": "Integer",
       "dbName": "displayOrder",
@@ -51,6 +58,14 @@
       "dataType": "Boolean",
       "dbName": "updateable",
       "fieldType": "checkbox"
+    },
+    {
+      "name": "Help",
+      "dbName": "help"
+    },
+    {
+      "name": "Placeholder",
+      "dbName": "placeholder"
     }
   ],
   "joins": [

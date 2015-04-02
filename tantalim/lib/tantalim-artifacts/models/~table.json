@@ -81,6 +81,22 @@
         {
           "name": "label",
           "basisColumn": "Label"
+        },
+        {
+          "name": "fieldType",
+          "basisColumn": "FieldType"
+        },
+        {
+          "name": "help",
+          "basisColumn": "Help"
+        },
+        {
+          "name": "placeholder",
+          "basisColumn": "Placeholder"
+        },
+        {
+          "name": "length",
+          "basisColumn": "Length"
         }
       ]
     },

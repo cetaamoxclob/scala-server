@@ -1,5 +1,5 @@
 {
-  "dbName" : "model_field",
+  "dbName" : "page_field",
   "primaryKey" : "FieldID",
   "joins" : [ {
     "name" : "Section",
@@ -26,6 +26,11 @@
     "dbName" : "name",
     "label" : "Field",
     "required" : true
+  }, {
+    "name": "DisplayOrder",
+    "dataType": "Integer",
+    "dbName": "displayOrder",
+    "label": "Order"
   }, {
     "name" : "ShowInFormView",
     "dbName" : "showInFormView",

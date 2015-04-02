@@ -160,6 +160,11 @@ object Application extends Controller with Timer {
         "status" -> "failure",
         "message" -> e.getMessage
       ))
+      case e: TantalimException => Ok(Json.obj(
+        "status" -> "failure",
+        "message" -> e.getMessage
+      ))
+      case _ => Ok("Unknown error")
     }
   }
 

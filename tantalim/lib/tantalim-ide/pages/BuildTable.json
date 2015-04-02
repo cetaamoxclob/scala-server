@@ -72,11 +72,22 @@
               "name": "TableColumnDataType"
             },
             {
+              "name": "TableColumnLength"
+            },
+            {
+              "name": "TableColumnFieldType"
+            },
+            {
               "name": "TableColumnSQL"
             },
             {
-              "name": "TableColumnLabel",
-              "label": "Label"
+              "name": "TableColumnLabel"
+            },
+            {
+              "name": "TableColumnHelp"
+            },
+            {
+              "name": "TableColumnPlaceholder"
             }
           ]
         },

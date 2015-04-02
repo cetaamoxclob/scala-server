@@ -77,12 +77,19 @@ trait TableCompiler extends ArtifactService with TableCache {
   }
 
   private def compileTableColumn(table: TableJson, column: TableColumnJson, order: Int): TableColumn = {
+    val dataType: DataType = compileDataType(column.dataType)
     new TableColumn(
       name = column.name,
       dbName = column.dbName.getOrElse(column.name),
       order = order,
-      dataType = compileDataType(column.dataType),
-      fieldType = column.fieldType.getOrElse("text"),
+      dataType = dataType,
+      fieldType = column.fieldType.getOrElse{
+        val display = dataType match {
+          case DataType.Boolean => FieldDisplay.Checkbox
+          case _ => FieldDisplay.Text
+        }
+        display.toString.toLowerCase
+      },
       required = column.required.getOrElse(false),
       updateable = table.allowUpdate.getOrElse(true) && column.updateable.getOrElse(true),
       label = column.label.getOrElse(column.name),

@@ -85,12 +85,28 @@
           "basisColumn": "DataType"
         },
         {
+          "name": "TableColumnFieldType",
+          "basisColumn": "FieldType"
+        },
+        {
           "name": "TableColumnSQL",
           "basisColumn": "SQL"
         },
         {
           "name": "TableColumnLabel",
           "basisColumn": "Label"
+        },
+        {
+          "name": "TableColumnLength",
+          "basisColumn": "Length"
+        },
+        {
+          "name": "TableColumnHelp",
+          "basisColumn": "Help"
+        },
+        {
+          "name": "TableColumnPlaceholder",
+          "basisColumn": "Placeholder"
         }
       ]
     },
