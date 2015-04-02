@@ -1,27 +1,22 @@
 {
-  "dbName": "app_application",
-  "primaryKey": "ApplicationID",
-  "columns": [
-    {
-      "name": "ApplicationID",
-      "dbName": "appID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "Code",
-      "dbName": "appCode",
-      "required": true
-    },
-    {
-      "name": "Name",
-      "dbName": "name",
-      "required": true
-    },
-    {
-      "name": "Description",
-      "dbName": "description"
-    }
-  ]
+  "dbName" : "app_application",
+  "primaryKey" : "ApplicationID",
+  "columns" : [ {
+    "name" : "ApplicationID",
+    "updateable" : false,
+    "dbName" : "appID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Code",
+    "dbName" : "appCode",
+    "required" : true
+  }, {
+    "name" : "Name",
+    "dbName" : "name",
+    "required" : true
+  }, {
+    "name" : "Description",
+    "dbName" : "description"
+  } ]
 }
