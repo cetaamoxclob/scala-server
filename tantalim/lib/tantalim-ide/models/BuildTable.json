@@ -72,6 +72,10 @@
           "basisColumn": "Required"
         },
         {
+          "name": "TableColumnUpdateable",
+          "basisColumn": "Updateable"
+        },
+        {
           "name": "TableColumnDisplayOrder",
           "basisColumn": "DisplayOrder",
           "fieldDefault": {

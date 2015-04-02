@@ -65,8 +65,10 @@
               "showInNavigation": true
             },
             {
-              "name": "TableColumnRequired",
-              "fieldType": "checkbox"
+              "name": "TableColumnRequired"
+            },
+            {
+              "name": "TableColumnUpdateable"
             },
             {
               "name": "TableColumnDataType"

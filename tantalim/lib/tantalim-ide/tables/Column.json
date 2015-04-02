@@ -22,8 +22,7 @@
     {
       "name": "Required",
       "dataType": "Boolean",
-      "dbName": "required",
-      "fieldType": "checkbox"
+      "dbName": "required"
     },
     {
       "name": "DataType",
@@ -56,12 +55,12 @@
     {
       "name": "Updateable",
       "dataType": "Boolean",
-      "dbName": "updateable",
-      "fieldType": "checkbox"
+      "dbName": "updateable"
     },
     {
       "name": "Help",
-      "dbName": "help"
+      "dbName": "help",
+      "length": 100
     },
     {
       "name": "Placeholder",
