@@ -23,6 +23,7 @@ case class TableColumnJson(name: String,
                            help: Option[String],
                            placeholder: Option[String],
                            fieldType: Option[String],
+                           length: Option[Int],
                            columnDefault: Option[String]
                             )
 
@@ -57,6 +58,7 @@ object TableJson {
       (JsPath \ "help").readNullable[String] and
       (JsPath \ "placeholder").readNullable[String] and
       (JsPath \ "fieldType").readNullable[String] and
+      (JsPath \ "length").readNullable[Int] and
       (JsPath \ "columnDefault").readNullable[String]
     ).apply(TableColumnJson.apply _)
 

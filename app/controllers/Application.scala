@@ -32,6 +32,7 @@ object Application extends Controller with Timer {
           "rows" -> DataConverters.convertSmartNodeSetToJsonArr(smartSet)
         ))
       } catch {
+        case e: TantalimException => Ok(convertExceptionToJson(e))
         case e: Exception => Ok(convertExceptionToJson(e))
       }
     }
@@ -48,6 +49,7 @@ object Application extends Controller with Timer {
         val jsonResponse = DataConverters.convertSmartNodeSetToJsonArr(dataSet)
         Ok(jsonResponse)
       } catch {
+        case e: TantalimException => Ok(convertExceptionToJson(e))
         case e: Exception => Ok(convertExceptionToJson(e))
       }
     }
@@ -103,6 +105,10 @@ object Application extends Controller with Timer {
         "message" -> s"${SqlBuilder.getTableSql(table)} was (re)created"
       ))
     } catch {
+      case e: Exception => Ok(Json.obj(
+        "status" -> "failure",
+        "message" -> e.getMessage
+      ))
       case e: TantalimException => Ok(Json.obj(
         "status" -> "failure",
         "message" -> e.getMessage

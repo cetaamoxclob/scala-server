@@ -86,6 +86,9 @@
               "name": "TableColumnLabel"
             },
             {
+              "name": "TableColumnColumnDefault"
+            },
+            {
               "name": "TableColumnHelp"
             },
             {

@@ -6,11 +6,13 @@
       "name": "ColumnID",
       "dataType": "Integer",
       "dbName": "columnID",
+      "required": true,
       "updateable": false
     },
     {
       "name": "TableID",
       "dataType": "Integer",
+      "required": true,
       "dbName": "tableID"
     },
     {
@@ -60,11 +62,15 @@
     {
       "name": "Help",
       "dbName": "help",
-      "length": 100
+      "length": 1000
     },
     {
       "name": "Placeholder",
       "dbName": "placeholder"
+    },
+    {
+      "name": "ColumnDefault",
+      "dbName": "columnDefault"
     }
   ],
   "joins": [

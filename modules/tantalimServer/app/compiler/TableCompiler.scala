@@ -93,6 +93,7 @@ trait TableCompiler extends ArtifactService with TableCache {
       required = column.required.getOrElse(false),
       updateable = table.allowUpdate.getOrElse(true) && column.updateable.getOrElse(true),
       label = column.label.getOrElse(column.name),
+      length = column.length,
       help = column.help,
       placeholder = column.placeholder
     )

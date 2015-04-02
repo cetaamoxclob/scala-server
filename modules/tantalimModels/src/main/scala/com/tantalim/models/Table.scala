@@ -51,6 +51,7 @@ case class TableColumn(
                         label: String,
                         help: Option[String] = None,
                         placeholder: Option[String] = None,
+                        length: Option[Int] = None,
                         fieldType: String = "text"
                         )
 

@@ -97,6 +97,10 @@
         {
           "name": "length",
           "basisColumn": "Length"
+        },
+        {
+          "name": "columnDefault",
+          "basisColumn": "ColumnDefault"
         }
       ]
     },

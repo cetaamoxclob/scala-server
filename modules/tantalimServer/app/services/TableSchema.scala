@@ -43,7 +43,8 @@ trait TableSchema {
         case DataType.DateTime => "DATETIME"
         case DataType.Integer => "INT"
         case DataType.Decimal => "DECIMAL"
-        case DataType.String => "VARCHAR(50)"
+        case DataType.String =>
+          s"VARCHAR(${column.length.getOrElse(50)})"
       })
       columnSql ++= (if (column.required) " NOT NULL" else " NULL")
       if (isPrimaryKey) {

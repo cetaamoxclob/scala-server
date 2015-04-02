@@ -111,6 +111,10 @@
         {
           "name": "TableColumnPlaceholder",
           "basisColumn": "Placeholder"
+        },
+        {
+          "name": "TableColumnColumnDefault",
+          "basisColumn": "ColumnDefault"
         }
       ]
     },
