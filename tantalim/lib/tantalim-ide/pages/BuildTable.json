@@ -51,6 +51,12 @@
           "name": "TableColumns",
           "title": "Columns",
           "viewMode": "table",
+          "buttons": [
+            {
+              "label": "Reorder",
+              "fxn": "var x = 10; _.forEach(section.getCurrentSet().rows, function(row) { row.update('TableColumnDisplayOrder', x); x = x + 10; })"
+            }
+          ],
           "fields": [
             {
               "name": "TableColumnDisplayOrder"

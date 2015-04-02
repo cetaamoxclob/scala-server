@@ -35,7 +35,8 @@
     },
     {
       "name": "ParentID",
-      "dbName": "parentID"
+      "dbName": "parentID",
+      "dataType": "Integer"
     }
   ]
 }

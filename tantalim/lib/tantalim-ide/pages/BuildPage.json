@@ -16,9 +16,24 @@
           "name": "PageSection",
           "model": "PageSection",
           "fields": [
-            {"name": "SectionName"},
+            {
+              "name": "SectionName",
+              "links": [
+                {
+                  "page": "BuildSection",
+                  "filter": "SectionName Equals '${SectionName}'"
+                }
+              ]
+            },
+            {
+              "name": "SectionModel",
+              "fieldType": "select",
+              "select": {
+                "model": "ListModels",
+                "sourceField": "ModelName"
+              }
+            },
             {"name": "SectionTitle"},
-            {"name": "SectionModel"},
             {"name": "SectionViewMode"}
           ]
         }

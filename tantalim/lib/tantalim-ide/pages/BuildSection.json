@@ -1,25 +1,62 @@
 {
-  "title": "Build Page",
+  "title": "Build Section",
   "sections": [
     {
-      "title": "Page",
-      "name": "BuildPage",
+      "title": "Section",
+      "name": "BuildSection",
       "fields": [
-        {"name": "PageName"},
-        {"name": "PageTitle"},
-        {"name": "PageIcon"},
-        {"name": "PageCss"}
+        {"name": "SectionName"},
+        {"name": "SectionTitle"},
+        {"name": "SectionModel"},
+        {"name": "SectionViewMode"}
       ],
       "sections": [
         {
-          "title": "Sections",
-          "name": "PageSection",
-          "model": "PageSection",
+          "title": "Fields",
+          "name": "PageField",
+          "model": "PageField",
+          "viewMode": "table",
           "fields": [
-            {"name": "SectionName"},
-            {"name": "SectionTitle"},
-            {"name": "SectionModel"},
-            {"name": "SectionViewMode"}
+            {"name": "PageFieldName"},
+            {
+              "name": "PageFieldShowInFormView"
+            },
+            {
+              "name": "PageFieldShowInTableView"
+            },
+            {
+              "name": "PageFieldShowInNavigation"
+            },
+            {
+              "name": "PageFieldLabel"
+            },
+            {
+              "name": "PageFieldFieldType"
+            },
+            {
+              "name": "PageFieldHelp"
+            },
+            {
+              "name": "PageFieldPlaceholder"
+            }
+          ]
+        },
+        {
+          "title": "Child Sections",
+          "name": "ChildSection",
+          "model": "ChildSection",
+          "viewMode": "table",
+          "fields": [
+            {"name": "ChildSectionName",
+              "links": [
+                {
+                  "page": "BuildSection",
+                  "filter": "SectionName Equals '${ChildSectionName}'"
+                }
+              ]},
+            {"name": "ChildSectionTitle"},
+            {"name": "ChildSectionModel"},
+            {"name": "ChildSectionViewMode"}
           ]
         }
       ]
