@@ -34,7 +34,8 @@ class ArtifactExport(artifactType: ArtifactType) extends DataReader with DataSav
 
     val artifactPath = FileSystems.getDefault.getPath(".", fileLocation)
 
-    Files.write(artifactPath, artifactContent.getBytes(ArtifactService.charSet), StandardOpenOption.CREATE)
+    Files.write(artifactPath, artifactContent.getBytes(ArtifactService.charSet),
+      StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
   }
 
   private def convertSmartNodeInstanceToJsObject(instance: SmartNodeInstance): JsObject = {
