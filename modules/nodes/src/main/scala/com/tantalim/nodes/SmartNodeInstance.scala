@@ -67,7 +67,7 @@ case class SmartNodeInstance(
     nodeSet.model.instanceID match {
       case Some(instanceID) =>
         id = Some(value)
-        set(instanceID, value)
+        set(instanceID.name, value)
       case None => throw new Exception("InstanceID isn't defined for " + this)
     }
   }

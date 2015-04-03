@@ -216,7 +216,7 @@ trait DataSaver extends DataReader with DatabaseConnection {
   }
 
   private def getPrimaryKey(model: Model) = {
-    model.fields.getOrElse(model.instanceID.get, {
+    model.fields.getOrElse(model.instanceID.get.name, {
       throw new Exception("Model does not include primary key for update")
     })
   }

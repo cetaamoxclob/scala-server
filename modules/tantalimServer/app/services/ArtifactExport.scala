@@ -6,6 +6,7 @@ import java.nio.file.{StandardOpenOption, FileSystems, Files}
 
 import com.tantalim.models.{Module, ArtifactType}
 import com.tantalim.nodes._
+import com.tantalim.util.TantalimException
 import compiler.ModelCompiler
 import play.api.libs.json._
 
@@ -25,17 +26,32 @@ class ArtifactExport(artifactType: ArtifactType) extends DataReader with DataSav
   }
 
   private def writeToSource(moduleName: Option[TntValue], artifactName: String, artifactContent: String) = {
-    val module = if (moduleName.isDefined) moduleName.get.rawString
-    else Module.default
-
-    val moduleDirLocation = ArtifactService.tantalimRoot + (if (moduleName.isDefined) "/lib/" + moduleName.get.rawString else "/src") + "/" + artifactType.getDirectory
-
-    val fileLocation = moduleDirLocation + "/" + artifactName + ".json"
+    val fileLocation = getArtifactDirectory(moduleName) + "/" + artifactName + ".json"
 
     val artifactPath = FileSystems.getDefault.getPath(".", fileLocation)
 
     Files.write(artifactPath, artifactContent.getBytes(ArtifactService.charSet),
       StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
+  }
+
+  private def getArtifactDirectory(moduleName: Option[TntValue]): String = {
+    val module = if (moduleName.isDefined) moduleName.get.rawString
+    else Module.default
+
+    val moduleDirLocation = ArtifactService.tantalimRoot +
+      (if (moduleName.isDefined) "/lib/" + moduleName.get.rawString else "/src")
+    if (!new File(moduleDirLocation).isDirectory) {
+      throw new TantalimException(s"Directory for Module `$module` does not exist" + moduleDirLocation,
+        "Create it in " + new File(moduleDirLocation).getAbsolutePath)
+    }
+
+    val artifactTypeLocation = moduleDirLocation + "/" + artifactType.getDirectory
+    val artifactTypeFile = new File(artifactTypeLocation)
+    if (!artifactTypeFile.exists()) {
+      artifactTypeFile.mkdir()
+    }
+
+    artifactTypeLocation
   }
 
   private def convertSmartNodeInstanceToJsObject(instance: SmartNodeInstance): JsObject = {

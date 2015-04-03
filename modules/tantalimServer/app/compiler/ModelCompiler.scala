@@ -24,13 +24,22 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
   private def extendModel(model: ModelJson, parent: Option[Model]): Model = {
     println("Extending model " + model.extendModel.get)
     val superModel = parent.get
+    val modelFields = superModel.fields ++
+      convertJsonFieldsToModelFieldMap(
+        model.fields,
+        superModel.basisTable,
+        buildModelSteps(model, superModel.basisTable)
+      )
+
     superModel.copy(
       name = model.name.get,
-      parentField = if (model.parentField.isDefined) model.parentField else {
+      parentField = if (model.parentField.isDefined) model.parentField
+      else {
         println(s"Warning parentLink in ${model.name.get} was deprecated and should be replaced with parentField and childField")
         Some(model.parentLink.get.parentField)
       },
       childField = if (model.childField.isDefined) model.childField else Some(model.parentLink.get.childField),
+      fields = modelFields,
       parent = parent,
       filter = if (model.filter.isDefined) model.filter else superModel.filter,
       preSave = model.preSave
@@ -38,77 +47,36 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
   }
 
   private def compileModelView(model: ModelJson, parent: Option[Model]): Model = {
-    // TODO split up this method...it's too long
     if (model.name.isEmpty) {
       throw new TantalimException("Model Name is missing", "Add name to " + model)
     }
     println("Compiling model " + model.name.get)
+    val basisTable = getBasisTable(model)
+    val steps = buildModelSteps(model, basisTable)
+    val modelFields = convertJsonFieldsToModelFieldMap(model.fields, basisTable, steps)
 
-    val basisTable: DeepTable =
-      if (Table.isMock(model.basisTable)) {
-        Table.createMock
-      } else {
-        getTableFromCache(model.basisTable).getOrElse {
-          val newTable = compileTable(model.basisTable)
-          addTableToCache(model.name.get, newTable)
-          newTable
-        }
+    val newModel = createModel(model, basisTable, modelFields, parent, steps)
+    if (newModel.parent.isDefined && !newModel.basisTable.isMock) checkChildModel(newModel)
+    if (model.children.isDefined) {
+      model.children.get.foreach { childJson =>
+        addChildModelToParentModel(childJson, newModel)
       }
-    val instanceIdField = if (basisTable.primaryKey.isDefined && model.fields.isDefined) {
-      model.fields.get.find(f =>
-        f.basisColumn == basisTable.primaryKey.get.name // && f.step
-      )
-    } else None
+    }
+    newModel
+  }
 
-    val tempSteps = buildModelSteps(model, basisTable)
-
-    val stepsByInt: Map[Int, ModelStep] = tempSteps.map { step =>
-      step.tableAlias.get -> new ModelStep(name = step.name,
-        tableAlias = step.tableAlias.get,
-        join = step.tableJoin.getOrElse(throw new TantalimException(s"tableJoin for $step is still missing", "Add or rename the step")),
-        required = step.required.get,
-        parentAlias = step.parent match {
-          case Some(p) => p.tableAlias.get
-          case _ => 0
-        }
-      )
-    }.toMap
-    val stepIntsByName: Map[String, Int] = tempSteps.map { step =>
-      step.name -> step.tableAlias.get
-    }.toMap
-
-    println("Sending Model " + model.name.get)
-    val newModel = new Model(
+  private def createModel(model: ModelJson, basisTable: DeepTable, modelFields: Map[String, ModelField], parent: Option[Model], steps: Seq[ModelStep]): Model = {
+    println("Creating new Model " + model.name.get)
+    new Model(
       model.name.get,
       basisTable,
       model.limit.getOrElse(0),
-      instanceID = if (instanceIdField.isDefined) Option(instanceIdField.get.name) else None,
-      fields = if (model.fields.isEmpty) Map.empty
-      else model.fields.get.map(f => {
-        if (f.step.isDefined) {
-          val stepName = f.step.get
-          val stepID = stepIntsByName.getOrElse(
-            stepName,
-            throw new TantalimException(s"Can't find step `$stepName` for field `${f.name}`", "Add it")
-          )
-          val fieldStep = stepsByInt.get(stepID)
-          val tableJoin = fieldStep.get.join
-
-          f.name -> compileModelField(f,
-            tableJoin.table.getColumn(f.basisColumn),
-            fieldStep
-          )
-        } else {
-          f.name -> compileModelField(f, basisTable.getColumn(f.basisColumn), None)
-        }
-      }).toMap,
-      parentField = if (model.parentLink.isDefined) {
-        println(s"Warning parentLink in ${model.name.get} was deprecated and should be replaced with parentField and childField")
-        Some(model.parentLink.get.parentField)
-      } else model.parentField,
-      childField = if (model.parentLink.isDefined) Some(model.parentLink.get.childField) else model.childField,
+      fields = modelFields.toMap,
+      instanceID = findInstanceIdField(basisTable.primaryKey, modelFields.values),
+      parentField = model.parentField,
+      childField = model.childField,
       parent = parent,
-      steps = stepsByInt,
+      steps = convertStepsToMap(steps),
       orderBy = compileOrderBy(model.orderBy),
       allowInsert = model.allowInsert.getOrElse(basisTable.allowInsert),
       allowUpdate = model.allowUpdate.getOrElse(basisTable.allowUpdate),
@@ -117,37 +85,98 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
       filter = model.filter,
       customUrlSource = model.customUrlSource
     )
-    if (newModel.parent.isDefined && !newModel.basisTable.isMock) {
-      val childField = newModel.getField(newModel.childField.get)
-      val parentField = newModel.parent.get.getField(newModel.parentField.get)
-      if (childField.dataType != parentField.dataType) {
-        throw new TantalimException(s"parent and child fields are not of the same data type in ${model.name.get}",
-          s"${childField.name} is a ${childField.dataType} and ${parentField.name} is a ${parentField.dataType}")
-      }
-    }
-    if (model.children.isDefined) {
-      model.children.get.foreach { childJson =>
-        val childModel =
-          if (childJson.extendModel.isDefined) extendModel(childJson, Some(newModel))
-          else compileModelView(childJson, Some(newModel))
-        if (!newModel.basisTable.isMock) {
-          if (childModel.parentField.isEmpty) {
-            // We could try to guess based on the parent model's identifier field
-            throw new TantalimException(s"Child model named ${childModel.name} is missing parentField", "")
-          }
-          if (childModel.childField.isEmpty) {
-            throw new TantalimException(s"Child model named ${childModel.name} is missing childField", "")
-          }
-          // TODO check to make sure the parentField actually exists
-          // TODO check to make sure the childField actually exists
-        }
-        newModel.children(childModel.name) = childModel
-      }
-    }
-    newModel
   }
 
-  private def buildModelSteps(model: ModelJson, basisTable: DeepTable): Seq[TempModelStep] = {
+  private def findInstanceIdField(primaryKey: Option[TableColumn], modelFields: Iterable[ModelField]): Option[ModelField] = {
+    if (primaryKey.isDefined) {
+      modelFields.find(f =>
+        f.basisColumn.name == primaryKey.get.name && f.step.isEmpty
+      )
+    } else None
+  }
+
+  private def convertJsonFieldsToModelFieldMap(modelFields: Option[Seq[ModelFieldJson]], basisTable: Table, steps: Seq[ModelStep]): Map[String, ModelField] = {
+    if (modelFields.isEmpty) Map.empty
+    else modelFields.get.map(f => {
+      if (f.step.isDefined) {
+        val fieldStep = findStepByName(f.step.get, steps)
+        val tableJoin = fieldStep.join
+
+        f.name -> compileModelField(f,
+          tableJoin.table.getColumn(f.basisColumn),
+          Some(fieldStep)
+        )
+      } else {
+        f.name -> compileModelField(f, basisTable.getColumn(f.basisColumn), None)
+      }
+    }).toMap
+  }
+
+  private def getBasisTable(model: ModelJson): DeepTable = {
+    if (Table.isMock(model.basisTable)) {
+      Table.createMock
+    } else {
+      getTableFromCache(model.basisTable).getOrElse {
+        val newTable = compileTable(model.basisTable)
+        addTableToCache(model.name.get, newTable)
+        newTable
+      }
+    }
+  }
+
+  private def checkChildModel(childModel: Model): Unit = {
+    if (childModel.parentField.isEmpty) {
+      // We could try to guess based on the parent model's identifier field ???
+      throw new TantalimException(s"Model named ${childModel.name} is missing parentField", "")
+    }
+    if (childModel.childField.isEmpty) {
+      throw new TantalimException(s"Model named ${childModel.name} is missing childField", "")
+    }
+    val childField = childModel.getField(childModel.childField.get)
+    val parentField = childModel.parent.get.getField(childModel.parentField.get)
+    if (childField.dataType != parentField.dataType) {
+      throw new TantalimException(s"parent and child fields are not of the same data type in ${childModel.name}",
+        s"${childField.name} is a ${childField.dataType} and ${parentField.name} is a ${parentField.dataType}")
+    }
+  }
+
+  private def addChildModelToParentModel(childJson: ModelJson, parentModel: Model): Unit = {
+    val childModel =
+      if (childJson.extendModel.isDefined) extendModel(childJson, Some(parentModel))
+      else compileModelView(childJson, Some(parentModel))
+    parentModel.children(childModel.name) = childModel
+
+  }
+
+  private def findStepByName(stepName: String, steps: Seq[ModelStep]): ModelStep = {
+    steps.find(step => step.name == stepName).getOrElse(
+      throw new TantalimException(s"Can't find step `$stepName`", s"Existing steps are: ${steps.mkString(", ")}")
+    )
+  }
+
+  private def convertStepsToMap(steps: Seq[ModelStep]): Map[Int, ModelStep] = {
+    steps.map { step =>
+      step.tableAlias -> step
+    }.toMap
+  }
+
+  private def buildModelSteps(model: ModelJson, basisTable: DeepTable): Seq[ModelStep] = {
+    buildTempModelSteps(model, basisTable).map { step =>
+      val join = step.tableJoin.getOrElse(throw new TantalimException(s"tableJoin for $step is still missing", "Add or rename the step"))
+      new ModelStep(
+        name = step.name,
+        tableAlias = step.tableAlias.get,
+        join = join,
+        required = step.required.get,
+        parentAlias = step.parent match {
+          case Some(p) => p.tableAlias.get
+          case _ => 0
+        }
+      )
+    }
+  }
+
+  private def buildTempModelSteps(model: ModelJson, basisTable: DeepTable): Seq[TempModelStep] = {
     if (model.steps.isDefined) {
       val tempSteps = model.steps.get.map(stepJson => {
         new TempModelStep(

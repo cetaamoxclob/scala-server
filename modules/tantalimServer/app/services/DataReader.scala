@@ -120,7 +120,7 @@ trait DataReader extends DatabaseConnection {
             }
           })
       }
-      newInstance.id = if (model.instanceID.isDefined) newInstance.data.get(model.instanceID.get) else None
+      newInstance.id = if (model.instanceID.isDefined) newInstance.data.get(model.instanceID.get.name) else None
     }
     resultBuilder
   }

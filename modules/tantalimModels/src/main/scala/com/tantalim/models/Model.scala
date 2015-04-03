@@ -5,7 +5,7 @@ import com.tantalim.util.TantalimException
 case class Model(name: String,
                  basisTable: DeepTable,
                  limit: Int = 0,
-                 instanceID: Option[String] = None,
+                 instanceID: Option[ModelField] = None,
                  fields: Map[String, ModelField],
                  steps: scala.collection.Map[Int, ModelStep] = Map.empty, // I'm not sure why just ": Map[Int," ... won't work here
                  parent: Option[Model] = None,
