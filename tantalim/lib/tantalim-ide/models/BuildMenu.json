@@ -38,8 +38,8 @@
       "basisColumn" : "ContentID"
     }, {
       "name" : "MenuContentMenuID",
-      "basisColumn" : "MenuID",
-      "updateable": false
+      "updateable" : false,
+      "basisColumn" : "MenuID"
     }, {
       "name" : "MenuContentDisplayOrder",
       "basisColumn" : "DisplayOrder"

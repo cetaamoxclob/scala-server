@@ -84,6 +84,18 @@
         {
           "name": "basisColumn",
           "basisColumn": "BasisColumn"
+        },
+        {
+          "name": "updateable",
+          "basisColumn": "Updateable"
+        },
+        {
+          "name": "required",
+          "basisColumn": "Required"
+        },
+        {
+          "name": "export",
+          "basisColumn": "Export"
         }
       ]
     },
