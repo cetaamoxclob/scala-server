@@ -1,9 +1,7 @@
 {
   "basisTable" : "Table",
+  "allowDelete" : false,
   "limit" : 100,
-  "orderBy" : [ {
-      "fieldName" : "TableName"
-    } ],
   "fields" : [ {
     "name" : "TableTableID",
     "basisColumn" : "TableID"
@@ -25,5 +23,8 @@
   }, {
     "name" : "TableAllowDelete",
     "basisColumn" : "AllowDelete"
+  } ],
+  "orderby" : [ {
+    "fieldName" : "TableName"
   } ]
 }
