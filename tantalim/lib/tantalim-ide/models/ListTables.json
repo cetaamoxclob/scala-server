@@ -1,42 +1,29 @@
 {
-  "basisTable": "Table",
-  "limit": 100,
-  "orderBy": [
-    {
-      "fieldName": "TableName"
-    }
-  ],
-  "fields": [
-    {
-      "name": "TableTableID",
-      "basisColumn": "TableID"
-    },
-    {
-      "name": "TableName",
-      "basisColumn": "Name"
-    },
-    {
-      "name": "TableSQL",
-      "basisColumn": "SQL"
-    },
-    {
-      "name": "TableModule",
-      "basisColumn": "Module"
-    },
-    {
-      "name": "TableAllowInsert",
-      "basisColumn": "AllowInsert"
-    },
-    {
-      "name": "TableAllowUpdate",
-      "basisColumn": "AllowUpdate"
-    },
-    {
-      "name": "TableAllowDelete",
-      "basisColumn": "AllowDelete"
-    }
-  ],
-  "allowInsert": true,
-  "allowUpdate": true,
-  "allowDelete": true
+  "basisTable" : "Table",
+  "limit" : 100,
+  "orderBy" : [ {
+      "fieldName" : "TableName"
+    } ],
+  "fields" : [ {
+    "name" : "TableTableID",
+    "basisColumn" : "TableID"
+  }, {
+    "name" : "TableName",
+    "basisColumn" : "Name"
+  }, {
+    "name" : "TableSQL",
+    "basisColumn" : "SQL"
+  }, {
+    "name" : "TableModule",
+    "basisColumn" : "Module"
+  }, {
+    "name" : "TableAllowInsert",
+    "basisColumn" : "AllowInsert"
+  }, {
+    "name" : "TableAllowUpdate",
+    "basisColumn" : "AllowUpdate"
+  }, {
+    "name" : "TableAllowDelete",
+    "basisColumn" : "AllowDelete"
+  } ]
 }
