@@ -1,0 +1,43 @@
+{
+  "dbName" : "model_sort",
+  "primaryKey" : "SortID",
+  "joins" : [ {
+    "name" : "Model",
+    "required" : true,
+    "table" : "Model",
+    "columns" : [ {
+      "to" : "ModelID",
+      "from" : "ModelID"
+    } ]
+  }, {
+    "name" : "Field",
+    "required" : true,
+    "table" : "ModelField",
+    "columns" : [ {
+      "to" : "FieldID",
+      "from" : "FieldID"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "SortID",
+    "updateable" : false,
+    "dbName" : "sortID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "ModelID",
+    "updateable" : false,
+    "dbName" : "modelID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "FieldID",
+    "dbName" : "fieldID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Ascending",
+    "dbName" : "sortAsc",
+    "dataType" : "Boolean"
+  } ]
+}
