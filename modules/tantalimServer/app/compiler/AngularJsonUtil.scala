@@ -57,7 +57,7 @@ object AngularJsonUtil {
     "name" -> JsString(field.name),
     "required" -> JsBoolean(field.required),
     "order" -> JsNumber(order),
-    "fieldType" -> JsString(field.fieldType)
+    "fieldType" -> JsString(field.fieldType.lower)
   ))
 
   private def toJson(field: ModelField): JsObject = JsObject(Seq(

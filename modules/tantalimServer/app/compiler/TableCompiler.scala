@@ -77,19 +77,19 @@ trait TableCompiler extends ArtifactService with TableCache {
   }
 
   private def compileTableColumn(table: TableJson, column: TableColumnJson, order: Int): TableColumn = {
-    val dataType: DataType = compileDataType(column.dataType)
+    val dataType: DataType = TableCompiler.compileDataType(column.dataType)
     new TableColumn(
       name = column.name,
       dbName = column.dbName.getOrElse(column.name),
       order = order,
       dataType = dataType,
-      fieldType = column.fieldType.getOrElse{
+      fieldType = if (column.fieldType.isEmpty) {
         val display = dataType match {
           case DataType.Boolean => FieldDisplay.Checkbox
           case _ => FieldDisplay.Text
         }
-        display.toString.toLowerCase
-      },
+        display
+      } else TableCompiler.compileFieldDisplay(column.fieldType.get),
       required = column.required.getOrElse(false),
       updateable = table.allowUpdate.getOrElse(true) && column.updateable.getOrElse(true),
       label = column.label.getOrElse(column.name),
@@ -97,14 +97,6 @@ trait TableCompiler extends ArtifactService with TableCache {
       help = column.help,
       placeholder = column.placeholder
     )
-  }
-
-  private def compileDataType(value: Option[String]): DataType = {
-    if (value.isEmpty || value.get.trim.isEmpty) DataType.String
-    else {
-      val needle = value.get.toLowerCase
-      DataType.values.find(t => t.toString.toLowerCase == needle).getOrElse(throw new Exception(s"${value.get} is not a valid DataType"))
-    }
   }
 
   private def compileTableJoin(fromColumns: Map[String, TableColumn], join: TableJoinJson): TableJoin = {
@@ -128,4 +120,19 @@ trait TableCompiler extends ArtifactService with TableCache {
     )
   }
 
+}
+
+object TableCompiler {
+  private def compileDataType(value: Option[String]): DataType = {
+    if (value.isEmpty || value.get.trim.isEmpty) DataType.String
+    else {
+      val needle = value.get.toLowerCase
+      DataType.values.find(t => t.toString.toLowerCase == needle).getOrElse(throw new Exception(s"${value.get} is not a valid DataType"))
+    }
+  }
+
+  def compileFieldDisplay(value: String): FieldDisplay = {
+    val needle = value.toLowerCase
+    FieldDisplay.values.find(t => t.toString.toLowerCase == needle).getOrElse(throw new Exception(s"$value is not a valid FieldDisplay"))
+  }
 }

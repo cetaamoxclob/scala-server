@@ -1,4 +1,5 @@
 @(page: com.tantalim.models.PageSection, depth: Int)
+@import com.tantalim.models.FieldDisplay
 
 <table class="tnt-grid table table-bordered no-select">
     <thead>
@@ -37,13 +38,13 @@
                     data-ng-mousedown="SmartPage.getSection('@(page.name)').mousedown($index, @fieldIndex)"
                     data-ng-mouseover="SmartPage.getSection('@(page.name)').mouseover($index, @fieldIndex)"
                     data-ng-mouseup="SmartPage.getSection('@(page.name)').mouseup($index, @fieldIndex)"
-                        @if(field.fieldType != "checkbox") {
+                        @if(field.fieldType != FieldDisplay.Checkbox) {
                             data-ng-dblclick="SmartPage.getSection('@(page.name)').dblclick($index, @fieldIndex)"
                             }
                     >
 
                         @field.fieldType match {
-                            case "checkbox" => {
+                            case FieldDisplay.Checkbox => {
                                 <i class="fa fa-check-square-o fa-lg"
                                 data-ng-show="row.data.@field.name === true"
                                 data-ng-click="row.toggle('@(field.name)', @(field.required))"></i>
@@ -54,7 +55,7 @@
                                 data-ng-show="row.data.@field.name === undefined || row.data.@field.name === null"
                                 data-ng-click="row.toggle('@(field.name)', @(field.required))"></i>
                             }
-                            case "select" => {
+                            case FieldDisplay.Select => {
                                 @defining(field.select.get) { select =>
                                     <tnt-select
                                     current-instance="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance()"

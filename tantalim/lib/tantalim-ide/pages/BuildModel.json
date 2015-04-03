@@ -30,6 +30,7 @@
         },
         {
           "name": "ModelParentName",
+          "label": "Parent Model",
           "links": [
             {
               "page": "BuildModel",

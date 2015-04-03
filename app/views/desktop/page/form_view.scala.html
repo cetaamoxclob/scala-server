@@ -1,10 +1,11 @@
 @(page: com.tantalim.models.PageSection, depth: Int)
+@import com.tantalim.models.FieldDisplay
 
 @for(field <- page.fields) {
     @if(field.showInFormView) {
-        <div class="form-group col-xs-6" ng-class="{'has-error': TopPageForm.@(field.name).$invalid}">
+        <div class="form-group col-xs-@field.columnSize" ng-class="{'has-error': TopPageForm.@(field.name).$invalid}">
         @field.fieldType match {
-            case "text" => {
+            case FieldDisplay.Text => {
                 <tnt-textbox label="@field.label"
                 current-instance="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance()"
                 name="@field.modelField.name" placeholder="@field.placeholder" disabled="@field.disabled"
@@ -23,7 +24,7 @@
                     }
                 </tnt-textbox>
             }
-            case "select" => {
+            case FieldDisplay.Select => {
                 @defining(field.select.get) { select =>
                     <tnt-select
                     label="@field.label"
@@ -45,7 +46,7 @@
                     </tnt-select>
                 }
             }
-            case "checkbox" => {
+            case FieldDisplay.Checkbox => {
                 <tnt-checkbox label="@field.label" current-instance="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance()"
                 required="@(field.required)" target-field="@(field.name)">
                 @if(field.help.nonEmpty) {

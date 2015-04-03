@@ -50,7 +50,7 @@ case class PageSection(name: String,
 
 case class PageField(
                       name: String,
-                      fieldType: String,
+                      fieldType: FieldDisplay,
                       modelField: ModelField,
                       label: String,
                       required: Boolean,
@@ -66,6 +66,13 @@ case class PageField(
                       select: Option[PageFieldSelect],
                       links: Seq[PageFieldLink]
                       ) {
+  def columnSize: Int = {
+    fieldType match {
+      case FieldDisplay.Checkbox => 3
+      case FieldDisplay.Textarea => 12
+      case _ => 6
+    }
+  }
 
   def tableWidth = {
     dataType match {

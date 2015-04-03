@@ -52,7 +52,7 @@ case class TableColumn(
                         help: Option[String] = None,
                         placeholder: Option[String] = None,
                         length: Option[Int] = None,
-                        fieldType: String = "text"
+                        fieldType: FieldDisplay = FieldDisplay.Text
                         )
 
 case class TableJoin(
@@ -100,12 +100,12 @@ object TableColumn {
       updateable = false,
       required = false,
       label = "Mock " + dataType.toString,
-      fieldType = (dataType match {
+      fieldType = dataType match {
         case DataType.Boolean => FieldDisplay.Checkbox
         case DataType.Date => FieldDisplay.Date
         case DataType.DateTime => FieldDisplay.DateTime
         case _ => FieldDisplay.Text
-      }).toString.toLowerCase
+      }
     ))
   }
 }
