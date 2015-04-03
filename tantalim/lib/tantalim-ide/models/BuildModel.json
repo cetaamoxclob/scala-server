@@ -26,6 +26,10 @@
       "basisColumn": "BasisTable"
     },
     {
+      "name": "ModelModule",
+      "basisColumn": "Module"
+    },
+    {
       "name": "ModelLimit",
       "basisColumn": "Limit"
     },

@@ -4,6 +4,12 @@
     {
       "name": "Model",
       "model": "BuildModel",
+      "buttons": [
+        {
+          "label": "Export",
+          "fxn": "var row = section.getCurrentSet().getInstance(); var model = row.getValue('ModelName'); var moduleName = row.getValue('ModelModule'); $http.post('/export/' + moduleName + '/Model/' + model).success(function(data) { alert(data.message) });"
+        }
+      ],
       "fields": [
         {
           "name": "ModelName"
@@ -30,6 +36,9 @@
               "filter": "ModelID Equals ${ModelParentID}"
             }
           ]
+        },
+        {
+          "name": "ModelModule"
         },
         {
           "name": "ModelLimit"

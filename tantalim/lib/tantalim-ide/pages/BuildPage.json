@@ -4,9 +4,16 @@
     {
       "title": "Page",
       "name": "BuildPage",
+      "buttons": [
+        {
+          "label": "Export",
+          "fxn": "var row = section.getCurrentSet().getInstance(); var page = row.getValue('PageName'); var moduleName = row.getValue('PageModule'); $http.post('/export/' + moduleName + '/Page/' + page).success(function(data) { alert(data.message) });"
+        }
+      ],
       "fields": [
         {"name": "PageName"},
         {"name": "PageTitle"},
+        {"name": "PageModule"},
         {"name": "PageIcon"},
         {"name": "PageCss"}
       ],
