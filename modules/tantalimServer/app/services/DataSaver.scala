@@ -82,7 +82,7 @@ trait DataSaver extends DataReader with DatabaseConnection {
 
   private def deleteSingleRow(rowToDelete: SmartNodeInstance, dbConnection: Connection): Unit = {
     val row: SmartNodeInstance = if (rowToDelete.data.isEmpty) {
-      val myFilter = Some(f"${rowToDelete.model.instanceID.get} = ${rowToDelete.id.get.rawString}")
+      val myFilter = Some(f"${rowToDelete.model.instanceID.get.name} = ${rowToDelete.id.get.rawString}")
       val oldDataToDelete = queryModelData(rowToDelete.nodeSet.model, filter = myFilter)
       oldDataToDelete.rows.head
     }
@@ -111,8 +111,12 @@ trait DataSaver extends DataReader with DatabaseConnection {
 
       model.fields.values.foreach { field =>
         val value = getValueForInsert(row, field)
-        if (value.isDefined) {
-          valueMap += field.basisColumn.dbName -> value.get
+        if (field.step.isDefined) {
+          println(s"Can't save data for field ${field.step.get.name}.${field.name} = $value")
+        } else {
+          if (value.isDefined) {
+            valueMap += field.basisColumn.dbName -> value.get
+          }
         }
       }
 
