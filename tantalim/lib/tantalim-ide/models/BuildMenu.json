@@ -1,82 +1,61 @@
 {
-  "basisTable": "Menu",
-  "children": [
-    {
-      "name": "MenuContent",
-      "basisTable": "MenuContent",
-      "children": [
-        {
-          "name": "MenuItem",
-          "basisTable": "MenuItem",
-          "parentField": "MenuContentContentID",
-          "childField": "MenuItemContentID",
-          "fields": [
-            {
-              "name": "MenuItemItemID",
-              "basisColumn": "ItemID"
-            },
-            {
-              "name": "MenuItemContentID",
-              "basisColumn": "ContentID"
-            },
-            {
-              "name": "MenuItemDisplayOrder",
-              "basisColumn": "DisplayOrder"
-            },
-            {
-              "name": "MenuItemPage",
-              "basisColumn": "Page"
-            },
-            {
-              "name": "MenuItemTitle",
-              "basisColumn": "Title"
-            },
-            {
-              "name": "MenuItemLink",
-              "basisColumn": "Link"
-            },
-            {
-              "name": "MenuItemIcon",
-              "basisColumn": "Icon"
-            }
-          ]
-        }
-      ],
-      "fields": [
-        {
-          "name": "MenuContentContentID",
-          "basisColumn": "ContentID"
-        },
-        {
-          "name": "MenuContentMenuID",
-          "updateable": false,
-          "basisColumn": "MenuID"
-        },
-        {
-          "name": "MenuContentDisplayOrder",
-          "basisColumn": "DisplayOrder"
-        },
-        {
-          "name": "MenuContentTitle",
-          "basisColumn": "Title"
-        }
-      ],
-      "parentField": "MenuMenuID",
-      "childField": "MenuContentMenuID"
-    }
-  ],
-  "fields": [
-    {
-      "name": "MenuMenuID",
-      "basisColumn": "MenuID"
-    },
-    {
-      "name": "MenuName",
-      "basisColumn": "Name"
-    },
-    {
-      "name": "MenuTitle",
-      "basisColumn": "Title"
-    }
-  ]
+  "basisTable" : "Menu",
+  "children" : [ {
+    "name" : "MenuContent",
+    "parentField" : "MenuMenuID",
+    "basisTable" : "MenuContent",
+    "childField" : "MenuContentMenuID",
+    "children" : [ {
+      "name" : "MenuItem",
+      "parentField" : "MenuContentContentID",
+      "basisTable" : "MenuItem",
+      "childField" : "MenuItemContentID",
+      "fields" : [ {
+        "name" : "MenuItemItemID",
+        "basisColumn" : "ItemID"
+      }, {
+        "name" : "MenuItemContentID",
+        "basisColumn" : "ContentID"
+      }, {
+        "name" : "MenuItemDisplayOrder",
+        "basisColumn" : "DisplayOrder"
+      }, {
+        "name" : "MenuItemPage",
+        "basisColumn" : "Page"
+      }, {
+        "name" : "MenuItemTitle",
+        "basisColumn" : "Title"
+      }, {
+        "name" : "MenuItemLink",
+        "basisColumn" : "Link"
+      }, {
+        "name" : "MenuItemIcon",
+        "basisColumn" : "Icon"
+      } ]
+    } ],
+    "fields" : [ {
+      "name" : "MenuContentContentID",
+      "basisColumn" : "ContentID"
+    }, {
+      "name" : "MenuContentMenuID",
+      "basisColumn" : "MenuID",
+      "updateable": false
+    }, {
+      "name" : "MenuContentDisplayOrder",
+      "basisColumn" : "DisplayOrder"
+    }, {
+      "name" : "MenuContentTitle",
+      "basisColumn" : "Title"
+    } ]
+  } ],
+  "fields" : [ {
+    "name" : "MenuMenuID",
+    "basisColumn" : "MenuID"
+  }, {
+    "name" : "MenuName",
+    "basisColumn" : "Name"
+  }, {
+    "name" : "MenuTitle",
+    "basisColumn" : "Title"
+  } ]
 }
