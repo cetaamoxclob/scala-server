@@ -26,8 +26,11 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
     val superModel = parent.get
     superModel.copy(
       name = model.name.get,
-      parentField = if (model.parentField.isDefined) model.parentField else Some(model.parentLink.get.parentField),
-      childField = if (model.childField.isDefined) model.parentField else Some(model.parentLink.get.childField),
+      parentField = if (model.parentField.isDefined) model.parentField else {
+        println(s"Warning parentLink in ${model.name.get} was deprecated and should be replaced with parentField and childField")
+        Some(model.parentLink.get.parentField)
+      },
+      childField = if (model.childField.isDefined) model.childField else Some(model.parentLink.get.childField),
       parent = parent,
       filter = if (model.filter.isDefined) model.filter else superModel.filter,
       preSave = model.preSave
