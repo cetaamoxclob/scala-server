@@ -24,7 +24,7 @@
     "name" : "TableAllowDelete",
     "basisColumn" : "AllowDelete"
   } ],
-  "orderby" : [ {
+  "orderBy" : [ {
     "fieldName" : "TableName"
   } ]
 }
