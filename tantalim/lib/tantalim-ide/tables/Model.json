@@ -21,14 +21,13 @@
     "label" : "Model Name",
     "required" : true
   }, {
-    "name" : "Module",
-    "dbName" : "module",
-    "required" : true
-  }, {
     "name" : "BasisTable",
     "dbName" : "basisTable",
     "label" : "Basis Table",
     "required" : true
+  }, {
+    "name" : "Module",
+    "dbName" : "module"
   }, {
     "name" : "ParentID",
     "dbName" : "parentID",
