@@ -60,6 +60,44 @@
   ],
   "children": [
     {
+      "name": "orderby",
+      "basisTable": "ModelSort",
+      "parentField": "ModelID",
+      "childField": "ModelSortModelID",
+      "steps": [
+        {
+          "name": "Field",
+          "join": "Field"
+        }
+      ],
+      "fields": [
+        {
+          "name": "ModelSortID",
+          "basisColumn": "SortID",
+          "export": false
+        },
+        {
+          "name": "ModelSortModelID",
+          "basisColumn": "ModelID",
+          "export": false
+        },
+        {
+          "name": "ModelSortFieldID",
+          "basisColumn": "FieldID",
+          "export": false
+        },
+        {
+          "name": "fieldName",
+          "basisColumn": "Name",
+          "step": "Field"
+        },
+        {
+          "name": "direction",
+          "basisColumn": "Ascending"
+        }
+      ]
+    },
+    {
       "name": "fields",
       "basisTable": "ModelField",
       "parentField": "ModelID",

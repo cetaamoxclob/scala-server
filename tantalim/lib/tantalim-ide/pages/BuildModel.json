@@ -130,6 +130,27 @@
           ]
         },
         {
+          "name": "ModelSort",
+          "title": "Sorting",
+          "model": "ModelSort",
+          "fields": [
+            {
+              "name": "ModelSortFieldName",
+              "label": "Field Name",
+              "fieldType": "select",
+              "select": {
+                "model": "ListModelFields",
+                "targetID": "ModelSortFieldID",
+                "sourceField": "FieldName",
+                "filter": "FieldModelID Equals ${ModelID}"
+              }
+            },
+            {
+              "name": "ModelSortAscending"
+            }
+          ]
+        },
+        {
           "name": "ChildModel",
           "title": "Child Models",
           "model": "ChildModel",
