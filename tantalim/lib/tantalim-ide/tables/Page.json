@@ -5,11 +5,16 @@
     "name" : "PageID",
     "updateable" : false,
     "dbName" : "pageID",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : true
   }, {
     "name" : "Name",
     "dbName" : "name",
     "label" : "Page Name",
+    "required" : true
+  }, {
+    "name" : "Module",
+    "dbName" : "module",
     "required" : true
   }, {
     "name" : "Title",

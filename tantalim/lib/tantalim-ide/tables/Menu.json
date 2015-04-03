@@ -5,11 +5,16 @@
     "name" : "MenuID",
     "updateable" : false,
     "dbName" : "menuID",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : true
   }, {
     "name" : "Name",
     "dbName" : "name",
     "label" : "Menu Name",
+    "required" : true
+  }, {
+    "name" : "Module",
+    "dbName" : "module",
     "required" : true
   }, {
     "name" : "Title",

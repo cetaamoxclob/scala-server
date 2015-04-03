@@ -5,6 +5,16 @@
     {
       "name": "BuildTable",
       "title": "Tables",
+      "buttons": [
+        {
+          "label": "Export",
+          "fxn": "var row = section.getCurrentSet().getInstance(); var table = row.getValue('TableName'); var moduleName = row.getValue('TableModule'); $http.post('/export/' + moduleName + '/Table/' + table).success(function(data) { alert(data.message) });"
+        },
+        {
+          "label": "Create Table",
+          "fxn": "var row = section.getCurrentSet().getInstance(); var table = row.getValue('TableName'); var moduleName = row.getValue('TableModule'); $http.post('/ddl/' + table).success(function(data) { alert(data.message) });"
+        }
+      ],
       "fields": [
         {
           "name": "TableName",

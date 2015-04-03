@@ -13,21 +13,26 @@
     "name" : "ModelID",
     "updateable" : false,
     "dbName" : "modelID",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : true
   }, {
     "name" : "Name",
     "dbName" : "name",
     "label" : "Model Name",
     "required" : true
   }, {
-    "name" : "ParentID",
-    "dbName" : "parentID",
-    "dataType" : "Integer"
+    "name" : "Module",
+    "dbName" : "module",
+    "required" : true
   }, {
     "name" : "BasisTable",
     "dbName" : "basisTable",
     "label" : "Basis Table",
     "required" : true
+  }, {
+    "name" : "ParentID",
+    "dbName" : "parentID",
+    "dataType" : "Integer"
   }, {
     "name" : "Limit",
     "dbName" : "maxRows",
