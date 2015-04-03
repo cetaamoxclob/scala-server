@@ -1,11 +1,28 @@
 {
   "dbName" : "page_section",
   "primaryKey" : "SectionID",
+  "joins" : [ {
+    "name" : "Page",
+    "table" : "Page",
+    "columns" : [ {
+      "to" : "PageID",
+      "from" : "PageID"
+    } ]
+  }, {
+    "name" : "Parent",
+    "required" : true,
+    "table" : "Section",
+    "columns" : [ {
+      "to" : "SectionID",
+      "from" : "ParentID"
+    } ]
+  } ],
   "columns" : [ {
     "name" : "SectionID",
     "updateable" : false,
     "dbName" : "sectionID",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : true
   }, {
     "name" : "Name",
     "dbName" : "name",
@@ -18,8 +35,7 @@
     "dataType" : "Integer"
   }, {
     "name" : "Title",
-    "dbName" : "title",
-    "required" : true
+    "dbName" : "title"
   }, {
     "name" : "Model",
     "dbName" : "model"
