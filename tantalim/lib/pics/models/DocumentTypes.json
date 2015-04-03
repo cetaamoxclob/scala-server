@@ -61,10 +61,8 @@
         }
       ],
       "filter": "DocumentCategoryParentID IsEmpty",
-      "parentLink": {
-        "parentField": "DocumentTypeID",
-        "childField": "DocumentCategoryDocumentTypeID"
-      },
+      "parentField": "DocumentTypeID",
+      "childField": "DocumentCategoryDocumentTypeID",
       "fields": [
         {
           "name": "DocumentCategoryID",

@@ -8,6 +8,8 @@
         {
           "name": "MenuItem",
           "basisTable": "MenuItem",
+          "parentField": "MenuContentContentID",
+          "childField": "MenuItemContentID",
           "fields": [
             {
               "name": "MenuItemItemID",
@@ -37,11 +39,7 @@
               "name": "MenuItemIcon",
               "basisColumn": "Icon"
             }
-          ],
-          "parentLink": {
-            "parentField": "MenuContentContentID",
-            "childField": "MenuItemContentID"
-          }
+          ]
         }
       ],
       "fields": [
@@ -63,10 +61,8 @@
           "basisColumn": "Title"
         }
       ],
-      "parentLink": {
-        "parentField": "MenuMenuID",
-        "childField": "MenuContentMenuID"
-      }
+      "parentField": "MenuMenuID",
+      "childField": "MenuContentMenuID"
     }
   ],
   "fields": [

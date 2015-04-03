@@ -72,10 +72,8 @@
     {
       "name": "ModelFields",
       "basisTable": "ModelField",
-      "parentLink": {
-        "parentField": "ModelID",
-        "childField": "ModelFieldModelID"
-      },
+      "parentField": "ModelID",
+      "childField": "ModelFieldModelID",
       "steps": [
         {
           "name": "Step",
@@ -126,10 +124,8 @@
     {
       "name": "ModelSteps",
       "basisTable": "ModelStep",
-      "parentLink": {
-        "parentField": "ModelID",
-        "childField": "ModelStepModelID"
-      },
+      "parentField": "ModelID",
+      "childField": "ModelStepModelID",
       "steps": [
         {
           "name": "Parent",
@@ -168,10 +164,8 @@
     {
       "name": "ChildModel",
       "basisTable": "Model",
-      "parentLink": {
-        "parentField": "ModelID",
-        "childField": "ChildModelParentID"
-      },
+      "parentField": "ModelID",
+      "childField": "ChildModelParentID",
       "fields": [
         {
           "name": "ChildModelID",

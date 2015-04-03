@@ -52,10 +52,8 @@
           "fieldName": "SubcategoriesNumber"
         }
       ],
-      "parentLink": {
-        "parentField": "CategoryID",
-        "childField": "SubcategoriesParentID"
-      },
+      "parentField": "CategoryID",
+      "childField": "SubcategoriesParentID",
       "fields": [
         {
           "name": "SubcategoriesCategoryID",

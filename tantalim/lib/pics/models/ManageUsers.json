@@ -57,10 +57,8 @@
     {
       "name": "Groups",
       "basisTable": "PicsUserGroup",
-      "parentLink": {
-        "parentField": "UserID",
-        "childField": "UserGroupIDUserID"
-      },
+      "parentField": "UserID",
+      "childField": "UserGroupIDUserID",
       "orderBy": [
         {
           "fieldName": "UserGroupIDGroupName"

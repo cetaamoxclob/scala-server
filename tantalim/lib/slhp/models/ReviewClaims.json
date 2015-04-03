@@ -36,10 +36,8 @@
     {
       "name": "Claim",
       "basisTable": "Claim",
-      "parentLink": {
-        "parentField": "PatientID",
-        "childField": "ClaimPatientID"
-      },
+      "parentField": "PatientID",
+      "childField": "ClaimPatientID",
       "steps": [
         {
           "name": "ClaimVendor",

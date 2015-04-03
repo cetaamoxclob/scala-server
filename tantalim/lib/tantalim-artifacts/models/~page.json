@@ -32,10 +32,8 @@
     {
       "name": "sections",
       "basisTable": "Section",
-      "parentLink": {
-        "parentField": "PageID",
-        "childField": "SectionPageID"
-      },
+      "parentField": "PageID",
+      "childField": "SectionPageID",
       "fields" : [ {
         "name" : "SectionSectionID",
         "basisColumn" : "SectionID",

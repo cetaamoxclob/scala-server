@@ -25,10 +25,8 @@
     {
       "name": "content",
       "basisTable": "MenuContent",
-      "parentLink": {
-        "parentField": "MenuMenuID",
-        "childField": "MenuContentMenuID"
-      },
+      "parentField": "MenuMenuID",
+      "childField": "MenuContentMenuID",
       "orderBy": [
         {
           "fieldName": "MenuContentDisplayOrder"
@@ -63,10 +61,8 @@
         {
           "name": "items",
           "basisTable": "MenuItem",
-          "parentLink": {
-            "parentField": "MenuContentContentID",
-            "childField": "MenuItemContentID"
-          },
+          "parentField": "MenuContentContentID",
+          "childField": "MenuItemContentID",
           "orderBy": [
             {
               "fieldName": "MenuItemDisplayOrder"

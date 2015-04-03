@@ -45,10 +45,8 @@
     {
       "name": "TableColumns",
       "basisTable": "Column",
-      "parentLink": {
-        "parentField": "TableTableID",
-        "childField": "TableColumnTableID"
-      },
+      "parentField": "TableTableID",
+      "childField": "TableColumnTableID",
       "orderBy": [
         {
           "fieldName": "TableColumnDisplayOrder"
@@ -121,10 +119,8 @@
     {
       "name": "TableJoins",
       "basisTable": "Join",
-      "parentLink": {
-        "parentField": "TableTableID",
-        "childField": "TableJoinFromTableID"
-      },
+      "parentField": "TableTableID",
+      "childField": "TableJoinFromTableID",
       "fields": [
         {
           "name": "TableJoinJoinID",
@@ -161,10 +157,8 @@
         {
           "name": "TableJoinColumns",
           "basisTable": "JoinColumn",
-          "parentLink": {
-            "parentField": "TableJoinJoinID",
-            "childField": "TableJoinJoinColumnJoinID"
-          },
+          "parentField": "TableJoinJoinID",
+          "childField": "TableJoinJoinColumnJoinID",
           "fields": [
             {
               "name": "TableJoinJoinColumnJoinColumnID",

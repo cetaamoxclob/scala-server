@@ -13,7 +13,8 @@
     },
     {
       "name": "name",
-      "basisColumn": "Name"
+      "basisColumn": "Name",
+      "export": false
     },
     {
       "name": "basisTable",
@@ -57,10 +58,8 @@
     {
       "name": "fields",
       "basisTable": "ModelField",
-      "parentLink": {
-        "parentField": "ModelID",
-        "childField": "ModelFieldModelID"
-      },
+      "parentField": "ModelID",
+      "childField": "ModelFieldModelID",
       "steps": [
         {
           "name": "Step",
@@ -91,10 +90,8 @@
     {
       "name": "steps",
       "basisTable": "ModelStep",
-      "parentLink": {
-        "parentField": "ModelID",
-        "childField": "ModelStepModelID"
-      },
+      "parentField": "ModelID",
+      "childField": "ModelStepModelID",
       "steps": [
         {
           "name": "Parent",
@@ -136,10 +133,14 @@
       "name": "children",
       "basisTable": "Model",
       "extends": "~model",
-      "parentLink": {
-        "parentField": "ModelID",
-        "childField": "ModelParentID"
-      }
+      "parentField": "ModelID",
+      "childField": "ModelParentID",
+      "fields": [
+        {
+          "name": "name",
+          "basisColumn": "Name"
+        }
+      ]
     }
   ]
 }

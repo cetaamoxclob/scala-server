@@ -19,10 +19,8 @@
     {
       "name": "WorkflowState",
       "basisTable": "WorkflowState",
-      "parentLink": {
-        "parentField": "WorkflowID",
-        "childField": "WorkflowStateWorkflowID"
-      },
+      "parentField": "WorkflowID",
+      "childField": "WorkflowStateWorkflowID",
       "fields": [
         {
           "name": "WorkflowStateStateID",
@@ -53,10 +51,8 @@
     {
       "name": "WorkflowStep",
       "basisTable": "WorkflowStep",
-      "parentLink": {
-        "parentField": "WorkflowID",
-        "childField": "WorkflowStepWorkflowID"
-      },
+      "parentField": "WorkflowID",
+      "childField": "WorkflowStepWorkflowID",
       "fields": [
         {
           "name": "WorkflowStepStepID",
@@ -87,10 +83,8 @@
     {
       "name": "DocumentType",
       "basisTable": "DocumentType",
-      "parentLink": {
-        "parentField": "WorkflowID",
-        "childField": "DocumentTypeWorkflowID"
-      },
+      "parentField": "WorkflowID",
+      "childField": "DocumentTypeWorkflowID",
       "fields": [
         {
           "name": "DocumentTypeID",
