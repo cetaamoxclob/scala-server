@@ -1,54 +1,13 @@
 {
   "basisTable": "Menu",
-  "fields": [
-    {
-      "name": "MenuMenuID",
-      "basisColumn": "MenuID"
-    },
-    {
-      "name": "MenuName",
-      "basisColumn": "Name"
-    },
-    {
-      "name": "MenuTitle",
-      "basisColumn": "Title"
-    }
-  ],
   "children": [
     {
       "name": "MenuContent",
       "basisTable": "MenuContent",
-      "parentLink": {
-        "parentField": "MenuMenuID",
-        "childField": "MenuContentMenuID"
-      },
-      "fields": [
-        {
-          "name": "MenuContentContentID",
-          "basisColumn": "ContentID"
-        },
-        {
-          "name": "MenuContentMenuID",
-          "updateable": false,
-          "basisColumn": "MenuID"
-        },
-        {
-          "name": "MenuContentDisplayOrder",
-          "basisColumn": "DisplayOrder"
-        },
-        {
-          "name": "MenuContentTitle",
-          "basisColumn": "Title"
-        }
-      ],
       "children": [
         {
           "name": "MenuItem",
           "basisTable": "MenuItem",
-          "parentLink": {
-            "parentField": "MenuContentContentID",
-            "childField": "MenuItemContentID"
-          },
           "fields": [
             {
               "name": "MenuItemItemID",
@@ -78,9 +37,50 @@
               "name": "MenuItemIcon",
               "basisColumn": "Icon"
             }
-          ]
+          ],
+          "parentLink": {
+            "parentField": "MenuContentContentID",
+            "childField": "MenuItemContentID"
+          }
         }
-      ]
+      ],
+      "fields": [
+        {
+          "name": "MenuContentContentID",
+          "basisColumn": "ContentID"
+        },
+        {
+          "name": "MenuContentMenuID",
+          "updateable": false,
+          "basisColumn": "MenuID"
+        },
+        {
+          "name": "MenuContentDisplayOrder",
+          "basisColumn": "DisplayOrder"
+        },
+        {
+          "name": "MenuContentTitle",
+          "basisColumn": "Title"
+        }
+      ],
+      "parentLink": {
+        "parentField": "MenuMenuID",
+        "childField": "MenuContentMenuID"
+      }
+    }
+  ],
+  "fields": [
+    {
+      "name": "MenuMenuID",
+      "basisColumn": "MenuID"
+    },
+    {
+      "name": "MenuName",
+      "basisColumn": "Name"
+    },
+    {
+      "name": "MenuTitle",
+      "basisColumn": "Title"
     }
   ]
 }
