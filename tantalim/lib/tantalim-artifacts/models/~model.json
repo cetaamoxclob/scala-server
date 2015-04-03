@@ -52,6 +52,10 @@
     {
       "name": "childField",
       "basisColumn": "ChildField"
+    },
+    {
+      "name": "customUrlSource",
+      "basisColumn": "CustomUrlSource"
     }
   ],
   "children": [

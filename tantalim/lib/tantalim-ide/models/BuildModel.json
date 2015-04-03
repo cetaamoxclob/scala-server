@@ -60,6 +60,10 @@
     {
       "name": "ModelAllowDelete",
       "basisColumn": "AllowDelete"
+    },
+    {
+      "name": "ModelCustomUrlSource",
+      "basisColumn": "CustomUrlSource"
     }
   ],
   "steps": [

@@ -69,5 +69,10 @@
     "label" : "Allow Delete",
     "fieldType" : "checkbox",
     "dataType" : "Boolean"
+  }, {
+    "name" : "CustomUrlSource",
+    "dbName" : "customUrlSource",
+    "label" : "URL Source",
+    "help" : "Identifies an alternative source URL for backend data"
   } ]
 }
