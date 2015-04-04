@@ -51,7 +51,11 @@ case class SmartNodeInstance(
     if (nodeSet.parentInstance.isDefined) nodeSet.parentInstance.get
   }
 
-  def get(fieldName: String) = data.get(fieldName)
+  def get(fieldName: String): Option[TntValue] = {
+    if (nodeSet.model.hasField(fieldName)) data.get(fieldName)
+    else if (nodeSet.parentInstance.isDefined) nodeSet.parentInstance.get.get(fieldName)
+    else throw new TantalimException("Failed to find value for field named " + fieldName, "")
+  }
 
   def set(fieldName: String, value: TntValue) = {
     if (nodeSet.model.fields.get(fieldName).isEmpty) {

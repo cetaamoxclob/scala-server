@@ -36,6 +36,8 @@ case class Model(name: String,
 
   override def toString: String = s"Model($name) fields(${fields.size}) children(${children.size})"
 
+  def hasField(fieldName: String): Boolean = fields.get(fieldName).isDefined
+
   def getField(fieldName: String): ModelField = {
     val field = fields.get(fieldName)
     if (field.isEmpty) {

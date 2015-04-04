@@ -92,6 +92,16 @@
           "step": "Field"
         },
         {
+          "name": "ModelSortFieldModelID",
+          "basisColumn": "ModelID",
+          "step": "Field",
+          "fieldDefault": {
+            "value": "ModelID",
+            "overwrite": true,
+            "type": "field"
+          }
+        },
+        {
           "name": "direction",
           "basisColumn": "Ascending"
         }

@@ -163,7 +163,12 @@ trait DataSaver extends DataReader with DatabaseConnection {
           case DataType.Boolean => Some(TntBoolean(default.value == "true"))
           case _ => Some(TntString(default.value))
         }
-      case FieldDefaultType.Field => row.get(default.value)
+      case FieldDefaultType.Field =>
+        val valueFromDefaultField = row.get(default.value)
+        if (valueFromDefaultField.isEmpty) {
+          println("row has no value for " + default.value)
+        }
+        valueFromDefaultField
       case FieldDefaultType.Fxn =>
         // Rule of Three - waiting for more examples of functions
         // https://code.google.com/p/scalascriptengine/
