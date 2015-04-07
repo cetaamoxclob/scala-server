@@ -169,6 +169,11 @@
       "basisTable": "Index",
       "parentField": "TableID",
       "childField": "IndexTableID",
+      "orderBy": [
+        {
+          "fieldName": "priority"
+        }
+      ],
       "fields": [
         {
           "name": "IndexID",
@@ -191,6 +196,11 @@
           "basisTable": "IndexColumn",
           "parentField": "IndexID",
           "childField": "IndexColumnIndexID",
+          "orderBy": [
+            {
+              "fieldName": "IndexColumnOrder"
+            }
+          ],
           "steps": [
             {
               "name": "Column",
@@ -206,6 +216,11 @@
             {
               "name": "IndexColumnIndexID",
               "basisColumn": "IndexID",
+              "export": false
+            },
+            {
+              "name": "IndexColumnOrder",
+              "basisColumn": "Order",
               "export": false
             },
             {
