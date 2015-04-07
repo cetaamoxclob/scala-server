@@ -16,27 +16,29 @@ import play.api.libs.json.Json
 @RunWith(classOf[JUnitRunner])
 class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
   "DataSaver" should {
+    val personID = fakeModelFieldMap("PersonID", "person_id", DataType.Integer, updateable = false)
     val model = new Model(
       "PersonTest",
       basisTable = new DeepTable("Person", "person", fakeModule()),
       limit = 100,
-      instanceID = Option("PersonID"),
+      instanceID = Option(personID._2),
       fields = Map(
-        fakeModelFieldMap("PersonID", "person_id", DataType.Integer, updateable = false),
+        personID,
         fakeModelFieldMap("PersonName", "name", required = true)
       )
     )
+    val personPhoneID = fakeModelFieldMap("PersonPhoneID", "phone_id", DataType.Integer, updateable = false)
     model.addChild(new Model(
       "PersonPhone",
       basisTable = new DeepTable(
         "Phone", "phone", fakeModule()
       ),
       limit = 100,
-      instanceID = Option("PersonPhoneID"),
+      instanceID = Option(personPhoneID._2),
       parentField = Some("PersonID"),
       childField = Some("PersonPhonePersonID"),
       fields = Map(
-        fakeModelFieldMap("PersonPhoneID", "phone_id", DataType.Integer, updateable = false),
+        personPhoneID,
         fakeModelFieldMap("PersonPhonePersonID", "person_id", DataType.Integer, updateable = false),
         fakeModelFieldMap("PersonPhoneNumber", "phone_number", required = true)
       ),

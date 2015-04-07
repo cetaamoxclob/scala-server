@@ -74,7 +74,7 @@ class ArtifactCompilerSpec extends Specification with Mockito with FakeArtifacts
             updateable = true,
             required = false,
             label = "PersonID",
-            fieldType = "text"
+            fieldType = FieldDisplay.Text
           )),
           joins = Map()
         ),
