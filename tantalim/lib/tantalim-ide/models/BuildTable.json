@@ -184,6 +184,11 @@
       "basisTable": "Index",
       "parentField": "TableTableID",
       "childField": "TableIndexTableID",
+      "orderBy": [
+        {
+          "fieldName": "TableIndexPriority"
+        }
+      ],
       "fields": [
         {
           "name": "TableIndexID",
@@ -209,6 +214,11 @@
           "basisTable": "IndexColumn",
           "parentField": "TableIndexID",
           "childField": "TableIndexColumnIndexID",
+          "orderBy": [
+            {
+              "fieldName": "TableIndexColumnOrder"
+            }
+          ],
           "steps": [
             {
               "name": "Column",

@@ -66,6 +66,8 @@ case class TableJoinColumn(to: TableColumn,
                            from: Option[TableColumn],
                            fromText: Option[String])
 
+case class TableIndex(priority: Int, unique: Boolean, columns: Seq[TableColumn])
+
 object Table {
   val Mock = "__MOCK_TABLE__"
 

@@ -173,7 +173,8 @@
               "showInNavigation": true
             },
             {
-              "name": "TableIndexUnique"
+              "name": "TableIndexUnique",
+              "showInNavigation": true
             }
           ],
           "sections": [
@@ -182,7 +183,11 @@
               "title": "Index Columns",
               "fields": [
                 {
+                  "name": "TableIndexColumnOrder"
+                },
+                {
                   "name": "TableIndexColumnColumnName",
+                  "showInNavigation": true,
                   "label": "Column",
                   "fieldType": "select",
                   "select": {
@@ -191,9 +196,6 @@
                     "sourceField": "ColumnName",
                     "filter": "ColumnTableID = ${TableTableID}"
                   }
-                },
-                {
-                  "name": "TableIndexColumnOrder"
                 }
               ]
             }

@@ -36,6 +36,12 @@ case class TableJoinColumnJson(to: String,
                                from: Option[String],
                                fromText: Option[String])
 
+case class TableIndexJson(priority: Int,
+                          columns: Seq[TableIndexColumnJson])
+
+case class TableIndexColumnJson(name: String,
+                                ignoreMe: Option[String])
+
 object TableJson {
   implicit def tableReads: Reads[TableJson] = (
     (JsPath \ "dbName").readNullable[String] and
@@ -74,4 +80,14 @@ object TableJson {
       (JsPath \ "from").readNullable[String] and
       (JsPath \ "fromText").readNullable[String]
     ).apply(TableJoinColumnJson.apply _)
+
+  implicit def tableIndexReads: Reads[TableIndexJson] = (
+    (JsPath \ "priority").read[Int] and
+      (JsPath \ "columns").read[Seq[TableIndexColumnJson]]
+    ).apply(TableIndexJson.apply _)
+
+  implicit def tableIndexColumnReads: Reads[TableIndexColumnJson] = (
+    (JsPath \ "name").read[String] and
+      (JsPath \ "unneeded var because I couldn't get it to work with just a single String 'name'").readNullable[String]
+    ).apply(TableIndexColumnJson.apply _)
 }
