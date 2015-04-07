@@ -76,13 +76,7 @@ case class SmartNodeInstance(
     }
   }
 
-  def getChild(childName: String) = {
-    if (children.get(childName).isEmpty) throw new TantalimException(
-      "Failed to find child named " + childName,
-      "Child models include: " + children.map(c => c._1).mkString(", ") + " on " + this
-    )
-    children.get(childName).get
-  }
+  def getChild(childName: String): Option[SmartNodeSet] = children.get(childName)
 
   def foreachChild(f: (SmartNodeSet) => Unit) = {
     nodeSet.model.children.foreach {
@@ -95,7 +89,7 @@ case class SmartNodeInstance(
   }
 
   def index: Int = {
-    val (_, i) = nodeSet.rows.zipWithIndex.find{
+    val (_, i) = nodeSet.rows.zipWithIndex.find {
       case (row, index) =>
         this == row
     }.get

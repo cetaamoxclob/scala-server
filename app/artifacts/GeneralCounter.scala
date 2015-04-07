@@ -13,8 +13,10 @@ class TablePreSave extends TantalimPreSave {
   override def preSave(row: SmartNodeInstance): Unit = {
     GeneralCounter.order(row.getChild("columns"), "DisplayOrder")
     GeneralCounter.order(row.getChild("indexes"), "priority")
-    row.getChild("indexes").foreach { index =>
-      GeneralCounter.order(index.getChild("columns"), "IndexColumnOrder")
+    if (row.getChild("indexes").isDefined) {
+      row.getChild("indexes").get.foreach { index =>
+        GeneralCounter.order(index.getChild("columns"), "IndexColumnOrder")
+      }
     }
   }
 }
@@ -24,11 +26,13 @@ class MenuContentPreSave extends GeneralCounter("content", "MenuContentDisplayOr
 class MenuItemPreSave extends GeneralCounter("items", "MenuItemDisplayOrder")
 
 object GeneralCounter {
-  def order(childSet: SmartNodeSet, fieldName: String) = {
+  def order(childSet: Option[SmartNodeSet], fieldName: String) = {
     var counter = 10
-    childSet.foreach { row =>
-      row.set(fieldName, TntInt(counter))
-      counter += 10
+    if (childSet.isDefined) {
+      childSet.get.foreach { row =>
+        row.set(fieldName, TntInt(counter))
+        counter += 10
+      }
     }
   }
 }
