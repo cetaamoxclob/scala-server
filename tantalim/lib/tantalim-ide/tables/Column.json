@@ -66,5 +66,18 @@
   }, {
     "name" : "ColumnDefault",
     "dbName" : "columnDefault"
+  } ],
+  "indexes" : [ {
+    "priority" : 10,
+    "columns" : [ {
+      "name" : "ColumnID"
+    } ]
+  }, {
+    "priority" : 20,
+    "columns" : [ {
+      "name" : "Name"
+    }, {
+      "name" : "TableID"
+    } ]
   } ]
 }
