@@ -133,11 +133,6 @@
         },
         {
           "name": "TableJoinFromTableID",
-          "fieldDefault": {
-            "updateable": false,
-            "type": "field",
-            "value": "TableTableID"
-          },
           "basisColumn": "FromTableID"
         },
         {
@@ -179,6 +174,73 @@
             {
               "name": "TableJoinJoinColumnFromText",
               "basisColumn": "FromText"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TableIndex",
+      "basisTable": "Index",
+      "parentField": "TableTableID",
+      "childField": "TableIndexTableID",
+      "fields": [
+        {
+          "name": "TableIndexID",
+          "updateable": false,
+          "basisColumn": "IndexID"
+        },
+        {
+          "name": "TableIndexTableID",
+          "basisColumn": "TableID"
+        },
+        {
+          "name": "TableIndexPriority",
+          "basisColumn": "Priority"
+        },
+        {
+          "name": "TableIndexUnique",
+          "basisColumn": "Unique"
+        }
+      ],
+      "children": [
+        {
+          "name": "TableIndexColumn",
+          "basisTable": "IndexColumn",
+          "parentField": "TableIndexID",
+          "childField": "TableIndexColumnIndexID",
+          "steps": [
+            {
+              "name": "Column",
+              "join": "Column"
+            }
+          ],
+          "fields": [
+            {
+              "name": "TableIndexColumnID",
+              "basisColumn": "IndexColumnID"
+            },
+            {
+              "name": "TableIndexColumnIndexID",
+              "basisColumn": "IndexID"
+            },
+            {
+              "name": "TableIndexColumnOrder",
+              "basisColumn": "Order"
+            },
+            {
+              "name": "TableIndexColumnColumnID",
+              "basisColumn": "ColumnID"
+            },
+            {
+              "name": "TableIndexColumnColumnTableID",
+              "basisColumn": "TableID",
+              "step": "Column"
+            },
+            {
+              "name": "TableIndexColumnColumnName",
+              "basisColumn": "Name",
+              "step": "Column"
             }
           ]
         }

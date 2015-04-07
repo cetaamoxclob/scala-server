@@ -163,6 +163,41 @@
               ]
             }
           ]
+        },
+        {
+          "name": "TableIndex",
+          "title": "Indexes",
+          "fields": [
+            {
+              "name": "TableIndexPriority",
+              "showInNavigation": true
+            },
+            {
+              "name": "TableIndexUnique"
+            }
+          ],
+          "sections": [
+            {
+              "name": "TableIndexColumn",
+              "title": "Index Columns",
+              "fields": [
+                {
+                  "name": "TableIndexColumnColumnName",
+                  "label": "Column",
+                  "fieldType": "select",
+                  "select": {
+                    "model": "ListTableColumns",
+                    "targetID": "TableIndexColumnColumnID",
+                    "sourceField": "ColumnName",
+                    "filter": "ColumnTableID = ${TableTableID}"
+                  }
+                },
+                {
+                  "name": "TableIndexColumnOrder"
+                }
+              ]
+            }
+          ]
         }
       ]
     }

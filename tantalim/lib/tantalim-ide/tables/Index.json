@@ -1,0 +1,50 @@
+{
+  "dbName" : "table_index",
+  "primaryKey" : "IndexID",
+  "joins" : [ {
+    "name" : "Table",
+    "required" : true,
+    "table" : "Table",
+    "columns" : [ {
+      "to" : "TableID",
+      "from" : "TableID"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "IndexID",
+    "updateable" : false,
+    "dbName" : "indexID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "TableID",
+    "updateable" : false,
+    "dbName" : "tableID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Priority",
+    "updateable" : true,
+    "dbName" : "priority",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Unique",
+    "dbName" : "uniqueIndex",
+    "help" : "Is this a unique index? Default No.",
+    "dataType" : "Boolean"
+  } ],
+  "indexes" : [ {
+    "priority" : 10,
+    "columns" : [ {
+      "name" : "IndexID"
+    } ]
+  }, {
+    "priority" : 20,
+    "columns" : [ {
+      "name" : "TableID"
+    }, {
+      "name" : "Priority"
+    } ]
+  } ]
+}

@@ -163,6 +163,70 @@
           ]
         }
       ]
+    },
+    {
+      "name": "indexes",
+      "basisTable": "Index",
+      "parentField": "TableID",
+      "childField": "IndexTableID",
+      "fields": [
+        {
+          "name": "IndexID",
+          "basisColumn": "IndexID",
+          "export": false
+        },
+        {
+          "name": "IndexTableID",
+          "basisColumn": "TableID",
+          "export": false
+        },
+        {
+          "name": "priority",
+          "basisColumn": "Priority"
+        }
+      ],
+      "children": [
+        {
+          "name": "columns",
+          "basisTable": "IndexColumn",
+          "parentField": "IndexID",
+          "childField": "IndexColumnIndexID",
+          "steps": [
+            {
+              "name": "Column",
+              "join": "Column"
+            }
+          ],
+          "fields": [
+            {
+              "name": "IndexColumnID",
+              "basisColumn": "IndexColumnID",
+              "export": false
+            },
+            {
+              "name": "IndexColumnIndexID",
+              "basisColumn": "IndexID",
+              "export": false
+            },
+            {
+              "name": "IndexColumnColumnID",
+              "basisColumn": "ColumnID",
+              "export": false
+            },
+            {
+              "name": "IndexColumnColumnTableID",
+              "basisColumn": "TableID",
+              "step": "Column",
+              "export": false
+            },
+            {
+              "name": "name",
+              "basisColumn": "Name",
+              "step": "Column"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
