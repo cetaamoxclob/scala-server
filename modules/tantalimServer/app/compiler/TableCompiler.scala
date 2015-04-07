@@ -1,7 +1,8 @@
 package compiler
 
 import com.tantalim.models._
-import compiler.src.{TableJoinColumnJson, TableJoinJson, TableColumnJson, TableJson}
+import com.tantalim.util.TantalimException
+import compiler.src._
 import play.api.libs.json.{JsError, JsSuccess}
 import services.{TableCache, ArtifactService}
 
@@ -42,6 +43,9 @@ trait TableCompiler extends ArtifactService with TableCache {
           joins = if (table.joins.isDefined) {
             table.joins.get.map(join => join.name -> compileTableJoin(columns, join)).toMap
           } else Map.empty,
+          indexes = if (table.indexes.isDefined) {
+            table.indexes.get.map(index => compileTableIndex(columns, index))
+          } else Seq.empty,
           allowInsert = table.allowInsert.getOrElse(true),
           allowUpdate = table.allowUpdate.getOrElse(true),
           allowDelete = table.allowDelete.getOrElse(true)
@@ -113,13 +117,23 @@ trait TableCompiler extends ArtifactService with TableCache {
     new TableJoinColumn(
       to = toTable.getOrElse(
         joinColumn.to, // TODO Default toColumn - Assume we're joining to the primaryKey of the target table
-        throw new Exception("Column `" + joinColumn.to + "` was not found when joining to table")
+        throw new TantalimException("Column `" + joinColumn.to + "` was not found when joining to table", "")
       ),
       from = if (joinColumn.from.isDefined) fromTable.get(joinColumn.from.get) else None,
       fromText = joinColumn.fromText
     )
   }
 
+  private def compileTableIndex(columns: Map[String, TableColumn], index: TableIndexJson): TableIndex = {
+    TableIndex(
+      index.priority,
+      index.unique.getOrElse(false),
+      index.columns.map(indexColumn => columns.getOrElse(indexColumn.name,
+        throw new TantalimException("Missing Index Column " + indexColumn.name,
+          "Existing columns: " + columns.keys.mkString(", ")))
+      )
+    )
+  }
 }
 
 object TableCompiler {

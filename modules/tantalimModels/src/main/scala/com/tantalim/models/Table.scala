@@ -36,6 +36,7 @@ case class DeepTable(
                       primaryKey: Option[TableColumn] = None,
                       columns: Map[String, TableColumn] = Map.empty,
                       joins: Map[String, TableJoin] = Map.empty,
+                      indexes: Seq[TableIndex] = Seq.empty,
                       allowInsert: Boolean = true,
                       allowUpdate: Boolean = true,
                       allowDelete: Boolean = true

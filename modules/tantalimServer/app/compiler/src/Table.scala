@@ -9,6 +9,7 @@ case class TableJson(dbName: Option[String],
                      primaryKey: Option[String],
                      columns: Seq[TableColumnJson],
                      joins: Option[Seq[TableJoinJson]],
+                     indexes: Option[Seq[TableIndexJson]],
                      allowInsert: Option[Boolean],
                      allowUpdate: Option[Boolean],
                      allowDelete: Option[Boolean]
@@ -37,6 +38,7 @@ case class TableJoinColumnJson(to: String,
                                fromText: Option[String])
 
 case class TableIndexJson(priority: Int,
+                          unique: Option[Boolean],
                           columns: Seq[TableIndexColumnJson])
 
 case class TableIndexColumnJson(name: String,
@@ -49,6 +51,7 @@ object TableJson {
       (JsPath \ "primaryKey").readNullable[String] and
       (JsPath \ "columns").read[Seq[TableColumnJson]] and
       (JsPath \ "joins").readNullable[Seq[TableJoinJson]] and
+      (JsPath \ "indexes").readNullable[Seq[TableIndexJson]] and
       (JsPath \ "allowInsert").readNullable[Boolean] and
       (JsPath \ "allowUpdate").readNullable[Boolean] and
       (JsPath \ "allowDelete").readNullable[Boolean]
@@ -83,6 +86,7 @@ object TableJson {
 
   implicit def tableIndexReads: Reads[TableIndexJson] = (
     (JsPath \ "priority").read[Int] and
+      (JsPath \ "unique").readNullable[Boolean] and
       (JsPath \ "columns").read[Seq[TableIndexColumnJson]]
     ).apply(TableIndexJson.apply _)
 
