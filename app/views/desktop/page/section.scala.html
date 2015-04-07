@@ -121,8 +121,8 @@
                         </thead>
                         <tbody>
                             <tr data-ng-repeat="row in SmartPage.getSection('@(section.name)').getCurrentSet().rows"
-                            data-ng-click="SmartPage.getSection('@(section.name)').getCurrentSet().moveTo($index)"
-                            data-ng-class="{success: row.id === SmartPage.getSection('@(section.name)').getCurrentSet().getInstance().id}">
+                            data-ng-click="SmartPage.getSection('@(section.name)').selectRow($index)"
+                            data-ng-class="{success: SmartPage.getSection('@(section.name)').rowIsSelected($index)}">
                             @for(field <- section.fields) {
                                 @if(field.showInNavigation) {
                                     <td data-ng-bind="row.data.@(field.name) @if(field.filter.isDefined) { | @field.filter}" class="nav"/>
