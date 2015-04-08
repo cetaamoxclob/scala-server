@@ -1,6 +1,6 @@
 package services
 
-import java.sql.ResultSet
+import java.sql.{Connection, ResultSet}
 
 import com.tantalim.filter.compiler.CompiledFilter
 import com.tantalim.nodes._
@@ -26,10 +26,11 @@ trait DataReader extends DatabaseConnection {
 
   private def calcMaxPages(rows: Long, limit: Int) = Math.ceil(rows.toDouble / limit).toInt
 
-  def queryModelData(model: Model, page: Int = 1, filter: Option[String] = None, orderBy: Seq[ModelOrderBy] = Seq.empty): SmartNodeSet = {
+  def queryModelData(model: Model, page: Int = 1, filter: Option[String] = None, orderBy: Seq[ModelOrderBy] = Seq.empty, dbConnection: Option[Connection] = None): SmartNodeSet = {
     if (model.basisTable.isMock) {
       throw new TantalimException(s"Model ${model.name} is based on a Mock Table and cannot query the database.", "Check the calling function.")
     }
+
     var sqlBuilder = new SqlBuilder(
       from = model.basisTable,
       steps = model.steps,
@@ -42,7 +43,8 @@ trait DataReader extends DatabaseConnection {
     sqlBuilder = parseFilterForSql(sqlBuilder, model.fields, filter)
 
     try {
-      val rs = query(sqlBuilder.toPreparedStatement, sqlBuilder.parameters)
+      val rs = if (dbConnection.isDefined) query(sqlBuilder.toPreparedStatement, sqlBuilder.parameters, dbConnection.get)
+      else query(sqlBuilder.toPreparedStatement, sqlBuilder.parameters)
       val resultSet = convertResultSetToDataRows(model, rs)
       resultSet.sql = sqlBuilder.toPreparedStatement
 

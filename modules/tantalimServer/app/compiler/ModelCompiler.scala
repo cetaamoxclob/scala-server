@@ -21,6 +21,33 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
     }
   }
 
+  def compileModel(table: DeepTable): Model = {
+    println("Creating model with table " + table.name)
+    def compileField(column: TableColumn): ModelField = {
+      new ModelField(
+        column.name,
+        column,
+        updateable = column.updateable,
+        required = column.required
+      )
+    }
+
+    val TableOnly = "TableOnly"
+    val model = new Model(
+      table.name + TableOnly,
+      table,
+      fields = table.columns.map { case (columnName, column) =>
+        columnName -> compileField(column)
+      },
+      instanceID = if (table.primaryKey.isDefined) Some(compileField(table.primaryKey.get)) else None,
+      allowInsert = table.allowInsert,
+      allowUpdate = table.allowUpdate,
+      allowDelete = table.allowDelete
+    )
+
+    model
+  }
+
   private def extendModel(model: ModelJson, parent: Option[Model]): Model = {
     println("Extending model " + model.extendModel.get)
     val superModel = parent.get
@@ -33,12 +60,8 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
 
     superModel.copy(
       name = model.name.get,
-      parentField = if (model.parentField.isDefined) model.parentField
-      else {
-        println(s"Warning parentLink in ${model.name.get} was deprecated and should be replaced with parentField and childField")
-        Some(model.parentLink.get.parentField)
-      },
-      childField = if (model.childField.isDefined) model.childField else Some(model.parentLink.get.childField),
+      parentField = model.parentField,
+      childField = model.childField,
       fields = modelFields,
       parent = parent,
       filter = if (model.filter.isDefined) model.filter else superModel.filter,

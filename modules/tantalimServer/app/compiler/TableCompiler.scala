@@ -33,23 +33,7 @@ trait TableCompiler extends ArtifactService with TableCache {
     val json = getArtifactContentAndParseJson(ArtifactType.Table, name)
     json.validate[TableJson] match {
       case JsSuccess(table, _) =>
-        val columns = compileTableColumns(table)
-        new DeepTable(
-          name,
-          table.dbName.getOrElse(name),
-          module = compileModule(table.module),
-          primaryKey = if (table.primaryKey.isDefined) columns.get(table.primaryKey.get) else None,
-          columns = columns,
-          joins = if (table.joins.isDefined) {
-            table.joins.get.map(join => join.name -> compileTableJoin(columns, join)).toMap
-          } else Map.empty,
-          indexes = if (table.indexes.isDefined) {
-            table.indexes.get.map(index => compileTableIndex(columns, index))
-          } else Seq.empty,
-          allowInsert = table.allowInsert.getOrElse(true),
-          allowUpdate = table.allowUpdate.getOrElse(true),
-          allowDelete = table.allowDelete.getOrElse(true)
-        )
+        compileDeepTable(name, table)
       case JsError(err) =>
         throw new Exception("Failed to compile table " + name + " due to the following error:" + err.toString)
     }
@@ -60,17 +44,42 @@ trait TableCompiler extends ArtifactService with TableCache {
     val json = getArtifactContentAndParseJson(ArtifactType.Table, name)
     json.validate[TableJson] match {
       case JsSuccess(table, _) =>
-        val columns = compileTableColumns(table)
-        new ShallowTable(
-          name,
-          table.dbName.getOrElse(name),
-          module = compileModule(table.module),
-          primaryKey = if (table.primaryKey.isDefined) columns.get(table.primaryKey.get) else None,
-          columns = columns
-        )
+        compileShallowTable(name, table)
       case JsError(err) =>
         throw new Exception("Failed to compile shallow table " + name + " due to the following error:" + err.toString)
     }
+  }
+
+  private def compileShallowTable(name: String, table: TableJson): ShallowTable = {
+    val columns = compileTableColumns(table)
+    new ShallowTable(
+      name,
+      table.dbName.getOrElse(name),
+      module = compileModule(table.module),
+      primaryKey = if (table.primaryKey.isDefined) columns.get(table.primaryKey.get) else None,
+      columns = columns,
+      indexes = if (table.indexes.isDefined) {
+        table.indexes.get.map(index => compileTableIndex(columns, index))
+      } else Seq.empty
+    )
+  }
+
+  private def compileDeepTable(name: String, table: TableJson): DeepTable = {
+    val shallowTable = compileShallowTable(name, table)
+    new DeepTable(
+      name = shallowTable.name,
+      dbName = shallowTable.dbName,
+      module = shallowTable.module,
+      primaryKey = shallowTable.primaryKey,
+      columns = shallowTable.columns,
+      joins = if (table.joins.isDefined) {
+        table.joins.get.map(join => join.name -> compileTableJoin(shallowTable.columns, join)).toMap
+      } else Map.empty,
+      indexes = shallowTable.indexes,
+      allowInsert = table.allowInsert.getOrElse(true),
+      allowUpdate = table.allowUpdate.getOrElse(true),
+      allowDelete = table.allowDelete.getOrElse(true)
+    )
   }
 
   private def compileTableColumns(table: TableJson): scala.collection.immutable.Map[String, TableColumn] = {
@@ -122,6 +131,13 @@ trait TableCompiler extends ArtifactService with TableCache {
       from = if (joinColumn.from.isDefined) fromTable.get(joinColumn.from.get) else None,
       fromText = joinColumn.fromText
     )
+  }
+
+  private def compileTableIndexes(columns: Map[String, TableColumn], table: TableJson): scala.collection.immutable.Map[String, TableColumn] = {
+    table.columns.zipWithIndex.map {
+      case (column, order) =>
+        column.name -> compileTableColumn(table, column, order)
+    }.toMap
   }
 
   private def compileTableIndex(columns: Map[String, TableColumn], index: TableIndexJson): TableIndex = {

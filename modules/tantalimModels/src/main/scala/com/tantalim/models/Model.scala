@@ -68,7 +68,11 @@ case class ModelStep(name: String,
                      tableAlias: Int,
                      join: TableJoin,
                      required: Boolean,
-                     parentAlias: Int)
+                     allowInsert: Boolean = false,
+                     allowUpdate: Boolean = false,
+                     allowDelete: Boolean = false,
+                     parentAlias: Int) {
+}
 
 case class ModelOrderBy(fieldName: String,
                         ascending: Option[Boolean])

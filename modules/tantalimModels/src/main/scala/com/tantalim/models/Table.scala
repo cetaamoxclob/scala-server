@@ -15,6 +15,8 @@ abstract class Table {
 
   def columns: Map[String, TableColumn]
 
+  def indexes: Seq[TableIndex]
+
   def getColumn(name: String) = columns.getOrElse(
     name,
     throw new TantalimException(f"failed to find column named `$name` in table `${this.name}`", s"found: ${this.columns.keys}")
@@ -26,9 +28,29 @@ case class ShallowTable(
                          dbName: String,
                          module: Module,
                          primaryKey: Option[TableColumn] = None,
-                         columns: Map[String, TableColumn] = Map.empty
-                         ) extends Table
+                         columns: Map[String, TableColumn] = Map.empty,
+                         indexes: Seq[TableIndex] = Seq.empty,
+                         allowInsert: Boolean = true,
+                         allowUpdate: Boolean = true,
+                         allowDelete: Boolean = true
+                         ) extends Table {
+  def toDeep: DeepTable = {
+    new DeepTable(
+      name,
+      dbName,
+      module,
+      primaryKey,
+      columns,
+      Map.empty,
+      indexes,
+      allowInsert,
+      allowUpdate,
+      allowDelete
+    )
+  }
+}
 
+// TODO DeepTable is turning out to be a ShallowTable with joins. Maybe we should just make it so.
 case class DeepTable(
                       name: String,
                       dbName: String,

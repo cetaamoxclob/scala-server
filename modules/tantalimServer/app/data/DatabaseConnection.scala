@@ -24,18 +24,23 @@ trait DatabaseConnection {
   def query(sql: String, numberedParameters: List[Any]): ResultSet = {
     connect {
       connection =>
-        if (numberedParameters.isEmpty) {
-          val stmt = connection.createStatement
-          println("Executing Query: " + sql)
-          stmt.executeQuery(sql)
-        } else {
-          val stmt = connection.prepareStatement(sql)
-          if (numberedParameters.nonEmpty) {
-            setParameters(stmt, numberedParameters)
-          }
-          println("Executing Prepared Query: " + sql + " with " + numberedParameters)
-          stmt.executeQuery
-        }
+        query(sql, numberedParameters, connection)
+    }
+  }
+
+
+  def query(sql: String, numberedParameters: List[Any], connection: Connection): ResultSet = {
+    if (numberedParameters.isEmpty) {
+      val stmt = connection.createStatement
+      println("Executing Query: " + sql)
+      stmt.executeQuery(sql)
+    } else {
+      val stmt = connection.prepareStatement(sql)
+      if (numberedParameters.nonEmpty) {
+        setParameters(stmt, numberedParameters)
+      }
+      println("Executing Prepared Query: " + sql + " with " + numberedParameters)
+      stmt.executeQuery
     }
   }
 
