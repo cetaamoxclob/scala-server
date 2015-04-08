@@ -123,9 +123,9 @@ trait DataSaver extends DataReader with ModelCompiler with DatabaseConnection {
 
           val topIndex = findFullUniqueIndex(step.join.table.indexes, valueMap)
           if (topIndex.isEmpty) {
-            throw new TantalimException(s"Table ${step.join.table.name} is missing unique index", "")
-          }
-          if (topIndex.isDefined) {
+            println(s"Warn: Table ${step.join.table.name} is missing unique index")
+//            throw new TantalimException(s"Table ${step.join.table.name} is missing unique index", "")
+          } else {
             val fakeModelForTable = compileModel(step.join.table.toDeep)
             val filter = valueMap.map { case (column, _) =>
               val value = column.dataType match {
@@ -142,7 +142,8 @@ trait DataSaver extends DataReader with ModelCompiler with DatabaseConnection {
                 // TODO Insert new row
                 Map.empty
               } else {
-                throw new TantalimException("Foreign key doesn't exist and step doesn't allow insert", "")
+//                throw new TantalimException("Foreign key doesn't exist and step doesn't allow insert", "")
+                Map.empty
               }
             } else {
               if (results.rows.length > 1) {
