@@ -12,8 +12,6 @@ case class ModelJson(basisTable: String,
                      extendModel: Option[String],
                      children: Option[Seq[ModelJson]],
                      orderBy: Option[Seq[ModelOrderBy]],
-                    @deprecated
-                     parentLink: Option[ModelParentLink],
                      parentField: Option[String],
                      childField: Option[String],
                      steps: Option[Seq[ModelStepJson]],
@@ -53,9 +51,6 @@ case class FieldDefaultJson(value: String,
                             defaultType: Option[String],
                             watch: Option[Seq[String]])
 
-@deprecated
-case class ModelParentLink(parentField: String, childField: String)
-
 object ModelJson {
   implicit def modelReads: Reads[ModelJson] = (
     (JsPath \ "basisTable").read[String] and
@@ -65,7 +60,6 @@ object ModelJson {
       (JsPath \ "extends").readNullable[String] and
       (JsPath \ "children").lazyReadNullable(Reads.seq[ModelJson](modelReads)) and
       (JsPath \ "orderBy").readNullable[Seq[ModelOrderBy]] and
-      (JsPath \ "parentLink").readNullable[ModelParentLink] and
       (JsPath \ "parentField").readNullable[String] and
       (JsPath \ "childField").readNullable[String] and
       (JsPath \ "steps").readNullable[Seq[ModelStepJson]] and
@@ -100,11 +94,6 @@ object ModelJson {
       (JsPath \ "required").readNullable[Boolean] and
       (JsPath \ "stepJson").readNullable[String]
     ).apply(ModelStepJson.apply _)
-
-  implicit def parentLinkReads: Reads[ModelParentLink] = (
-    (JsPath \ "parentField").read[String] and
-      (JsPath \ "childField").read[String]
-    ).apply(ModelParentLink.apply _)
 
   implicit def orderByReads: Reads[ModelOrderBy] = (
     (JsPath \ "fieldName").read[String] and
