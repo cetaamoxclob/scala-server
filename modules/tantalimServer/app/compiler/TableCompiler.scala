@@ -133,13 +133,6 @@ trait TableCompiler extends ArtifactService with TableCache {
     )
   }
 
-  private def compileTableIndexes(columns: Map[String, TableColumn], table: TableJson): scala.collection.immutable.Map[String, TableColumn] = {
-    table.columns.zipWithIndex.map {
-      case (column, order) =>
-        column.name -> compileTableColumn(table, column, order)
-    }.toMap
-  }
-
   private def compileTableIndex(columns: Map[String, TableColumn], index: TableIndexJson): TableIndex = {
     TableIndex(
       index.priority,
