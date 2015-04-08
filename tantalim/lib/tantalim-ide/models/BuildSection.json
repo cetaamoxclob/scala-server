@@ -1,112 +1,84 @@
 {
-  "basisTable": "Section",
-  "fields": [
-    {
-      "name": "SectionID",
-      "basisColumn": "SectionID"
-    },
-    {
-      "name": "SectionName",
-      "basisColumn": "Name"
-    },
-    {
-      "name": "SectionModel",
-      "basisColumn": "Model",
-      "updateable": false
-    },
-    {
-      "name": "SectionTitle",
-      "basisColumn": "Title"
-    },
-    {
-      "name": "SectionViewMode",
-      "basisColumn": "ViewMode"
-    }
-  ],
-  "children": [
-    {
-      "name": "PageField",
-      "parentField": "SectionID",
-      "basisTable": "PageField",
-      "childField": "PageFieldSectionID",
-      "fields": [
-        {
-          "name": "PageFieldID",
-          "basisColumn": "FieldID"
-        },
-        {
-          "name": "PageFieldName",
-          "basisColumn": "Name"
-        },
-        {
-          "name": "PageFieldSectionID",
-          "basisColumn": "SectionID"
-        },
-        {
-          "name": "PageFieldShowInFormView",
-          "basisColumn": "ShowInFormView"
-        },
-        {
-          "name": "PageFieldShowInTableView",
-          "basisColumn": "ShowInTableView"
-        },
-        {
-          "name": "PageFieldShowInNavigation",
-          "basisColumn": "ShowInNavigation"
-        },
-        {
-          "name": "PageFieldLabel",
-          "basisColumn": "Label"
-        },
-        {
-          "name": "PageFieldFieldType",
-          "basisColumn": "FieldType"
-        },
-        {
-          "name": "PageFieldHelp",
-          "basisColumn": "Help"
-        },
-        {
-          "name": "PageFieldPlaceholder",
-          "basisColumn": "Placeholder"
-        }
-      ]
-    },
-    {
-      "name": "ChildSection",
-      "parentField": "SectionID",
-      "basisTable": "Section",
-      "childField": "ChildSectionParentID",
-      "fields": [
-        {
-          "name": "ChildSectionID",
-          "basisColumn": "SectionID"
-        },
-        {
-          "name": "ChildSectionName",
-          "basisColumn": "Name"
-        },
-        {
-          "name": "ChildSectionPageID",
-          "basisColumn": "PageID"
-        },
-        {
-          "name": "ChildSectionTitle",
-          "basisColumn": "Title"
-        },
-        {
-          "name": "ChildSectionModel",
-          "basisColumn": "Model"
-        },
-        {
-          "name": "ChildSectionViewMode",
-          "basisColumn": "ViewMode"
-        },
-        {
-          "name": "ChildSectionParentID",
-          "basisColumn": "ParentID"
-        }
-      ]
-    }
-  ]
+  "basisTable" : "Section",
+  "children" : [ {
+    "name" : "PageField",
+    "parentField" : "SectionID",
+    "basisTable" : "PageField",
+    "childField" : "PageFieldSectionID",
+    "fields" : [ {
+      "name" : "PageFieldID",
+      "basisColumn" : "FieldID"
+    }, {
+      "name" : "PageFieldName",
+      "basisColumn" : "Name"
+    }, {
+      "name" : "PageFieldSectionID",
+      "basisColumn" : "SectionID"
+    }, {
+      "name" : "PageFieldShowInFormView",
+      "basisColumn" : "ShowInFormView"
+    }, {
+      "name" : "PageFieldShowInTableView",
+      "basisColumn" : "ShowInTableView"
+    }, {
+      "name" : "PageFieldShowInNavigation",
+      "basisColumn" : "ShowInNavigation"
+    }, {
+      "name" : "PageFieldLabel",
+      "basisColumn" : "Label"
+    }, {
+      "name" : "PageFieldFieldType",
+      "basisColumn" : "FieldType"
+    }, {
+      "name" : "PageFieldHelp",
+      "basisColumn" : "Help"
+    }, {
+      "name" : "PageFieldPlaceholder",
+      "basisColumn" : "Placeholder"
+    } ]
+  }, {
+    "name" : "ChildSection",
+    "parentField" : "SectionID",
+    "basisTable" : "Section",
+    "childField" : "ChildSectionParentID",
+    "fields" : [ {
+      "name" : "ChildSectionID",
+      "basisColumn" : "SectionID"
+    }, {
+      "name" : "ChildSectionName",
+      "basisColumn" : "Name"
+    }, {
+      "name" : "ChildSectionPageID",
+      "basisColumn" : "PageID"
+    }, {
+      "name" : "ChildSectionTitle",
+      "basisColumn" : "Title"
+    }, {
+      "name" : "ChildSectionModel",
+      "basisColumn" : "Model"
+    }, {
+      "name" : "ChildSectionViewMode",
+      "basisColumn" : "ViewMode"
+    }, {
+      "name" : "ChildSectionParentID",
+      "basisColumn" : "ParentID"
+    } ]
+  } ],
+  "fields" : [ {
+    "name" : "SectionID",
+    "basisColumn" : "SectionID"
+  }, {
+    "name" : "SectionName",
+    "basisColumn" : "Name"
+  }, {
+    "name" : "SectionModel",
+    "updateable" : false,
+    "basisColumn" : "Model"
+  }, {
+    "name" : "SectionTitle",
+    "basisColumn" : "Title"
+  }, {
+    "name" : "SectionViewMode",
+    "basisColumn" : "ViewMode"
+  } ]
 }

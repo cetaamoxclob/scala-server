@@ -1,5 +1,4 @@
 {
-  "name" : "BuildPage",
   "basisTable" : "Page",
   "children" : [ {
     "name" : "PageSection",
