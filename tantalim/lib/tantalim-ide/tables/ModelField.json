@@ -55,5 +55,18 @@
     "dbName" : "export",
     "fieldType" : "checkbox",
     "dataType" : "Boolean"
+  } ],
+  "indexes" : [ {
+    "priority" : 10,
+    "columns" : [ {
+      "name" : "FieldID"
+    } ]
+  }, {
+    "priority" : 20,
+    "columns" : [ {
+      "name" : "Name"
+    }, {
+      "name" : "ModelID"
+    } ]
   } ]
 }
