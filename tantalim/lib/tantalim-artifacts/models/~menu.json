@@ -1,111 +1,83 @@
 {
-  "basisTable": "Menu",
   "preSave": "artifacts.MenuContentPreSave",
-  "children": [
-    {
-      "name": "content",
-      "parentField": "MenuMenuID",
-      "basisTable": "MenuContent",
-      "childField": "MenuContentMenuID",
+  "basisTable" : "Menu",
+  "children" : [ {
+    "name" : "content",
+    "parentField" : "MenuMenuID",
+    "basisTable" : "MenuContent",
+    "childField" : "MenuContentMenuID",
+    "children" : [ {
+      "name" : "items",
+      "parentField" : "MenuContentContentID",
       "preSave": "artifacts.MenuItemPreSave",
-      "children": [
-        {
-          "name": "items",
-          "parentField": "MenuContentContentID",
-          "basisTable": "MenuItem",
-          "childField": "MenuItemContentID",
-          "fields": [
-            {
-              "name": "MenuItemItemID",
-              "basisColumn": "ItemID",
-              "export": false
-            },
-            {
-              "name": "MenuItemContentID",
-              "basisColumn": "ContentID",
-              "export": false
-            },
-            {
-              "name": "MenuItemDisplayOrder",
-              "basisColumn": "DisplayOrder",
-              "export": false
-            },
-            {
-              "name": "page",
-              "basisColumn": "Page"
-            },
-            {
-              "name": "title",
-              "basisColumn": "Title"
-            },
-            {
-              "name": "href",
-              "basisColumn": "Link"
-            },
-            {
-              "name": "icon",
-              "basisColumn": "Icon"
-            }
-          ],
-          "orderBy": [
-            {
-              "fieldName": "MenuItemDisplayOrder"
-            },
-            {
-              "fieldName": "MenuItemItemID"
-            }
-          ]
-        }
-      ],
-      "fields": [
-        {
-          "name": "MenuContentContentID",
-          "basisColumn": "ContentID",
-          "export": false
-        },
-        {
-          "name": "MenuContentMenuID",
-          "basisColumn": "MenuID",
-          "export": false
-        },
-        {
-          "name": "MenuContentDisplayOrder",
-          "basisColumn": "DisplayOrder",
-          "export": false
-        },
-        {
-          "name": "title",
-          "basisColumn": "Title"
-        }
-      ],
-      "orderBy": [
-        {
-          "fieldName": "MenuContentDisplayOrder"
-        },
-        {
-          "fieldName": "MenuContentContentID"
-        }
-      ]
-    }
-  ],
-  "fields": [
-    {
-      "name": "MenuMenuID",
-      "basisColumn": "MenuID",
-      "export": false
-    },
-    {
-      "name": "module",
-      "basisColumn": "Module",
-      "export": false
-    },
-    {
-      "name": "name",
-      "basisColumn": "Name"
-    },
-    {
-      "name": "appTitle",
-      "basisColumn": "Title"
-    }
-  ]
+      "basisTable" : "MenuItem",
+      "childField" : "MenuItemContentID",
+      "fields" : [ {
+        "name" : "MenuItemItemID",
+        "basisColumn" : "ItemID",
+        "export" : false
+      }, {
+        "name" : "MenuItemContentID",
+        "basisColumn" : "ContentID",
+        "export" : false
+      }, {
+        "name" : "MenuItemDisplayOrder",
+        "basisColumn" : "DisplayOrder",
+        "export" : false
+      }, {
+        "name" : "page",
+        "basisColumn" : "Page"
+      }, {
+        "name" : "title",
+        "basisColumn" : "Title"
+      }, {
+        "name" : "href",
+        "basisColumn" : "Link"
+      }, {
+        "name" : "icon",
+        "basisColumn" : "Icon"
+      } ],
+      "orderBy" : [ {
+        "fieldName" : "MenuItemDisplayOrder"
+      }, {
+        "fieldName" : "MenuItemItemID"
+      } ]
+    } ],
+    "fields" : [ {
+      "name" : "MenuContentContentID",
+      "basisColumn" : "ContentID",
+      "export" : false
+    }, {
+      "name" : "MenuContentMenuID",
+      "basisColumn" : "MenuID",
+      "export" : false
+    }, {
+      "name" : "MenuContentDisplayOrder",
+      "basisColumn" : "DisplayOrder",
+      "export" : false
+    }, {
+      "name" : "title",
+      "basisColumn" : "Title"
+    } ],
+    "orderBy" : [ {
+      "fieldName" : "MenuContentDisplayOrder"
+    }, {
+      "fieldName" : "MenuContentContentID"
+    } ]
+  } ],
+  "fields" : [ {
+    "name" : "MenuMenuID",
+    "basisColumn" : "MenuID",
+    "export" : false
+  }, {
+    "name" : "module",
+    "basisColumn" : "Module",
+    "export" : false
+  }, {
+    "name" : "name",
+    "basisColumn" : "Name"
+  }, {
+    "name" : "appTitle",
+    "basisColumn" : "Title"
+  } ]
 }
