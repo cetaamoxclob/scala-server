@@ -1,208 +1,167 @@
 {
-  "title": "Build Model",
-  "sections": [
-    {
-      "name": "Model",
-      "model": "BuildModel",
-      "buttons": [
+  "title" : "Build Model",
+  "sections" : [ {
+    "name" : "Model",
+    "model" : "BuildModel",
+    "fields" : [ {
+      "name" : "ModelName"
+    }, {
+      "name" : "ModelBasisTable",
+      "fieldType" : "select",
+      "select": {
+        "model": "ListTables",
+        "sourceField": "TableName"
+      },
+      "links": [
         {
-          "label": "Export",
-          "fxn": "var row = section.getCurrentSet().getInstance(); var model = row.getValue('ModelName'); var moduleName = row.getValue('ModelModule'); $http.post('/export/' + moduleName + '/Model/' + model).success(function(data) { alert(data.message) });"
-        }
-      ],
-      "fields": [
-        {
-          "name": "ModelName"
-        },
-        {
-          "name": "ModelBasisTable",
-          "fieldType": "select",
-          "select": {
-            "model": "ListTables",
-            "sourceField": "TableName"
-          },
-          "links": [
-            {
-              "page": "BuildTable",
-              "filter": "TableName Equals '${ModelBasisTable}'"
-            }
-          ]
-        },
-        {
-          "name": "ModelParentName",
-          "label": "Parent Model",
-          "links": [
-            {
-              "page": "BuildModel",
-              "filter": "ModelID Equals ${ModelParentID}"
-            }
-          ]
-        },
-        {
-          "name": "ModelModule"
-        },
-        {
-          "name": "ModelLimit"
-        },
-        {
-          "name": "ModelPreSave"
-        },
-        {
-          "name": "ModelFilter"
-        },
-        {
-          "name": "ModelExtends"
-        },
-        {
-          "name": "ModelCustomUrlSource"
-        },
-        {
-          "name": "ModelAllowInsert"
-        },
-        {
-          "name": "ModelAllowUpdate"
-        },
-        {
-          "name": "ModelAllowDelete"
-        }
-      ],
-      "sections": [
-        {
-          "name": "ModelSteps",
-          "title": "Steps",
-          "model": "ModelSteps",
-          "fields": [
-            {
-              "name": "ModelStepName",
-              "label": "Step Name",
-              "showInNavigation": true
-            },
-            {
-              "name": "ModelStepJoin",
-              "label": "Table Join",
-              "fieldType": "select",
-              "select": {
-                "model": "ListTableJoins",
-                "sourceField": "TableJoinName",
-                "filter": "TableJoinFromTableName = '${ModelBasisTable}'"
-              }
-            },
-            {
-              "name": "ModelStepParentName",
-              "label": "Parent Step"
-            }
-          ]
-        },
-        {
-          "name": "ModelFields",
-          "title": "Fields",
-          "model": "ModelFields",
-          "fields": [
-            {
-              "name": "ModelFieldName",
-              "label": "Field Name",
-              "showInNavigation": true
-            },
-            {
-              "name": "ModelFieldBasisColumn",
-              "fieldType": "select",
-              "select": {
-                "model": "ListTableColumns",
-                "sourceField": "ColumnName",
-                "filter": "ColumnTableName Equals '${ModelBasisTable}'"
-              }
-            },
-            {
-              "name": "ModelFieldStepName",
-              "fieldType": "select",
-              "select": {
-                "model": "ListModelSteps",
-                "sourceField": "ModelStepName",
-                "filter": "ModelStepModelID Equals ${ModelID}"
-              }
-            },
-            {
-              "name": "ModelFieldUpdateable"
-            },
-            {
-              "name": "ModelFieldRequired"
-            },
-            {
-              "name": "ModelFieldExport"
-            }
-          ]
-        },
-        {
-          "name": "ModelSort",
-          "title": "Sorting",
-          "model": "ModelSort",
-          "fields": [
-            {
-              "name": "ModelSortFieldName",
-              "label": "Field Name",
-              "fieldType": "select",
-              "select": {
-                "model": "ListModelFields",
-                "targetID": "ModelSortFieldID",
-                "sourceField": "FieldName",
-                "filter": "FieldModelID Equals ${ModelID}"
-              }
-            },
-            {
-              "name": "ModelSortAscending"
-            }
-          ]
-        },
-        {
-          "name": "ChildModel",
-          "title": "Child Models",
-          "model": "ChildModel",
-          "fields": [
-            {
-              "name": "ChildModelName",
-              "showInNavigation": true,
-              "links": [
-                {
-                  "page": "BuildModel",
-                  "filter": "ModelID Equals ${ChildModelID}"
-                }
-              ]
-            },
-            {
-              "name": "ChildModelBasisTable",
-              "fieldType": "select",
-              "select": {
-                "model": "ListTables",
-                "sourceField": "TableName"
-              },
-              "links": [
-                {
-                  "page": "BuildTable",
-                  "filter": "TableName Equals '${ChildModelBasisTable}'"
-                }
-              ]
-            },
-            {
-              "name": "ChildModelParentField",
-              "fieldType": "select",
-              "select": {
-                "model": "ListModelFields",
-                "sourceField": "FieldName",
-                "filter": "FieldModelID Equals ${ModelID}"
-              }
-            },
-            {
-              "name": "ChildModelChildField",
-              "fieldType": "select",
-              "select": {
-                "model": "ListModelFields",
-                "sourceField": "FieldName",
-                "filter": "FieldModelID Equals ${ChildModelID}"
-              }
-            }
-          ]
+          "page": "BuildTable",
+          "filter": "TableName Equals '${ModelBasisTable}'"
         }
       ]
-    }
-  ]
+    }, {
+      "name" : "ModelParentName",
+      "label" : "Parent Model",
+      "links": [
+        {
+          "page": "BuildModel",
+          "filter": "ModelID Equals ${ModelParentID}"
+        }
+      ]
+    }, {
+      "name" : "ModelModule"
+    }, {
+      "name" : "ModelLimit"
+    }, {
+      "name" : "ModelPreSave"
+    }, {
+      "name" : "ModelFilter"
+    }, {
+      "name" : "ModelExtends"
+    }, {
+      "name" : "ModelCustomUrlSource"
+    }, {
+      "name" : "ModelAllowInsert"
+    }, {
+      "name" : "ModelAllowUpdate"
+    }, {
+      "name" : "ModelAllowDelete"
+    } ],
+    "sections" : [ {
+      "name" : "ModelSteps",
+      "model" : "ModelSteps",
+      "title" : "Steps",
+      "fields" : [ {
+        "name" : "ModelStepName",
+        "label" : "Step Name",
+        "showInNavigation" : true
+      }, {
+        "name" : "ModelStepJoin",
+        "label" : "Table Join",
+        "fieldType" : "select",
+        "select": {
+          "model": "ListTableJoins",
+          "sourceField": "TableJoinName",
+          "filter": "TableJoinFromTableName = '${ModelBasisTable}'"
+        }
+      }, {
+        "name" : "ModelStepParentName",
+        "label" : "Parent Step"
+      } ]
+    }, {
+      "name" : "ModelFields",
+      "model" : "ModelFields",
+      "title" : "Fields",
+      "fields" : [ {
+        "name" : "ModelFieldName",
+        "label" : "Field Name",
+        "showInNavigation" : true
+      }, {
+        "name" : "ModelFieldBasisColumn",
+        "fieldType" : "select",
+        "select": {
+          "model": "ListTableColumns",
+          "sourceField": "ColumnName",
+          "filter": "ColumnTableName Equals '${ModelBasisTable}'"
+        }
+      }, {
+        "name" : "ModelFieldStepName",
+        "fieldType" : "select",
+        "select": {
+          "model": "ListModelSteps",
+          "sourceField": "ModelStepName",
+          "filter": "ModelStepModelID Equals ${ModelID}"
+        }
+      }, {
+        "name" : "ModelFieldUpdateable"
+      }, {
+        "name" : "ModelFieldRequired"
+      }, {
+        "name" : "ModelFieldExport"
+      } ]
+    }, {
+      "name" : "ModelSort",
+      "model" : "ModelSort",
+      "title" : "Sorting",
+      "fields" : [ {
+        "name" : "ModelSortFieldName",
+        "label" : "Field Name",
+        "fieldType" : "select",
+        "select": {
+          "model": "ListModelFields",
+          "targetID": "ModelSortFieldID",
+          "sourceField": "FieldName",
+          "filter": "FieldModelID Equals ${ModelID}"
+        }
+      }, {
+        "name" : "ModelSortAscending"
+      } ]
+    }, {
+      "name" : "ChildModel",
+      "model" : "ChildModel",
+      "title" : "Child Models",
+      "fields" : [ {
+        "name" : "ChildModelName",
+        "showInNavigation" : true,
+        "links": [
+          {
+            "page": "BuildModel",
+            "filter": "ModelID Equals ${ChildModelID}"
+          }
+        ]
+      }, {
+        "name" : "ChildModelBasisTable",
+        "fieldType" : "select",
+        "select": {
+          "model": "ListTables",
+          "sourceField": "TableName"
+        },
+        "links": [
+          {
+            "page": "BuildTable",
+            "filter": "TableName Equals '${ChildModelBasisTable}'"
+          }
+        ]
+      }, {
+        "name" : "ChildModelParentField",
+        "fieldType" : "select",
+        "select": {
+          "model": "ListModelFields",
+          "sourceField": "FieldName",
+          "filter": "FieldModelID Equals ${ModelID}"
+        }
+      }, {
+        "name" : "ChildModelChildField",
+        "fieldType" : "select",
+        "select": {
+          "model": "ListModelFields",
+          "sourceField": "FieldName",
+          "filter": "FieldModelID Equals ${ChildModelID}"
+        }
+      } ]
+    } ],
+    "buttons" : [ {
+      "label" : "Export",
+      "fxn" : "var row = section.getCurrentSet().getInstance(); var model = row.getValue('ModelName'); var moduleName = row.getValue('ModelModule'); $http.post('/export/' + moduleName + '/Model/' + model).success(function(data) { alert(data.message) });"
+    } ]
+  } ]
 }
