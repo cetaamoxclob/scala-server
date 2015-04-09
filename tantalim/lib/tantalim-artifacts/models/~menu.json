@@ -1,5 +1,5 @@
 {
-  "preSave": "artifacts.MenuContentPreSave",
+  "preSave" : "artifacts.MenuContentPreSave",
   "basisTable" : "Menu",
   "children" : [ {
     "name" : "content",
@@ -8,8 +8,8 @@
     "childField" : "MenuContentMenuID",
     "children" : [ {
       "name" : "items",
+      "preSave" : "artifacts.MenuItemPreSave",
       "parentField" : "MenuContentContentID",
-      "preSave": "artifacts.MenuItemPreSave",
       "basisTable" : "MenuItem",
       "childField" : "MenuItemContentID",
       "fields" : [ {
