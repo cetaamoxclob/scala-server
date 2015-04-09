@@ -1,57 +1,12 @@
 {
   "basisTable": "Table",
   "limit": 5,
-  "orderBy": [
-    {
-      "fieldName": "TableName"
-    }
-  ],
-  "fields": [
-    {
-      "name": "TableTableID",
-      "updateable": false,
-      "basisColumn": "TableID"
-    },
-    {
-      "name": "TableName",
-      "basisColumn": "Name"
-    },
-    {
-      "name": "TableSQL",
-      "basisColumn": "SQL"
-    },
-    {
-      "name": "TableModule",
-      "basisColumn": "Module"
-    },
-    {
-      "name": "TablePrimaryKey",
-      "basisColumn": "PrimaryKey"
-    },
-    {
-      "name": "TableAllowInsert",
-      "basisColumn": "AllowInsert"
-    },
-    {
-      "name": "TableAllowUpdate",
-      "basisColumn": "AllowUpdate"
-    },
-    {
-      "name": "TableAllowDelete",
-      "basisColumn": "AllowDelete"
-    }
-  ],
   "children": [
     {
       "name": "TableColumns",
-      "basisTable": "Column",
       "parentField": "TableTableID",
+      "basisTable": "Column",
       "childField": "TableColumnTableID",
-      "orderBy": [
-        {
-          "fieldName": "TableColumnDisplayOrder"
-        }
-      ],
       "fields": [
         {
           "name": "TableColumnColumnID",
@@ -114,13 +69,48 @@
           "name": "TableColumnColumnDefault",
           "basisColumn": "ColumnDefault"
         }
+      ],
+      "orderBy": [
+        {
+          "fieldName": "TableColumnDisplayOrder"
+        }
       ]
     },
     {
       "name": "TableJoins",
-      "basisTable": "Join",
       "parentField": "TableTableID",
+      "basisTable": "Join",
       "childField": "TableJoinFromTableID",
+      "children": [
+        {
+          "name": "TableJoinColumns",
+          "parentField": "TableJoinJoinID",
+          "basisTable": "JoinColumn",
+          "childField": "TableJoinJoinColumnJoinID",
+          "fields": [
+            {
+              "name": "TableJoinJoinColumnJoinColumnID",
+              "basisColumn": "JoinColumnID"
+            },
+            {
+              "name": "TableJoinJoinColumnJoinID",
+              "basisColumn": "JoinID"
+            },
+            {
+              "name": "TableJoinJoinColumnFromColumn",
+              "basisColumn": "FromColumn"
+            },
+            {
+              "name": "TableJoinJoinColumnToColumn",
+              "basisColumn": "ToColumn"
+            },
+            {
+              "name": "TableJoinJoinColumnFromText",
+              "basisColumn": "FromText"
+            }
+          ]
+        }
+      ],
       "fields": [
         {
           "name": "TableJoinJoinID",
@@ -147,84 +137,19 @@
           },
           "basisColumn": "Required"
         }
-      ],
-      "children": [
-        {
-          "name": "TableJoinColumns",
-          "basisTable": "JoinColumn",
-          "parentField": "TableJoinJoinID",
-          "childField": "TableJoinJoinColumnJoinID",
-          "fields": [
-            {
-              "name": "TableJoinJoinColumnJoinColumnID",
-              "basisColumn": "JoinColumnID"
-            },
-            {
-              "name": "TableJoinJoinColumnJoinID",
-              "basisColumn": "JoinID"
-            },
-            {
-              "name": "TableJoinJoinColumnFromColumn",
-              "basisColumn": "FromColumn"
-            },
-            {
-              "name": "TableJoinJoinColumnToColumn",
-              "basisColumn": "ToColumn"
-            },
-            {
-              "name": "TableJoinJoinColumnFromText",
-              "basisColumn": "FromText"
-            }
-          ]
-        }
       ]
     },
     {
       "name": "TableIndex",
-      "basisTable": "Index",
       "parentField": "TableTableID",
+      "basisTable": "Index",
       "childField": "TableIndexTableID",
-      "orderBy": [
-        {
-          "fieldName": "TableIndexPriority"
-        }
-      ],
-      "fields": [
-        {
-          "name": "TableIndexID",
-          "updateable": false,
-          "basisColumn": "IndexID"
-        },
-        {
-          "name": "TableIndexTableID",
-          "basisColumn": "TableID"
-        },
-        {
-          "name": "TableIndexPriority",
-          "basisColumn": "Priority"
-        },
-        {
-          "name": "TableIndexUnique",
-          "basisColumn": "Unique"
-        }
-      ],
       "children": [
         {
           "name": "TableIndexColumn",
-          "basisTable": "IndexColumn",
           "parentField": "TableIndexID",
+          "basisTable": "IndexColumn",
           "childField": "TableIndexColumnIndexID",
-          "orderBy": [
-            {
-              "fieldName": "TableIndexColumnOrder"
-            }
-          ],
-          "steps": [
-            {
-              "name": "Column",
-              "join": "Column"
-            }
-          ],
           "fields": [
             {
               "name": "TableIndexColumnID",
@@ -252,9 +177,84 @@
               "basisColumn": "Name",
               "step": "Column"
             }
+          ],
+          "orderBy": [
+            {
+              "fieldName": "TableIndexColumnOrder"
+            }
+          ],
+          "steps": [
+            {
+              "name": "Column",
+              "join": "Column"
+            }
           ]
         }
+      ],
+      "fields": [
+        {
+          "name": "TableIndexID",
+          "updateable": false,
+          "basisColumn": "IndexID"
+        },
+        {
+          "name": "TableIndexTableID",
+          "basisColumn": "TableID"
+        },
+        {
+          "name": "TableIndexPriority",
+          "basisColumn": "Priority"
+        },
+        {
+          "name": "TableIndexUnique",
+          "basisColumn": "Unique"
+        }
+      ],
+      "orderBy": [
+        {
+          "fieldName": "TableIndexPriority"
+        }
       ]
+    }
+  ],
+  "fields": [
+    {
+      "name": "TableTableID",
+      "updateable": false,
+      "basisColumn": "TableID"
+    },
+    {
+      "name": "TableName",
+      "basisColumn": "Name"
+    },
+    {
+      "name": "TableSQL",
+      "basisColumn": "SQL"
+    },
+    {
+      "name": "TableModule",
+      "basisColumn": "Module"
+    },
+    {
+      "name": "TablePrimaryKey",
+      "basisColumn": "PrimaryKey"
+    },
+    {
+      "name": "TableAllowInsert",
+      "basisColumn": "AllowInsert"
+    },
+    {
+      "name": "TableAllowUpdate",
+      "basisColumn": "AllowUpdate"
+    },
+    {
+      "name": "TableAllowDelete",
+      "basisColumn": "AllowDelete"
+    }
+  ],
+  "orderBy": [
+    {
+      "fieldName": "TableName"
     }
   ]
 }
