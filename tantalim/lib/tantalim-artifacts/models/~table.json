@@ -1,6 +1,6 @@
 {
+  "preSave" : "artifacts.TablePreSave",
   "basisTable" : "Table",
-  "preSave": "artifacts.TablePreSave",
   "children" : [ {
     "name" : "columns",
     "parentField" : "TableID",

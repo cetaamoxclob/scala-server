@@ -185,5 +185,8 @@
   }, {
     "name" : "extends",
     "basisColumn" : "Extends"
+  }, {
+    "name" : "preSave",
+    "basisColumn" : "PreSave"
   } ]
 }
