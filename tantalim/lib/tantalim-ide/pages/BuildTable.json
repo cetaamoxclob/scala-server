@@ -75,10 +75,14 @@
               "showInNavigation": true
             },
             {
+              "name": "TableColumnSQL"
+            },
+            {
               "name": "TableColumnRequired"
             },
             {
-              "name": "TableColumnUpdateable"
+              "name": "TableColumnUpdateable",
+              "showInTableView": false
             },
             {
               "name": "TableColumnDataType"
@@ -87,22 +91,23 @@
               "name": "TableColumnLength"
             },
             {
-              "name": "TableColumnFieldType"
-            },
-            {
-              "name": "TableColumnSQL"
-            },
-            {
               "name": "TableColumnLabel"
             },
             {
-              "name": "TableColumnColumnDefault"
+              "name": "TableColumnFieldType",
+              "showInTableView": false
             },
             {
-              "name": "TableColumnHelp"
+              "name": "TableColumnColumnDefault",
+              "showInTableView": false
             },
             {
-              "name": "TableColumnPlaceholder"
+              "name": "TableColumnHelp",
+              "showInTableView": false
+            },
+            {
+              "name": "TableColumnPlaceholder",
+              "showInTableView": false
             }
           ]
         },
