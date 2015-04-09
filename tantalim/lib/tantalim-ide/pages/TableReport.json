@@ -6,13 +6,10 @@
     "name" : "ListTables",
     "fields" : [ {
       "name" : "TableName",
-      "links": [
-        {
-          "title": "Build Table",
-          "page": "BuildTable",
-          "filter": "TableTableID Equals [TableTableID]"
-        }
-      ]
+      "links" : [ {
+        "page" : "BuildTable",
+        "filter" : "TableTableID Equals [TableTableID]"
+      } ]
     }, {
       "name" : "TableSQL"
     }, {

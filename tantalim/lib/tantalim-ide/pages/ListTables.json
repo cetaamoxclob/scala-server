@@ -8,13 +8,10 @@
     "fields" : [ {
       "name" : "TableName",
       "showInNavigation" : true,
-      "links": [
-        {
-          "title": "Build Table",
-          "page": "BuildTable",
-          "filter": "TableName Equals '${TableName}'"
-        }
-      ]
+      "links" : [ {
+        "page" : "BuildTable",
+        "filter" : "TableName Equals '${TableName}'"
+      } ]
     }, {
       "name" : "TableSQL",
       "showInNavigation" : true
