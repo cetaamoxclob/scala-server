@@ -232,11 +232,8 @@
               "name": "IndexColumnColumnTableID",
               "basisColumn": "TableID",
               "step": "Column",
-              "fieldDefault": {
-                "value": "TableID",
-                "overwrite": true,
-                "type": "field"
-              },
+              "alwaysDefault": true,
+              "fieldDefault": "TableID",
               "export": false
             },
             {
