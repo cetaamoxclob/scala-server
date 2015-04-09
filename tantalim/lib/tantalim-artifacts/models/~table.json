@@ -1,45 +1,12 @@
 {
   "basisTable": "Table",
   "preSave": "artifacts.TablePreSave",
-  "fields": [
-    {
-      "name": "TableID",
-      "basisColumn": "TableID",
-      "export": false
-    },
-    {
-      "name": "name",
-      "basisColumn": "Name",
-      "export": false
-    },
-    {
-      "name": "module",
-      "basisColumn": "Module",
-      "export": false
-    },
-    {
-      "name": "dbName",
-      "basisColumn": "SQL"
-    },
-    {
-      "name": "primaryKey",
-      "basisColumn": "PrimaryKey"
-    }
-  ],
   "children": [
     {
       "name": "columns",
-      "basisTable": "Column",
       "parentField": "TableID",
+      "basisTable": "Column",
       "childField": "TableID",
-      "orderBy": [
-        {
-          "fieldName": "DisplayOrder"
-        },
-        {
-          "fieldName": "ColumnID"
-        }
-      ],
       "fields": [
         {
           "name": "ColumnID",
@@ -100,42 +67,26 @@
           "name": "columnDefault",
           "basisColumn": "ColumnDefault"
         }
+      ],
+      "orderBy": [
+        {
+          "fieldName": "DisplayOrder"
+        },
+        {
+          "fieldName": "ColumnID"
+        }
       ]
     },
     {
       "name": "joins",
-      "basisTable": "Join",
       "parentField": "TableID",
+      "basisTable": "Join",
       "childField": "fromTableID",
-      "fields": [
-        {
-          "name": "joinID",
-          "basisColumn": "JoinID",
-          "export": false
-        },
-        {
-          "name": "fromTableID",
-          "basisColumn": "FromTableID",
-          "export": false
-        },
-        {
-          "name": "table",
-          "basisColumn": "ToTableName"
-        },
-        {
-          "name": "name",
-          "basisColumn": "Name"
-        },
-        {
-          "name": "required",
-          "basisColumn": "Required"
-        }
-      ],
       "children": [
         {
           "name": "columns",
-          "basisTable": "JoinColumn",
           "parentField": "joinID",
+          "basisTable": "JoinColumn",
           "childField": "JoinColumnJoinID",
           "fields": [
             {
@@ -162,51 +113,43 @@
             }
           ]
         }
+      ],
+      "fields": [
+        {
+          "name": "joinID",
+          "basisColumn": "JoinID",
+          "export": false
+        },
+        {
+          "name": "fromTableID",
+          "basisColumn": "FromTableID",
+          "export": false
+        },
+        {
+          "name": "table",
+          "basisColumn": "ToTableName"
+        },
+        {
+          "name": "name",
+          "basisColumn": "Name"
+        },
+        {
+          "name": "required",
+          "basisColumn": "Required"
+        }
       ]
     },
     {
       "name": "indexes",
-      "basisTable": "Index",
       "parentField": "TableID",
+      "basisTable": "Index",
       "childField": "IndexTableID",
-      "orderBy": [
-        {
-          "fieldName": "priority"
-        }
-      ],
-      "fields": [
-        {
-          "name": "IndexID",
-          "basisColumn": "IndexID",
-          "export": false
-        },
-        {
-          "name": "IndexTableID",
-          "basisColumn": "TableID",
-          "export": false
-        },
-        {
-          "name": "priority",
-          "basisColumn": "Priority"
-        }
-      ],
       "children": [
         {
           "name": "columns",
-          "basisTable": "IndexColumn",
           "parentField": "IndexID",
+          "basisTable": "IndexColumn",
           "childField": "IndexColumnIndexID",
-          "orderBy": [
-            {
-              "fieldName": "IndexColumnOrder"
-            }
-          ],
-          "steps": [
-            {
-              "name": "Column",
-              "join": "Column"
-            }
-          ],
           "fields": [
             {
               "name": "IndexColumnID",
@@ -241,9 +184,66 @@
               "basisColumn": "Name",
               "step": "Column"
             }
+          ],
+          "orderBy": [
+            {
+              "fieldName": "IndexColumnOrder"
+            }
+          ],
+          "steps": [
+            {
+              "name": "Column",
+              "join": "Column"
+            }
           ]
         }
+      ],
+      "fields": [
+        {
+          "name": "IndexID",
+          "basisColumn": "IndexID",
+          "export": false
+        },
+        {
+          "name": "IndexTableID",
+          "basisColumn": "TableID",
+          "export": false
+        },
+        {
+          "name": "priority",
+          "basisColumn": "Priority"
+        }
+      ],
+      "orderBy": [
+        {
+          "fieldName": "priority"
+        }
       ]
+    }
+  ],
+  "fields": [
+    {
+      "name": "TableID",
+      "basisColumn": "TableID",
+      "export": false
+    },
+    {
+      "name": "name",
+      "basisColumn": "Name",
+      "export": false
+    },
+    {
+      "name": "module",
+      "basisColumn": "Module",
+      "export": false
+    },
+    {
+      "name": "dbName",
+      "basisColumn": "SQL"
+    },
+    {
+      "name": "primaryKey",
+      "basisColumn": "PrimaryKey"
     }
   ]
 }
