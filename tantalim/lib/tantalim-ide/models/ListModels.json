@@ -1,6 +1,7 @@
 {
   "filter" : "ModelParentID IsEmpty",
   "basisTable" : "Model",
+  "allowDelete" : false,
   "fields" : [ {
     "name" : "ModelID",
     "basisColumn" : "ModelID"

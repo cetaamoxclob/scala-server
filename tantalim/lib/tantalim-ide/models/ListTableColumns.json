@@ -1,5 +1,6 @@
 {
   "basisTable" : "Column",
+  "allowDelete" : false,
   "limit" : 100,
   "fields" : [ {
     "name" : "ColumnColumnID",

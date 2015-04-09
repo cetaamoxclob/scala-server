@@ -1,5 +1,6 @@
 {
   "basisTable" : "Join",
+  "allowDelete" : false,
   "fields" : [ {
     "name" : "TableJoinID",
     "basisColumn" : "JoinID"

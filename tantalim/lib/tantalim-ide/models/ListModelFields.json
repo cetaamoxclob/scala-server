@@ -1,5 +1,6 @@
 {
   "basisTable" : "ModelField",
+  "allowDelete" : false,
   "limit" : 100,
   "fields" : [ {
     "name" : "FieldID",
