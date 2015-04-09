@@ -161,7 +161,7 @@
     } ],
     "buttons" : [ {
       "label" : "Export",
-      "fxn" : "var row = section.getCurrentSet().getInstance(); var model = row.getValue('ModelName'); var moduleName = row.getValue('ModelModule'); $http.post('/export/' + moduleName + '/Model/' + model).success(function(data) { alert(data.message) });"
+      "fxn" : "var row = section.getCurrentSet().getInstance();\nvar model = row.getValue('ModelName');\nvar moduleName = row.getValue('ModelModule');\n$http.post('/export/' + moduleName + '/Model/' + model).success(function(data) { alert(data.message) });"
     } ]
   } ]
 }
