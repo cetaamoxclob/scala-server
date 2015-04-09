@@ -12,21 +12,17 @@
         "model": "ListTables",
         "sourceField": "TableName"
       },
-      "links": [
-        {
-          "page": "BuildTable",
-          "filter": "TableName Equals '${ModelBasisTable}'"
-        }
-      ]
+      "links" : [ {
+        "page" : "BuildTable",
+        "filter" : "TableName Equals '${ModelBasisTable}'"
+      } ]
     }, {
       "name" : "ModelParentName",
       "label" : "Parent Model",
-      "links": [
-        {
-          "page": "BuildModel",
-          "filter": "ModelID Equals ${ModelParentID}"
-        }
-      ]
+      "links" : [ {
+        "page" : "BuildModel",
+        "filter" : "ModelID Equals ${ModelParentID}"
+      } ]
     }, {
       "name" : "ModelModule"
     }, {
@@ -122,12 +118,10 @@
       "fields" : [ {
         "name" : "ChildModelName",
         "showInNavigation" : true,
-        "links": [
-          {
-            "page": "BuildModel",
-            "filter": "ModelID Equals ${ChildModelID}"
-          }
-        ]
+        "links" : [ {
+          "page" : "BuildModel",
+          "filter" : "ModelID Equals ${ChildModelID}"
+        } ]
       }, {
         "name" : "ChildModelBasisTable",
         "fieldType" : "select",
@@ -135,12 +129,10 @@
           "model": "ListTables",
           "sourceField": "TableName"
         },
-        "links": [
-          {
-            "page": "BuildTable",
-            "filter": "TableName Equals '${ChildModelBasisTable}'"
-          }
-        ]
+        "links" : [ {
+          "page" : "BuildTable",
+          "filter" : "TableName Equals '${ChildModelBasisTable}'"
+        } ]
       }, {
         "name" : "ChildModelParentField",
         "fieldType" : "select",

@@ -10,6 +10,27 @@
       "parentField" : "SectionSectionID",
       "basisTable" : "PageField",
       "childField" : "PageFieldSectionID",
+      "children" : [ {
+        "name" : "links",
+        "parentField" : "PageFieldID",
+        "basisTable" : "Link",
+        "childField" : "PageFieldLinkFieldID",
+        "fields" : [ {
+          "name" : "PageFieldLinkID",
+          "basisColumn" : "LinkID",
+          "export" : false
+        }, {
+          "name" : "PageFieldLinkFieldID",
+          "basisColumn" : "FieldID",
+          "export" : false
+        }, {
+          "name" : "page",
+          "basisColumn" : "Page"
+        }, {
+          "name" : "filter",
+          "basisColumn" : "Filter"
+        } ]
+      } ],
       "fields" : [ {
         "name" : "PageFieldID",
         "basisColumn" : "FieldID",
