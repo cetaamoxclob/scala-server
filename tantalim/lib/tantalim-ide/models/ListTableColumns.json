@@ -1,48 +1,35 @@
 {
-  "basisTable": "Column",
-  "limit": 100,
-  "orderBy": [
-    {
-      "fieldName": "ColumnDisplayOrder"
-    },
-    {
-      "fieldName": "ColumnTableName"
-    },
-    {
-      "fieldName": "ColumnName"
-    }
-  ],
-  "fields": [
-    {
-      "name": "ColumnColumnID",
-      "basisColumn": "ColumnID"
-    },
-    {
-      "name": "ColumnDisplayOrder",
-      "basisColumn": "DisplayOrder"
-    },
-    {
-      "name": "ColumnName",
-      "basisColumn": "Name"
-    },
-    {
-      "name": "ColumnSQL",
-      "basisColumn": "SQL"
-    },
-    {
-      "name": "ColumnTableID",
-      "basisColumn": "TableID"
-    },
-    {
-      "name": "ColumnTableName",
-      "step": "t",
-      "basisColumn": "Name"
-    }
-  ],
-  "steps": [
-    {
-      "name": "t",
-      "join": "Table"
-    }
-  ]
+  "basisTable" : "Column",
+  "limit" : 100,
+  "fields" : [ {
+    "name" : "ColumnColumnID",
+    "basisColumn" : "ColumnID"
+  }, {
+    "name" : "ColumnDisplayOrder",
+    "basisColumn" : "DisplayOrder"
+  }, {
+    "name" : "ColumnName",
+    "basisColumn" : "Name"
+  }, {
+    "name" : "ColumnSQL",
+    "basisColumn" : "SQL"
+  }, {
+    "name" : "ColumnTableID",
+    "basisColumn" : "TableID"
+  }, {
+    "name" : "ColumnTableName",
+    "step": "t",
+    "basisColumn" : "Name"
+  } ],
+  "orderBy" : [ {
+    "fieldName" : "ColumnDisplayOrder"
+  }, {
+    "fieldName" : "ColumnTableName"
+  }, {
+    "fieldName" : "ColumnName"
+  } ],
+  "steps" : [ {
+    "name" : "t",
+    "join" : "Table"
+  } ]
 }

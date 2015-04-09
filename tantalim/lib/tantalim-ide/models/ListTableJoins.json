@@ -1,10 +1,5 @@
 {
   "basisTable": "Join",
-  "orderBy": [
-    {
-      "fieldName": "TableJoinName"
-    }
-  ],
   "fields": [
     {
       "name": "TableJoinID",
@@ -16,8 +11,8 @@
     },
     {
       "name": "TableJoinFromTableName",
-      "basisColumn": "Name",
-      "step": "FromTable"
+      "step": "FromTable",
+      "basisColumn": "Name"
     },
     {
       "name": "TableJoinName",
@@ -30,6 +25,11 @@
     {
       "name": "TableJoinRequired",
       "basisColumn": "Required"
+    }
+  ],
+  "orderBy": [
+    {
+      "fieldName": "TableJoinName"
     }
   ],
   "steps": [
