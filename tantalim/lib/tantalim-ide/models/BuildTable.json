@@ -24,7 +24,7 @@
     }, {
       "name" : "TableColumnDisplayOrder",
       "basisColumn" : "DisplayOrder",
-      "functionDefault": "10 + (row.nodeSet.rows.length * 10)"
+      "functionDefault" : "10 + (row.nodeSet.rows.length * 10)"
     }, {
       "name" : "TableColumnDataType",
       "basisColumn" : "DataType"
@@ -96,8 +96,7 @@
     }, {
       "name" : "TableJoinRequired",
       "basisColumn" : "Required",
-      "dataType": "Boolean",
-      "valueDefault": "true"
+      "valueDefault" : "true"
     } ]
   }, {
     "name" : "TableIndex",
