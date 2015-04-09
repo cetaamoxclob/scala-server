@@ -1,64 +1,55 @@
 {
-  "basisTable": "Page",
-  "fields": [
-    {
-      "name": "PageID",
-      "basisColumn": "PageID",
-      "export": false
-    },
-    {
-      "name": "module",
-      "basisColumn": "Module",
-      "export": false
-    },
-    {
-      "name": "name",
-      "basisColumn": "Name"
-    },
-    {
-      "name": "title",
-      "basisColumn": "Title"
-    },
-    {
-      "name": "icon",
-      "basisColumn": "Icon"
-    },
-    {
-      "name": "css",
-      "basisColumn": "Css"
-    }
-  ],
-  "children": [
-    {
-      "name": "sections",
-      "basisTable": "Section",
-      "parentField": "PageID",
-      "childField": "SectionPageID",
-      "fields" : [ {
-        "name" : "SectionSectionID",
-        "basisColumn" : "SectionID",
-        "export": false
-      }, {
-        "name" : "SectionPageID",
-        "basisColumn" : "PageID",
-        "export": false
-      }, {
-        "name" : "SectionParentID",
-        "basisColumn" : "ParentID",
-        "export": false
-      }, {
-        "name" : "name",
-        "basisColumn" : "Name"
-      }, {
-        "name" : "title",
-        "basisColumn" : "Title"
-      }, {
-        "name" : "model",
-        "basisColumn" : "Model"
-      }, {
-        "name" : "viewMode",
-        "basisColumn" : "ViewMode"
-      } ]
-    }
-  ]
+  "basisTable" : "Page",
+  "children" : [ {
+    "name" : "sections",
+    "parentField" : "PageID",
+    "basisTable" : "Section",
+    "childField" : "SectionPageID",
+    "fields" : [ {
+      "name" : "SectionSectionID",
+      "basisColumn" : "SectionID",
+      "export" : false
+    }, {
+      "name" : "SectionPageID",
+      "basisColumn" : "PageID",
+      "export" : false
+    }, {
+      "name" : "SectionParentID",
+      "basisColumn" : "ParentID",
+      "export" : false
+    }, {
+      "name" : "name",
+      "basisColumn" : "Name"
+    }, {
+      "name" : "title",
+      "basisColumn" : "Title"
+    }, {
+      "name" : "model",
+      "basisColumn" : "Model"
+    }, {
+      "name" : "viewMode",
+      "basisColumn" : "ViewMode"
+    } ]
+  } ],
+  "fields" : [ {
+    "name" : "PageID",
+    "basisColumn" : "PageID",
+    "export" : false
+  }, {
+    "name" : "module",
+    "basisColumn" : "Module",
+    "export" : false
+  }, {
+    "name" : "name",
+    "basisColumn" : "Name"
+  }, {
+    "name" : "title",
+    "basisColumn" : "Title"
+  }, {
+    "name" : "icon",
+    "basisColumn" : "Icon"
+  }, {
+    "name" : "css",
+    "basisColumn" : "Css"
+  } ]
 }
