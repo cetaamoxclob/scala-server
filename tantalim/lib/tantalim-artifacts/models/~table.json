@@ -1,249 +1,188 @@
 {
-  "basisTable": "Table",
+  "basisTable" : "Table",
   "preSave": "artifacts.TablePreSave",
-  "children": [
-    {
-      "name": "columns",
-      "parentField": "TableID",
-      "basisTable": "Column",
-      "childField": "TableID",
-      "fields": [
-        {
-          "name": "ColumnID",
-          "basisColumn": "ColumnID",
-          "export": false
-        },
-        {
-          "name": "TableID",
-          "basisColumn": "TableID",
-          "export": false
-        },
-        {
-          "name": "name",
-          "basisColumn": "Name"
-        },
-        {
-          "name": "required",
-          "basisColumn": "Required"
-        },
-        {
-          "name": "dataType",
-          "basisColumn": "DataType"
-        },
-        {
-          "name": "DisplayOrder",
-          "basisColumn": "DisplayOrder",
-          "export": false
-        },
-        {
-          "name": "dbName",
-          "basisColumn": "SQL"
-        },
-        {
-          "name": "updateable",
-          "basisColumn": "Updateable"
-        },
-        {
-          "name": "label",
-          "basisColumn": "Label"
-        },
-        {
-          "name": "fieldType",
-          "basisColumn": "FieldType"
-        },
-        {
-          "name": "help",
-          "basisColumn": "Help"
-        },
-        {
-          "name": "placeholder",
-          "basisColumn": "Placeholder"
-        },
-        {
-          "name": "length",
-          "basisColumn": "Length"
-        },
-        {
-          "name": "columnDefault",
-          "basisColumn": "ColumnDefault"
-        }
-      ],
-      "orderBy": [
-        {
-          "fieldName": "DisplayOrder"
-        },
-        {
-          "fieldName": "ColumnID"
-        }
-      ]
-    },
-    {
-      "name": "joins",
-      "parentField": "TableID",
-      "basisTable": "Join",
-      "childField": "fromTableID",
-      "children": [
-        {
-          "name": "columns",
-          "parentField": "joinID",
-          "basisTable": "JoinColumn",
-          "childField": "JoinColumnJoinID",
-          "fields": [
-            {
-              "name": "JoinColumnJoinColumnID",
-              "basisColumn": "JoinColumnID",
-              "export": false
-            },
-            {
-              "name": "JoinColumnJoinID",
-              "basisColumn": "JoinID",
-              "export": false
-            },
-            {
-              "name": "from",
-              "basisColumn": "FromColumn"
-            },
-            {
-              "name": "to",
-              "basisColumn": "ToColumn"
-            },
-            {
-              "name": "fromText",
-              "basisColumn": "FromText"
-            }
-          ]
-        }
-      ],
-      "fields": [
-        {
-          "name": "joinID",
-          "basisColumn": "JoinID",
-          "export": false
-        },
-        {
-          "name": "fromTableID",
-          "basisColumn": "FromTableID",
-          "export": false
-        },
-        {
-          "name": "table",
-          "basisColumn": "ToTableName"
-        },
-        {
-          "name": "name",
-          "basisColumn": "Name"
-        },
-        {
-          "name": "required",
-          "basisColumn": "Required"
-        }
-      ]
-    },
-    {
-      "name": "indexes",
-      "parentField": "TableID",
-      "basisTable": "Index",
-      "childField": "IndexTableID",
-      "children": [
-        {
-          "name": "columns",
-          "parentField": "IndexID",
-          "basisTable": "IndexColumn",
-          "childField": "IndexColumnIndexID",
-          "fields": [
-            {
-              "name": "IndexColumnID",
-              "basisColumn": "IndexColumnID",
-              "export": false
-            },
-            {
-              "name": "IndexColumnIndexID",
-              "basisColumn": "IndexID",
-              "export": false
-            },
-            {
-              "name": "IndexColumnOrder",
-              "basisColumn": "Order",
-              "export": false
-            },
-            {
-              "name": "IndexColumnColumnID",
-              "basisColumn": "ColumnID",
-              "export": false
-            },
-            {
-              "name": "IndexColumnColumnTableID",
-              "step": "Column",
-              "basisColumn": "TableID",
-              "export": false,
-              "fieldDefault": "TableID",
-              "alwaysDefault": true
-            },
-            {
-              "name": "name",
-              "step": "Column",
-              "basisColumn": "Name"
-            }
-          ],
-          "orderBy": [
-            {
-              "fieldName": "IndexColumnOrder"
-            }
-          ],
-          "steps": [
-            {
-              "name": "Column",
-              "join": "Column"
-            }
-          ]
-        }
-      ],
-      "fields": [
-        {
-          "name": "IndexID",
-          "basisColumn": "IndexID",
-          "export": false
-        },
-        {
-          "name": "IndexTableID",
-          "basisColumn": "TableID",
-          "export": false
-        },
-        {
-          "name": "priority",
-          "basisColumn": "Priority"
-        }
-      ],
-      "orderBy": [
-        {
-          "fieldName": "priority"
-        }
-      ]
-    }
-  ],
-  "fields": [
-    {
-      "name": "TableID",
-      "basisColumn": "TableID",
-      "export": false
-    },
-    {
-      "name": "name",
-      "basisColumn": "Name",
-      "export": false
-    },
-    {
-      "name": "module",
-      "basisColumn": "Module",
-      "export": false
-    },
-    {
-      "name": "dbName",
-      "basisColumn": "SQL"
-    },
-    {
-      "name": "primaryKey",
-      "basisColumn": "PrimaryKey"
-    }
-  ]
+  "children" : [ {
+    "name" : "columns",
+    "parentField" : "TableID",
+    "basisTable" : "Column",
+    "childField" : "TableID",
+    "fields" : [ {
+      "name" : "ColumnID",
+      "basisColumn" : "ColumnID",
+      "export" : false
+    }, {
+      "name" : "TableID",
+      "basisColumn" : "TableID",
+      "export" : false
+    }, {
+      "name" : "name",
+      "basisColumn" : "Name"
+    }, {
+      "name" : "required",
+      "basisColumn" : "Required"
+    }, {
+      "name" : "dataType",
+      "basisColumn" : "DataType"
+    }, {
+      "name" : "DisplayOrder",
+      "basisColumn" : "DisplayOrder",
+      "export" : false
+    }, {
+      "name" : "dbName",
+      "basisColumn" : "SQL"
+    }, {
+      "name" : "updateable",
+      "basisColumn" : "Updateable"
+    }, {
+      "name" : "label",
+      "basisColumn" : "Label"
+    }, {
+      "name" : "fieldType",
+      "basisColumn" : "FieldType"
+    }, {
+      "name" : "help",
+      "basisColumn" : "Help"
+    }, {
+      "name" : "placeholder",
+      "basisColumn" : "Placeholder"
+    }, {
+      "name" : "length",
+      "basisColumn" : "Length"
+    }, {
+      "name" : "columnDefault",
+      "basisColumn" : "ColumnDefault"
+    } ],
+    "orderBy" : [ {
+      "fieldName" : "DisplayOrder"
+    }, {
+      "fieldName" : "ColumnID"
+    } ]
+  }, {
+    "name" : "joins",
+    "parentField" : "TableID",
+    "basisTable" : "Join",
+    "childField" : "fromTableID",
+    "children" : [ {
+      "name" : "columns",
+      "parentField" : "joinID",
+      "basisTable" : "JoinColumn",
+      "childField" : "JoinColumnJoinID",
+      "fields" : [ {
+        "name" : "JoinColumnJoinColumnID",
+        "basisColumn" : "JoinColumnID",
+        "export" : false
+      }, {
+        "name" : "JoinColumnJoinID",
+        "basisColumn" : "JoinID",
+        "export" : false
+      }, {
+        "name" : "from",
+        "basisColumn" : "FromColumn"
+      }, {
+        "name" : "to",
+        "basisColumn" : "ToColumn"
+      }, {
+        "name" : "fromText",
+        "basisColumn" : "FromText"
+      } ]
+    } ],
+    "fields" : [ {
+      "name" : "joinID",
+      "basisColumn" : "JoinID",
+      "export" : false
+    }, {
+      "name" : "fromTableID",
+      "basisColumn" : "FromTableID",
+      "export" : false
+    }, {
+      "name" : "table",
+      "basisColumn" : "ToTableName"
+    }, {
+      "name" : "name",
+      "basisColumn" : "Name"
+    }, {
+      "name" : "required",
+      "basisColumn" : "Required"
+    } ]
+  }, {
+    "name" : "indexes",
+    "parentField" : "TableID",
+    "basisTable" : "Index",
+    "childField" : "IndexTableID",
+    "children" : [ {
+      "name" : "columns",
+      "parentField" : "IndexID",
+      "basisTable" : "IndexColumn",
+      "childField" : "IndexColumnIndexID",
+      "fields" : [ {
+        "name" : "IndexColumnID",
+        "basisColumn" : "IndexColumnID",
+        "export" : false
+      }, {
+        "name" : "IndexColumnIndexID",
+        "basisColumn" : "IndexID",
+        "export" : false
+      }, {
+        "name" : "IndexColumnOrder",
+        "basisColumn" : "Order",
+        "export" : false
+      }, {
+        "name" : "IndexColumnColumnID",
+        "basisColumn" : "ColumnID",
+        "export" : false
+      }, {
+        "name" : "IndexColumnColumnTableID",
+        "step" : "Column",
+        "basisColumn" : "TableID",
+        "export" : false,
+        "fieldDefault" : "TableID",
+        "alwaysDefault" : true
+      }, {
+        "name" : "name",
+        "step" : "Column",
+        "basisColumn" : "Name"
+      } ],
+      "orderBy" : [ {
+        "fieldName" : "IndexColumnOrder"
+      } ],
+      "steps" : [ {
+        "name" : "Column",
+        "join" : "Column"
+      } ]
+    } ],
+    "fields" : [ {
+      "name" : "IndexID",
+      "basisColumn" : "IndexID",
+      "export" : false
+    }, {
+      "name" : "IndexTableID",
+      "basisColumn" : "TableID",
+      "export" : false
+    }, {
+      "name" : "priority",
+      "basisColumn" : "Priority"
+    } ],
+    "orderBy" : [ {
+      "fieldName" : "priority"
+    } ]
+  } ],
+  "fields" : [ {
+    "name" : "TableID",
+    "basisColumn" : "TableID",
+    "export" : false
+  }, {
+    "name" : "name",
+    "basisColumn" : "Name",
+    "export" : false
+  }, {
+    "name" : "module",
+    "basisColumn" : "Module",
+    "export" : false
+  }, {
+    "name" : "dbName",
+    "basisColumn" : "SQL"
+  }, {
+    "name" : "primaryKey",
+    "basisColumn" : "PrimaryKey"
+  } ]
 }

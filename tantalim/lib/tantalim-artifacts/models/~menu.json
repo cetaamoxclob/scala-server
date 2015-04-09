@@ -1,76 +1,19 @@
 {
   "basisTable": "Menu",
-  "fields": [
-    {
-      "name": "MenuMenuID",
-      "basisColumn": "MenuID",
-      "export": false
-    },
-    {
-      "name": "module",
-      "basisColumn": "Module",
-      "export": false
-    },
-    {
-      "name": "name",
-      "basisColumn": "Name"
-    },
-    {
-      "name": "appTitle",
-      "basisColumn": "Title"
-    }
-  ],
   "preSave": "artifacts.MenuContentPreSave",
   "children": [
     {
       "name": "content",
-      "basisTable": "MenuContent",
       "parentField": "MenuMenuID",
+      "basisTable": "MenuContent",
       "childField": "MenuContentMenuID",
-      "orderBy": [
-        {
-          "fieldName": "MenuContentDisplayOrder"
-        },
-        {
-          "fieldName": "MenuContentContentID"
-        }
-      ],
-      "fields": [
-        {
-          "name": "MenuContentContentID",
-          "basisColumn": "ContentID",
-          "export": false
-        },
-        {
-          "name": "MenuContentMenuID",
-          "basisColumn": "MenuID",
-          "export": false
-        },
-        {
-          "name": "MenuContentDisplayOrder",
-          "basisColumn": "DisplayOrder",
-          "export": false
-        },
-        {
-          "name": "title",
-          "basisColumn": "Title"
-        }
-      ],
       "preSave": "artifacts.MenuItemPreSave",
       "children": [
         {
           "name": "items",
-          "basisTable": "MenuItem",
           "parentField": "MenuContentContentID",
+          "basisTable": "MenuItem",
           "childField": "MenuItemContentID",
-          "orderBy": [
-            {
-              "fieldName": "MenuItemDisplayOrder"
-            },
-            {
-              "fieldName": "MenuItemItemID"
-            }
-          ],
           "fields": [
             {
               "name": "MenuItemItemID",
@@ -103,9 +46,66 @@
               "name": "icon",
               "basisColumn": "Icon"
             }
+          ],
+          "orderBy": [
+            {
+              "fieldName": "MenuItemDisplayOrder"
+            },
+            {
+              "fieldName": "MenuItemItemID"
+            }
           ]
         }
+      ],
+      "fields": [
+        {
+          "name": "MenuContentContentID",
+          "basisColumn": "ContentID",
+          "export": false
+        },
+        {
+          "name": "MenuContentMenuID",
+          "basisColumn": "MenuID",
+          "export": false
+        },
+        {
+          "name": "MenuContentDisplayOrder",
+          "basisColumn": "DisplayOrder",
+          "export": false
+        },
+        {
+          "name": "title",
+          "basisColumn": "Title"
+        }
+      ],
+      "orderBy": [
+        {
+          "fieldName": "MenuContentDisplayOrder"
+        },
+        {
+          "fieldName": "MenuContentContentID"
+        }
       ]
+    }
+  ],
+  "fields": [
+    {
+      "name": "MenuMenuID",
+      "basisColumn": "MenuID",
+      "export": false
+    },
+    {
+      "name": "module",
+      "basisColumn": "Module",
+      "export": false
+    },
+    {
+      "name": "name",
+      "basisColumn": "Name"
+    },
+    {
+      "name": "appTitle",
+      "basisColumn": "Title"
     }
   ]
 }
