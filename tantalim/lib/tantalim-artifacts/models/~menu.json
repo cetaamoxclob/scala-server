@@ -75,7 +75,8 @@
     "export" : false
   }, {
     "name" : "name",
-    "basisColumn" : "Name"
+    "basisColumn" : "Name",
+    "export" : false
   }, {
     "name" : "appTitle",
     "basisColumn" : "Title"
