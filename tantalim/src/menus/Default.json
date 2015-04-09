@@ -1,77 +1,51 @@
 {
-  "appTitle": "Tantalim Demo",
-  "content": [
-    {
-      "title": "PICS",
-      "items": [
-        {
-          "page": "ManageDocumentTypes"
-        },
-        {
-          "page": "ManageCategories"
-        },
-        {
-          "page": "ManageWorkflows"
-        }
-      ]
-    },
-    {
-      "title": "SLHP",
-      "items": [
-        {
-          "page": "ReviewClaims"
-        },
-        {
-          "page": "AttachmentTypes"
-        }
-      ]
-    },
-    {
-      "title": "Tantalim IDE",
-      "items": [
-        {
-          "page": "ListTables"
-        },
-        {
-          "page": "BuildTable"
-        },
-        {
-          "page": "ListModels"
-        },
-        {
-          "page": "BuildModel"
-        },
-        {
-          "page": "BuildPage"
-        },
-        {
-          "page": "BuildMenu"
-        },
-        {
-          "page": "TableReport"
-        },
-        {
-          "page": "ModuleManagement"
-        }
-      ]
-    },
-    {
-      "title": "Manage",
-      "items": [
-        {
-          "page": "ManageUsers",
-          "title": "Users"
-        }
-      ]
-    },
-    {
-      "title": "Debug",
-      "items": [
-        {
-          "title": "Samples",
-          "href": "/assets/lib/tantalim-client/public/samples/"
-        }
-      ]
-    }
-  ]
+  "appTitle" : "Tantalim Demo",
+  "content" : [ {
+    "title" : "PICS",
+    "items" : [ {
+      "page" : "ManageDocumentTypes"
+    }, {
+      "page" : "ManageCategories"
+    }, {
+      "page" : "ManageWorkflows"
+    } ]
+  }, {
+    "title" : "SLHP",
+    "items" : [ {
+      "page" : "ReviewClaims"
+    }, {
+      "page" : "AttachmentTypes"
+    } ]
+  }, {
+    "title" : "Tantalim IDE",
+    "items" : [ {
+      "page" : "ListTables"
+    }, {
+      "page" : "BuildTable"
+    }, {
+      "page" : "ListModels"
+    }, {
+      "page" : "BuildModel"
+    }, {
+      "page" : "BuildPage"
+    }, {
+      "page" : "BuildMenu"
+    }, {
+      "page" : "TableReport"
+    }, {
+      "page" : "ModuleManagement"
+    } ]
+  }, {
+    "title" : "Manage",
+    "items" : [ {
+      "page" : "ManageUsers",
+      "title" : "Users"
+    } ]
+  }, {
+    "title" : "Debug",
+    "items" : [ {
+      "title" : "Samples",
+      "href" : "/assets/lib/tantalim-client/public/samples/"
+    } ]
+  } ]
 }
