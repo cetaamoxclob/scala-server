@@ -1,65 +1,57 @@
 {
-  "title": "Build Section",
-  "sections": [
-    {
-      "title": "Section",
-      "name": "BuildSection",
-      "fields": [
-        {"name": "SectionName"},
-        {"name": "SectionTitle"},
-        {"name": "SectionModel"},
-        {"name": "SectionViewMode"}
-      ],
-      "sections": [
-        {
-          "title": "Fields",
-          "name": "PageField",
-          "model": "PageField",
-          "viewMode": "table",
-          "fields": [
-            {"name": "PageFieldName"},
-            {
-              "name": "PageFieldShowInFormView"
-            },
-            {
-              "name": "PageFieldShowInTableView"
-            },
-            {
-              "name": "PageFieldShowInNavigation"
-            },
-            {
-              "name": "PageFieldLabel"
-            },
-            {
-              "name": "PageFieldFieldType"
-            },
-            {
-              "name": "PageFieldHelp"
-            },
-            {
-              "name": "PageFieldPlaceholder"
-            }
-          ]
-        },
-        {
-          "title": "Child Sections",
-          "name": "ChildSection",
-          "model": "ChildSection",
-          "viewMode": "table",
-          "fields": [
-            {"name": "ChildSectionName",
-              "links": [
-                {
-                  "page": "BuildSection",
-                  "filter": "SectionName Equals '${ChildSectionName}'"
-                }
-              ]},
-            {"name": "ChildSectionTitle"},
-            {"name": "ChildSectionModel"},
-            {"name": "ChildSectionViewMode"}
-          ]
-        }
-      ]
-    }
-  ]
+  "title" : "Build Section",
+  "sections" : [ {
+    "name" : "BuildSection",
+    "title" : "Section",
+    "fields" : [ {
+      "name" : "SectionName"
+    }, {
+      "name" : "SectionTitle"
+    }, {
+      "name" : "SectionModel"
+    }, {
+      "name" : "SectionViewMode"
+    } ],
+    "sections" : [ {
+      "viewMode" : "table",
+      "name" : "PageField",
+      "model" : "PageField",
+      "title" : "Fields",
+      "fields" : [ {
+        "name" : "PageFieldName"
+      }, {
+        "name" : "PageFieldShowInFormView"
+      }, {
+        "name" : "PageFieldShowInTableView"
+      }, {
+        "name" : "PageFieldShowInNavigation"
+      }, {
+        "name" : "PageFieldLabel"
+      }, {
+        "name" : "PageFieldFieldType"
+      }, {
+        "name" : "PageFieldHelp"
+      }, {
+        "name" : "PageFieldPlaceholder"
+      } ]
+    }, {
+      "viewMode" : "table",
+      "name" : "ChildSection",
+      "model" : "ChildSection",
+      "title" : "Child Sections",
+      "fields" : [ {
+        "name" : "ChildSectionName",
+        "links" : [ {
+          "page" : "BuildSection",
+          "filter" : "SectionName Equals '${ChildSectionName}'"
+        } ]
+      }, {
+        "name" : "ChildSectionTitle"
+      }, {
+        "name" : "ChildSectionModel"
+      }, {
+        "name" : "ChildSectionViewMode"
+      } ]
+    } ]
+  } ]
 }

@@ -1,50 +1,41 @@
 {
-  "title": "Build Page",
-  "sections": [
-    {
-      "title": "Page",
-      "name": "BuildPage",
-      "buttons": [
-        {
-          "label": "Export",
-          "fxn": "var row = section.getCurrentSet().getInstance(); var page = row.getValue('PageName'); var moduleName = row.getValue('PageModule'); $http.post('/export/' + moduleName + '/Page/' + page).success(function(data) { alert(data.message) });"
-        }
-      ],
-      "fields": [
-        {"name": "PageName"},
-        {"name": "PageTitle"},
-        {"name": "PageModule"},
-        {"name": "PageIcon"},
-        {"name": "PageCss"}
-      ],
-      "sections": [
-        {
-          "title": "Sections",
-          "name": "PageSection",
-          "model": "PageSection",
-          "fields": [
-            {
-              "name": "SectionName",
-              "links": [
-                {
-                  "page": "BuildSection",
-                  "filter": "SectionName Equals '${SectionName}'"
-                }
-              ]
-            },
-            {
-              "name": "SectionModel",
-              "fieldType": "select",
-              "select": {
-                "model": "ListModels",
-                "sourceField": "ModelName"
-              }
-            },
-            {"name": "SectionTitle"},
-            {"name": "SectionViewMode"}
-          ]
-        }
-      ]
-    }
-  ]
+  "title" : "Build Page",
+  "sections" : [ {
+    "name" : "BuildPage",
+    "title" : "Page",
+    "fields" : [ {
+      "name" : "PageName"
+    }, {
+      "name" : "PageTitle"
+    }, {
+      "name" : "PageModule"
+    }, {
+      "name" : "PageIcon"
+    }, {
+      "name" : "PageCss"
+    } ],
+    "sections" : [ {
+      "name" : "PageSection",
+      "model" : "PageSection",
+      "title" : "Sections",
+      "fields" : [ {
+        "name" : "SectionName",
+        "links" : [ {
+          "page" : "BuildSection",
+          "filter" : "SectionName Equals '${SectionName}'"
+        } ]
+      }, {
+        "name" : "SectionModel",
+        "fieldType" : "select"
+      }, {
+        "name" : "SectionTitle"
+      }, {
+        "name" : "SectionViewMode"
+      } ]
+    } ],
+    "buttons" : [ {
+      "label" : "Export",
+      "fxn" : "var row = section.getCurrentSet().getInstance(); var page = row.getValue('PageName'); var moduleName = row.getValue('PageModule'); $http.post('/export/' + moduleName + '/Page/' + page).success(function(data) { alert(data.message) });"
+    } ]
+  } ]
 }
