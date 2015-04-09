@@ -56,7 +56,7 @@
         "basisColumn" : "Searchable"
       } ]
     }, {
-      "name" : "children",
+      "name" : "sections",
       "parentField" : "SectionSectionID",
       "basisTable" : "Section",
       "extends" : "sections",
