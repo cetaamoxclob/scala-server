@@ -20,8 +20,35 @@ case class Model(name: String,
                  customUrlSource: Option[String] = None,
                  children: collection.mutable.Map[String, Model] = scala.collection.mutable.Map.empty
                   ) {
+
   def addChild(child: Model): Unit = {
     this.children(child.name) = child.copy(parent = Some(this))
+  }
+
+  /**
+   * List of models ordered from the first child that should be inserted to the last child to be inserted.
+   * Insert order is determined by what depends on what.
+   */
+  lazy val orderedChildren = {
+    val dependencies = children.map { case (childModelName, childModel) =>
+      childModelName -> children.values.filter { sibling =>
+        sibling != childModel && childModel.steps.values.exists(step => sibling.basisTable.name == step.join.table.name)
+      }
+    }
+
+    val orderedChildren = children.values.toList.sortBy { model =>
+      val myDependencies = dependencies.get(model.name).get
+      myDependencies.size + 10
+    }
+
+    // TODO order them one more time based on dependencies
+    // A depends on B, B depends on C, then C goes first but A and B have one dependencies and may not get sorted correctly
+
+    println("Ordered Children: " + orderedChildren.map(model => model.name).mkString(", "))
+    dependencies.foreach { case (modelName, models) =>
+      println(s"$modelName depends on: ${models.map(m => m.name).mkString(", ")}")
+    }
+    orderedChildren
   }
 
   lazy val isRecursive: Boolean = {

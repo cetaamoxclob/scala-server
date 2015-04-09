@@ -79,11 +79,12 @@ case class SmartNodeInstance(
   def getChild(childName: String): Option[SmartNodeSet] = children.get(childName)
 
   def foreachChild(f: (SmartNodeSet) => Unit) = {
-    nodeSet.model.children.foreach {
-      case (childModelName: String, childModel: Model) =>
-        children.get(childModelName) match {
+
+    nodeSet.model.orderedChildren.foreach {
+      case childModel: Model =>
+        children.get(childModel.name) match {
           case Some(childSet) => f(childSet)
-          case None =>
+          case None => // The data doesn't contain a child set matching this model. That's OK.
         }
     }
   }
