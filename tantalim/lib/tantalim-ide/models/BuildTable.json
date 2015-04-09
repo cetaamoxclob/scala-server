@@ -1,260 +1,194 @@
 {
-  "basisTable": "Table",
-  "limit": 5,
-  "children": [
-    {
-      "name": "TableColumns",
-      "parentField": "TableTableID",
-      "basisTable": "Column",
-      "childField": "TableColumnTableID",
-      "fields": [
-        {
-          "name": "TableColumnColumnID",
-          "basisColumn": "ColumnID"
-        },
-        {
-          "name": "TableColumnName",
-          "basisColumn": "Name"
-        },
-        {
-          "name": "TableColumnTableID",
-          "basisColumn": "TableID"
-        },
-        {
-          "name": "TableColumnRequired",
-          "basisColumn": "Required"
-        },
-        {
-          "name": "TableColumnUpdateable",
-          "basisColumn": "Updateable"
-        },
-        {
-          "name": "TableColumnDisplayOrder",
-          "basisColumn": "DisplayOrder",
-          "fieldDefault": {
-            "type": "fxn",
-            "updateable": false,
-            "value": "10 + (row.nodeSet.rows.length * 10)"
-          }
-        },
-        {
-          "name": "TableColumnDataType",
-          "basisColumn": "DataType"
-        },
-        {
-          "name": "TableColumnFieldType",
-          "basisColumn": "FieldType"
-        },
-        {
-          "name": "TableColumnSQL",
-          "basisColumn": "SQL"
-        },
-        {
-          "name": "TableColumnLabel",
-          "basisColumn": "Label"
-        },
-        {
-          "name": "TableColumnLength",
-          "basisColumn": "Length"
-        },
-        {
-          "name": "TableColumnHelp",
-          "basisColumn": "Help"
-        },
-        {
-          "name": "TableColumnPlaceholder",
-          "basisColumn": "Placeholder"
-        },
-        {
-          "name": "TableColumnColumnDefault",
-          "basisColumn": "ColumnDefault"
-        }
-      ],
-      "orderBy": [
-        {
-          "fieldName": "TableColumnDisplayOrder"
-        }
-      ]
-    },
-    {
-      "name": "TableJoins",
-      "parentField": "TableTableID",
-      "basisTable": "Join",
-      "childField": "TableJoinFromTableID",
-      "children": [
-        {
-          "name": "TableJoinColumns",
-          "parentField": "TableJoinJoinID",
-          "basisTable": "JoinColumn",
-          "childField": "TableJoinJoinColumnJoinID",
-          "fields": [
-            {
-              "name": "TableJoinJoinColumnJoinColumnID",
-              "basisColumn": "JoinColumnID"
-            },
-            {
-              "name": "TableJoinJoinColumnJoinID",
-              "basisColumn": "JoinID"
-            },
-            {
-              "name": "TableJoinJoinColumnFromColumn",
-              "basisColumn": "FromColumn"
-            },
-            {
-              "name": "TableJoinJoinColumnToColumn",
-              "basisColumn": "ToColumn"
-            },
-            {
-              "name": "TableJoinJoinColumnFromText",
-              "basisColumn": "FromText"
-            }
-          ]
-        }
-      ],
-      "fields": [
-        {
-          "name": "TableJoinJoinID",
-          "updateable": false,
-          "basisColumn": "JoinID"
-        },
-        {
-          "name": "TableJoinName",
-          "basisColumn": "Name"
-        },
-        {
-          "name": "TableJoinFromTableID",
-          "basisColumn": "FromTableID"
-        },
-        {
-          "name": "TableJoinToTableName",
-          "basisColumn": "ToTableName"
-        },
-        {
-          "name": "TableJoinRequired",
-          "dataType": "Boolean",
-          "fieldDefault": {
-            "value": "true"
-          },
-          "basisColumn": "Required"
-        }
-      ]
-    },
-    {
-      "name": "TableIndex",
-      "parentField": "TableTableID",
-      "basisTable": "Index",
-      "childField": "TableIndexTableID",
-      "children": [
-        {
-          "name": "TableIndexColumn",
-          "parentField": "TableIndexID",
-          "basisTable": "IndexColumn",
-          "childField": "TableIndexColumnIndexID",
-          "fields": [
-            {
-              "name": "TableIndexColumnID",
-              "basisColumn": "IndexColumnID"
-            },
-            {
-              "name": "TableIndexColumnIndexID",
-              "basisColumn": "IndexID"
-            },
-            {
-              "name": "TableIndexColumnOrder",
-              "basisColumn": "Order"
-            },
-            {
-              "name": "TableIndexColumnColumnID",
-              "basisColumn": "ColumnID"
-            },
-            {
-              "name": "TableIndexColumnColumnTableID",
-              "basisColumn": "TableID",
-              "step": "Column"
-            },
-            {
-              "name": "TableIndexColumnColumnName",
-              "basisColumn": "Name",
-              "step": "Column"
-            }
-          ],
-          "orderBy": [
-            {
-              "fieldName": "TableIndexColumnOrder"
-            }
-          ],
-          "steps": [
-            {
-              "name": "Column",
-              "join": "Column"
-            }
-          ]
-        }
-      ],
-      "fields": [
-        {
-          "name": "TableIndexID",
-          "updateable": false,
-          "basisColumn": "IndexID"
-        },
-        {
-          "name": "TableIndexTableID",
-          "basisColumn": "TableID"
-        },
-        {
-          "name": "TableIndexPriority",
-          "basisColumn": "Priority"
-        },
-        {
-          "name": "TableIndexUnique",
-          "basisColumn": "Unique"
-        }
-      ],
-      "orderBy": [
-        {
-          "fieldName": "TableIndexPriority"
-        }
-      ]
-    }
-  ],
-  "fields": [
-    {
-      "name": "TableTableID",
-      "updateable": false,
-      "basisColumn": "TableID"
-    },
-    {
-      "name": "TableName",
-      "basisColumn": "Name"
-    },
-    {
-      "name": "TableSQL",
-      "basisColumn": "SQL"
-    },
-    {
-      "name": "TableModule",
-      "basisColumn": "Module"
-    },
-    {
-      "name": "TablePrimaryKey",
-      "basisColumn": "PrimaryKey"
-    },
-    {
-      "name": "TableAllowInsert",
-      "basisColumn": "AllowInsert"
-    },
-    {
-      "name": "TableAllowUpdate",
-      "basisColumn": "AllowUpdate"
-    },
-    {
-      "name": "TableAllowDelete",
-      "basisColumn": "AllowDelete"
-    }
-  ],
-  "orderBy": [
-    {
-      "fieldName": "TableName"
-    }
-  ]
+  "basisTable" : "Table",
+  "limit" : 5,
+  "children" : [ {
+    "name" : "TableColumns",
+    "parentField" : "TableTableID",
+    "basisTable" : "Column",
+    "childField" : "TableColumnTableID",
+    "fields" : [ {
+      "name" : "TableColumnColumnID",
+      "basisColumn" : "ColumnID"
+    }, {
+      "name" : "TableColumnName",
+      "basisColumn" : "Name"
+    }, {
+      "name" : "TableColumnTableID",
+      "basisColumn" : "TableID"
+    }, {
+      "name" : "TableColumnRequired",
+      "basisColumn" : "Required"
+    }, {
+      "name" : "TableColumnUpdateable",
+      "basisColumn" : "Updateable"
+    }, {
+      "name" : "TableColumnDisplayOrder",
+      "basisColumn" : "DisplayOrder",
+      "fieldDefault": {
+        "type": "fxn",
+        "updateable": false,
+        "value": "10 + (row.nodeSet.rows.length * 10)"
+      }
+    }, {
+      "name" : "TableColumnDataType",
+      "basisColumn" : "DataType"
+    }, {
+      "name" : "TableColumnFieldType",
+      "basisColumn" : "FieldType"
+    }, {
+      "name" : "TableColumnSQL",
+      "basisColumn" : "SQL"
+    }, {
+      "name" : "TableColumnLabel",
+      "basisColumn" : "Label"
+    }, {
+      "name" : "TableColumnLength",
+      "basisColumn" : "Length"
+    }, {
+      "name" : "TableColumnHelp",
+      "basisColumn" : "Help"
+    }, {
+      "name" : "TableColumnPlaceholder",
+      "basisColumn" : "Placeholder"
+    }, {
+      "name" : "TableColumnColumnDefault",
+      "basisColumn" : "ColumnDefault"
+    } ],
+    "orderBy" : [ {
+      "fieldName" : "TableColumnDisplayOrder"
+    } ]
+  }, {
+    "name" : "TableJoins",
+    "parentField" : "TableTableID",
+    "basisTable" : "Join",
+    "childField" : "TableJoinFromTableID",
+    "children" : [ {
+      "name" : "TableJoinColumns",
+      "parentField" : "TableJoinJoinID",
+      "basisTable" : "JoinColumn",
+      "childField" : "TableJoinJoinColumnJoinID",
+      "fields" : [ {
+        "name" : "TableJoinJoinColumnJoinColumnID",
+        "basisColumn" : "JoinColumnID"
+      }, {
+        "name" : "TableJoinJoinColumnJoinID",
+        "basisColumn" : "JoinID"
+      }, {
+        "name" : "TableJoinJoinColumnFromColumn",
+        "basisColumn" : "FromColumn"
+      }, {
+        "name" : "TableJoinJoinColumnToColumn",
+        "basisColumn" : "ToColumn"
+      }, {
+        "name" : "TableJoinJoinColumnFromText",
+        "basisColumn" : "FromText"
+      } ]
+    } ],
+    "fields" : [ {
+      "name" : "TableJoinJoinID",
+      "updateable" : false,
+      "basisColumn" : "JoinID"
+    }, {
+      "name" : "TableJoinName",
+      "basisColumn" : "Name"
+    }, {
+      "name" : "TableJoinFromTableID",
+      "basisColumn" : "FromTableID"
+    }, {
+      "name" : "TableJoinToTableName",
+      "basisColumn" : "ToTableName"
+    }, {
+      "name" : "TableJoinRequired",
+      "basisColumn" : "Required",
+      "dataType": "Boolean",
+      "fieldDefault": {
+        "value": "true"
+      }
+    } ]
+  }, {
+    "name" : "TableIndex",
+    "parentField" : "TableTableID",
+    "basisTable" : "Index",
+    "childField" : "TableIndexTableID",
+    "children" : [ {
+      "name" : "TableIndexColumn",
+      "parentField" : "TableIndexID",
+      "basisTable" : "IndexColumn",
+      "childField" : "TableIndexColumnIndexID",
+      "fields" : [ {
+        "name" : "TableIndexColumnID",
+        "basisColumn" : "IndexColumnID"
+      }, {
+        "name" : "TableIndexColumnIndexID",
+        "basisColumn" : "IndexID"
+      }, {
+        "name" : "TableIndexColumnOrder",
+        "basisColumn" : "Order"
+      }, {
+        "name" : "TableIndexColumnColumnID",
+        "basisColumn" : "ColumnID"
+      }, {
+        "name" : "TableIndexColumnColumnTableID",
+        "step" : "Column",
+        "basisColumn" : "TableID"
+      }, {
+        "name" : "TableIndexColumnColumnName",
+        "step" : "Column",
+        "basisColumn" : "Name"
+      } ],
+      "orderBy" : [ {
+        "fieldName" : "TableIndexColumnOrder"
+      } ],
+      "steps" : [ {
+        "name" : "Column",
+        "join" : "Column"
+      } ]
+    } ],
+    "fields" : [ {
+      "name" : "TableIndexID",
+      "updateable" : false,
+      "basisColumn" : "IndexID"
+    }, {
+      "name" : "TableIndexTableID",
+      "basisColumn" : "TableID"
+    }, {
+      "name" : "TableIndexPriority",
+      "basisColumn" : "Priority"
+    }, {
+      "name" : "TableIndexUnique",
+      "basisColumn" : "Unique"
+    } ],
+    "orderBy" : [ {
+      "fieldName" : "TableIndexPriority"
+    } ]
+  } ],
+  "fields" : [ {
+    "name" : "TableTableID",
+    "updateable" : false,
+    "basisColumn" : "TableID"
+  }, {
+    "name" : "TableName",
+    "basisColumn" : "Name"
+  }, {
+    "name" : "TableSQL",
+    "basisColumn" : "SQL"
+  }, {
+    "name" : "TableModule",
+    "basisColumn" : "Module"
+  }, {
+    "name" : "TablePrimaryKey",
+    "basisColumn" : "PrimaryKey"
+  }, {
+    "name" : "TableAllowInsert",
+    "basisColumn" : "AllowInsert"
+  }, {
+    "name" : "TableAllowUpdate",
+    "basisColumn" : "AllowUpdate"
+  }, {
+    "name" : "TableAllowDelete",
+    "basisColumn" : "AllowDelete"
+  } ],
+  "orderBy" : [ {
+    "fieldName" : "TableName"
+  } ]
 }
