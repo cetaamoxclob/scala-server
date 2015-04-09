@@ -18,7 +18,7 @@
     "basisColumn" : "TableID"
   }, {
     "name" : "ColumnTableName",
-    "step": "t",
+    "step" : "t",
     "basisColumn" : "Name"
   } ],
   "orderBy" : [ {
