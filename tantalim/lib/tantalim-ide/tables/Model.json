@@ -33,6 +33,9 @@
     "dbName" : "parentID",
     "dataType" : "Integer"
   }, {
+    "name" : "Extends",
+    "dbName" : "extends"
+  }, {
     "name" : "Limit",
     "dbName" : "maxRows",
     "dataType" : "Integer"

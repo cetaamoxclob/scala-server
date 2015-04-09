@@ -237,6 +237,10 @@
     {
       "name": "customUrlSource",
       "basisColumn": "CustomUrlSource"
+    },
+    {
+      "name": "extends",
+      "basisColumn": "Extends"
     }
   ]
 }
