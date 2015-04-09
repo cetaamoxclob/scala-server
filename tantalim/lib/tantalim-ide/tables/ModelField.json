@@ -43,18 +43,31 @@
   }, {
     "name" : "Updateable",
     "dbName" : "updateable",
-    "fieldType" : "checkbox",
     "dataType" : "Boolean"
   }, {
     "name" : "Required",
     "dbName" : "required",
-    "fieldType" : "checkbox",
     "dataType" : "Boolean"
   }, {
     "name" : "Export",
     "dbName" : "export",
-    "fieldType" : "checkbox",
     "dataType" : "Boolean"
+  }, {
+    "name" : "AlwaysDefault",
+    "dbName" : "alwaysDefault",
+    "dataType" : "Boolean"
+  }, {
+    "name" : "FieldDefault",
+    "dbName" : "fieldDefault",
+    "label" : "Field Default"
+  }, {
+    "name" : "ValueDefault",
+    "dbName" : "valueDefault",
+    "label" : "Value Default"
+  }, {
+    "name" : "FunctionDefault",
+    "dbName" : "functionDefault",
+    "label" : "Function Default"
   } ],
   "indexes" : [ {
     "priority" : 10,
