@@ -1,61 +1,43 @@
 {
-  "title": "Build Menu",
-  "icon": "fa-bars",
-  "sections": [
-    {
-      "name": "Menu",
-      "model": "BuildMenu",
-      "title": "Menu",
-      "fields": [
-        {
-          "name": "MenuName",
-          "showInNavigation": true
-        },
-        {
-          "name": "MenuTitle"
-        }
-      ],
-      "sections": [
-        {
-          "name": "MenuContent",
-          "model": "MenuContent",
-          "title": "Content",
-          "fields": [
-            {
-              "name": "MenuContentDisplayOrder"
-            },
-            {
-              "name": "MenuContentTitle",
-              "showInNavigation": true
-            }
-          ],
-          "sections": [
-            {
-              "name": "MenuItem",
-              "model": "MenuItem",
-              "title": "Items",
-              "viewMode": "table",
-              "fields": [
-                {
-                  "name": "MenuItemDisplayOrder"
-                },
-                {
-                  "name": "MenuItemPage"
-                },
-                {
-                  "name": "MenuItemTitle"
-                },
-                {
-                  "name": "MenuItemLink"
-                },
-                {
-                  "name": "MenuItemIcon"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  "icon" : "fa-bars",
+  "title" : "Build Menu",
+  "sections" : [ {
+    "name" : "Menu",
+    "model" : "BuildMenu",
+    "title" : "Menu",
+    "fields" : [ {
+      "name" : "MenuName",
+      "showInNavigation" : true
+    }, {
+      "name" : "MenuTitle"
+    } ],
+    "sections" : [ {
+      "name" : "MenuContent",
+      "model" : "MenuContent",
+      "title" : "Content",
+      "fields" : [ {
+        "name" : "MenuContentDisplayOrder"
+      }, {
+        "name" : "MenuContentTitle",
+        "showInNavigation" : true
+      } ],
+      "sections" : [ {
+        "viewMode" : "table",
+        "name" : "MenuItem",
+        "model" : "MenuItem",
+        "title" : "Items",
+        "fields" : [ {
+          "name" : "MenuItemDisplayOrder"
+        }, {
+          "name" : "MenuItemPage"
+        }, {
+          "name" : "MenuItemTitle"
+        }, {
+          "name" : "MenuItemLink"
+        }, {
+          "name" : "MenuItemIcon"
+        } ]
+      } ]
+    } ]
+  } ]
 }
