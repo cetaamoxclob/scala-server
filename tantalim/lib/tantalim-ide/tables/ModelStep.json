@@ -39,5 +39,18 @@
     "name" : "ParentID",
     "dbName" : "parentID",
     "dataType" : "Integer"
+  } ],
+  "indexes" : [ {
+    "priority" : 10,
+    "columns" : [ {
+      "name" : "StepID"
+    } ]
+  }, {
+    "priority" : 20,
+    "columns" : [ {
+      "name" : "Name"
+    }, {
+      "name" : "ModelID"
+    } ]
   } ]
 }
