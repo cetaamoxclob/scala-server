@@ -173,16 +173,16 @@
             },
             {
               "name": "IndexColumnColumnTableID",
-              "basisColumn": "TableID",
               "step": "Column",
-              "alwaysDefault": true,
+              "basisColumn": "TableID",
+              "export": false,
               "fieldDefault": "TableID",
-              "export": false
+              "alwaysDefault": true
             },
             {
               "name": "name",
-              "basisColumn": "Name",
-              "step": "Column"
+              "step": "Column",
+              "basisColumn": "Name"
             }
           ],
           "orderBy": [

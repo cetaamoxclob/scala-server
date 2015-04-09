@@ -32,8 +32,8 @@
         },
         {
           "name": "parent",
-          "basisColumn": "Name",
-          "step": "Parent"
+          "step": "Parent",
+          "basisColumn": "Name"
         }
       ],
       "steps": [
@@ -78,16 +78,16 @@
         },
         {
           "name": "step",
-          "basisColumn": "Name",
-          "step": "Step"
+          "step": "Step",
+          "basisColumn": "Name"
         },
         {
           "name": "ModelFieldStepModelID",
-          "basisColumn": "ModelID",
           "step": "Step",
-          "alwaysDefault": true,
+          "basisColumn": "ModelID",
+          "export": false,
           "fieldDefault": "ModelID",
-          "export": false
+          "alwaysDefault": true
         },
         {
           "name": "required",
@@ -126,12 +126,6 @@
       "parentField": "ModelID",
       "basisTable": "ModelSort",
       "childField": "ModelSortModelID",
-      "steps": [
-        {
-          "name": "Field",
-          "join": "Field"
-        }
-      ],
       "fields": [
         {
           "name": "ModelSortID",
@@ -150,20 +144,26 @@
         },
         {
           "name": "fieldName",
-          "basisColumn": "Name",
-          "step": "Field"
+          "step": "Field",
+          "basisColumn": "Name"
         },
         {
           "name": "ModelSortFieldModelID",
-          "basisColumn": "ModelID",
           "step": "Field",
+          "basisColumn": "ModelID",
           "export": false,
-          "alwaysDefault": true,
-          "fieldDefault": "ModelID"
+          "fieldDefault": "ModelID",
+          "alwaysDefault": true
         },
         {
           "name": "direction",
           "basisColumn": "Ascending"
+        }
+      ],
+      "steps": [
+        {
+          "name": "Field",
+          "join": "Field"
         }
       ]
     },
