@@ -38,18 +38,16 @@ case class ModelFieldJson(name: String,
                           step: Option[String],
                           required: Option[Boolean],
                           updateable: Option[Boolean],
-                          fieldDefault: Option[FieldDefaultJson],
+                          alwaysDefault: Option[Boolean],
+                          fieldDefault: Option[String],
+                          valueDefault: Option[String],
+                          functionDefault: Option[String],
                           export: Option[Boolean]
                            ) {
   override def toString = {
     s"$basisColumn AS $name"
   }
 }
-
-case class FieldDefaultJson(value: String,
-                            overwrite: Option[Boolean],
-                            defaultType: Option[String],
-                            watch: Option[Seq[String]])
 
 object ModelJson {
   implicit def modelReads: Reads[ModelJson] = (
@@ -77,16 +75,12 @@ object ModelJson {
       (JsPath \ "step").readNullable[String] and
       (JsPath \ "required").readNullable[Boolean] and
       (JsPath \ "updateable").readNullable[Boolean] and
-      (JsPath \ "fieldDefault").readNullable[FieldDefaultJson] and
+      (JsPath \ "alwaysDefault").readNullable[Boolean] and
+      (JsPath \ "fieldDefault").readNullable[String] and
+      (JsPath \ "valueDefault").readNullable[String] and
+      (JsPath \ "functionDefault").readNullable[String] and
       (JsPath \ "export").readNullable[Boolean]
     ).apply(ModelFieldJson.apply _)
-
-  implicit def fieldDefaultReads: Reads[FieldDefaultJson] = (
-    (JsPath \ "value").read[String] and
-      (JsPath \ "overwrite").readNullable[Boolean] and
-      (JsPath \ "type").readNullable[String] and
-      (JsPath \ "watch").readNullable[Seq[String]]
-    ).apply(FieldDefaultJson.apply _)
 
   implicit def stepReads: Reads[ModelStepJson] = (
     (JsPath \ "name").read[String] and

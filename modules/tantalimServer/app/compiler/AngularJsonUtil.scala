@@ -64,17 +64,13 @@ object AngularJsonUtil {
     "name" -> JsString(field.name),
     "dataType" -> JsString(field.basisColumn.dataType.toString),
     "updateable" -> JsBoolean(field.updateable),
-    "fieldDefault" -> {
-      if (field.fieldDefault.isEmpty) JsNull
-      else toJson(field.fieldDefault.get)
-    }
+    "alwaysDefault" -> JsBoolean(field.alwaysDefault),
+    "fieldDefault" -> toJson(field.fieldDefault),
+    "functionDefault" -> toJson(field.functionDefault),
+    "valueDefault" -> toJson(field.valueDefault)
   ))
 
-  private def toJson(fieldDefault: FieldDefault): JsObject = JsObject(Seq(
-    "type" -> JsString(fieldDefault.defaultType.toString),
-    "overwrite" -> JsBoolean(fieldDefault.overwrite),
-    "value" -> JsString(fieldDefault.value)
-  ))
+  def toJson(option: Option[String]): JsValue = if (option.isEmpty) JsNull else JsString(option.get)
 
   def toJson(user: User): JsObject = JsObject(Seq(
     "id" -> JsString(user.id),

@@ -142,7 +142,8 @@ object Application extends Controller with Timer {
       } catch {
         case e: TantalimException => Ok(Json.obj(
           "status" -> "failure",
-          "message" -> e.getMessage
+          "message" -> e.getMessage,
+          "help" -> e.getHelp
         ))
         case e: Exception => Ok(Json.obj(
           "status" -> "failure",

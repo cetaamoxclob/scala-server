@@ -2,7 +2,7 @@ package compiler
 
 import com.tantalim.models._
 import com.tantalim.util.TantalimException
-import compiler.src.{FieldDefaultJson, ModelFieldJson, ModelJson}
+import compiler.src.{ModelFieldJson, ModelJson}
 import play.api.libs.json.{JsError, JsSuccess}
 import services.ArtifactService
 
@@ -255,32 +255,13 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
       step = step,
       required = field.required.getOrElse(basisColumn.required),
       updateable = field.updateable.getOrElse(basisColumn.updateable),
-      fieldDefault = compileFieldDefault(field.fieldDefault),
+      alwaysDefault = field.alwaysDefault.getOrElse(false),
+      fieldDefault = field.fieldDefault,
+      functionDefault = field.functionDefault,
+      valueDefault = field.valueDefault,
       export = field.export.getOrElse(true)
     )
   }
-
-  private def compileFieldDefault(fieldDefault: Option[FieldDefaultJson]): Option[FieldDefault] = {
-    if (fieldDefault.isEmpty) None
-    else {
-      val o = fieldDefault.get
-      Some(new FieldDefault(
-        o.value,
-        o.overwrite.getOrElse(false),
-        compileFieldDefaultType(o.defaultType),
-        o.watch.getOrElse(Seq.empty))
-      )
-    }
-  }
-
-  private def compileFieldDefaultType(fieldTypeJson: Option[String]): FieldDefaultType = {
-    if (fieldTypeJson.isEmpty) FieldDefaultType.Constant
-    else {
-      val needle = fieldTypeJson.get.toLowerCase
-      FieldDefaultType.values.find(t => t.toString.toLowerCase == needle).get
-    }
-  }
-
 }
 
 case class TempModelStep(name: String,

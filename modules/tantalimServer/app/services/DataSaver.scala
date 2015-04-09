@@ -208,7 +208,7 @@ trait DataSaver extends DataReader with ModelCompiler with DatabaseConnection {
         return row.nodeSet.parentInstance.get.get(row.model.parentField.get)
     }
 
-    if (field.fieldDefault.isDefined && field.fieldDefault.get.overwrite) {
+    if (field.alwaysDefault) {
       getDefaultValue(row, field)
     } else {
       val value = row.get(field.name)
@@ -218,37 +218,36 @@ trait DataSaver extends DataReader with ModelCompiler with DatabaseConnection {
           case _ => Some(value.get)
         }
       } else {
-        if (field.fieldDefault.isDefined) {
-          getDefaultValue(row, field)
-        } else None
+        getDefaultValue(row, field)
       }
     }
   }
 
   private def getDefaultValue(row: SmartNodeInstance, field: ModelField): Option[TntValue] = {
-    val default = field.fieldDefault.get
-    default.defaultType match {
-      case FieldDefaultType.Constant =>
-        field.basisColumn.dataType match {
-          case DataType.Boolean => Some(TntBoolean(default.value == "true"))
-          case _ => Some(TntString(default.value))
-        }
-      case FieldDefaultType.Field =>
-        val valueFromDefaultField = row.get(default.value)
-        if (valueFromDefaultField.isEmpty) {
-          println("row has no value for " + default.value)
-        }
-        valueFromDefaultField
-      case FieldDefaultType.Fxn =>
-        // Rule of Three - waiting for more examples of functions
-        // https://code.google.com/p/scalascriptengine/
-        if (field.name == "displayOrder") {
-          Some(TntInt(10 + (row.index * 10)))
-          None
-        } else {
-          None
-        }
-    }
+    if (field.fieldDefault.isDefined) {
+      val defaultValue = field.fieldDefault.get
+      val valueFromDefaultField = row.get(defaultValue)
+      if (valueFromDefaultField.isEmpty) {
+        println("row has no value for " + defaultValue)
+      }
+      valueFromDefaultField
+    } else if (field.valueDefault.isDefined) {
+      val defaultValue = field.valueDefault.get
+      field.basisColumn.dataType match {
+        case DataType.Boolean => Some(TntBoolean(defaultValue == "true"))
+        case _ => Some(TntString(defaultValue))
+      }
+
+    } else if (field.functionDefault.isDefined) {
+      // Rule of Three - waiting for more examples of functions
+      // https://code.google.com/p/scalascriptengine/
+      if (field.name == "displayOrder") {
+        Some(TntInt(10 + (row.index * 10)))
+        None
+      } else {
+        None
+      }
+    } else None
   }
 
   private def createSqlForUpdate(row: SmartNodeInstance): (String, List[Any]) = {

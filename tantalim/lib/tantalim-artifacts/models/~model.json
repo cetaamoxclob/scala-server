@@ -149,16 +149,29 @@
           "name": "ModelFieldStepModelID",
           "basisColumn": "ModelID",
           "step": "Step",
-          "fieldDefault": {
-            "value": "ModelID",
-            "overwrite": true,
-            "type": "field"
-          },
+          "alwaysDefault": true,
+          "fieldDefault": "ModelID",
           "export": false
         },
         {
           "name": "required",
           "basisColumn": "Required"
+        },
+        {
+          "name": "alwaysDefault",
+          "basisColumn": "AlwaysDefault"
+        },
+        {
+          "name": "fieldDefault",
+          "basisColumn": "FieldDefault"
+        },
+        {
+          "name": "valueDefault",
+          "basisColumn": "ValueDefault"
+        },
+        {
+          "name": "functionDefault",
+          "basisColumn": "FunctionDefault"
         },
         {
           "name": "export",
@@ -203,11 +216,8 @@
           "basisColumn": "ModelID",
           "step": "Field",
           "export": false,
-          "fieldDefault": {
-            "value": "ModelID",
-            "overwrite": true,
-            "type": "field"
-          }
+          "alwaysDefault": true,
+          "fieldDefault": "ModelID"
         },
         {
           "name": "direction",

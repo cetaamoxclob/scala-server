@@ -80,16 +80,14 @@ case class ModelField(name: String,
                       step: Option[ModelStep] = None,
                       updateable: Boolean = true,
                       required: Boolean = false,
-                      fieldDefault: Option[FieldDefault] = None,
+                      alwaysDefault: Boolean = false,
+                      fieldDefault: Option[String] = None,
+                      functionDefault: Option[String] = None,
+                      valueDefault: Option[String] = None,
                       export: Boolean = true
                        ) {
   def dataType: DataType = basisColumn.dataType
 }
-
-case class FieldDefault(value: String,
-                        overwrite: Boolean,
-                        defaultType: FieldDefaultType,
-                        watch: Seq[String])
 
 case class ModelStep(name: String,
                      tableAlias: Int,
