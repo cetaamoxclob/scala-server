@@ -5,6 +5,83 @@
     "parentField" : "PageID",
     "basisTable" : "Section",
     "childField" : "SectionPageID",
+    "children" : [ {
+      "name" : "fields",
+      "parentField" : "SectionSectionID",
+      "basisTable" : "PageField",
+      "childField" : "PageFieldSectionID",
+      "fields" : [ {
+        "name" : "PageFieldID",
+        "basisColumn" : "FieldID",
+        "export" : false
+      }, {
+        "name" : "PageFieldSectionID",
+        "basisColumn" : "SectionID",
+        "export" : false
+      }, {
+        "name" : "name",
+        "basisColumn" : "Name"
+      }, {
+        "name" : "showInFormView",
+        "basisColumn" : "ShowInFormView"
+      }, {
+        "name" : "showInTableView",
+        "basisColumn" : "ShowInTableView"
+      }, {
+        "name" : "showInNavigation",
+        "basisColumn" : "ShowInNavigation"
+      }, {
+        "name" : "label",
+        "basisColumn" : "Label"
+      }, {
+        "name" : "fieldType",
+        "basisColumn" : "FieldType"
+      }, {
+        "name" : "help",
+        "basisColumn" : "Help"
+      }, {
+        "name" : "placeholder",
+        "basisColumn" : "Placeholder"
+      }, {
+        "name" : "filter",
+        "basisColumn" : "Filter"
+      }, {
+        "name" : "blurFunction",
+        "basisColumn" : "BlurFunction"
+      }, {
+        "name" : "disabled",
+        "basisColumn" : "Disabled"
+      }, {
+        "name" : "searchable",
+        "basisColumn" : "Searchable"
+      } ]
+    }, {
+      "name" : "children",
+      "parentField" : "SectionSectionID",
+      "basisTable" : "Section",
+      "extends" : "sections",
+      "childField" : "SectionParentID"
+    }, {
+      "name" : "buttons",
+      "parentField" : "SectionSectionID",
+      "basisTable" : "Button",
+      "childField" : "PageButtonSectionID",
+      "fields" : [ {
+        "name" : "PageButtonID",
+        "basisColumn" : "ButtonID",
+        "export" : false
+      }, {
+        "name" : "PageButtonSectionID",
+        "basisColumn" : "SectionID",
+        "export" : false
+      }, {
+        "name" : "label",
+        "basisColumn" : "Label"
+      }, {
+        "name" : "fxn",
+        "basisColumn" : "Function"
+      } ]
+    } ],
     "fields" : [ {
       "name" : "SectionSectionID",
       "basisColumn" : "SectionID",
@@ -41,7 +118,8 @@
     "export" : false
   }, {
     "name" : "name",
-    "basisColumn" : "Name"
+    "basisColumn" : "Name",
+    "export" : false
   }, {
     "name" : "title",
     "basisColumn" : "Title"
