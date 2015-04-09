@@ -172,6 +172,9 @@
   }, {
     "name" : "ModelCustomUrlSource",
     "basisColumn" : "CustomUrlSource"
+  }, {
+    "name" : "ModelExtends",
+    "basisColumn" : "Extends"
   } ],
   "steps" : [ {
     "name" : "Parent",
