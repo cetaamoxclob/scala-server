@@ -1,246 +1,189 @@
 {
-  "basisTable": "Model",
-  "children": [
-    {
-      "name": "steps",
-      "parentField": "ModelID",
-      "basisTable": "ModelStep",
-      "childField": "ModelStepModelID",
-      "fields": [
-        {
-          "name": "ModelStepID",
-          "basisColumn": "StepID",
-          "export": false
-        },
-        {
-          "name": "ModelStepModelID",
-          "basisColumn": "ModelID",
-          "export": false
-        },
-        {
-          "name": "name",
-          "basisColumn": "Name"
-        },
-        {
-          "name": "join",
-          "basisColumn": "Join"
-        },
-        {
-          "name": "ModelStepParentID",
-          "basisColumn": "ParentID",
-          "export": false
-        },
-        {
-          "name": "parent",
-          "step": "Parent",
-          "basisColumn": "Name"
-        }
-      ],
-      "steps": [
-        {
-          "name": "Parent",
-          "join": "Parent"
-        }
-      ]
-    },
-    {
-      "name": "fields",
-      "parentField": "ModelID",
-      "basisTable": "ModelField",
-      "childField": "ModelFieldModelID",
-      "fields": [
-        {
-          "name": "ModelFieldID",
-          "basisColumn": "FieldID",
-          "export": false
-        },
-        {
-          "name": "ModelFieldModelID",
-          "basisColumn": "ModelID",
-          "export": false
-        },
-        {
-          "name": "name",
-          "basisColumn": "Name"
-        },
-        {
-          "name": "basisColumn",
-          "basisColumn": "BasisColumn"
-        },
-        {
-          "name": "updateable",
-          "basisColumn": "Updateable"
-        },
-        {
-          "name": "ModelFieldStepID",
-          "basisColumn": "StepID",
-          "export": false
-        },
-        {
-          "name": "step",
-          "step": "Step",
-          "basisColumn": "Name"
-        },
-        {
-          "name": "ModelFieldStepModelID",
-          "step": "Step",
-          "basisColumn": "ModelID",
-          "export": false,
-          "fieldDefault": "ModelID",
-          "alwaysDefault": true
-        },
-        {
-          "name": "required",
-          "basisColumn": "Required"
-        },
-        {
-          "name": "alwaysDefault",
-          "basisColumn": "AlwaysDefault"
-        },
-        {
-          "name": "fieldDefault",
-          "basisColumn": "FieldDefault"
-        },
-        {
-          "name": "valueDefault",
-          "basisColumn": "ValueDefault"
-        },
-        {
-          "name": "functionDefault",
-          "basisColumn": "FunctionDefault"
-        },
-        {
-          "name": "export",
-          "basisColumn": "Export"
-        }
-      ],
-      "steps": [
-        {
-          "name": "Step",
-          "join": "Step"
-        }
-      ]
-    },
-    {
-      "name": "orderBy",
-      "parentField": "ModelID",
-      "basisTable": "ModelSort",
-      "childField": "ModelSortModelID",
-      "fields": [
-        {
-          "name": "ModelSortID",
-          "basisColumn": "SortID",
-          "export": false
-        },
-        {
-          "name": "ModelSortModelID",
-          "basisColumn": "ModelID",
-          "export": false
-        },
-        {
-          "name": "ModelSortFieldID",
-          "basisColumn": "FieldID",
-          "export": false
-        },
-        {
-          "name": "fieldName",
-          "step": "Field",
-          "basisColumn": "Name"
-        },
-        {
-          "name": "ModelSortFieldModelID",
-          "step": "Field",
-          "basisColumn": "ModelID",
-          "export": false,
-          "fieldDefault": "ModelID",
-          "alwaysDefault": true
-        },
-        {
-          "name": "direction",
-          "basisColumn": "Ascending"
-        }
-      ],
-      "steps": [
-        {
-          "name": "Field",
-          "join": "Field"
-        }
-      ]
-    },
-    {
-      "name": "children",
-      "extends": "~model",
-      "parentField": "ModelID",
-      "basisTable": "Model",
-      "childField": "ModelParentID",
-      "fields": [
-        {
-          "name": "name",
-          "basisColumn": "Name"
-        }
-      ]
-    }
-  ],
-  "fields": [
-    {
-      "name": "ModelID",
-      "basisColumn": "ModelID",
-      "export": false
-    },
-    {
-      "name": "module",
-      "basisColumn": "Module",
-      "export": false
-    },
-    {
-      "name": "name",
-      "basisColumn": "Name",
-      "export": false
-    },
-    {
-      "name": "basisTable",
-      "basisColumn": "BasisTable"
-    },
-    {
-      "name": "ModelParentID",
-      "basisColumn": "ParentID",
-      "export": false
-    },
-    {
-      "name": "limit",
-      "basisColumn": "Limit"
-    },
-    {
-      "name": "filter",
-      "basisColumn": "Filter"
-    },
-    {
-      "name": "allowInsert",
-      "basisColumn": "AllowInsert"
-    },
-    {
-      "name": "allowUpdate",
-      "basisColumn": "AllowUpdate"
-    },
-    {
-      "name": "allowDelete",
-      "basisColumn": "AllowDelete"
-    },
-    {
-      "name": "parentField",
-      "basisColumn": "ParentField"
-    },
-    {
-      "name": "childField",
-      "basisColumn": "ChildField"
-    },
-    {
-      "name": "customUrlSource",
-      "basisColumn": "CustomUrlSource"
-    },
-    {
-      "name": "extends",
-      "basisColumn": "Extends"
-    }
-  ]
+  "basisTable" : "Model",
+  "children" : [ {
+    "name" : "steps",
+    "parentField" : "ModelID",
+    "basisTable" : "ModelStep",
+    "childField" : "ModelStepModelID",
+    "fields" : [ {
+      "name" : "ModelStepID",
+      "basisColumn" : "StepID",
+      "export" : false
+    }, {
+      "name" : "ModelStepModelID",
+      "basisColumn" : "ModelID",
+      "export" : false
+    }, {
+      "name" : "name",
+      "basisColumn" : "Name"
+    }, {
+      "name" : "join",
+      "basisColumn" : "Join"
+    }, {
+      "name" : "ModelStepParentID",
+      "basisColumn" : "ParentID",
+      "export" : false
+    }, {
+      "name" : "parent",
+      "step" : "Parent",
+      "basisColumn" : "Name"
+    } ],
+    "steps" : [ {
+      "name" : "Parent",
+      "join" : "Parent"
+    } ]
+  }, {
+    "name" : "fields",
+    "parentField" : "ModelID",
+    "basisTable" : "ModelField",
+    "childField" : "ModelFieldModelID",
+    "fields" : [ {
+      "name" : "ModelFieldID",
+      "basisColumn" : "FieldID",
+      "export" : false
+    }, {
+      "name" : "ModelFieldModelID",
+      "basisColumn" : "ModelID",
+      "export" : false
+    }, {
+      "name" : "name",
+      "basisColumn" : "Name"
+    }, {
+      "name" : "basisColumn",
+      "basisColumn" : "BasisColumn"
+    }, {
+      "name" : "updateable",
+      "basisColumn" : "Updateable"
+    }, {
+      "name" : "ModelFieldStepID",
+      "basisColumn" : "StepID",
+      "export" : false
+    }, {
+      "name" : "step",
+      "step" : "Step",
+      "basisColumn" : "Name"
+    }, {
+      "name" : "ModelFieldStepModelID",
+      "step" : "Step",
+      "basisColumn" : "ModelID",
+      "export" : false,
+      "fieldDefault" : "ModelID",
+      "alwaysDefault" : true
+    }, {
+      "name" : "required",
+      "basisColumn" : "Required"
+    }, {
+      "name" : "alwaysDefault",
+      "basisColumn" : "AlwaysDefault"
+    }, {
+      "name" : "fieldDefault",
+      "basisColumn" : "FieldDefault"
+    }, {
+      "name" : "valueDefault",
+      "basisColumn" : "ValueDefault"
+    }, {
+      "name" : "functionDefault",
+      "basisColumn" : "FunctionDefault"
+    }, {
+      "name" : "export",
+      "basisColumn" : "Export"
+    } ],
+    "steps" : [ {
+      "name" : "Step",
+      "join" : "Step"
+    } ]
+  }, {
+    "name" : "orderBy",
+    "parentField" : "ModelID",
+    "basisTable" : "ModelSort",
+    "childField" : "ModelSortModelID",
+    "fields" : [ {
+      "name" : "ModelSortID",
+      "basisColumn" : "SortID",
+      "export" : false
+    }, {
+      "name" : "ModelSortModelID",
+      "basisColumn" : "ModelID",
+      "export" : false
+    }, {
+      "name" : "ModelSortFieldID",
+      "basisColumn" : "FieldID",
+      "export" : false
+    }, {
+      "name" : "fieldName",
+      "step" : "Field",
+      "basisColumn" : "Name"
+    }, {
+      "name" : "ModelSortFieldModelID",
+      "step" : "Field",
+      "basisColumn" : "ModelID",
+      "export" : false,
+      "fieldDefault" : "ModelID",
+      "alwaysDefault" : true
+    }, {
+      "name" : "direction",
+      "basisColumn" : "Ascending"
+    } ],
+    "steps" : [ {
+      "name" : "Field",
+      "join" : "Field"
+    } ]
+  }, {
+    "name" : "children",
+    "parentField" : "ModelID",
+    "basisTable" : "Model",
+    "extends" : "~model",
+    "childField" : "ModelParentID",
+    "fields" : [ {
+      "name" : "name",
+      "basisColumn" : "Name"
+    } ]
+  } ],
+  "fields" : [ {
+    "name" : "ModelID",
+    "basisColumn" : "ModelID",
+    "export" : false
+  }, {
+    "name" : "module",
+    "basisColumn" : "Module",
+    "export" : false
+  }, {
+    "name" : "name",
+    "basisColumn" : "Name",
+    "export" : false
+  }, {
+    "name" : "basisTable",
+    "basisColumn" : "BasisTable"
+  }, {
+    "name" : "ModelParentID",
+    "basisColumn" : "ParentID",
+    "export" : false
+  }, {
+    "name" : "limit",
+    "basisColumn" : "Limit"
+  }, {
+    "name" : "filter",
+    "basisColumn" : "Filter"
+  }, {
+    "name" : "allowInsert",
+    "basisColumn" : "AllowInsert"
+  }, {
+    "name" : "allowUpdate",
+    "basisColumn" : "AllowUpdate"
+  }, {
+    "name" : "allowDelete",
+    "basisColumn" : "AllowDelete"
+  }, {
+    "name" : "parentField",
+    "basisColumn" : "ParentField"
+  }, {
+    "name" : "childField",
+    "basisColumn" : "ChildField"
+  }, {
+    "name" : "customUrlSource",
+    "basisColumn" : "CustomUrlSource"
+  }, {
+    "name" : "extends",
+    "basisColumn" : "Extends"
+  } ]
 }
