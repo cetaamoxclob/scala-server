@@ -1,31 +1,22 @@
 {
-  "title": "Table Report",
-  "model": "ListTables",
-  "icon": "glyphicon-th",
-  "viewMode": "table",
-  "sections": [
-    {
-      "name": "ListTables",
-      "viewMode": "table",
-      "fields": [
+  "icon" : "glyphicon-th",
+  "title" : "Table Report",
+  "sections" : [ {
+    "viewMode" : "table",
+    "name" : "ListTables",
+    "fields" : [ {
+      "name" : "TableName",
+      "links": [
         {
-          "name": "TableName",
-          "links": [
-            {
-              "title": "Build Table",
-              "page": "BuildTable",
-              "filter": "TableTableID Equals [TableTableID]"
-            }
-          ]
-        },
-        {
-          "name": "TableSQL"
-        },
-        {
-          "name": "TableDatabase"
+          "title": "Build Table",
+          "page": "BuildTable",
+          "filter": "TableTableID Equals [TableTableID]"
         }
       ]
-
-    }
-  ]
+    }, {
+      "name" : "TableSQL"
+    }, {
+      "name" : "TableModule"
+    } ]
+  } ]
 }
