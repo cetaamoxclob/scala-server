@@ -5,6 +5,28 @@
     "parentField" : "SectionID",
     "basisTable" : "PageField",
     "childField" : "PageFieldSectionID",
+    "children" : [ {
+      "name" : "PageFieldLink",
+      "parentField" : "PageFieldID",
+      "basisTable" : "Link",
+      "childField" : "PageFieldLinkFieldID",
+      "fields" : [ {
+        "name" : "PageFieldLinkID",
+        "basisColumn" : "LinkID"
+      }, {
+        "name" : "PageFieldLinkFieldID",
+        "basisColumn" : "FieldID"
+      }, {
+        "name" : "PageFieldLinkPage",
+        "basisColumn" : "Page"
+      }, {
+        "name" : "PageFieldLinkFilter",
+        "basisColumn" : "Filter"
+      } ],
+      "orderBy" : [ {
+        "fieldName" : "PageFieldLinkPage"
+      } ]
+    } ],
     "fields" : [ {
       "name" : "PageFieldID",
       "basisColumn" : "FieldID"
@@ -122,6 +144,12 @@
     "step" : "Parent",
     "basisColumn" : "Name",
     "required" : false
+  }, {
+    "name" : "SectionPageID",
+    "basisColumn" : "PageID"
+  }, {
+    "name" : "SectionParentID",
+    "basisColumn" : "ParentID"
   } ],
   "steps" : [ {
     "name" : "Parent",

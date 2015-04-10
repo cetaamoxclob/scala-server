@@ -32,10 +32,6 @@
         "selectSourceField" : "ModelName"
       }, {
         "name" : "SectionViewMode"
-      }, {
-        "name" : "SectionPage"
-      }, {
-        "name" : "SectionParent"
       } ]
     } ],
     "buttons" : [ {

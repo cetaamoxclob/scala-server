@@ -10,7 +10,6 @@
     } ]
   }, {
     "name" : "Parent",
-    "required" : true,
     "table" : "Section",
     "columns" : [ {
       "to" : "SectionID",

@@ -9,13 +9,26 @@
     }, {
       "name" : "SectionTitle"
     }, {
-      "name" : "SectionModel"
+      "name" : "SectionModel",
+      "links" : [ {
+        "page" : "BuildModel",
+        "filter" : "ModelName Equals '${SectionModel}'"
+      } ]
     }, {
       "name" : "SectionViewMode"
     }, {
-      "name" : "SectionPage"
+      "name" : "SectionPage",
+      "links" : [ {
+        "page" : "BuildPage",
+        "filter" : "PagePageID Equals ${SectionPageID}"
+      } ]
     }, {
-      "name" : "SectionParent"
+      "name" : "SectionParent",
+      "label" : "Parent Section",
+      "links" : [ {
+        "page" : "BuildSection",
+        "filter" : "SectionID Equals ${SectionParentID}"
+      } ]
     } ],
     "sections" : [ {
       "viewMode" : "table",
@@ -58,6 +71,17 @@
       }, {
         "name" : "PageFieldShowInFormView",
         "showInTableView" : false
+      } ],
+      "sections" : [ {
+        "viewMode" : "table",
+        "name" : "PageFieldLink",
+        "model" : "PageFieldLink",
+        "title" : "Links",
+        "fields" : [ {
+          "name" : "PageFieldLinkPage"
+        }, {
+          "name" : "PageFieldLinkFilter"
+        } ]
       } ]
     }, {
       "viewMode" : "table",
