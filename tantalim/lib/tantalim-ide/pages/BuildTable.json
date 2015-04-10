@@ -39,11 +39,9 @@
         {
           "name": "TablePrimaryKey",
           "fieldType": "select",
-          "select": {
-            "model": "ListTableColumns",
-            "sourceField": "ColumnName",
-            "filter": "ColumnTableID = ${TableTableID}"
-          }
+          "selectModel": "ListTableColumns",
+          "selectSourceField": "ColumnName",
+          "selectFilter": "ColumnTableID = ${TableTableID}"
         },
         {
           "name": "TableAllowInsert"
@@ -122,10 +120,8 @@
             {
               "name": "TableJoinToTableName",
               "fieldType": "select",
-              "select": {
-                "model": "ListTables",
-                "sourceField": "TableName"
-              },
+              "selectModel": "ListTables",
+              "selectSourceField": "TableName",
               "links": [
                 {
                   "page": "BuildTable",
@@ -146,21 +142,17 @@
                   "name": "TableJoinJoinColumnFromColumn",
                   "label": "From Column",
                   "fieldType": "select",
-                  "select": {
-                    "model": "ListTableColumns",
-                    "sourceField": "ColumnName",
-                    "filter": "ColumnTableID = ${TableTableID}"
-                  }
+                  "selectModel": "ListTableColumns",
+                  "selectSourceField": "ColumnName",
+                  "selectFilter": "ColumnTableID = ${TableTableID}"
                 },
                 {
                   "name": "TableJoinJoinColumnToColumn",
                   "label": "To Column",
                   "fieldType": "select",
-                  "select": {
-                    "model": "ListTableColumns",
-                    "sourceField": "ColumnName",
-                    "filter": "ColumnTableName = '${TableJoinToTableName}'"
-                  }
+                  "selectModel": "ListTableColumns",
+                  "selectSourceField": "ColumnName",
+                  "selectFilter": "ColumnTableName = '${TableJoinToTableName}'"
                 },
                 {
                   "name": "TableJoinJoinColumnFromText"
@@ -195,12 +187,10 @@
                   "showInNavigation": true,
                   "label": "Column",
                   "fieldType": "select",
-                  "select": {
-                    "model": "ListTableColumns",
-                    "targetID": "TableIndexColumnColumnID",
-                    "sourceField": "ColumnName",
-                    "filter": "ColumnTableID = ${TableTableID}"
-                  }
+                  "selectModel": "ListTableColumns",
+                  "selectTargetID": "TableIndexColumnColumnID",
+                  "selectSourceField": "ColumnName",
+                  "selectFilter": "ColumnTableID = ${TableTableID}"
                 }
               ]
             }
