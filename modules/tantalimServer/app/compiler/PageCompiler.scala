@@ -121,11 +121,27 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
 
   private def compilePageField(field: PageFieldJson, modelField: ModelField): PageField = {
     val column = modelField.basisColumn
+    val fieldType = {
+      if (field.selectModel.isDefined) {
+        if (field.fieldType.isDefined && TableCompiler.compileFieldDisplay(field.fieldType.get) == FieldDisplay.Select) {
+          println(s"WARN: field ${field.name} has a fieldDisplay = Select but doesn't need to")
+        }
+        FieldDisplay.Select
+      }
+      else if (field.fieldType.isEmpty) column.fieldType
+      else {
+        val compiled = TableCompiler.compileFieldDisplay(field.fieldType.get)
+        if (compiled == FieldDisplay.Select) {
+          throw new TantalimException(s"field ${field.name} missing select", "has a fieldDisplay = Select but doesn't have a Select defined")
+        }
+        else compiled
+      }
+    }
+
     new PageField(
       name = field.name,
       modelField = modelField,
-      fieldType = if (field.fieldType.isEmpty) column.fieldType
-      else TableCompiler.compileFieldDisplay(field.fieldType.get),
+      fieldType = fieldType,
       required = modelField.required,
       disabled = field.disabled.getOrElse(!modelField.updateable),
       label = field.label.getOrElse(column.label),

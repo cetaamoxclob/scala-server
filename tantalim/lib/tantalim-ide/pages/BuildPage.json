@@ -26,7 +26,8 @@
         } ]
       }, {
         "name" : "SectionModel",
-        "fieldType" : "select"
+        "selectModel": "ListModels",
+        "selectSourceField": "ModelName"
       }, {
         "name" : "SectionTitle"
       }, {
