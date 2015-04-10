@@ -145,8 +145,8 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
         }
       },
       blurFunction = field.blurFunction,
-      select = field.select match {
-        case Some(s) => Some(compileFieldSelect(s))
+      select = field.selectModel match {
+        case Some(s) => Some(compileFieldSelect(field))
         case None => None
       },
       links = field.links match {
@@ -156,13 +156,15 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
     )
   }
 
-  private def compileFieldSelect(selectJson: PageFieldSelectJson): PageFieldSelect = {
+  private def compileFieldSelect(selectJson: PageFieldJson): PageFieldSelect = {
     new PageFieldSelect(
-      model = selectJson.model,
-      sourceField = selectJson.sourceField,
-      targetID = selectJson.targetID,
-      fields = selectJson.fields.getOrElse(Map.empty),
-      filter = selectJson.filter
+      model = selectJson.selectModel.get,
+      sourceField = selectJson.selectSourceField.getOrElse{
+        throw new TantalimException("SourceField is required when using selects", selectJson.toString)
+      },
+      targetID = selectJson.selectTargetID,
+      fields = Map.empty,
+      filter = selectJson.selectFilter
     )
   }
 

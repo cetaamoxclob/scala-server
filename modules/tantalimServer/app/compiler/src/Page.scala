@@ -31,16 +31,13 @@ case class PageFieldJson(name: String,
                          blurFunction: Option[String],
                          disabled: Option[Boolean],
                          searchable: Option[Boolean],
-                         select: Option[PageFieldSelectJson],
+                         selectModel: Option[String],
+                         selectSourceField: Option[String],
+                         selectTargetID: Option[String],
+                         // selectFields: Option[Map[String, String]],
+                         selectFilter: Option[String],
                          links: Option[Seq[PageFieldLinkJson]]
                           )
-
-case class PageFieldSelectJson(model: String,
-                               sourceField: String,
-                               targetID: Option[String],
-                               fields: Option[Map[String, String]],
-                               filter: Option[String]
-                                )
 
 case class PageFieldLinkJson(page: String, filter: String)
 
@@ -77,17 +74,12 @@ object PageJson {
       (JsPath \ "blurFunction").readNullable[String] and
       (JsPath \ "disabled").readNullable[Boolean] and
       (JsPath \ "searchable").readNullable[Boolean] and
-      (JsPath \ "select").readNullable[PageFieldSelectJson] and
+      (JsPath \ "selectModel").readNullable[String] and
+      (JsPath \ "selectSourceField").readNullable[String] and
+      (JsPath \ "selectTargetID").readNullable[String] and
+      (JsPath \ "selectFilter").readNullable[String] and
       (JsPath \ "links").readNullable[Seq[PageFieldLinkJson]]
     ).apply(PageFieldJson.apply _)
-
-  implicit def selectReads: Reads[PageFieldSelectJson] = (
-    (JsPath \ "model").read[String] and
-      (JsPath \ "sourceField").read[String] and
-      (JsPath \ "targetID").readNullable[String] and
-      (JsPath \ "fields").readNullable[Map[String, String]] and
-      (JsPath \ "filter").readNullable[String]
-    ).apply(PageFieldSelectJson.apply _)
 
   implicit def linkReads: Reads[PageFieldLinkJson] = (
     (JsPath \ "page").read[String] and
