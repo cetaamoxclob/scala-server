@@ -7,9 +7,9 @@
       "name" : "ModelName"
     }, {
       "name" : "ModelBasisTable",
+      "selectModel" : "ListTables",
+      "selectSourceField" : "TableName",
       "fieldType" : "select",
-      "selectModel": "ListTables",
-      "selectSourceField": "TableName",
       "links" : [ {
         "page" : "BuildTable",
         "filter" : "TableName Equals '${ModelBasisTable}'"
@@ -51,10 +51,10 @@
       }, {
         "name" : "ModelStepJoin",
         "label" : "Table Join",
-        "fieldType" : "select",
-        "selectModel": "ListTableJoins",
-        "selectSourceField": "TableJoinName",
-        "selectFilter": "TableJoinFromTableName = '${ModelBasisTable}'"
+        "selectModel" : "ListTableJoins",
+        "selectFilter" : "TableJoinFromTableName = '${ModelBasisTable}'",
+        "selectSourceField" : "TableJoinName",
+        "fieldType" : "select"
       }, {
         "name" : "ModelStepParentName",
         "label" : "Parent Step"
@@ -69,16 +69,16 @@
         "showInNavigation" : true
       }, {
         "name" : "ModelFieldBasisColumn",
-        "fieldType" : "select",
-        "selectModel": "ListTableColumns",
-        "selectSourceField": "ColumnName",
-        "selectFilter": "ColumnTableName Equals '${ModelBasisTable}'"
+        "selectModel" : "ListTableColumns",
+        "selectFilter" : "ColumnTableName Equals '${ModelBasisTable}'",
+        "selectSourceField" : "ColumnName",
+        "fieldType" : "select"
       }, {
         "name" : "ModelFieldStepName",
-        "fieldType" : "select",
-        "selectModel": "ListModelSteps",
-        "selectSourceField": "ModelStepName",
-        "selectFilter": "ModelStepModelID Equals ${ModelID}"
+        "selectModel" : "ListModelSteps",
+        "selectFilter" : "ModelStepModelID Equals ${ModelID}",
+        "selectSourceField" : "ModelStepName",
+        "fieldType" : "select"
       }, {
         "name" : "ModelFieldUpdateable"
       }, {
@@ -92,12 +92,12 @@
       "title" : "Sorting",
       "fields" : [ {
         "name" : "ModelSortFieldName",
+        "selectTargetID" : "ModelSortFieldID",
         "label" : "Field Name",
-        "fieldType" : "select",
-        "selectModel": "ListModelFields",
-        "selectTargetID": "ModelSortFieldID",
-        "selectSourceField": "FieldName",
-        "selectFilter": "FieldModelID Equals ${ModelID}"
+        "selectModel" : "ListModelFields",
+        "selectFilter" : "FieldModelID Equals ${ModelID}",
+        "selectSourceField" : "FieldName",
+        "fieldType" : "select"
       }, {
         "name" : "ModelSortAscending"
       } ]
@@ -114,25 +114,25 @@
         } ]
       }, {
         "name" : "ChildModelBasisTable",
+        "selectModel" : "ListTables",
+        "selectSourceField" : "TableName",
         "fieldType" : "select",
-        "selectModel": "ListTables",
-        "selectSourceField": "TableName",
         "links" : [ {
           "page" : "BuildTable",
           "filter" : "TableName Equals '${ChildModelBasisTable}'"
         } ]
       }, {
         "name" : "ChildModelParentField",
-        "fieldType" : "select",
-        "selectModel": "ListModelFields",
-        "selectSourceField": "FieldName",
-        "selectFilter": "FieldModelID Equals ${ModelID}"
+        "selectModel" : "ListModelFields",
+        "selectFilter" : "FieldModelID Equals ${ModelID}",
+        "selectSourceField" : "FieldName",
+        "fieldType" : "select"
       }, {
         "name" : "ChildModelChildField",
-        "fieldType" : "select",
-        "selectModel": "ListModelFields",
-        "selectSourceField": "FieldName",
-        "selectFilter": "FieldModelID Equals ${ChildModelID}"
+        "selectModel" : "ListModelFields",
+        "selectFilter" : "FieldModelID Equals ${ChildModelID}",
+        "selectSourceField" : "FieldName",
+        "fieldType" : "select"
       } ]
     } ],
     "buttons" : [ {
