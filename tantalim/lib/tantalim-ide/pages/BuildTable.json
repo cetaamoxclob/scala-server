@@ -1,202 +1,147 @@
 {
-  "title": "Build Table",
-  "icon": "glyphicon-modal-window",
-  "sections": [
-    {
-      "name": "BuildTable",
-      "title": "Tables",
-      "buttons": [
-        {
-          "label": "Export",
-          "fxn": "var row = section.getCurrentSet().getInstance(); var table = row.getValue('TableName'); var moduleName = row.getValue('TableModule'); $http.post('/export/' + moduleName + '/Table/' + table).success(function(data) { alert(data.message) });"
-        },
-        {
-          "label": "Create Table",
-          "fxn": "var row = section.getCurrentSet().getInstance(); var table = row.getValue('TableName'); var moduleName = row.getValue('TableModule'); $http.post('/ddl/' + table).success(function(data) { alert(data.message) });"
-        }
-      ],
-      "fields": [
-        {
-          "name": "TableName",
-          "showInNavigation": true,
-          "links": [
-            {
-              "page": "ListModels",
-              "filter": "ModelBasisTable Equals '${TableName}'"
-            },
-            {
-              "page": "BuildModel",
-              "filter": "ModelBasisTable Equals '${TableName}'"
-            }
-          ]
-        },
-        {
-          "name": "TableSQL"
-        },
-        {
-          "name": "TableModule"
-        },
-        {
-          "name": "TablePrimaryKey",
-          "fieldType": "select",
-          "selectModel": "ListTableColumns",
-          "selectSourceField": "ColumnName",
-          "selectFilter": "ColumnTableID = ${TableTableID}"
-        },
-        {
-          "name": "TableAllowInsert"
-        },
-        {
-          "name": "TableAllowUpdate"
-        },
-        {
-          "name": "TableAllowDelete"
-        }
-      ],
-      "sections": [
-        {
-          "name": "TableColumns",
-          "title": "Columns",
-          "viewMode": "table",
-          "buttons": [
-            {
-              "label": "Reorder",
-              "fxn": "var x = 10; _.forEach(section.getCurrentSet().rows, function(row) { row.update('TableColumnDisplayOrder', x); x = x + 10; })"
-            }
-          ],
-          "fields": [
-            {
-              "name": "TableColumnDisplayOrder"
-            },
-            {
-              "name": "TableColumnName",
-              "showInNavigation": true
-            },
-            {
-              "name": "TableColumnSQL"
-            },
-            {
-              "name": "TableColumnRequired"
-            },
-            {
-              "name": "TableColumnUpdateable",
-              "showInTableView": false
-            },
-            {
-              "name": "TableColumnDataType"
-            },
-            {
-              "name": "TableColumnLength"
-            },
-            {
-              "name": "TableColumnLabel"
-            },
-            {
-              "name": "TableColumnFieldType",
-              "showInTableView": false
-            },
-            {
-              "name": "TableColumnColumnDefault",
-              "showInTableView": false
-            },
-            {
-              "name": "TableColumnHelp",
-              "showInTableView": false
-            },
-            {
-              "name": "TableColumnPlaceholder",
-              "showInTableView": false
-            }
-          ]
-        },
-        {
-          "name": "TableJoins",
-          "title": "Joins",
-          "fields": [
-            {
-              "name": "TableJoinName",
-              "showInNavigation": true
-            },
-            {
-              "name": "TableJoinToTableName",
-              "fieldType": "select",
-              "selectModel": "ListTables",
-              "selectSourceField": "TableName",
-              "links": [
-                {
-                  "page": "BuildTable",
-                  "filter": "TableName Equals '${TableJoinToTableName}'"
-                }
-              ]
-            },
-            {
-              "name": "TableJoinRequired"
-            }
-          ],
-          "sections": [
-            {
-              "name": "TableJoinColumns",
-              "title": "Join Columns",
-              "fields": [
-                {
-                  "name": "TableJoinJoinColumnFromColumn",
-                  "label": "From Column",
-                  "fieldType": "select",
-                  "selectModel": "ListTableColumns",
-                  "selectSourceField": "ColumnName",
-                  "selectFilter": "ColumnTableID = ${TableTableID}"
-                },
-                {
-                  "name": "TableJoinJoinColumnToColumn",
-                  "label": "To Column",
-                  "fieldType": "select",
-                  "selectModel": "ListTableColumns",
-                  "selectSourceField": "ColumnName",
-                  "selectFilter": "ColumnTableName = '${TableJoinToTableName}'"
-                },
-                {
-                  "name": "TableJoinJoinColumnFromText"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "TableIndex",
-          "title": "Indexes",
-          "fields": [
-            {
-              "name": "TableIndexPriority",
-              "showInNavigation": true
-            },
-            {
-              "name": "TableIndexUnique",
-              "showInNavigation": true
-            }
-          ],
-          "sections": [
-            {
-              "name": "TableIndexColumn",
-              "title": "Index Columns",
-              "fields": [
-                {
-                  "name": "TableIndexColumnOrder"
-                },
-                {
-                  "name": "TableIndexColumnColumnName",
-                  "showInNavigation": true,
-                  "label": "Column",
-                  "fieldType": "select",
-                  "selectModel": "ListTableColumns",
-                  "selectTargetID": "TableIndexColumnColumnID",
-                  "selectSourceField": "ColumnName",
-                  "selectFilter": "ColumnTableID = ${TableTableID}"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  "icon" : "glyphicon-modal-window",
+  "title" : "Build Table",
+  "sections" : [ {
+    "name" : "BuildTable",
+    "title" : "Tables",
+    "fields" : [ {
+      "name" : "TableName",
+      "showInNavigation" : true,
+      "links" : [ {
+        "page" : "ListModels",
+        "filter" : "ModelBasisTable Equals '${TableName}'"
+      }, {
+        "page" : "BuildModel",
+        "filter" : "ModelBasisTable Equals '${TableName}'"
+      } ]
+    }, {
+      "name" : "TableSQL"
+    }, {
+      "name" : "TableModule"
+    }, {
+      "name" : "TablePrimaryKey",
+      "selectModel" : "ListTableColumns",
+      "selectFilter" : "ColumnTableID = ${TableTableID}",
+      "selectSourceField" : "ColumnName",
+      "fieldType" : "select"
+    }, {
+      "name" : "TableAllowInsert"
+    }, {
+      "name" : "TableAllowUpdate"
+    }, {
+      "name" : "TableAllowDelete"
+    } ],
+    "sections" : [ {
+      "viewMode" : "table",
+      "name" : "TableColumns",
+      "title" : "Columns",
+      "fields" : [ {
+        "name" : "TableColumnDisplayOrder"
+      }, {
+        "name" : "TableColumnName",
+        "showInNavigation" : true
+      }, {
+        "name" : "TableColumnSQL"
+      }, {
+        "name" : "TableColumnRequired"
+      }, {
+        "name" : "TableColumnUpdateable",
+        "showInTableView" : false
+      }, {
+        "name" : "TableColumnDataType"
+      }, {
+        "name" : "TableColumnLength"
+      }, {
+        "name" : "TableColumnLabel"
+      }, {
+        "name" : "TableColumnFieldType",
+        "showInTableView" : false
+      }, {
+        "name" : "TableColumnColumnDefault",
+        "showInTableView" : false
+      }, {
+        "name" : "TableColumnHelp",
+        "showInTableView" : false
+      }, {
+        "name" : "TableColumnPlaceholder",
+        "showInTableView" : false
+      } ],
+      "buttons" : [ {
+        "label" : "Reorder",
+        "fxn" : "var x = 10; _.forEach(section.getCurrentSet().rows, function(row) { row.update('TableColumnDisplayOrder', x); x = x + 10; })"
+      } ]
+    }, {
+      "name" : "TableJoins",
+      "title" : "Joins",
+      "fields" : [ {
+        "name" : "TableJoinName",
+        "showInNavigation" : true
+      }, {
+        "name" : "TableJoinToTableName",
+        "selectModel" : "ListTables",
+        "selectSourceField" : "TableName",
+        "fieldType" : "select",
+        "links" : [ {
+          "page" : "BuildTable",
+          "filter" : "TableName Equals '${TableJoinToTableName}'"
+        } ]
+      }, {
+        "name" : "TableJoinRequired"
+      } ],
+      "sections" : [ {
+        "name" : "TableJoinColumns",
+        "title" : "Join Columns",
+        "fields" : [ {
+          "name" : "TableJoinJoinColumnFromColumn",
+          "label" : "From Column",
+          "selectModel" : "ListTableColumns",
+          "selectFilter" : "ColumnTableID = ${TableTableID}",
+          "selectSourceField" : "ColumnName",
+          "fieldType" : "select"
+        }, {
+          "name" : "TableJoinJoinColumnToColumn",
+          "label" : "To Column",
+          "selectModel" : "ListTableColumns",
+          "selectFilter" : "ColumnTableName = '${TableJoinToTableName}'",
+          "selectSourceField" : "ColumnName",
+          "fieldType" : "select"
+        }, {
+          "name" : "TableJoinJoinColumnFromText"
+        } ]
+      } ]
+    }, {
+      "name" : "TableIndex",
+      "title" : "Indexes",
+      "fields" : [ {
+        "name" : "TableIndexPriority",
+        "showInNavigation" : true
+      }, {
+        "name" : "TableIndexUnique",
+        "showInNavigation" : true
+      } ],
+      "sections" : [ {
+        "name" : "TableIndexColumn",
+        "title" : "Index Columns",
+        "fields" : [ {
+          "name" : "TableIndexColumnOrder"
+        }, {
+          "name" : "TableIndexColumnColumnName",
+          "selectTargetID" : "TableIndexColumnColumnID",
+          "label" : "Column",
+          "selectModel" : "ListTableColumns",
+          "selectFilter" : "ColumnTableID = ${TableTableID}",
+          "selectSourceField" : "ColumnName",
+          "showInNavigation" : true,
+          "fieldType" : "select"
+        } ]
+      } ]
+    } ],
+    "buttons" : [ {
+      "label" : "Export",
+      "fxn" : "var row = section.getCurrentSet().getInstance(); var table = row.getValue('TableName'); var moduleName = row.getValue('TableModule'); $http.post('/export/' + moduleName + '/Table/' + table).success(function(data) { alert(data.message) });"
+    }, {
+      "label" : "Create Table",
+      "fxn" : "var row = section.getCurrentSet().getInstance(); var table = row.getValue('TableName'); var moduleName = row.getValue('TableModule'); $http.post('/ddl/' + table).success(function(data) { alert(data.message) });"
+    } ]
+  } ]
 }
