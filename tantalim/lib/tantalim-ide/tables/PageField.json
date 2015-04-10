@@ -9,6 +9,14 @@
       "to" : "SectionID",
       "from" : "SectionID"
     } ]
+  }, {
+    "name" : "SelectTarget",
+    "required" : true,
+    "table" : "PageField",
+    "columns" : [ {
+      "to" : "FieldID",
+      "from" : "SelectTargetID"
+    } ]
   } ],
   "columns" : [ {
     "name" : "FieldID",
@@ -79,5 +87,34 @@
     "dbName" : "searchable",
     "fieldType" : "checkbox",
     "dataType" : "Boolean"
+  }, {
+    "name" : "SelectModel",
+    "dbName" : "selectModel",
+    "label" : "Select - Model"
+  }, {
+    "name" : "SelectSourceField",
+    "dbName" : "selectSourceField",
+    "label" : "Select - Source Field"
+  }, {
+    "name" : "SelectTargetID",
+    "dbName" : "selectTargetID",
+    "label" : "Select - Target ID"
+  }, {
+    "name" : "SelectFilter",
+    "dbName" : "selectFilter",
+    "label" : "Select - Filter"
+  } ],
+  "indexes" : [ {
+    "priority" : 10,
+    "columns" : [ {
+      "name" : "FieldID"
+    } ]
+  }, {
+    "priority" : 20,
+    "columns" : [ {
+      "name" : "Name"
+    }, {
+      "name" : "SectionID"
+    } ]
   } ]
 }

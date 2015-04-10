@@ -75,6 +75,18 @@
       }, {
         "name" : "searchable",
         "basisColumn" : "Searchable"
+      }, {
+        "name" : "selectModel",
+        "basisColumn" : "SelectModel"
+      }, {
+        "name" : "selectSourceField",
+        "basisColumn" : "SelectSourceField"
+      }, {
+        "name" : "selectTargetID",
+        "basisColumn" : "SelectTargetID"
+      }, {
+        "name" : "selectFilter",
+        "basisColumn" : "SelectFilter"
       } ]
     }, {
       "name" : "sections",
