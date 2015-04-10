@@ -1,92 +1,68 @@
 {
-  "title": "Module Management",
-  "icon": "fa-cog",
-  "sections": [
-    {
-      "name": "Module",
-      "model": "ModuleManagement",
-      "title": "Modules",
-      "viewMode": "table",
-      "buttons": [
-        {
-          "label": "Import All Artifacts",
-          "fxn": "var rows = _.map(section.getSelectedRows(), function(row) { row.update('ModuleName', 'asdf', true); return row.getValue('ModuleName'); }); console.info(rows);"
-        }
-      ],
-      "fields": [
-        {
-          "name": "ModuleName",
-          "label": "Module Name",
-          "showInFormView": false
-        }
-      ],
-      "sections": [
-        {
-          "name": "ArtifactTypes",
-          "model": "ArtifactTypes",
-          "title": "Artifact Types",
-          "viewMode": "table",
-          "fields": [
-            {
-              "name": "ArtifactType",
-              "label": "Artifact Type",
-              "showInFormView": false
-            }
-          ],
-          "sections": [
-            {
-              "name": "ModuleArtifacts",
-              "model": "ModuleArtifacts",
-              "title": "Artifacts",
-              "viewMode": "table",
-              "buttons": [
-                {
-                  "label": "Import Artifact(s)",
-                  "fxn": "_.forEach(section.getSelectedRows(), function(row) { var artifact = row.getValue('ArtifactName'); var moduleName = row.getValue('ModuleName'); var artifactType = row.getValue('ArtifactType'); row.update('ArtifactOutput', 'STARTING IMPORT', true); $http.post('/import/' + moduleName + '/' + artifactType + '/' + artifact).success(function(data) { row.update('ArtifactOutput', data.message || data, true); }).error(function(data) { row.update('ArtifactOutput', data, true); }); });"
-                },
-                {
-                  "label": "Export Artifact(s)",
-                  "fxn": "_.forEach(section.getSelectedRows(), function(row) { var artifact = row.getValue('ArtifactName'); var moduleName = row.getValue('ModuleName'); var artifactType = row.getValue('ArtifactType'); row.update('ArtifactOutput', 'STARTING EXPORT', true); $http.post('/export/' + moduleName + '/' + artifactType + '/' + artifact).success(function(data) { row.update('ArtifactOutput', data.message || data, true); }).error(function(data) { row.update('ArtifactOutput', data, true); }); });"
-                },
-                {
-                  "label": "Create Table(s)",
-                  "fxn": "_.forEach(section.getSelectedRows(), function(row) { var table = row.getValue('ArtifactName'); if (row.getValue('ArtifactType') !== 'Table') { return } row.update('ArtifactOutput', 'CREATING TABLE', true); $http.post('/ddl/' + table).success(function(data) { row.update('ArtifactOutput', data.message || data, true); }).error(function(data) { row.update('ArtifactOutput', data, true); }); });"
-                }
-              ],
-              "fields": [
-                {
-                  "name": "ArtifactName",
-                  "label": "Artifact Name",
-                  "showInFormView": false,
-                  "links": [
-                    {
-                      "page": "BuildTable",
-                      "filter": "TableName Equals '${ArtifactName}'"
-                    },
-                    {
-                      "page": "BuildModel",
-                      "filter": "ModelName Equals '${ArtifactName}'"
-                    },
-                    {
-                      "page": "BuildPage",
-                      "filter": "PageName Equals '${ArtifactName}'"
-                    },
-                    {
-                      "page": "BuildMenu",
-                      "filter": "MenuName Equals '${ArtifactName}'"
-                    }
-                  ]
-                },
-                {
-                  "name": "ArtifactOutput",
-                  "label": "Output",
-                  "showInFormView": false
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  "icon" : "fa-cog",
+  "title" : "Module Management",
+  "sections" : [ {
+    "viewMode" : "table",
+    "name" : "Module",
+    "model" : "ModuleManagement",
+    "title" : "Modules",
+    "fields" : [ {
+      "name" : "ModuleName",
+      "showInFormView" : false,
+      "label" : "Module Name"
+    } ],
+    "sections" : [ {
+      "viewMode" : "table",
+      "name" : "ArtifactTypes",
+      "model" : "ArtifactTypes",
+      "title" : "Artifact Types",
+      "fields" : [ {
+        "name" : "ArtifactType",
+        "showInFormView" : false,
+        "label" : "Artifact Type"
+      } ],
+      "sections" : [ {
+        "viewMode" : "table",
+        "name" : "ModuleArtifacts",
+        "model" : "ModuleArtifacts",
+        "title" : "Artifacts",
+        "fields" : [ {
+          "name" : "ArtifactName",
+          "showInFormView" : false,
+          "label" : "Artifact Name",
+          "links" : [ {
+            "page" : "BuildTable",
+            "filter" : "TableName Equals '${ArtifactName}'"
+          }, {
+            "page" : "BuildModel",
+            "filter" : "ModelName Equals '${ArtifactName}'"
+          }, {
+            "page" : "BuildPage",
+            "filter" : "PageName Equals '${ArtifactName}'"
+          }, {
+            "page" : "BuildMenu",
+            "filter" : "MenuName Equals '${ArtifactName}'"
+          } ]
+        }, {
+          "name" : "ArtifactOutput",
+          "showInFormView" : false,
+          "label" : "Output"
+        } ],
+        "buttons" : [ {
+          "label" : "Import Artifact(s)",
+          "fxn" : "_.forEach(section.getSelectedRows(), function(row) { var artifact = row.getValue('ArtifactName'); var moduleName = row.getValue('ModuleName'); var artifactType = row.getValue('ArtifactType'); row.update('ArtifactOutput', 'STARTING IMPORT', true); $http.post('/import/' + moduleName + '/' + artifactType + '/' + artifact).success(function(data) { row.update('ArtifactOutput', data.message || data, true); }).error(function(data) { row.update('ArtifactOutput', data, true); }); });"
+        }, {
+          "label" : "Export Artifact(s)",
+          "fxn" : "_.forEach(section.getSelectedRows(), function(row) { var artifact = row.getValue('ArtifactName'); var moduleName = row.getValue('ModuleName'); var artifactType = row.getValue('ArtifactType'); row.update('ArtifactOutput', 'STARTING EXPORT', true); $http.post('/export/' + moduleName + '/' + artifactType + '/' + artifact).success(function(data) { row.update('ArtifactOutput', data.message || data, true); }).error(function(data) { row.update('ArtifactOutput', data, true); }); });"
+        }, {
+          "label" : "Create Table(s)",
+          "fxn" : "_.forEach(section.getSelectedRows(), function(row) { var table = row.getValue('ArtifactName'); if (row.getValue('ArtifactType') !== 'Table') { return } row.update('ArtifactOutput', 'CREATING TABLE', true); $http.post('/ddl/' + table).success(function(data) { row.update('ArtifactOutput', data.message || data, true); }).error(function(data) { row.update('ArtifactOutput', data, true); }); });"
+        } ]
+      } ]
+    } ],
+    "buttons" : [ {
+      "label" : "Import All Artifacts",
+      "fxn" : "var rows = _.map(section.getSelectedRows(), function(row) { row.update('ModuleName', 'asdf', true); return row.getValue('ModuleName'); }); console.info(rows);"
+    } ]
+  } ]
 }
