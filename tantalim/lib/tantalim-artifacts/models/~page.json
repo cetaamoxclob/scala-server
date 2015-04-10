@@ -87,6 +87,13 @@
       }, {
         "name" : "selectFilter",
         "basisColumn" : "SelectFilter"
+      }, {
+        "name" : "PageFieldDisplayOrder",
+        "basisColumn" : "DisplayOrder",
+        "export" : false
+      } ],
+      "orderBy" : [ {
+        "fieldName" : "PageFieldDisplayOrder"
       } ]
     }, {
       "name" : "sections",

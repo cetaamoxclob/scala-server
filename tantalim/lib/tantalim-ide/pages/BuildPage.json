@@ -25,13 +25,17 @@
           "filter" : "SectionName Equals '${SectionName}'"
         } ]
       }, {
+        "name" : "SectionTitle"
+      }, {
         "name" : "SectionModel",
         "selectModel" : "ListModels",
         "selectSourceField" : "ModelName"
       }, {
-        "name" : "SectionTitle"
-      }, {
         "name" : "SectionViewMode"
+      }, {
+        "name" : "SectionPage"
+      }, {
+        "name" : "SectionParent"
       } ]
     } ],
     "buttons" : [ {

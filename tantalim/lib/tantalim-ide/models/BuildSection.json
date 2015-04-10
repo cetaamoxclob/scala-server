@@ -35,6 +35,38 @@
     }, {
       "name" : "PageFieldPlaceholder",
       "basisColumn" : "Placeholder"
+    }, {
+      "name" : "PageFieldDisplayOrder",
+      "basisColumn" : "DisplayOrder"
+    }, {
+      "name" : "PageFieldFilter",
+      "basisColumn" : "Filter"
+    }, {
+      "name" : "PageFieldBlurFunction",
+      "basisColumn" : "BlurFunction"
+    }, {
+      "name" : "PageFieldDisabled",
+      "basisColumn" : "Disabled"
+    }, {
+      "name" : "PageFieldSearchable",
+      "basisColumn" : "Searchable"
+    }, {
+      "name" : "PageFieldSelectModel",
+      "basisColumn" : "SelectModel"
+    }, {
+      "name" : "PageFieldSelectSourceField",
+      "basisColumn" : "SelectSourceField"
+    }, {
+      "name" : "PageFieldSelectTargetID",
+      "basisColumn" : "SelectTargetID"
+    }, {
+      "name" : "PageFieldSelectFilter",
+      "basisColumn" : "SelectFilter"
+    } ],
+    "orderBy" : [ {
+      "fieldName" : "PageFieldDisplayOrder"
+    }, {
+      "fieldName" : "PageFieldName"
     } ]
   }, {
     "name" : "ChildSection",
@@ -80,5 +112,22 @@
   }, {
     "name" : "SectionViewMode",
     "basisColumn" : "ViewMode"
+  }, {
+    "name" : "SectionPage",
+    "step" : "Page",
+    "basisColumn" : "Name",
+    "required" : false
+  }, {
+    "name" : "SectionParent",
+    "step" : "Parent",
+    "basisColumn" : "Name",
+    "required" : false
+  } ],
+  "steps" : [ {
+    "name" : "Parent",
+    "join" : "Parent"
+  }, {
+    "name" : "Page",
+    "join" : "Page"
   } ]
 }

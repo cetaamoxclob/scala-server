@@ -2,6 +2,7 @@
   "title" : "Build Section",
   "sections" : [ {
     "name" : "BuildSection",
+    "model" : "BuildSection",
     "title" : "Section",
     "fields" : [ {
       "name" : "SectionName"
@@ -11,6 +12,10 @@
       "name" : "SectionModel"
     }, {
       "name" : "SectionViewMode"
+    }, {
+      "name" : "SectionPage"
+    }, {
+      "name" : "SectionParent"
     } ],
     "sections" : [ {
       "viewMode" : "table",
@@ -18,21 +23,41 @@
       "model" : "PageField",
       "title" : "Fields",
       "fields" : [ {
-        "name" : "PageFieldName"
+        "name" : "PageFieldDisplayOrder"
       }, {
-        "name" : "PageFieldShowInFormView"
-      }, {
-        "name" : "PageFieldShowInTableView"
-      }, {
-        "name" : "PageFieldShowInNavigation"
+        "name" : "PageFieldName",
+        "showInNavigation" : true
       }, {
         "name" : "PageFieldLabel"
       }, {
         "name" : "PageFieldFieldType"
       }, {
-        "name" : "PageFieldHelp"
+        "name" : "PageFieldPlaceholder",
+        "showInTableView" : false
       }, {
-        "name" : "PageFieldPlaceholder"
+        "name" : "PageFieldHelp",
+        "showInTableView" : false
+      }, {
+        "name" : "PageFieldSelectModel",
+        "showInTableView" : false
+      }, {
+        "name" : "PageFieldSelectSourceField",
+        "showInTableView" : false
+      }, {
+        "name" : "PageFieldSelectTargetID",
+        "showInTableView" : false
+      }, {
+        "name" : "PageFieldSelectFilter",
+        "showInTableView" : false
+      }, {
+        "name" : "PageFieldShowInNavigation",
+        "showInTableView" : false
+      }, {
+        "name" : "PageFieldShowInTableView",
+        "showInTableView" : false
+      }, {
+        "name" : "PageFieldShowInFormView",
+        "showInTableView" : false
       } ]
     }, {
       "viewMode" : "table",
