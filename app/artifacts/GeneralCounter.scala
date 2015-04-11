@@ -1,7 +1,7 @@
 package artifacts
 
 import com.tantalim.nodes.{SmartNodeSet, SmartNodeInstance, TntInt}
-import services.TantalimPreSave
+import core.services.TantalimPreSave
 
 case class GeneralCounter(modelName: String, fieldName: String) extends TantalimPreSave {
   override def preSave(row: SmartNodeInstance): Unit = {

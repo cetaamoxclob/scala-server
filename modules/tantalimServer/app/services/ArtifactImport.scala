@@ -1,8 +1,9 @@
 package services
 
 import com.tantalim.nodes.{TntString, SmartNodeSet, SmartNodeInstance}
-import compiler.ModelCompiler
-import data._
+import core.compiler.ModelCompiler
+import core.data.DataConverters
+import core.services.{DataSaver, DataReader}
 import com.tantalim.models.{ArtifactType, Model, ModelField}
 import play.api.libs.json._
 

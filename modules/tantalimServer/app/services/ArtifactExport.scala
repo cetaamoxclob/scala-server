@@ -7,7 +7,9 @@ import java.nio.file.{StandardOpenOption, FileSystems, Files}
 import com.tantalim.models.{Module, ArtifactType}
 import com.tantalim.nodes._
 import com.tantalim.util.TantalimException
-import compiler.ModelCompiler
+import core.compiler.ModelCompiler
+import core.artifacts.ArtifactService
+import core.services.{DataSaver, DataReader}
 import play.api.libs.json._
 
 class ArtifactExport(artifactType: ArtifactType) extends DataReader with DataSaver with ModelCompiler {

@@ -4,7 +4,8 @@ import java.sql._
 
 import com.tantalim.models._
 import com.tantalim.nodes.{DataState, SmartNodeSet, TntInt, TntString}
-import data._
+import core.data.DatabaseConnection
+import core.services.DataSaver
 import mock.{FakeConnection, FakeResultSet}
 import org.junit.runner.RunWith
 import org.specs2.mock._

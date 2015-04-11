@@ -2,7 +2,7 @@ package services
 
 import com.tantalim.models.{DataType, Table}
 import com.tantalim.util.TantalimException
-import data.{SqlBuilder, DatabaseConnection}
+import core.data.{SqlBuilder, DatabaseConnection}
 
 trait TableSchema {
   val db = new DatabaseConnection {}
