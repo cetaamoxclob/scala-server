@@ -29,7 +29,11 @@
       }, {
         "name" : "SectionModel",
         "selectModel" : "ListModels",
-        "selectSourceField" : "ModelName"
+        "selectSourceField" : "ModelName",
+        "links" : [ {
+          "page" : "BuildModel",
+          "filter" : "ModelName Equals '${SectionModel}'"
+        } ]
       }, {
         "name" : "SectionViewMode"
       } ]

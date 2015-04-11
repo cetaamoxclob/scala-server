@@ -33,6 +33,8 @@
     }, {
       "page" : "TableReport"
     }, {
+      "page" : "ListModules"
+    }, {
       "page" : "ModuleManagement"
     } ]
   }, {
