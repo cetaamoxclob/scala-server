@@ -1,0 +1,23 @@
+{
+  "dbName" : "module",
+  "primaryKey" : "ModuleID",
+  "columns" : [ {
+    "name" : "ModuleID",
+    "dbName" : "moduleID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Name",
+    "dbName" : "name",
+    "required" : true
+  }, {
+    "name" : "Database",
+    "dbName" : "database"
+  } ],
+  "indexes" : [ {
+    "priority" : 10,
+    "columns" : [ {
+      "name" : "ModuleID"
+    } ]
+  } ]
+}

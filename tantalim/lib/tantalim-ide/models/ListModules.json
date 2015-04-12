@@ -1,0 +1,16 @@
+{
+  "basisTable" : "Module",
+  "fields" : [ {
+    "name" : "ModuleID",
+    "basisColumn" : "ModuleID"
+  }, {
+    "name" : "ModuleName",
+    "basisColumn" : "Name"
+  }, {
+    "name" : "ModuleDatabase",
+    "basisColumn" : "Database"
+  } ],
+  "orderBy" : [ {
+    "fieldName" : "ModuleName"
+  } ]
+}
