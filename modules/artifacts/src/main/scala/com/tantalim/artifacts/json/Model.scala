@@ -1,4 +1,4 @@
-package core.compiler.src
+package com.tantalim.artifacts.json
 
 import com.tantalim.models.ModelOrderBy
 import play.api.libs.functional.syntax._

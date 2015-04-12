@@ -1,9 +1,9 @@
-package core.compiler
+package com.tantalim.artifacts.compiler
 
+import com.tantalim.artifacts.ArtifactService
+import com.tantalim.artifacts.json._
 import com.tantalim.models._
 import com.tantalim.util.TantalimException
-import core.compiler.src._
-import core.artifacts.ArtifactService
 import play.api.libs.json.{JsError, JsSuccess}
 
 import scala.collection.Seq

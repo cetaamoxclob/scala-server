@@ -1,12 +1,12 @@
-package core.compiler
+package com.tantalim.artifacts.compiler
 
+import com.tantalim.artifacts.ArtifactService
+import com.tantalim.artifacts.json.{ModelFieldJson, ModelJson}
 import com.tantalim.models._
 import com.tantalim.util.TantalimException
-import core.compiler.src.{ModelFieldJson, ModelJson}
-import core.artifacts.ArtifactService
 import play.api.libs.json.{JsError, JsSuccess}
 
-import scala.collection.{Seq, Map}
+import scala.collection.{Map, Seq}
 
 trait ModelCompiler extends ArtifactService with TableCompiler {
 

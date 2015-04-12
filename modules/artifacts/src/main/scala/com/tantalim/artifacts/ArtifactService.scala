@@ -1,13 +1,13 @@
-package core.artifacts
+package com.tantalim.artifacts
 
 import java.io.File
 import java.nio.charset.StandardCharsets
 
 import com.google.common.base.Charsets
 import com.google.common.io.Files
+import com.tantalim.artifacts.json.{MenuJson, ModelJson, PageJson, TableJson}
 import com.tantalim.models.{ArtifactStub, ArtifactType, Module}
 import com.tantalim.util.TantalimException
-import core.compiler.src.{TableJson, ModelJson, PageJson, MenuJson}
 import play.api.Play
 import play.api.Play.current
 import play.api.libs.json._

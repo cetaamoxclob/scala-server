@@ -3,7 +3,7 @@ package controllers.core
 import com.tantalim.models.{User, ModelOrderBy}
 import com.tantalim.nodes.SmartNodeSet
 import com.tantalim.util.{Timer, TantalimException}
-import core.compiler.{MenuCompiler, PageCompiler, ModelCompiler}
+import com.tantalim.artifacts.compiler.{MenuCompiler, PageCompiler, ModelCompiler}
 import play.api.libs.json.{JsArray, JsString, JsNumber, Json}
 import play.api.mvc._
 import com.tantalim.database.services.{DataSaver, DataReader}

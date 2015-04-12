@@ -1,4 +1,4 @@
-package core.artifacts
+package com.tantalim.artifacts
 
 import java.util.concurrent.TimeUnit
 

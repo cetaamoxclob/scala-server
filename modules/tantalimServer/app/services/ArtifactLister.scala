@@ -2,8 +2,8 @@ package services
 
 import java.io.File
 
+import com.tantalim.artifacts.ArtifactService
 import com.tantalim.models.{Module, ArtifactType}
-import core.artifacts.ArtifactService
 import play.api.libs.json.{JsObject, JsNumber, Json}
 
 import scala.collection.immutable.TreeMap

@@ -1,4 +1,4 @@
-package core.artifacts
+package com.tantalim.artifacts
 
 import com.tantalim.models.ArtifactType
 import com.tantalim.util.TantalimException

@@ -1,4 +1,4 @@
-package core.compiler
+package com.tantalim.artifacts.compiler
 
 import com.tantalim.models._
 import play.api.libs.json._

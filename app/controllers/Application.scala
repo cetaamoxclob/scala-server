@@ -1,6 +1,6 @@
 package controllers
 
-import _root_.core.compiler.TableCompiler
+import com.tantalim.artifacts.compiler.TableCompiler
 import com.tantalim.database.data.SqlBuilder
 import com.tantalim.models.ArtifactType
 import com.tantalim.nodes.DataState

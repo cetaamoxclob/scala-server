@@ -1,9 +1,9 @@
-package core.compiler
+package com.tantalim.artifacts.compiler
 
+import com.tantalim.artifacts.json.{MenuContentJson, MenuItemJson}
+import com.tantalim.artifacts.{ArtifactService, MissingArtifactException}
 import com.tantalim.models._
 import com.tantalim.util.TantalimException
-import core.compiler.src.{MenuItemJson, MenuContentJson}
-import core.artifacts.{MissingArtifactException, ArtifactService}
 import play.api.libs.json.{JsError, JsSuccess}
 
 trait MenuCompiler extends ArtifactService with PageCompiler {
