@@ -1,0 +1,19 @@
+{
+  "title" : "List Pages",
+  "sections" : [ {
+    "viewMode" : "table",
+    "name" : "Pages",
+    "model" : "ListPages",
+    "fields" : [ {
+      "name" : "PageName",
+      "links" : [ {
+        "page" : "BuildPage",
+        "filter" : "PagePageID Equals ${PagePageID}"
+      } ]
+    }, {
+      "name" : "PageTitle"
+    }, {
+      "name" : "PageModule"
+    } ]
+  } ]
+}

@@ -1,0 +1,20 @@
+{
+  "basisTable" : "Page",
+  "allowDelete" : false,
+  "fields" : [ {
+    "name" : "PagePageID",
+    "basisColumn" : "PageID"
+  }, {
+    "name" : "PageName",
+    "basisColumn" : "Name"
+  }, {
+    "name" : "PageModule",
+    "basisColumn" : "Module"
+  }, {
+    "name" : "PageTitle",
+    "basisColumn" : "Title"
+  } ],
+  "orderBy" : [ {
+    "fieldName" : "PageName"
+  } ]
+}
