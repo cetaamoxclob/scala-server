@@ -1,4 +1,4 @@
-package core.data
+package com.tantalim.database.data
 
 import com.tantalim.models._
 

@@ -1,25 +1,14 @@
-package core.data
+package com.tantalim.database.data
 
 import java.sql.{Connection, PreparedStatement, ResultSet, Statement}
 
 import com.tantalim.nodes._
-import play.api.Play.current
-import play.api.db.DB
 
 trait DatabaseConnection {
 
-  private def connect[T](f: Connection => T): T = {
-    val connection = DB.getConnection()
-    try {
-      f(connection)
-    } finally {
-      connection.close()
-    }
-  }
+  protected def connect[T](f: Connection => T): T
 
-  def getConnection: Connection = {
-    DB.getConnection()
-  }
+  def getConnection: Connection
 
   def query(sql: String, numberedParameters: List[Any]): ResultSet = {
     connect {

@@ -1,4 +1,4 @@
-package core.services
+package com.tantalim.database.services
 
 import java.sql.{Connection, ResultSet}
 
@@ -6,7 +6,7 @@ import com.tantalim.filter.compiler.CompiledFilter
 import com.tantalim.models._
 import com.tantalim.nodes._
 import com.tantalim.util.TantalimException
-import core.data.{DatabaseConnection, SqlBuilder}
+import com.tantalim.database.data.{DatabaseConnection, SqlBuilder}
 
 trait DataReader extends DatabaseConnection {
 

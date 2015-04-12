@@ -1,16 +1,15 @@
-package core.services
+package com.tantalim.database.services
 
 import java.sql.{Connection, SQLException}
 
 import com.tantalim.models._
 import com.tantalim.nodes._
 import com.tantalim.util.TantalimException
-import core.compiler.ModelCompiler
-import core.data.{DatabaseConnection, SqlBuilder}
+import com.tantalim.database.data.SqlBuilder
 
 import scala.collection.mutable
 
-trait DataSaver extends DataReader with ModelCompiler with DatabaseConnection {
+trait DataSaver extends DataReader {
   def saveAll(dataToSave: SmartNodeSet): Unit = {
     if (dataToSave.model.basisTable.isMock) {
       throw new TantalimException(s"Model ${dataToSave.model.name} is based on a Mock Table and cannot query the database.", "Check the calling function.")
@@ -124,9 +123,9 @@ trait DataSaver extends DataReader with ModelCompiler with DatabaseConnection {
           val topIndex = findFullUniqueIndex(step.join.table.indexes, valueMap)
           if (topIndex.isEmpty) {
             println(s"Warn: Table ${step.join.table.name} is missing unique index")
-//            throw new TantalimException(s"Table ${step.join.table.name} is missing unique index", "")
+            //            throw new TantalimException(s"Table ${step.join.table.name} is missing unique index", "")
           } else {
-            val fakeModelForTable = compileModel(step.join.table.toDeep)
+            val fakeModelForTable = ModelCompiler.compileModel(step.join.table.toDeep)
             val filter = valueMap.map { case (column, _) =>
               val value = column.dataType match {
                 case DataType.Integer => valueMap.get(column).get.asInstanceOf[TntInt].value
@@ -142,7 +141,7 @@ trait DataSaver extends DataReader with ModelCompiler with DatabaseConnection {
                 // TODO Insert new row
                 Map.empty
               } else {
-//                throw new TantalimException("Foreign key doesn't exist and step doesn't allow insert", "")
+                //                throw new TantalimException("Foreign key doesn't exist and step doesn't allow insert", "")
                 Map.empty
               }
             } else {
@@ -301,8 +300,35 @@ trait DataSaver extends DataReader with ModelCompiler with DatabaseConnection {
 
 }
 
+object ModelCompiler {
+  def compileModel(table: DeepTable): Model = {
+    println("Creating model with table " + table.name)
+    def compileField(column: TableColumn): ModelField = {
+      new ModelField(
+        column.name,
+        column,
+        updateable = column.updateable,
+        required = column.required
+      )
+    }
+
+    val TableOnly = "TableOnly"
+    val model = new Model(
+      table.name + TableOnly,
+      table,
+      fields = table.columns.map { case (columnName, column) =>
+        columnName -> compileField(column)
+      },
+      instanceID = if (table.primaryKey.isDefined) Some(compileField(table.primaryKey.get)) else None,
+      allowInsert = table.allowInsert,
+      allowUpdate = table.allowUpdate,
+      allowDelete = table.allowDelete
+    )
+
+    model
+  }
+}
+
 trait TantalimPreSave {
   def preSave(row: SmartNodeInstance): Unit
 }
-
-class DataSaverService extends DataSaver

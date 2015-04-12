@@ -4,18 +4,20 @@ version := "1.0"
 
 lazy val app = (project in file("."))
   .enablePlugins(PlayScala)
-  .aggregate(server, models, util, filterCompiler, scriptCompiler, nodes, core)
+  .aggregate(server, models, util, filterCompiler, scriptCompiler, nodes, core, database)
   .dependsOn(server, core)
-
-lazy val core = (project in file("modules/core"))
-  .enablePlugins(PlayScala)
-  .dependsOn(filterCompiler, scriptCompiler, nodes, models % "test->test;compile->compile")
-
-//lazy val artifacts = (project in file("modules/artifacts")).dependsOn()
 
 lazy val server = (project in file("modules/tantalimServer"))
   .enablePlugins(PlayScala)
   .dependsOn(core, models % "test->test;compile->compile")
+
+lazy val core = (project in file("modules/core"))
+  .enablePlugins(PlayScala)
+  .dependsOn(filterCompiler, scriptCompiler, database, models % "test->test;compile->compile")
+
+//lazy val artifacts = (project in file("modules/artifacts")).dependsOn()
+
+lazy val database = (project in file("modules/database")).dependsOn(nodes, filterCompiler)
 
 lazy val filterCompiler = (project in file("modules/filterCompiler"))
   .dependsOn(models % "test->test;compile->compile")

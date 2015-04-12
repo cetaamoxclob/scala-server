@@ -1,4 +1,4 @@
-package core.data
+package controllers.core
 
 import com.tantalim.models.{Model, ModelField}
 import com.tantalim.nodes._

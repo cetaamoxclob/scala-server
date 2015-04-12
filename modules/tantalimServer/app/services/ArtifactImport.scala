@@ -1,13 +1,13 @@
 package services
 
 import com.tantalim.nodes.{TntString, SmartNodeSet, SmartNodeInstance}
+import controllers.core.{PlayableDatabaseConnection, DataConverters}
 import core.compiler.ModelCompiler
-import core.data.DataConverters
-import core.services.{DataSaver, DataReader}
+import com.tantalim.database.services.{DataSaver, DataReader}
 import com.tantalim.models.{ArtifactType, Model, ModelField}
 import play.api.libs.json._
 
-class ArtifactImport(artifactType: ArtifactType) extends DataReader with DataSaver with ModelCompiler {
+class ArtifactImport(artifactType: ArtifactType) extends DataReader with DataSaver with ModelCompiler with PlayableDatabaseConnection {
 
   val artifactWriter = compileModel("~" + artifactType.toString.toLowerCase)
 

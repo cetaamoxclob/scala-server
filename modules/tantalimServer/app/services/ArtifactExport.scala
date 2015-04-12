@@ -7,12 +7,13 @@ import java.nio.file.{StandardOpenOption, FileSystems, Files}
 import com.tantalim.models.{Module, ArtifactType}
 import com.tantalim.nodes._
 import com.tantalim.util.TantalimException
+import controllers.core.PlayableDatabaseConnection
 import core.compiler.ModelCompiler
 import core.artifacts.ArtifactService
-import core.services.{DataSaver, DataReader}
+import com.tantalim.database.services.{DataSaver, DataReader}
 import play.api.libs.json._
 
-class ArtifactExport(artifactType: ArtifactType) extends DataReader with DataSaver with ModelCompiler {
+class ArtifactExport(artifactType: ArtifactType) extends DataReader with DataSaver with ModelCompiler with PlayableDatabaseConnection {
   val artifactReader = compileModel("~" + artifactType.toString.toLowerCase)
 
   def readFromDatabaseAndWriteToSource(module: String, artifactName: String) = {

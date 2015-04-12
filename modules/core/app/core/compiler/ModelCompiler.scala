@@ -21,33 +21,6 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
     }
   }
 
-  def compileModel(table: DeepTable): Model = {
-    println("Creating model with table " + table.name)
-    def compileField(column: TableColumn): ModelField = {
-      new ModelField(
-        column.name,
-        column,
-        updateable = column.updateable,
-        required = column.required
-      )
-    }
-
-    val TableOnly = "TableOnly"
-    val model = new Model(
-      table.name + TableOnly,
-      table,
-      fields = table.columns.map { case (columnName, column) =>
-        columnName -> compileField(column)
-      },
-      instanceID = if (table.primaryKey.isDefined) Some(compileField(table.primaryKey.get)) else None,
-      allowInsert = table.allowInsert,
-      allowUpdate = table.allowUpdate,
-      allowDelete = table.allowDelete
-    )
-
-    model
-  }
-
   private def extendModel(model: ModelJson, parent: Option[Model]): Model = {
     println("Extending model " + model.extendModel.get)
     val superModel = parent.get

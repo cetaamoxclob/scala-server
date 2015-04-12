@@ -4,10 +4,9 @@ import com.tantalim.models.{User, ModelOrderBy}
 import com.tantalim.nodes.SmartNodeSet
 import com.tantalim.util.{Timer, TantalimException}
 import core.compiler.{MenuCompiler, PageCompiler, ModelCompiler}
-import core.data.DataConverters
 import play.api.libs.json.{JsArray, JsString, JsNumber, Json}
 import play.api.mvc._
-import core.services.{DataSaverService, DataReader}
+import com.tantalim.database.services.{DataSaver, DataReader}
 
 object Application extends Controller with Timer {
   val menuCompiler = new MenuCompiler {}
@@ -59,7 +58,7 @@ object Application extends Controller with Timer {
   def readData(name: String, page: Int = 1, filter: Option[String] = None, orderBy: Option[ModelOrderBy] = None) = Action {
     timer("readData") {
       try {
-        val reader = new DataReader {}
+        val reader = new DataReader with PlayableDatabaseConnection
         val model = compileModel(name)
         val smartSet: SmartNodeSet = reader.queryModelData(model, page, filter, if (orderBy.isDefined) Seq(orderBy.get) else model.orderBy)
         val totalPages = reader.calcTotalRows(model, filter)
@@ -81,7 +80,7 @@ object Application extends Controller with Timer {
         val model = compileModel(name)
         val dataSet = new SmartNodeSet(model)
         DataConverters.convertJsArrayToSmartNodeSet(dataSet, request.body.as[JsArray])
-        val saver = new DataSaverService
+        val saver = new DataSaver with PlayableDatabaseConnection
         saver.saveAll(dataSet)
         val jsonResponse = DataConverters.convertSmartNodeSetToJsonArr(dataSet)
         Ok(jsonResponse)
