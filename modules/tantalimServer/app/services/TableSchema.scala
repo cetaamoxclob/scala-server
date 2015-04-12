@@ -1,11 +1,12 @@
 package services
 
+import com.tantalim.database.data.{SqlBuilder, DatabaseConnection}
 import com.tantalim.models.{DataType, Table}
 import com.tantalim.util.TantalimException
-import core.data.{SqlBuilder, DatabaseConnection}
+import controllers.core.PlayableDatabaseConnection
 
 trait TableSchema {
-  val db = new DatabaseConnection {}
+  val db = new DatabaseConnection with PlayableDatabaseConnection
 
   def drop(table: Table) = {
     checkMock(table)
@@ -54,6 +55,7 @@ trait TableSchema {
     }.toSeq.mkString(",\n")
     s"""CREATE TABLE ${SqlBuilder.getTableSql(table)} (
        |$columnClause
-       |) ENGINE=InnoDB DEFAULT CHARSET=utf8;""".stripMargin  }
+       |) ENGINE=InnoDB DEFAULT CHARSET=utf8;""".stripMargin
+  }
 
 }

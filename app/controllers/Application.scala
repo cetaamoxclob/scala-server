@@ -1,8 +1,8 @@
 package controllers
 
-import _root_.core.compiler.{MenuCompiler, PageCompiler, TableCompiler}
-import _root_.core.data.SqlBuilder
-import com.tantalim.models.{ArtifactType, User}
+import _root_.core.compiler.TableCompiler
+import com.tantalim.database.data.SqlBuilder
+import com.tantalim.models.ArtifactType
 import com.tantalim.nodes.DataState
 import com.tantalim.util.{LoginStrategyType, TantalimException, Timer}
 import play.api.libs.json._
