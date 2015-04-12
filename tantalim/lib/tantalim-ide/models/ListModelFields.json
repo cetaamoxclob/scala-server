@@ -11,8 +11,16 @@
   }, {
     "name" : "FieldName",
     "basisColumn" : "Name"
+  }, {
+    "name" : "FieldModelName",
+    "step" : "Model",
+    "basisColumn" : "Name"
   } ],
   "orderBy" : [ {
     "fieldName" : "FieldName"
+  } ],
+  "steps" : [ {
+    "name" : "Model",
+    "join" : "Model"
   } ]
 }

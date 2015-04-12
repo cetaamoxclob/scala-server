@@ -10,6 +10,8 @@
       "name" : "SectionTitle"
     }, {
       "name" : "SectionModel",
+      "selectModel" : "ListModels",
+      "selectSourceField" : "ModelName",
       "links" : [ {
         "page" : "BuildModel",
         "filter" : "ModelName Equals '${SectionModel}'"
@@ -52,13 +54,25 @@
         "showInTableView" : false
       }, {
         "name" : "PageFieldSelectModel",
-        "showInTableView" : false
+        "showInTableView" : false,
+        "selectModel" : "ListModels",
+        "selectSourceField" : "ModelName",
+        "links" : [ {
+          "page" : "BuildModel",
+          "filter" : "ModelName Equals '${PageFieldSelectModel}'"
+        } ]
       }, {
         "name" : "PageFieldSelectSourceField",
-        "showInTableView" : false
+        "showInTableView" : false,
+        "selectModel" : "ListModelFields",
+        "selectFilter" : "FieldModelName Equals '${PageFieldSelectModel}'",
+        "selectSourceField" : "FieldName"
       }, {
         "name" : "PageFieldSelectTargetID",
-        "showInTableView" : false
+        "showInTableView" : false,
+        "selectModel" : "ListModelFields",
+        "selectFilter" : "FieldModelName Equals '${SectionModel}'",
+        "selectSourceField" : "FieldName"
       }, {
         "name" : "PageFieldSelectFilter",
         "showInTableView" : false
@@ -78,7 +92,9 @@
         "model" : "PageFieldLink",
         "title" : "Links",
         "fields" : [ {
-          "name" : "PageFieldLinkPage"
+          "name" : "PageFieldLinkPage",
+          "selectModel" : "ListPages",
+          "selectSourceField" : "PageName"
         }, {
           "name" : "PageFieldLinkFilter"
         } ]
@@ -92,7 +108,7 @@
         "name" : "ChildSectionName",
         "links" : [ {
           "page" : "BuildSection",
-          "filter" : "SectionName Equals '${ChildSectionName}'"
+          "filter" : "SectionID Equals ${ChildSectionID}"
         } ]
       }, {
         "name" : "ChildSectionTitle"
@@ -100,6 +116,16 @@
         "name" : "ChildSectionModel"
       }, {
         "name" : "ChildSectionViewMode"
+      } ]
+    }, {
+      "viewMode" : "table",
+      "name" : "Button",
+      "model" : "Button",
+      "title" : "Buttons",
+      "fields" : [ {
+        "name" : "ButtonLabel"
+      }, {
+        "name" : "ButtonFunction"
       } ]
     } ]
   } ]

@@ -22,7 +22,9 @@
         "filter" : "ModelID Equals ${ModelParentID}"
       } ]
     }, {
-      "name" : "ModelModule"
+      "name" : "ModelModule",
+      "selectModel" : "ListModules",
+      "selectSourceField" : "ModuleName"
     }, {
       "name" : "ModelLimit"
     }, {

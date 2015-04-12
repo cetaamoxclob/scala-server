@@ -27,6 +27,8 @@
     }, {
       "page" : "BuildModel"
     }, {
+      "page" : "ListPages"
+    }, {
       "page" : "BuildPage"
     }, {
       "page" : "BuildMenu"

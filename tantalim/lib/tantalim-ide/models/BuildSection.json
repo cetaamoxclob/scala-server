@@ -117,6 +117,24 @@
       "name" : "ChildSectionParentID",
       "basisColumn" : "ParentID"
     } ]
+  }, {
+    "name" : "Button",
+    "parentField" : "SectionID",
+    "basisTable" : "Button",
+    "childField" : "ButtonSectionID",
+    "fields" : [ {
+      "name" : "ButtonButtonID",
+      "basisColumn" : "ButtonID"
+    }, {
+      "name" : "ButtonSectionID",
+      "basisColumn" : "SectionID"
+    }, {
+      "name" : "ButtonLabel",
+      "basisColumn" : "Label"
+    }, {
+      "name" : "ButtonFunction",
+      "basisColumn" : "Function"
+    } ]
   } ],
   "fields" : [ {
     "name" : "SectionID",
