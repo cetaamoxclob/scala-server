@@ -56,8 +56,23 @@
                                 data-ng-click="row.toggle('@(field.name)', @(field.required))"></i>
                             }
                             case FieldDisplay.Select => {
+                                <span data-ng-show="SmartPage.getSection('@(page.name)').isHoveredOverCell($index, @fieldIndex)" style="float: right; margin: -1px;">
+                                    @if(!field.disabled) {
+                                        <button class="btn btn-default btn-xs" data-ng-click="SmartPage.getSection('@(page.name)').startEditing($index, @fieldIndex)">
+                                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                        </button>
+                                    }
+                                    @if(field.links.nonEmpty) {
+                                        <tnt-links>
+                                        @for(link <- field.links) {
+                                            <tnt-link target="@link.page.name" filter="@link.filter" section="@page.name" label="@link.page.title"></tnt-link>
+                                        }
+                                        </tnt-links>
+                                    }
+                                </span>
+                                <span class="text-view" data-ng-bind="row.data.@field.name @if(field.filter.isDefined) { | @field.filter}"></span>
                                 @defining(field.select.get) { select =>
-                                    <tnt-select
+                                    <tnt-select class="tnt-select"
                                     current-instance="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance()"
                                     source-model="@select.model"
                                     source-field="@select.sourceField"
@@ -65,6 +80,7 @@
                                     target-id="@select.targetID.getOrElse("")"
                                     target-field="@(field.name)"
                                     other-mappings="@Html(select.fields.toString())"
+                                    data-ng-show="SmartPage.getSection('@(page.name)').cellIsEditing($index, @fieldIndex)"
                                     >
                                     @if(field.links.nonEmpty) {
                                         <tnt-links>

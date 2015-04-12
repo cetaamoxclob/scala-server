@@ -63,7 +63,9 @@ class ArtifactExport(artifactType: ArtifactType) extends DataReader with DataSav
         val fieldValue = instance.get(field.name)
         val returnVal: (String, JsValue) = if (fieldValue.isDefined) {
           field.name -> (fieldValue.get match {
-            case TntString(raw) => if (raw == null) JsNull else JsString(raw)
+            case TntString(raw) =>
+              if (raw == null || raw.trim.length == 0) JsNull
+              else JsString(raw)
             case TntInt(raw) => JsNumber(raw.toInt)
             case TntDecimal(raw) => JsNumber(raw)
             case TntBoolean(raw) => JsBoolean(raw)
