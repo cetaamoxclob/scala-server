@@ -1,0 +1,52 @@
+{
+  "dbName" : "page_link",
+  "primaryKey" : "LinkID",
+  "joins" : [ {
+    "name" : "Field",
+    "required" : true,
+    "table" : "PageField",
+    "columns" : [ {
+      "to" : "FieldID",
+      "from" : "FieldID"
+    } ]
+  }, {
+    "name" : "Page",
+    "required" : true,
+    "table" : "Page",
+    "columns" : [ {
+      "to" : "Name",
+      "from" : "Page"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "LinkID",
+    "dbName" : "linkID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "FieldID",
+    "dbName" : "fieldID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Page",
+    "dbName" : "page",
+    "required" : true
+  }, {
+    "name" : "Filter",
+    "dbName" : "filter"
+  } ],
+  "indexes" : [ {
+    "priority" : 10,
+    "columns" : [ {
+      "name" : "LinkID"
+    } ]
+  }, {
+    "priority" : 20,
+    "columns" : [ {
+      "name" : "FieldID"
+    }, {
+      "name" : "Page"
+    } ]
+  } ]
+}

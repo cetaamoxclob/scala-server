@@ -1,0 +1,45 @@
+{
+  "dbName" : "page_button",
+  "primaryKey" : "ButtonID",
+  "joins" : [ {
+    "name" : "Section",
+    "required" : true,
+    "table" : "Section",
+    "columns" : [ {
+      "to" : "SectionID",
+      "from" : "SectionID"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "ButtonID",
+    "dbName" : "buttonID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "SectionID",
+    "dbName" : "sectionID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Label",
+    "dbName" : "label",
+    "required" : true
+  }, {
+    "name" : "Function",
+    "dbName" : "functionText",
+    "length" : 1000
+  } ],
+  "indexes" : [ {
+    "priority" : 10,
+    "columns" : [ {
+      "name" : "ButtonID"
+    } ]
+  }, {
+    "priority" : 20,
+    "columns" : [ {
+      "name" : "SectionID"
+    }, {
+      "name" : "Label"
+    } ]
+  } ]
+}
