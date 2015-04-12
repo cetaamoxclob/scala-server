@@ -4,9 +4,8 @@ GET         /                         controllers.core.Application.index
 GET         /data/:name               controllers.core.Application.readData(name, page: Int ?= 1, filter: Option[String])
 POST        /data/:name               controllers.core.Application.saveData(name)
 
-GET         /m/:name                  controllers.core.Application.mobile(name)
 GET         /m/:name/                 controllers.core.Application.mobile(name)
 GET         /page/:name/              controllers.core.Application.desktop(name)
 GET         /page/:name/search        controllers.core.Application.desktop(name)
 
-# GET         /assets/*file             controllers.core.Assets.at(path="/public", file)
+GET         /assets/*file             assets.core.Assets.at(path="/public", file)

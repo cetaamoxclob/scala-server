@@ -1,4 +1,4 @@
-package controllers.core
+package assets.core
 
 object Assets extends controllers.AssetsBuilder {
 
