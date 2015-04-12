@@ -67,11 +67,11 @@ case class DeepTable(
 case class TableColumn(
                         name: String,
                         dbName: String,
-                        order: Int,
+                        order: Int = 0,
                         dataType: DataType = DataType.String,
                         updateable: Boolean = true,
                         required: Boolean = false,
-                        label: String,
+                        label: String = "",
                         help: Option[String] = None,
                         placeholder: Option[String] = None,
                         length: Option[Int] = None,
@@ -86,8 +86,8 @@ case class TableJoin(
                       )
 
 case class TableJoinColumn(to: TableColumn,
-                           from: Option[TableColumn],
-                           fromText: Option[String])
+                           from: Option[TableColumn] = None,
+                           fromText: Option[String] = None)
 
 case class TableIndex(priority: Int, unique: Boolean, columns: Seq[TableColumn])
 
