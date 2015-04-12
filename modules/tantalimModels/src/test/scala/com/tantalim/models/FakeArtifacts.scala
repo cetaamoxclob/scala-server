@@ -12,7 +12,7 @@ trait FakeArtifacts {
   )
 
   def fakeTableColumnMap(name: String,
-                         dbName: String, dataType: DataType) =
+                         dbName: String, dataType: DataType = DataType.String) =
     name -> fakeTableColumn(name, dbName, dataType)
 
   def fakeTableColumn(name: String,
