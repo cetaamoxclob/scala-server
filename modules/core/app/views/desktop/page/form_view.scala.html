@@ -24,6 +24,25 @@
                     }
                 </tnt-textbox>
             }
+            case FieldDisplay.Textarea => {
+                <tnt-textarea label="@field.label"
+                current-instance="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance()"
+                name="@field.modelField.name" placeholder="@field.placeholder" disabled="@field.disabled"
+                    @if(field.required) {
+                        required="true" }
+                >
+                    @if(field.help.nonEmpty) {
+                        <tnt-help label="@field.label">@field.help</tnt-help>
+                    }
+                    @if(field.links.nonEmpty) {
+                        <tnt-links>
+                        @for(link <- field.links) {
+                            <tnt-link target="@link.page.name" filter="@link.filter" section="@page.name" label="@link.page.title"></tnt-link>
+                        }
+                        </tnt-links>
+                    }
+                </tnt-textarea>
+            }
             case FieldDisplay.Select => {
                 @defining(field.select.get) { select =>
                     <tnt-select

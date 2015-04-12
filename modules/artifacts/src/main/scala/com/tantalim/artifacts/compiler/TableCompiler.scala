@@ -99,7 +99,8 @@ trait TableCompiler extends ArtifactService with TableCache {
       fieldType = if (column.fieldType.isEmpty) {
         val display = dataType match {
           case DataType.Boolean => FieldDisplay.Checkbox
-          case _ => FieldDisplay.Text
+          case _ => if (column.length.isDefined && column.length.get > 100) FieldDisplay.Textarea
+          else FieldDisplay.Text
         }
         display
       } else TableCompiler.compileFieldDisplay(column.fieldType.get),

@@ -97,6 +97,7 @@ case class ModelStep(name: String,
                      allowUpdate: Boolean = false,
                      allowDelete: Boolean = false,
                      parentAlias: Int) {
+  // TODO Consider adding custom filters like AppTranslations
 }
 
 case class ModelOrderBy(fieldName: String,
