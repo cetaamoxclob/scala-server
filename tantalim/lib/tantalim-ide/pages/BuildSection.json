@@ -118,12 +118,13 @@
         "name" : "ChildSectionViewMode"
       } ]
     }, {
-      "viewMode" : "table",
+      "viewMode" : "form",
       "name" : "Button",
       "model" : "Button",
       "title" : "Buttons",
       "fields" : [ {
-        "name" : "ButtonLabel"
+        "name" : "ButtonLabel",
+        "showInNavigation" : true
       }, {
         "name" : "ButtonFunction"
       } ]

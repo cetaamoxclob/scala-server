@@ -1,38 +1,37 @@
 {
-  "appTitle": "Tantalim",
-  "content": [
-    {
-      "title": "Tables",
-      "items": [
-        {
-          "page": "ListTables"
-        },
-        {
-          "page": "BuildTable"
-        },
-        {
-          "page": "TableReport"
-        }
-      ]
-    },
-    {
-      "title": "Manage",
-      "items": [
-        {
-          "page": "ManageUsers",
-          "title": "Users"
-        },
-        {
-          "title": "Import",
-          "href": "/import/",
-          "icon": "fa-sign-in"
-        },
-        {
-          "title": "Export",
-          "href": "/exportAll",
-          "icon": "fa-sign-out"
-        }
-      ]
-    }
-  ]
+  "appTitle" : "Tantalim Demo",
+  "content" : [ {
+    "title" : "Tantalim IDE",
+    "items" : [ {
+      "page" : "ListTables"
+    }, {
+      "page" : "BuildTable"
+    }, {
+      "page" : "ListModels"
+    }, {
+      "page" : "BuildModel"
+    }, {
+      "page" : "ListPages"
+    }, {
+      "page" : "BuildPage"
+    }, {
+      "page" : "BuildMenu"
+    }, {
+      "page" : "TableReport"
+    }, {
+      "page" : "ModuleManagement"
+    } ]
+  }, {
+    "title" : "Manage",
+    "items" : [ {
+      "page" : "ManageUsers",
+      "title" : "Users"
+    } ]
+  }, {
+    "title" : "Debug",
+    "items" : [ {
+      "title" : "Samples",
+      "href" : "/assets/lib/tantalim-client/public/samples/"
+    } ]
+  } ]
 }

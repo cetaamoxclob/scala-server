@@ -10,6 +10,8 @@
       "showInNavigation" : true
     }, {
       "name" : "MenuTitle"
+    }, {
+      "name" : "MenuModule"
     } ],
     "sections" : [ {
       "name" : "MenuContent",
@@ -38,6 +40,10 @@
           "name" : "MenuItemIcon"
         } ]
       } ]
+    } ],
+    "buttons" : [ {
+      "label" : "Export",
+      "fxn" : "var row = section.getCurrentSet().getInstance();\nvar menu = row.getValue('MenuName');\nvar moduleName = row.getValue('MenuModule');\n$http.post('/export/' + moduleName + '/Menu/' + menu).success(function(data) { console.info(data.message) });"
     } ]
   } ]
 }

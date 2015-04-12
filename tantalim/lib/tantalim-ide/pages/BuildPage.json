@@ -40,7 +40,7 @@
     } ],
     "buttons" : [ {
       "label" : "Export",
-      "fxn" : "var row = section.getCurrentSet().getInstance(); var page = row.getValue('PageName'); var moduleName = row.getValue('PageModule'); $http.post('/export/' + moduleName + '/Page/' + page).success(function(data) { alert(data.message) });"
+      "fxn" : "var row = section.getCurrentSet().getInstance();\nvar page = row.getValue('PageName');\nvar moduleName = row.getValue('PageModule');\n$http.post('/export/' + moduleName + '/Page/' + page).success(function(data) { console.info(data.message) });"
     } ]
   } ]
 }
