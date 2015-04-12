@@ -1,16 +1,15 @@
 package services
 
 import java.io.File
-import java.nio.charset.{StandardCharsets, Charset}
-import java.nio.file.{StandardOpenOption, FileSystems, Files}
+import java.nio.file.{FileSystems, Files, StandardOpenOption}
 
 import com.tantalim.artifacts.ArtifactService
-import com.tantalim.models.{Module, ArtifactType}
+import com.tantalim.artifacts.compiler.ModelCompiler
+import com.tantalim.database.services.{DataReader, DataSaver}
+import com.tantalim.models.{ArtifactType, Module}
 import com.tantalim.nodes._
 import com.tantalim.util.TantalimException
 import controllers.core.PlayableDatabaseConnection
-import com.tantalim.artifacts.compiler.ModelCompiler
-import com.tantalim.database.services.{DataSaver, DataReader}
 import play.api.libs.json._
 
 class ArtifactExport(artifactType: ArtifactType) extends DataReader with DataSaver with ModelCompiler with PlayableDatabaseConnection {

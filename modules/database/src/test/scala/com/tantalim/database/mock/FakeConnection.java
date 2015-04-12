@@ -1,4 +1,4 @@
-package mock;
+package com.tantalim.database.mock;
 
 import java.sql.*;
 import java.util.Map;

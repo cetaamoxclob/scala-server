@@ -1,12 +1,11 @@
-package services
+package com.tantalim.database.services
 
 import java.sql._
 
 import com.tantalim.models._
 import com.tantalim.nodes.{DataState, SmartNodeSet, TntInt, TntString}
 import com.tantalim.database.data.DatabaseConnection
-import com.tantalim.database.services.DataSaver
-import mock.{FakeConnection, FakeResultSet}
+import com.tantalim.database.mock.{FakeConnection, FakeResultSet}
 import org.junit.runner.RunWith
 import org.specs2.mock._
 import org.specs2.mutable._

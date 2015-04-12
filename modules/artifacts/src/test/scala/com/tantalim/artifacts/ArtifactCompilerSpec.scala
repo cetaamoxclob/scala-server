@@ -1,9 +1,7 @@
-package services
+package com.tantalim.artifacts
 
-import com.tantalim.artifacts.{TableCache, ArtifactService}
-import com.tantalim.models._
 import com.tantalim.artifacts.compiler.{MenuCompiler, ModelCompiler}
-import com.tantalim.artifacts.TableCache
+import com.tantalim.models._
 import org.junit.runner._
 import org.specs2.mock._
 import org.specs2.mutable._

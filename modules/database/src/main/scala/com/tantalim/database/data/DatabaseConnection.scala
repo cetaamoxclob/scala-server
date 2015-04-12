@@ -6,7 +6,14 @@ import com.tantalim.nodes._
 
 trait DatabaseConnection {
 
-  protected def connect[T](f: Connection => T): T
+  private def connect[T](f: Connection => T): T = {
+    val connection = getConnection
+    try {
+      f(connection)
+    } finally {
+      connection.close()
+    }
+  }
 
   def getConnection: Connection
 

@@ -18,7 +18,7 @@ lazy val core = (project in file("modules/core"))
 lazy val artifacts = (project in file("modules/artifacts"))
   .dependsOn(models)
 
-lazy val database = (project in file("modules/database")).dependsOn(nodes, filterCompiler)
+lazy val database = (project in file("modules/database")).dependsOn(nodes, filterCompiler, models % "test->test")
 
 lazy val filterCompiler = (project in file("modules/filterCompiler"))
   .dependsOn(models % "test->test;compile->compile")
