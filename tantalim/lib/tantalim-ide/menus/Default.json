@@ -1,6 +1,22 @@
 {
   "appTitle" : "Tantalim Demo",
   "content" : [ {
+    "title" : "PICS",
+    "items" : [ {
+      "page" : "ManageDocumentTypes"
+    }, {
+      "page" : "ManageCategories"
+    }, {
+      "page" : "ManageWorkflows"
+    } ]
+  }, {
+    "title" : "SLHP",
+    "items" : [ {
+      "page" : "ReviewClaims"
+    }, {
+      "page" : "AttachmentTypes"
+    } ]
+  }, {
     "title" : "Tantalim IDE",
     "items" : [ {
       "page" : "ListTables"
@@ -20,6 +36,8 @@
       "page" : "TableReport"
     }, {
       "page" : "ModuleManagement"
+    }, {
+      "page" : "PageFieldsEditor"
     } ]
   }, {
     "title" : "Manage",
