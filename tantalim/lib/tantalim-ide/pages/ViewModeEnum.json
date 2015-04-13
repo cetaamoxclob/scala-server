@@ -1,0 +1,15 @@
+{
+  "title" : "View Modes",
+  "sections" : [ {
+    "viewMode" : "table",
+    "name" : "ViewModeEnum",
+    "model" : "ViewModeEnum",
+    "fields" : [ {
+      "name" : "EnumCode"
+    }, {
+      "name" : "EnumMeaning"
+    }, {
+      "name" : "EnumActive"
+    } ]
+  } ]
+}

@@ -1,0 +1,17 @@
+{
+  "filter" : "EnumCode Equals 'ViewModel'",
+  "basisTable" : "TantalimEnum",
+  "fields" : [ {
+    "name" : "EnumCode",
+    "basisColumn" : "Code"
+  }, {
+    "name" : "EnumMeaning",
+    "basisColumn" : "Meaning"
+  }, {
+    "name" : "EnumActive",
+    "basisColumn" : "Active"
+  } ],
+  "orderBy" : [ {
+    "fieldName" : "EnumMeaning"
+  } ]
+}

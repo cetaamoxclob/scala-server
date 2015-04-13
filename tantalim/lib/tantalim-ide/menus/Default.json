@@ -44,7 +44,7 @@
   }, {
     "title" : "Enum",
     "items" : [ {
-      "page" : "BuildMenu"
+      "page" : "ViewModeEnum"
     } ]
   }, {
     "title" : "Manage",

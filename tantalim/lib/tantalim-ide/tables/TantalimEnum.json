@@ -1,0 +1,43 @@
+{
+  "dbName" : "enum",
+  "primaryKey" : "ID",
+  "columns" : [ {
+    "name" : "ID",
+    "dbName" : "id",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Type",
+    "dbName" : "type",
+    "required" : true
+  }, {
+    "name" : "Code",
+    "dbName" : "code",
+    "length" : 10,
+    "required" : true
+  }, {
+    "name" : "Meaning",
+    "dbName" : "meaning",
+    "required" : true
+  }, {
+    "name" : "Active",
+    "dbName" : "active",
+    "dataType" : "Boolean",
+    "required" : true
+  } ],
+  "indexes" : [ {
+    "priority" : 10,
+    "columns" : [ {
+      "name" : "Code"
+    }, {
+      "name" : "Type"
+    } ]
+  }, {
+    "priority" : 20,
+    "columns" : [ {
+      "name" : "Meaning"
+    }, {
+      "name" : "Type"
+    } ]
+  } ]
+}
