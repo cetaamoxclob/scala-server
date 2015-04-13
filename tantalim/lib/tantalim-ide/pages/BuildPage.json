@@ -2,6 +2,7 @@
   "title" : "Build Page",
   "sections" : [ {
     "name" : "BuildPage",
+    "model" : "BuildPage",
     "title" : "Page",
     "fields" : [ {
       "name" : "PageName"

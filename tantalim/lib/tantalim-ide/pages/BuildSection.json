@@ -96,7 +96,11 @@
         "fields" : [ {
           "name" : "PageFieldLinkPage",
           "selectModel" : "ListPages",
-          "selectSourceField" : "PageName"
+          "selectSourceField" : "PageName",
+          "links" : [ {
+            "page" : "BuildPage",
+            "filter" : "PageName Equals '${PageFieldLinkPage}'"
+          } ]
         }, {
           "name" : "PageFieldLinkFilter"
         } ]
