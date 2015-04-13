@@ -1,0 +1,40 @@
+{
+  "basisTable" : "PageField",
+  "fields" : [ {
+    "name" : "PageFieldFieldID",
+    "basisColumn" : "FieldID"
+  }, {
+    "name" : "PageFieldSectionID",
+    "basisColumn" : "SectionID"
+  }, {
+    "name" : "PageFieldName",
+    "basisColumn" : "Name"
+  }, {
+    "name" : "PageFieldSelectModel",
+    "basisColumn" : "SelectModel"
+  }, {
+    "name" : "PageFieldSelectSourceField",
+    "basisColumn" : "SelectSourceField"
+  }, {
+    "name" : "PageFieldSelectTargetID",
+    "basisColumn" : "SelectTargetID"
+  }, {
+    "name" : "PageFieldSelectFilter",
+    "basisColumn" : "SelectFilter"
+  }, {
+    "name" : "PageFieldDisabled",
+    "basisColumn" : "Disabled"
+  }, {
+    "name" : "PageFieldSectionName",
+    "step" : "Section",
+    "basisColumn" : "Name"
+  }, {
+    "name" : "PageFieldSectionModel",
+    "step" : "Section",
+    "basisColumn" : "Model"
+  } ],
+  "steps" : [ {
+    "name" : "Section",
+    "join" : "Section"
+  } ]
+}

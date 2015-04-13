@@ -1,0 +1,26 @@
+{
+  "title" : "Page Fields Editor",
+  "sections" : [ {
+    "viewMode" : "table",
+    "name" : "PageFields",
+    "model" : "PageFieldsEditor",
+    "title" : "Page Fields",
+    "fields" : [ {
+      "name" : "PageFieldSectionName"
+    }, {
+      "name" : "PageFieldSectionModel"
+    }, {
+      "name" : "PageFieldName"
+    }, {
+      "name" : "PageFieldSelectModel"
+    }, {
+      "name" : "PageFieldSelectSourceField"
+    }, {
+      "name" : "PageFieldSelectTargetID"
+    }, {
+      "name" : "PageFieldSelectFilter"
+    }, {
+      "name" : "PageFieldDisabled"
+    } ]
+  } ]
+}
