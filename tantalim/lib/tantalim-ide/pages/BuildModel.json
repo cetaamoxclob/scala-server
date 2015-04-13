@@ -141,6 +141,9 @@
     "buttons" : [ {
       "label" : "Export",
       "fxn" : "var row = section.getCurrentSet().getInstance();\nvar model = row.getValue('ModelName');\nvar moduleName = row.getValue('ModelModule');\n$http.post('/export/' + moduleName + '/Model/' + model).success(function(data) { alert(data.message) });"
+    }, {
+      "label" : "Test",
+      "fxn" : "var row = section.getCurrentSet().getInstance();\nvar model = row.getValue('ModelName');\nvar url = \"/data/\" + model;\nwindow.open(url);"
     } ]
   } ]
 }
