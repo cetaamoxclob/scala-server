@@ -43,6 +43,9 @@
     "buttons" : [ {
       "label" : "Export",
       "fxn" : "var row = section.getCurrentSet().getInstance();\nvar page = row.getValue('PageName');\nvar moduleName = row.getValue('PageModule');\n$http.post('/export/' + moduleName + '/Page/' + page).success(function(data) { console.info(data.message) });"
+    }, {
+      "label" : "Test",
+      "fxn" : "var row = section.getCurrentSet().getInstance();\nvar page = row.getValue('PageName');\nvar url = \"/page/\" + page + '/';\nwindow.open(url);"
     } ]
   } ]
 }

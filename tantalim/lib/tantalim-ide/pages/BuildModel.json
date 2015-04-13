@@ -4,7 +4,11 @@
     "name" : "Model",
     "model" : "BuildModel",
     "fields" : [ {
-      "name" : "ModelName"
+      "name" : "ModelName",
+      "links" : [ {
+        "page" : "BuildSection",
+        "filter" : "SectionModel Equals '${ModelName}'"
+      } ]
     }, {
       "name" : "ModelBasisTable",
       "selectModel" : "ListTables",
@@ -62,6 +66,7 @@
         "label" : "Parent Step"
       } ]
     }, {
+      "viewMode" : "form",
       "name" : "ModelFields",
       "model" : "ModelFields",
       "title" : "Fields",

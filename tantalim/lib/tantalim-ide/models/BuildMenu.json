@@ -31,6 +31,9 @@
       }, {
         "name" : "MenuItemIcon",
         "basisColumn" : "Icon"
+      } ],
+      "orderBy" : [ {
+        "fieldName" : "MenuItemDisplayOrder"
       } ]
     } ],
     "fields" : [ {
@@ -46,6 +49,9 @@
     }, {
       "name" : "MenuContentTitle",
       "basisColumn" : "Title"
+    } ],
+    "orderBy" : [ {
+      "fieldName" : "MenuContentDisplayOrder"
     } ]
   } ],
   "fields" : [ {

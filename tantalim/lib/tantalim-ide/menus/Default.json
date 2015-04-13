@@ -17,7 +17,7 @@
       "page" : "AttachmentTypes"
     } ]
   }, {
-    "title" : "Tantalim IDE",
+    "title" : "IDE",
     "items" : [ {
       "page" : "ListTables"
     }, {
@@ -31,6 +31,8 @@
     }, {
       "page" : "BuildPage"
     }, {
+      "page" : "BuildSection"
+    }, {
       "page" : "BuildMenu"
     }, {
       "page" : "TableReport"
@@ -38,6 +40,11 @@
       "page" : "ModuleManagement"
     }, {
       "page" : "PageFieldsEditor"
+    } ]
+  }, {
+    "title" : "Enum",
+    "items" : [ {
+      "page" : "BuildMenu"
     } ]
   }, {
     "title" : "Manage",
