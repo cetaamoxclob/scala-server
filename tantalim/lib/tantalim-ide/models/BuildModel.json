@@ -35,6 +35,18 @@
     }, {
       "name" : "ModelFieldExport",
       "basisColumn" : "Export"
+    }, {
+      "name" : "ModelFieldAlwaysDefault",
+      "basisColumn" : "AlwaysDefault"
+    }, {
+      "name" : "ModelFieldFieldDefault",
+      "basisColumn" : "FieldDefault"
+    }, {
+      "name" : "ModelFieldValueDefault",
+      "basisColumn" : "ValueDefault"
+    }, {
+      "name" : "ModelFieldFunctionDefault",
+      "basisColumn" : "FunctionDefault"
     } ],
     "steps" : [ {
       "name" : "Step",

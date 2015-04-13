@@ -71,28 +71,36 @@
       "model" : "ModelFields",
       "title" : "Fields",
       "fields" : [ {
-        "name" : "ModelFieldName",
-        "label" : "Field Name",
-        "showInNavigation" : true
-      }, {
         "name" : "ModelFieldBasisColumn",
         "selectModel" : "ListTableColumns",
         "selectFilter" : "ColumnTableName Equals '${ModelBasisTable}'",
         "selectSourceField" : "ColumnName",
         "fieldType" : "select"
       }, {
+        "name" : "ModelFieldName",
+        "label" : "Field Name",
+        "showInNavigation" : true
+      }, {
         "name" : "ModelFieldStepName",
+        "selectTargetID" : "ModelFieldStepID",
         "selectModel" : "ListModelSteps",
         "selectFilter" : "ModelStepModelID Equals ${ModelID}",
-        "selectTargetID" : "ModelFieldStepID",
         "selectSourceField" : "ModelStepName",
         "fieldType" : "select"
       }, {
-        "name" : "ModelFieldUpdateable"
-      }, {
         "name" : "ModelFieldRequired"
       }, {
+        "name" : "ModelFieldUpdateable"
+      }, {
         "name" : "ModelFieldExport"
+      }, {
+        "name" : "ModelFieldAlwaysDefault"
+      }, {
+        "name" : "ModelFieldFieldDefault"
+      }, {
+        "name" : "ModelFieldValueDefault"
+      }, {
+        "name" : "ModelFieldFunctionDefault"
       } ]
     }, {
       "name" : "ModelSort",
