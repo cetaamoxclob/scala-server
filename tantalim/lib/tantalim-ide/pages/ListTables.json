@@ -16,7 +16,9 @@
       "name" : "TableSQL",
       "showInNavigation" : true
     }, {
-      "name" : "TableModule"
+      "name" : "TableModule",
+      "selectModel" : "ListModules",
+      "selectSourceField" : "ModuleName"
     }, {
       "name" : "TableAllowInsert"
     }, {

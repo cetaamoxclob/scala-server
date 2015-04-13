@@ -5,7 +5,9 @@
     "name" : "ListModules",
     "model" : "ListModules",
     "fields" : [ {
-      "name" : "ModuleName"
+      "name" : "ModuleName",
+      "selectModel" : "ListModules",
+      "selectSourceField" : "ModuleName"
     }, {
       "name" : "ModuleDatabase"
     } ]

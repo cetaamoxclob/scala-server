@@ -168,6 +168,12 @@
   }, {
     "name" : "SectionParentID",
     "basisColumn" : "ParentID"
+  }, {
+    "name" : "SectionPageModule",
+    "step" : "Page",
+    "updateable" : false,
+    "basisColumn" : "Module",
+    "required" : false
   } ],
   "steps" : [ {
     "name" : "Parent",

@@ -11,7 +11,9 @@
     }, {
       "name" : "MenuTitle"
     }, {
-      "name" : "MenuModule"
+      "name" : "MenuModule",
+      "selectModel" : "ListModules",
+      "selectSourceField" : "ModuleName"
     } ],
     "sections" : [ {
       "name" : "MenuContent",
@@ -31,7 +33,9 @@
         "fields" : [ {
           "name" : "MenuItemDisplayOrder"
         }, {
-          "name" : "MenuItemPage"
+          "name" : "MenuItemPage",
+          "selectModel" : "ListPages",
+          "selectSourceField" : "PageName"
         }, {
           "name" : "MenuItemTitle"
         }, {

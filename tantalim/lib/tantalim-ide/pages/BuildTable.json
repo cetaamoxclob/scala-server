@@ -3,6 +3,7 @@
   "title" : "Build Table",
   "sections" : [ {
     "name" : "BuildTable",
+    "model" : "BuildTable",
     "title" : "Tables",
     "fields" : [ {
       "name" : "TableName",
@@ -17,7 +18,9 @@
     }, {
       "name" : "TableSQL"
     }, {
-      "name" : "TableModule"
+      "name" : "TableModule",
+      "selectModel" : "ListModules",
+      "selectSourceField" : "ModuleName"
     }, {
       "name" : "TablePrimaryKey",
       "selectModel" : "ListTableColumns",

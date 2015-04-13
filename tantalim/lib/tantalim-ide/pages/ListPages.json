@@ -13,7 +13,9 @@
     }, {
       "name" : "PageTitle"
     }, {
-      "name" : "PageModule"
+      "name" : "PageModule",
+      "selectModel" : "ListModules",
+      "selectSourceField" : "ModuleName"
     } ]
   } ]
 }

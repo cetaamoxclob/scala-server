@@ -13,7 +13,9 @@
     }, {
       "name" : "TableSQL"
     }, {
-      "name" : "TableModule"
+      "name" : "TableModule",
+      "selectModel" : "ListModules",
+      "selectSourceField" : "ModuleName"
     } ]
   } ]
 }
