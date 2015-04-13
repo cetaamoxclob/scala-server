@@ -11,7 +11,7 @@
         @section.title
         <span class="dropdown" data-ng-show="showDevelopmentTools">
             <button class="btn btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
-                <span class="glyphicon glyphicon-cog"></span>
+                <i class="fa fa-wrench"></i>
             </button>
             <ul class="dropdown-menu" role="menu">
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="/page/BuildSection/?filter=SectionName%20Equals%20%27@(section.name)%27">Build Section</a></li>
@@ -40,14 +40,6 @@
                     Insert
                 </button>
             }
-            @if(section.model.allowDelete) {
-                <button type="button" class="btn btn-danger btn-xs"
-                data-ng-click="SmartPage.getSection('@(section.name)').delete()"
-                data-ng-enabled="SmartPage.getSection('@(section.name)').deleteEnabled()">
-                    <span class="glyphicon glyphicon-trash"></span>
-                    Delete
-                </button>
-            }
             @for(button <- section.buttons) {
                 <button type="button" class="btn btn-default btn-xs" data-ng-click="buttons['@(button.label)'](SmartPage.getSection('@(section.name)'), $http)">
                     <script>
@@ -56,6 +48,16 @@
                         };
                     </script>
                     @button.label
+                </button>
+            }
+
+            @if(section.model.allowDelete) {
+                <span class="divider"></span>
+                <button type="button" class="btn btn-danger btn-xs"
+                data-ng-click="SmartPage.getSection('@(section.name)').delete()"
+                data-ng-enabled="SmartPage.getSection('@(section.name)').deleteEnabled()">
+                    <span class="glyphicon glyphicon-trash"></span>
+                    Delete
                 </button>
             }
         </ul>
