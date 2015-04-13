@@ -7,7 +7,19 @@
         <span class="icon-indent glyphicon glyphicon-triangle-bottom" aria-hidden="true"
         data-ng-click="hide@section.name = false" data-ng-show="hide@section.name"></span>
     }
-    <h2>@section.title</h2>
+    <h2>
+        @section.title
+        <span class="dropdown" data-ng-show="showDevelopmentTools">
+            <button class="btn btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+                <span class="glyphicon glyphicon-cog"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="/page/BuildSection/?filter=SectionName%20Equals%20%27@(section.name)%27">Build Section</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="/page/BuildModel/?filter=ModelName%20Equals%20%27@(section.model.name)%27">Build Model</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="/page/BuildTable/?filter=TableName%20Equals%20%27@(section.model.basisTable.name)%27">Build Table</a></li>
+            </ul>
+        </span>
+    </h2>
 
     <nav data-ng-hide="hide@section.name" class="no-select">
         <div data-ng-hide="SmartPage.getSection('@(section.name)').getCurrentSet().rows.length">
