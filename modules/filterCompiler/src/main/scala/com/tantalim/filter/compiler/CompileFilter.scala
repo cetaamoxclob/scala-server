@@ -131,6 +131,11 @@ class CompileFilter(filter: String, fields: Map[String, ModelField]) extends Fil
     Value(values = List(intValue))
   }
 
+  override def visitBooleanAtom(ctx: FilterParser.BooleanAtomContext) = {
+    val booleanValue = ctx.getText == "true"
+    Value(values = List(booleanValue))
+  }
+
   override def visitListAtom(ctx: FilterParser.ListAtomContext) = {
     import scala.collection.JavaConverters._
     val itemList = ctx.basicAtom.asScala

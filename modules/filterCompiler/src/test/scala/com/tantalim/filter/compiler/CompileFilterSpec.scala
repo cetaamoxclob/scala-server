@@ -12,6 +12,7 @@ class CompileFilterSpec extends Specification with FakeArtifacts {
   val modelColumnSample: Map[String, ModelField] = Map(
     fakeModelFieldMap("TableID", "id", DataType.Integer, None, false, true),
     fakeModelFieldMap("CreatedDate", "created_date", DataType.Date),
+    fakeModelFieldMap("Active", "active", DataType.Boolean),
     fakeModelFieldMap("TableName", "name", DataType.String)
   )
 
@@ -40,6 +41,11 @@ class CompileFilterSpec extends Specification with FakeArtifacts {
 
       "Contains" in {
         mustBeEqual("TableName Contains 'Person'", "`t0`.`name` LIKE ?", List("%Person%"))
+      }
+    }
+    "filter boolean" in {
+      "=" in {
+        mustBeEqual("Active Equals true", "`t0`.`active` = ?", List(true))
       }
     }
     "filter numbers" in {
