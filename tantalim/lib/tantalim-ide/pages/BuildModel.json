@@ -1,6 +1,7 @@
 {
   "title" : "Build Model",
   "sections" : [ {
+    "viewMode" : "form",
     "name" : "Model",
     "model" : "BuildModel",
     "fields" : [ {

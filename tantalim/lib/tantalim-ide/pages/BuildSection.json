@@ -17,7 +17,9 @@
         "filter" : "ModelName Equals '${SectionModel}'"
       } ]
     }, {
-      "name" : "SectionViewMode"
+      "name" : "SectionViewMode",
+      "selectModel" : "ViewModeActiveEnum",
+      "selectSourceField" : "Code"
     }, {
       "name" : "SectionPage",
       "links" : [ {
@@ -121,7 +123,9 @@
       }, {
         "name" : "ChildSectionModel"
       }, {
-        "name" : "ChildSectionViewMode"
+        "name" : "ChildSectionViewMode",
+        "selectModel" : "ViewModeActiveEnum",
+        "selectSourceField" : "Code"
       } ]
     }, {
       "viewMode" : "form",

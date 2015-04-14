@@ -6,7 +6,11 @@
     "model" : "PageFieldsEditor",
     "title" : "Page Fields",
     "fields" : [ {
-      "name" : "PageFieldSectionName"
+      "name" : "PageFieldSectionName",
+      "links" : [ {
+        "page" : "BuildSection",
+        "filter" : "SectionName Equals '${PageFieldSectionName}'"
+      } ]
     }, {
       "name" : "PageFieldSectionModel"
     }, {

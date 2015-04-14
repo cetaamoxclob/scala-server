@@ -38,7 +38,9 @@
           "filter" : "ModelName Equals '${SectionModel}'"
         } ]
       }, {
-        "name" : "SectionViewMode"
+        "name" : "SectionViewMode",
+        "selectModel" : "ViewModeActiveEnum",
+        "selectSourceField" : "Code"
       } ]
     } ],
     "buttons" : [ {

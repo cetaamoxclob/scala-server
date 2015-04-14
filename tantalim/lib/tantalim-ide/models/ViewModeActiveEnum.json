@@ -1,0 +1,20 @@
+{
+  "allowUpdate" : false,
+  "filter" : "EnumType Equals 'ViewMode' AND Active Equals true",
+  "allowInsert" : false,
+  "basisTable" : "TantalimEnum",
+  "allowDelete" : false,
+  "fields" : [ {
+    "name" : "Meaning",
+    "basisColumn" : "Meaning"
+  }, {
+    "name" : "Code",
+    "basisColumn" : "Code"
+  }, {
+    "name" : "Active",
+    "basisColumn" : "Active"
+  }, {
+    "name" : "EnumType",
+    "basisColumn" : "Type"
+  } ]
+}
