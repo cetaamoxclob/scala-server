@@ -129,7 +129,9 @@
     }, {
       "name" : "SectionPageID",
       "basisColumn" : "PageID",
-      "export" : false
+      "export" : false,
+      "fieldDefault" : "PageID",
+      "alwaysDefault" : true
     }, {
       "name" : "SectionParentID",
       "basisColumn" : "ParentID",

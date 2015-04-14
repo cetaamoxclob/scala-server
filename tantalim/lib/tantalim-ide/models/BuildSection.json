@@ -103,7 +103,9 @@
       "basisColumn" : "Name"
     }, {
       "name" : "ChildSectionPageID",
-      "basisColumn" : "PageID"
+      "basisColumn" : "PageID",
+      "fieldDefault" : "SectionPageID",
+      "alwaysDefault" : true
     }, {
       "name" : "ChildSectionTitle",
       "basisColumn" : "Title"
