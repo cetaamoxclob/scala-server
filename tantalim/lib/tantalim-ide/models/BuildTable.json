@@ -146,10 +146,12 @@
       "basisColumn" : "TableID"
     }, {
       "name" : "TableIndexPriority",
-      "basisColumn" : "Priority"
+      "basisColumn" : "Priority",
+      "valueDefault" : "10"
     }, {
       "name" : "TableIndexUnique",
-      "basisColumn" : "Unique"
+      "basisColumn" : "Unique",
+      "valueDefault" : "true"
     } ],
     "orderBy" : [ {
       "fieldName" : "TableIndexPriority"

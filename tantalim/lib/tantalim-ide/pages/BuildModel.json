@@ -48,6 +48,7 @@
       "name" : "ModelAllowDelete"
     } ],
     "sections" : [ {
+      "viewMode" : "form",
       "name" : "ModelSteps",
       "model" : "ModelSteps",
       "title" : "Steps",
@@ -104,6 +105,7 @@
         "name" : "ModelFieldFunctionDefault"
       } ]
     }, {
+      "viewMode" : "form",
       "name" : "ModelSort",
       "model" : "ModelSort",
       "title" : "Sorting",
@@ -119,6 +121,7 @@
         "name" : "ModelSortAscending"
       } ]
     }, {
+      "viewMode" : "form",
       "name" : "ChildModel",
       "model" : "ChildModel",
       "title" : "Child Models",
@@ -154,10 +157,13 @@
     } ],
     "buttons" : [ {
       "label" : "Export",
-      "fxn" : "var row = section.getCurrentSet().getInstance();\nvar model = row.getValue('ModelName');\nvar moduleName = row.getValue('ModelModule');\n$http.post('/export/' + moduleName + '/Model/' + model).success(function(data) { alert(data.message) });"
+      "fxn" : "var row = section.getCurrentSet().getInstance();\nvar model = row.getValue('ModelName');\nvar moduleName = row.getValue('ModelModule');\n$scope.Logger.info('Exporting...');\n$scope.$http.post('/export/' + moduleName + '/Model/' + model).success(function(data) { $scope.Logger.info(data.message) });"
     }, {
       "label" : "Test",
       "fxn" : "var row = section.getCurrentSet().getInstance();\nvar model = row.getValue('ModelName');\nvar url = \"/data/\" + model;\nwindow.open(url);"
+    }, {
+      "label" : "Add Fields",
+      "fxn" : "var model = section.getCurrentSet().getInstance();\nvar tableName = model.getValue('ModelBasisTable');\nvar fieldSet = model.childModels.ModelFields;\n$scope.Logger.info('Finding columns...');\n$scope.PageService.readModelData('ListTableColumns', 'ColumnTableName%20Equals%20%27' + tableName + '%27').then(function(results) {\n    var modelName = model.getValue('ModelName');\n  _.forEach(results.data.rows, function(row) {\n    var newField = fieldSet.insert();\n    var basisColumn = row.data.ColumnName;\n    newField.update('ModelFieldBasisColumn', basisColumn, true);\n    newField.update('ModelFieldName', modelName + basisColumn, true);\n    $scope.Logger.info('Added ' + basisColumn);\n  });\n});"
     } ]
   } ]
 }

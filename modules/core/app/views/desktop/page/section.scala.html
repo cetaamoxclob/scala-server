@@ -41,9 +41,9 @@
                 </button>
             }
             @for(button <- section.buttons) {
-                <button type="button" class="btn btn-default btn-xs" data-ng-click="buttons['@(button.label)'](SmartPage.getSection('@(section.name)'), $http)">
+                <button type="button" class="btn btn-default btn-xs" data-ng-click="buttons['@(button.label)'](SmartPage.getSection('@(section.name)'), buttonScope, buttonScope.$http)">
                     <script>
-                        buttons['@(button.label)'] = function(section, $http) {
+                        buttons['@(button.label)'] = function(section, $scope, $http) {
                             @Html(button.function)
                         };
                     </script>

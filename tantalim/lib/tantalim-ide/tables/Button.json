@@ -27,7 +27,8 @@
   }, {
     "name" : "Function",
     "dbName" : "functionText",
-    "length" : 1000
+    "length" : 1000,
+    "required" : true
   } ],
   "indexes" : [ {
     "priority" : 10,

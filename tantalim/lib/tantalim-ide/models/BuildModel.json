@@ -105,6 +105,11 @@
     }, {
       "name" : "ChildModelChildField",
       "basisColumn" : "ChildField"
+    }, {
+      "name" : "ChildModelModule",
+      "basisColumn" : "Module",
+      "fieldDefault" : "ModelModule",
+      "alwaysDefault" : true
     } ]
   }, {
     "name" : "ModelSort",
