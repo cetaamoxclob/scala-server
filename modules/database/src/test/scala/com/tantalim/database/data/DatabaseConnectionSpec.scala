@@ -2,23 +2,29 @@ package com.tantalim.database.data
 
 import java.sql._
 
-import com.tantalim.database.mock.FakeConnection
 import org.junit.runner.RunWith
+import org.mockito.Matchers
+import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class DatabaseConnectionSpec extends Specification {
+class DatabaseConnectionSpec extends Specification with Mockito {
 
   val expected: ResultSet = null
 
-  "ComparatorByDataType" should {
-    "Boolean" in {
+  "DatabaseConnection" should {
+    "insert" in {
+      val mockStatement = mock[Statement]
       val db = new DatabaseConnection {
-        override def getConnection: Connection = new FakeConnection
+        val mockConnection = mock[Connection]
+        val mockResultSet = mock[ResultSet]
+        mockConnection.createStatement returns mockStatement
+        mockStatement.getGeneratedKeys returns mockResultSet
+        override def getConnection: Connection = mockConnection
       }
-      val rs = db.insert("INSERT", List.empty, db.getConnection)
-      rs must be equalTo(expected)
+      db.insert("INSERT STATEMENT HERE", List.empty, db.getConnection)
+      there was one(mockStatement).executeUpdate(Matchers.eq("INSERT STATEMENT HERE"), Matchers.anyInt())
     }
   }
 

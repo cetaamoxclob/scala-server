@@ -101,4 +101,4 @@ case class ModelStep(name: String,
 }
 
 case class ModelOrderBy(fieldName: String,
-                        ascending: Option[Boolean])
+                        ascending: Option[Boolean] = None)

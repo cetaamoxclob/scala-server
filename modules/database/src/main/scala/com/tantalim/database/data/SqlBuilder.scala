@@ -4,8 +4,8 @@ import com.tantalim.models._
 
 case class SqlBuilder(
                        from: Table,
-                       fields: Map[String, ModelField],
-                       steps: scala.collection.Map[Int, ModelStep],
+                       fields: Map[String, ModelField] = Map.empty,
+                       steps: scala.collection.Map[Int, ModelStep] = Map.empty,
                        where: Option[String] = None,
                        orderBy: Seq[ModelOrderBy] = Seq.empty,
                        parameters: List[Any] = List.empty,
