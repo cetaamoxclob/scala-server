@@ -8,7 +8,7 @@ import java.util.concurrent.Executor;
 public class FakeConnection implements Connection {
     @Override
     public Statement createStatement() throws SQLException {
-        return null;
+        return new FakeStatement();
     }
 
     @Override
