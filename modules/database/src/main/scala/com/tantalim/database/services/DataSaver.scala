@@ -53,16 +53,15 @@ trait DataSaver extends DataReader {
     }
   }
 
-  private def updateSingleRow(row: SmartNodeInstance, dbConnection: Connection): Unit = {
-    val (sql, params) = createSqlForUpdate(row)
-
-    val rowCountModified = update(sql, params, dbConnection)
-    if (rowCountModified != 1) {
-      throw new Exception(f"Update $rowCountModified rows: $sql")
-    }
-
-    childUpdate(row, dbConnection)
+  private def childUpdate(row: SmartNodeInstance, dbConnection: Connection): Unit = {
+    row.foreachChild(childSet => saveAll(childSet, dbConnection))
     row.state = DataState.Done
+  }
+
+  def findFullUniqueIndex(indexes: Seq[TableIndex], valueMap: mutable.Map[TableColumn, TntValue]): Option[TableIndex] = {
+    indexes.find { index =>
+      index.columns.forall(c => valueMap.get(c).nonEmpty)
+    }
   }
 
   private def deleteSingleRow(rowToDelete: SmartNodeInstance, dbConnection: Connection): Unit = {
@@ -84,15 +83,48 @@ trait DataSaver extends DataReader {
     row.state = DataState.Done
   }
 
-  private def childUpdate(row: SmartNodeInstance, dbConnection: Connection): Unit = {
-    row.foreachChild(childSet => saveAll(childSet, dbConnection))
-    row.state = DataState.Done
-  }
-
-  def findFullUniqueIndex(indexes: Seq[TableIndex], valueMap: mutable.Map[TableColumn, TntValue]): Option[TableIndex] = {
-    indexes.find { index =>
-      index.columns.forall(c => valueMap.get(c).nonEmpty)
+  private def updateSingleRow(row: SmartNodeInstance, dbConnection: Connection): Unit = {
+    if (row.nodeSet.model.preSave.isDefined) {
+      val preSaveClass = Class.forName(row.nodeSet.model.preSave.get)
+      val preSaveClassObject = preSaveClass.newInstance().asInstanceOf[TantalimPreSave]
+      preSaveClassObject.preSave(row)
     }
+
+    val (sql, params) = {
+      val model = row.nodeSet.model
+      val primaryKey = getPrimaryKey(model)
+      val primaryKeyValue = getPrimaryKeyValue(primaryKey.name, row)
+
+      val valueMap: Map[String, TntValue] = {
+        val valueMap = Map.newBuilder[String, TntValue]
+
+        model.fields.values.foreach { field =>
+          if (field.updateable && field.step.isEmpty) {
+            val value = row.get(field.name)
+            valueMap += field.basisColumn.dbName -> value.getOrElse(
+              TntNull()
+            )
+          }
+        }
+        valueMap.result()
+      }
+
+      val fieldList = valueMap.keys.map(fieldName => fieldName).toList
+
+      val setColumnPhrase = fieldList.map(fieldName => f"`$fieldName` = ?").mkString(", ")
+
+      (f"UPDATE ${SqlBuilder.getTableSql(model.basisTable)} " +
+        f"SET $setColumnPhrase " +
+        f"WHERE `${primaryKey.basisColumn.dbName}` = ?", fieldList.map(fieldName => valueMap.get(fieldName).get).toList :+ primaryKeyValue)
+    }
+
+    val rowCountModified = update(sql, params, dbConnection)
+    if (rowCountModified != 1) {
+      throw new Exception(f"Update $rowCountModified rows: $sql")
+    }
+
+    childUpdate(row, dbConnection)
+    row.state = DataState.Done
   }
 
   private def insertSingleRow(row: SmartNodeInstance, dbConnection: Connection): Unit = {
@@ -247,34 +279,6 @@ trait DataSaver extends DataReader {
         None
       }
     } else None
-  }
-
-  private def createSqlForUpdate(row: SmartNodeInstance): (String, List[Any]) = {
-    val model = row.nodeSet.model
-    val primaryKey = getPrimaryKey(model)
-    val primaryKeyValue = getPrimaryKeyValue(primaryKey.name, row)
-
-    val valueMap: Map[String, TntValue] = {
-      val valueMap = Map.newBuilder[String, TntValue]
-
-      model.fields.values.foreach { field =>
-        if (field.updateable && field.step.isEmpty) {
-          val value = row.get(field.name)
-          valueMap += field.basisColumn.dbName -> value.getOrElse(
-            TntNull()
-          )
-        }
-      }
-      valueMap.result()
-    }
-
-    val fieldList = valueMap.keys.map(fieldName => fieldName).toList
-
-    val setColumnPhrase = fieldList.map(fieldName => f"`$fieldName` = ?").mkString(", ")
-
-    (f"UPDATE ${SqlBuilder.getTableSql(model.basisTable)} " +
-      f"SET $setColumnPhrase " +
-      f"WHERE `${primaryKey.basisColumn.dbName}` = ?", fieldList.map(fieldName => valueMap.get(fieldName).get).toList :+ primaryKeyValue)
   }
 
   private def createSqlForDelete(row: SmartNodeInstance): (String, List[Any]) = {
