@@ -6,7 +6,7 @@ import org.specs2.mutable._
 import org.specs2.runner._
 
 @RunWith(classOf[JUnitRunner])
-class SqlBuilderSpec extends Specification {
+class SqlBuilderSpec extends Specification with FakeArtifacts {
   "SqlBuilder" should {
     val module = Module("test-module", Database("TestDatabase"))
     val table = DeepTable("Test", "test_table", module)
@@ -35,11 +35,7 @@ class SqlBuilderSpec extends Specification {
     }
 
     "Simple FROM" in {
-      val sql = new SqlBuilder(table, Map(
-        "TestPersonID" -> ModelField(
-          "TestPersonID", TableColumn("PersonID", "id")
-        )
-      ))
+      val sql = new SqlBuilder(table, Map(fakeModelFieldMap("TestPersonID", "id")))
       Util.stripExtraWhitespace(sql.toPreparedStatement) must be equalTo
         "SELECT `t0`.`id` AS `TestPersonID` FROM `test_table` AS `t0`"
     }
@@ -91,8 +87,10 @@ class SqlBuilderSpec extends Specification {
         required = false,
         parentAlias = 0
       )
-      val field = ModelField("OtherName", TableColumn("Name", "name"), step = Some(step))
-      val sql = new SqlBuilder(table, fields = Map(field.name -> field), steps = Map(step.tableAlias -> step))
+      val sql = new SqlBuilder(table,
+        fields = Map(fakeModelFieldMap("OtherName", "name", step = Some(step))),
+        steps = Map(step.tableAlias -> step)
+      )
       Util.stripExtraWhitespace(sql.toPreparedStatement) must be equalTo
         "SELECT `t1`.`name` AS `OtherName` FROM `test_table` AS `t0` LEFT JOIN `test_other` AS `t1` ON `t1`.`personID` = `t0`.`parentID`"
     }

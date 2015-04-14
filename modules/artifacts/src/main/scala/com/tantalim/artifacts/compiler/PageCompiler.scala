@@ -80,7 +80,9 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
     pageSection.sections = sectionJson.sections match {
       case Some(childViews) => childViews.map { childView =>
         val childModelName = childView.model.getOrElse(childView.name)
-        val childModel = model.children.get(childModelName).get
+        val childModel = model.children.getOrElse(childModelName,
+          throw new TantalimException(s"Model ${model.name} doesn't have child named $childModelName",
+          s"Model has children: ${model.children.keys.mkString(", ")}. <a href='/page/BuildModel/?filter=ModelName%20Equals%20%22${model.name}%22'>Build Model</a>"))
         compilePageSection(childView, childModel, Some(pageSection))
       }
       case None => Seq.empty

@@ -3,7 +3,6 @@ package com.tantalim.artifacts
 import com.tantalim.artifacts.compiler.{MenuCompiler, ModelCompiler}
 import com.tantalim.models._
 import org.junit.runner._
-import org.specs2.mock._
 import org.specs2.mutable._
 import org.specs2.runner._
 import play.api.libs.json.{JsValue, Json}
@@ -15,7 +14,7 @@ trait TableCacheMock extends TableCache {
 }
 
 @RunWith(classOf[JUnitRunner])
-class ArtifactCompilerSpec extends Specification with Mockito with FakeArtifacts {
+class ArtifactCompilerSpec extends Specification with FakeArtifacts {
   "ArtifactCompiler" should {
     "compile the Default menu" in {
       trait ArtifactServiceMock extends ArtifactService {

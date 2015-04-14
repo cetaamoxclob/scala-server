@@ -35,7 +35,11 @@
         }, {
           "name" : "MenuItemPage",
           "selectModel" : "ListPages",
-          "selectSourceField" : "PageName"
+          "selectSourceField" : "PageName",
+          "links" : [ {
+            "page" : "BuildPage",
+            "filter" : "PageName Equals '${MenuItemPage}'"
+          } ]
         }, {
           "name" : "MenuItemTitle"
         }, {
