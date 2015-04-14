@@ -3,6 +3,7 @@
   "children" : [ {
     "name" : "sections",
     "parentField" : "PageID",
+    "filter" : "SectionParentID IsEmpty",
     "basisTable" : "Section",
     "childField" : "SectionPageID",
     "children" : [ {
@@ -98,6 +99,7 @@
     }, {
       "name" : "sections",
       "parentField" : "SectionSectionID",
+      "filter" : "SectionParentID GreaterThan 0",
       "basisTable" : "Section",
       "extends" : "sections",
       "childField" : "SectionParentID"
