@@ -130,6 +130,10 @@
       "functionDefault" : "10 + row.nodeSet.max('ModelSortSortOrder', 0)",
       "export" : false
     } ],
+    "orderBy" : [ {
+      "direction" : true,
+      "fieldName" : "ModelSortSortOrder"
+    } ],
     "steps" : [ {
       "name" : "Field",
       "join" : "Field"
