@@ -17,7 +17,9 @@
       "basisColumn" : "TableID"
     }, {
       "name" : "TableColumnRequired",
-      "basisColumn" : "Required"
+      "basisColumn" : "Required",
+      "valueDefault" : "false",
+      "required" : true
     }, {
       "name" : "TableColumnUpdateable",
       "basisColumn" : "Updateable"
@@ -27,7 +29,8 @@
       "functionDefault" : "10 + (row.nodeSet.rows.length * 10)"
     }, {
       "name" : "TableColumnDataType",
-      "basisColumn" : "DataType"
+      "basisColumn" : "DataType",
+      "valueDefault" : "String"
     }, {
       "name" : "TableColumnFieldType",
       "basisColumn" : "FieldType"
@@ -116,7 +119,8 @@
         "basisColumn" : "IndexID"
       }, {
         "name" : "TableIndexColumnOrder",
-        "basisColumn" : "Order"
+        "basisColumn" : "Order",
+        "valueDefault" : "10"
       }, {
         "name" : "TableIndexColumnColumnID",
         "basisColumn" : "ColumnID"

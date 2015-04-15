@@ -97,7 +97,7 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
         compileModel(s.model)
       } catch {
         case e: TantalimException => throw new TantalimException(s"Failed to find or parse model named ${s.model} on ${pageField.name}",
-          e.getMessage)
+          e.getMessage + s" <a href='/page/BuildModel/?filter=ModelName%20Equals%20%27${s.model}%27'>Build Model</a>")
       }
       if (targetModel.fields.get(s.sourceField).isEmpty)
         throw new TantalimException(

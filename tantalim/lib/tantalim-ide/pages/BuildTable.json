@@ -113,6 +113,7 @@
         } ]
       } ]
     }, {
+      "viewMode" : "table",
       "name" : "TableIndex",
       "title" : "Indexes",
       "fields" : [ {
