@@ -35,12 +35,10 @@
     "dataType" : "Boolean"
   } ],
   "indexes" : [ {
-    "priority" : 10,
     "columns" : [ {
       "name" : "IndexID"
     } ]
   }, {
-    "priority" : 20,
     "columns" : [ {
       "name" : "TableID"
     }, {

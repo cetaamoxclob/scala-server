@@ -26,19 +26,16 @@
     "required" : true
   } ],
   "indexes" : [ {
-    "priority" : 5,
     "columns" : [ {
       "name" : "ID"
     } ]
   }, {
-    "priority" : 10,
     "columns" : [ {
       "name" : "Code"
     }, {
       "name" : "Type"
     } ]
   }, {
-    "priority" : 20,
     "columns" : [ {
       "name" : "Meaning"
     }, {

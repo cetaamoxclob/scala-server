@@ -37,12 +37,10 @@
     "dbName" : "filter"
   } ],
   "indexes" : [ {
-    "priority" : 10,
     "columns" : [ {
       "name" : "LinkID"
     } ]
   }, {
-    "priority" : 20,
     "columns" : [ {
       "name" : "FieldID"
     }, {

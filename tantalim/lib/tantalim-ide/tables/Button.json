@@ -31,12 +31,10 @@
     "required" : true
   } ],
   "indexes" : [ {
-    "priority" : 10,
     "columns" : [ {
       "name" : "ButtonID"
     } ]
   }, {
-    "priority" : 20,
     "columns" : [ {
       "name" : "SectionID"
     }, {
