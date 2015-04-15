@@ -37,8 +37,7 @@ case class TableJoinColumnJson(to: String,
                                from: Option[String],
                                fromText: Option[String])
 
-case class TableIndexJson(priority: Int,
-                          unique: Option[Boolean],
+case class TableIndexJson(unique: Option[Boolean],
                           columns: Seq[TableIndexColumnJson])
 
 case class TableIndexColumnJson(name: String,
@@ -85,7 +84,6 @@ object TableJson {
     ).apply(TableJoinColumnJson.apply _)
 
   implicit def tableIndexReads: Reads[TableIndexJson] = (
-    (JsPath \ "priority").read[Int] and
       (JsPath \ "unique").readNullable[Boolean] and
       (JsPath \ "columns").read[Seq[TableIndexColumnJson]]
     ).apply(TableIndexJson.apply _)

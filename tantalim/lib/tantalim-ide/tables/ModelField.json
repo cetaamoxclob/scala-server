@@ -67,15 +67,16 @@
   }, {
     "name" : "FunctionDefault",
     "dbName" : "functionDefault",
-    "label" : "Function Default"
+    "label" : "Function Default",
+    "length" : 1000,
+    "dataType" : "String",
+    "required" : false
   } ],
   "indexes" : [ {
-    "priority" : 10,
     "columns" : [ {
       "name" : "FieldID"
     } ]
   }, {
-    "priority" : 20,
     "columns" : [ {
       "name" : "Name"
     }, {

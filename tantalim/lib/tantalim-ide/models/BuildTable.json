@@ -26,7 +26,7 @@
     }, {
       "name" : "TableColumnDisplayOrder",
       "basisColumn" : "DisplayOrder",
-      "functionDefault" : "10 + (row.nodeSet.rows.length * 10)"
+      "functionDefault" : "10 + row.nodeSet.max('TableColumnDisplayOrder')"
     }, {
       "name" : "TableColumnDataType",
       "basisColumn" : "DataType",

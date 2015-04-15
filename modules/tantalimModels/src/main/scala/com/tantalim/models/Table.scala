@@ -89,7 +89,7 @@ case class TableJoinColumn(to: TableColumn,
                            from: Option[TableColumn] = None,
                            fromText: Option[String] = None)
 
-case class TableIndex(priority: Int, unique: Boolean, columns: Seq[TableColumn])
+case class TableIndex(unique: Boolean, columns: Seq[TableColumn])
 
 object Table {
   val Mock = "__MOCK_TABLE__"

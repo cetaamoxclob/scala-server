@@ -136,7 +136,6 @@ trait TableCompiler extends ArtifactService with TableCache {
 
   private def compileTableIndex(columns: Map[String, TableColumn], index: TableIndexJson): TableIndex = {
     TableIndex(
-      index.priority,
       index.unique.getOrElse(false),
       index.columns.map(indexColumn => columns.getOrElse(indexColumn.name,
         throw new TantalimException("Missing Index Column " + indexColumn.name,
