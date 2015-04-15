@@ -15,6 +15,13 @@
     "name" : "FieldModelName",
     "step" : "Model",
     "basisColumn" : "Name"
+  }, {
+    "name" : "FieldBasisColumn",
+    "basisColumn" : "BasisColumn"
+  }, {
+    "name" : "FieldStepTable",
+    "step" : "Step",
+    "basisColumn" : "Name"
   } ],
   "orderBy" : [ {
     "fieldName" : "FieldName"
@@ -22,5 +29,8 @@
   "steps" : [ {
     "name" : "Model",
     "join" : "Model"
+  }, {
+    "name" : "Step",
+    "join" : "Step"
   } ]
 }

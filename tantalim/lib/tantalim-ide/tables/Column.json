@@ -22,50 +22,88 @@
     "dataType" : "Integer",
     "required" : true
   }, {
+    "name" : "TableName",
+    "dbName" : "tableName",
+    "help" : "This should always default to the TableID's Table name. It violates normalization rules but joining between Columns and ModelFields much easier.",
+    "dataType" : "String",
+    "required" : true
+  }, {
     "name" : "Name",
     "dbName" : "name",
     "label" : "Column Name",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "Required",
     "dbName" : "required",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   }, {
     "name" : "DataType",
     "dbName" : "dataType",
-    "label" : "Data Type"
+    "label" : "Data Type",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "Length",
     "dbName" : "columnLength",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : false
   }, {
     "name" : "FieldType",
-    "dbName" : "fieldType"
+    "dbName" : "fieldType",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "DisplayOrder",
     "dbName" : "displayOrder",
     "label" : "Order",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : false
   }, {
     "name" : "SQL",
-    "dbName" : "dbName"
+    "dbName" : "dbName",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "Label",
-    "dbName" : "label"
+    "dbName" : "label",
+    "dataType" : "String",
+    "required" : false
+  }, {
+    "name" : "Visible",
+    "dbName" : "visible",
+    "help" : "Should this column be visible on pages by default?",
+    "dataType" : "Boolean",
+    "required" : false
   }, {
     "name" : "Updateable",
     "dbName" : "updateable",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   }, {
     "name" : "Help",
     "dbName" : "help",
-    "length" : 1000
+    "length" : 1000,
+    "dataType" : "String",
+    "required" : false
+  }, {
+    "name" : "Description",
+    "dbName" : "description",
+    "help" : "Description and other notes about this column",
+    "length" : 100,
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "Placeholder",
-    "dbName" : "placeholder"
+    "dbName" : "placeholder",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "ColumnDefault",
-    "dbName" : "columnDefault"
+    "dbName" : "columnDefault",
+    "dataType" : "String",
+    "required" : false
   } ],
   "indexes" : [ {
     "priority" : 10,

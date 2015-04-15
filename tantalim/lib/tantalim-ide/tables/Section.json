@@ -3,6 +3,7 @@
   "primaryKey" : "SectionID",
   "joins" : [ {
     "name" : "Page",
+    "required" : false,
     "table" : "Page",
     "columns" : [ {
       "to" : "PageID",
@@ -31,7 +32,8 @@
     "name" : "PageID",
     "updateable" : false,
     "dbName" : "pageID",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : true
   }, {
     "name" : "Title",
     "dbName" : "title"
