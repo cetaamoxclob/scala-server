@@ -10,13 +10,11 @@ case class GeneralCounter(modelName: String, fieldName: String) extends Tantalim
 }
 
 class TablePreSave extends TantalimPreSave {
-  override def preSave(row: SmartNodeInstance): Unit = {
-    GeneralCounter.order(row.getChild("columns"), "DisplayOrder")
-    GeneralCounter.order(row.getChild("indexes"), "priority")
-    if (row.getChild("indexes").isDefined) {
-      row.getChild("indexes").get.foreach { index =>
-        GeneralCounter.order(index.getChild("columns"), "IndexColumnOrder")
-      }
+  override def preSave(table: SmartNodeInstance): Unit = {
+    GeneralCounter.order(table.getChild("columns"), "DisplayOrder")
+    GeneralCounter.order(table.getChild("indexes"), "priority")
+    table.foreach("indexes") { index =>
+      GeneralCounter.order(index.getChild("columns"), "IndexColumnOrder")
     }
   }
 }
@@ -24,6 +22,22 @@ class TablePreSave extends TantalimPreSave {
 class MenuContentPreSave extends GeneralCounter("content", "MenuContentDisplayOrder")
 
 class MenuItemPreSave extends GeneralCounter("items", "MenuItemDisplayOrder")
+
+class PagePreSave extends TantalimPreSave {
+
+  private def processSections(sections: Option[SmartNodeSet]): Unit = {
+    if (sections.isDefined) {
+      sections.get.foreach { section =>
+        GeneralCounter.order(section.getChild("fields"), "PageFieldDisplayOrder")
+        processSections(section.getChild("sections"))
+      }
+    }
+  }
+
+  override def preSave(page: SmartNodeInstance): Unit = {
+    processSections(page.getChild("sections"))
+  }
+}
 
 object GeneralCounter {
   def order(childSet: Option[SmartNodeSet], fieldName: String) = {

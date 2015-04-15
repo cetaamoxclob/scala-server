@@ -1,4 +1,5 @@
 {
+  "preSave" : "artifacts.PagePreSave",
   "basisTable" : "Page",
   "children" : [ {
     "name" : "sections",
