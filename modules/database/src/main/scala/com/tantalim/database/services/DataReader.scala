@@ -10,7 +10,7 @@ import com.tantalim.database.data.{DatabaseConnection, SqlBuilder}
 
 trait DataReader extends DatabaseConnection {
 
-  def calcTotalRows(model: Model, filter: Option[String]): Long = {
+  def calcTotalRows(model: Model, filter: Option[String] = None): Long = {
     if (model.limit == 0) return 1
     var sqlBuilder = new SqlBuilder(
       from = model.basisTable,
@@ -66,6 +66,7 @@ trait DataReader extends DatabaseConnection {
       resultSet
     } catch {
       case e: Exception =>
+        println("ERROR" + e.getMessage)
         val e2 = new TantalimException(e.getMessage, sqlBuilder.toPreparedStatement)
         throw e2
     }
@@ -91,7 +92,10 @@ trait DataReader extends DatabaseConnection {
 
   private def convertResultSetToDataRows(model: Model, rs: ResultSet) = {
     val resultBuilder = new SmartNodeSet(model)
-    while (rs.next()) {
+    var done = 0
+    while (rs.next() && done < 10000) {
+      println("convertResultSetToDataRows")
+      done = done + 1
       val newInstance = resultBuilder.insert
       model.fields.foreach {
         case (fieldName, f) =>

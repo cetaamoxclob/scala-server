@@ -99,8 +99,9 @@ trait DataSaver extends DataReader {
         val valueMap = Map.newBuilder[String, TntValue]
 
         model.fields.values.foreach { field =>
-          if (field.updateable && field.step.isEmpty) {
-            val value = row.get(field.name)
+          val value = getValueForInsert(row, field)
+          // TODO How should we handle non-updateable fields
+          if (field.step.isEmpty) {
             valueMap += field.basisColumn.dbName -> value.getOrElse(
               TntNull()
             )
