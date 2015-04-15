@@ -135,6 +135,10 @@
     }, {
       "name" : "ModelSortAscending",
       "basisColumn" : "Ascending"
+    }, {
+      "name" : "ModelSortSortOrder",
+      "basisColumn" : "SortOrder",
+      "functionDefault" : "10 + row.nodeSet.max('ModelSortSortOrder')"
     } ],
     "steps" : [ {
       "name" : "Field",

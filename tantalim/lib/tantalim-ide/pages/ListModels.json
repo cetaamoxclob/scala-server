@@ -19,6 +19,8 @@
         "page" : "BuildTable",
         "filter" : "TableName Equals '${ModelBasisTable}'"
       } ]
+    }, {
+      "name" : "ModelModule"
     } ]
   } ]
 }

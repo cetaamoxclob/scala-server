@@ -42,7 +42,8 @@
       "model" : "PageField",
       "title" : "Fields",
       "fields" : [ {
-        "name" : "PageFieldDisplayOrder"
+        "name" : "PageFieldDisplayOrder",
+        "showInNavigation" : true
       }, {
         "name" : "PageFieldName",
         "showInNavigation" : true

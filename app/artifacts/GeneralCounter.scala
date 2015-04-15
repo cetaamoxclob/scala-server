@@ -23,8 +23,22 @@ class MenuContentPreSave extends GeneralCounter("content", "MenuContentDisplayOr
 
 class MenuItemPreSave extends GeneralCounter("items", "MenuItemDisplayOrder")
 
-class PagePreSave extends TantalimPreSave {
+class ModelPreSave extends TantalimPreSave {
+  override def preSave(model: SmartNodeInstance): Unit = {
+    processModel(model)
+  }
 
+  private def processModel(model: SmartNodeInstance): Unit = {
+    GeneralCounter.order(model.getChild("orderBy"), "ModelSortSortOrder")
+    processModels(model.getChild("children"))
+  }
+
+  private def processModels(models: Option[SmartNodeSet]): Unit = {
+    if (models.isDefined) models.get.foreach(model => processModel(model))
+  }
+}
+
+class PagePreSave extends TantalimPreSave {
   private def processSections(sections: Option[SmartNodeSet]): Unit = {
     if (sections.isDefined) {
       sections.get.foreach { section =>

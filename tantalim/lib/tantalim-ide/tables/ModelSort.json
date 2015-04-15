@@ -38,6 +38,13 @@
   }, {
     "name" : "Ascending",
     "dbName" : "sortAsc",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
+  }, {
+    "name" : "SortOrder",
+    "dbName" : "sortOrder",
+    "label" : "Order",
+    "dataType" : "Integer",
+    "required" : true
   } ]
 }

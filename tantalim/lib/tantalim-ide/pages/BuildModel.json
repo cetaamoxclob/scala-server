@@ -88,6 +88,7 @@
         "selectModel" : "ListModelSteps",
         "selectFilter" : "ModelStepModelID Equals ${ModelID}",
         "selectSourceField" : "ModelStepName",
+        "showInNavigation" : true,
         "fieldType" : "select"
       }, {
         "name" : "ModelFieldRequired"
@@ -105,11 +106,13 @@
         "name" : "ModelFieldFunctionDefault"
       } ]
     }, {
-      "viewMode" : "form",
+      "viewMode" : "table",
       "name" : "ModelSort",
       "model" : "ModelSort",
       "title" : "Sorting",
       "fields" : [ {
+        "name" : "ModelSortSortOrder"
+      }, {
         "name" : "ModelSortFieldName",
         "selectTargetID" : "ModelSortFieldID",
         "label" : "Field Name",
