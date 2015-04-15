@@ -44,9 +44,9 @@
                 <button type="button" class="btn btn-default btn-xs"
                 data-ng-click="buttons['@(button.label)'](
                 SmartPage.getSection('@(section.name)'), SmartPage.getSection('@(section.name)').getCurrentSet(), buttonScope,
-                buttonScope.Http, buttonScope.Logger, buttonScope.Server)">
+                buttonScope.Http, buttonScope.Http, buttonScope.Logger, buttonScope.Server)">
                     <script>
-                        buttons['@(button.label)'] = function(section, data, $scope, Http, Logger, Server) {
+                        buttons['@(button.label)'] = function(section, data, $scope, Http, $http, Logger, Server) {
                             @Html(button.function)
                         };
                     </script>
