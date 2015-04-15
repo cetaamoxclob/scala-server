@@ -25,6 +25,28 @@
       "name" : "PageFieldSelectFilter"
     }, {
       "name" : "PageFieldDisabled"
+    }, {
+      "name" : "PageFieldsEditorBlurFunction"
+    }, {
+      "name" : "PageFieldsEditorDisplayOrder"
+    }, {
+      "name" : "PageFieldsEditorFieldType"
+    }, {
+      "name" : "PageFieldsEditorFilter"
+    }, {
+      "name" : "PageFieldsEditorHelp"
+    }, {
+      "name" : "PageFieldsEditorLabel"
+    }, {
+      "name" : "PageFieldsEditorPlaceholder"
+    }, {
+      "name" : "PageFieldsEditorSearchable"
+    }, {
+      "name" : "PageFieldsEditorShowInFormView"
+    }, {
+      "name" : "PageFieldsEditorShowInNavigation"
+    }, {
+      "name" : "PageFieldsEditorShowInTableView"
     } ]
   } ]
 }

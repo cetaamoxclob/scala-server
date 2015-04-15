@@ -1,0 +1,50 @@
+{
+  "allowInsert" : false,
+  "basisTable" : "ModelField",
+  "limit" : 100,
+  "fields" : [ {
+    "name" : "ModelFieldsEditorFieldID",
+    "basisColumn" : "FieldID"
+  }, {
+    "name" : "ModelFieldsEditorModelID",
+    "basisColumn" : "ModelID"
+  }, {
+    "name" : "ModelFieldsEditorName",
+    "basisColumn" : "Name"
+  }, {
+    "name" : "ModelFieldsEditorBasisColumn",
+    "basisColumn" : "BasisColumn"
+  }, {
+    "name" : "ModelFieldsEditorStepID",
+    "basisColumn" : "StepID"
+  }, {
+    "name" : "ModelFieldsEditorUpdateable",
+    "basisColumn" : "Updateable"
+  }, {
+    "name" : "ModelFieldsEditorRequired",
+    "basisColumn" : "Required"
+  }, {
+    "name" : "ModelFieldsEditorExport",
+    "basisColumn" : "Export"
+  }, {
+    "name" : "ModelFieldsEditorAlwaysDefault",
+    "basisColumn" : "AlwaysDefault"
+  }, {
+    "name" : "ModelFieldsEditorFieldDefault",
+    "basisColumn" : "FieldDefault"
+  }, {
+    "name" : "ModelFieldsEditorValueDefault",
+    "basisColumn" : "ValueDefault"
+  }, {
+    "name" : "ModelFieldsEditorFunctionDefault",
+    "basisColumn" : "FunctionDefault"
+  }, {
+    "name" : "ModelFieldsEditorModelName",
+    "step" : "Model",
+    "basisColumn" : "Name"
+  } ],
+  "steps" : [ {
+    "name" : "Model",
+    "join" : "Model"
+  } ]
+}

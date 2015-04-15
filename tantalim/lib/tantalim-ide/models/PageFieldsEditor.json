@@ -32,6 +32,39 @@
     "name" : "PageFieldSectionModel",
     "step" : "Section",
     "basisColumn" : "Model"
+  }, {
+    "name" : "PageFieldsEditorDisplayOrder",
+    "basisColumn" : "DisplayOrder"
+  }, {
+    "name" : "PageFieldsEditorShowInFormView",
+    "basisColumn" : "ShowInFormView"
+  }, {
+    "name" : "PageFieldsEditorShowInTableView",
+    "basisColumn" : "ShowInTableView"
+  }, {
+    "name" : "PageFieldsEditorShowInNavigation",
+    "basisColumn" : "ShowInNavigation"
+  }, {
+    "name" : "PageFieldsEditorLabel",
+    "basisColumn" : "Label"
+  }, {
+    "name" : "PageFieldsEditorFieldType",
+    "basisColumn" : "FieldType"
+  }, {
+    "name" : "PageFieldsEditorHelp",
+    "basisColumn" : "Help"
+  }, {
+    "name" : "PageFieldsEditorPlaceholder",
+    "basisColumn" : "Placeholder"
+  }, {
+    "name" : "PageFieldsEditorFilter",
+    "basisColumn" : "Filter"
+  }, {
+    "name" : "PageFieldsEditorBlurFunction",
+    "basisColumn" : "BlurFunction"
+  }, {
+    "name" : "PageFieldsEditorSearchable",
+    "basisColumn" : "Searchable"
   } ],
   "steps" : [ {
     "name" : "Section",

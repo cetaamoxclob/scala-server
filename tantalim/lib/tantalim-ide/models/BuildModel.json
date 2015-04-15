@@ -134,11 +134,13 @@
       "basisColumn" : "Name"
     }, {
       "name" : "ModelSortAscending",
-      "basisColumn" : "Ascending"
+      "basisColumn" : "Ascending",
+      "valueDefault" : "true",
+      "required" : true
     }, {
       "name" : "ModelSortSortOrder",
       "basisColumn" : "SortOrder",
-      "functionDefault" : "10 + row.nodeSet.max('ModelSortSortOrder')"
+      "functionDefault" : "10 + row.nodeSet.max('ModelSortSortOrder', 0)"
     } ],
     "steps" : [ {
       "name" : "Field",

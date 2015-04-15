@@ -127,7 +127,8 @@
     }, {
       "name" : "ModelSortSortOrder",
       "basisColumn" : "SortOrder",
-      "functionDefault" : "10 + row.nodeSet.max('ModelSortSortOrder')"
+      "functionDefault" : "10 + row.nodeSet.max('ModelSortSortOrder', 0)",
+      "export" : false
     } ],
     "steps" : [ {
       "name" : "Field",

@@ -40,6 +40,8 @@
       "page" : "ModuleManagement"
     }, {
       "page" : "PageFieldsEditor"
+    }, {
+      "page" : "ModelFieldsEditor"
     } ]
   }, {
     "title" : "Enum",

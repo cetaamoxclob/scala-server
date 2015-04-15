@@ -1,0 +1,35 @@
+{
+  "title" : "Model Fields Editor",
+  "sections" : [ {
+    "viewMode" : "table",
+    "name" : "ModelFieldsEditor",
+    "model" : "ModelFieldsEditor",
+    "fields" : [ {
+      "name" : "ModelFieldsEditorAlwaysDefault"
+    }, {
+      "name" : "ModelFieldsEditorBasisColumn"
+    }, {
+      "name" : "ModelFieldsEditorExport"
+    }, {
+      "name" : "ModelFieldsEditorFieldDefault"
+    }, {
+      "name" : "ModelFieldsEditorFieldID"
+    }, {
+      "name" : "ModelFieldsEditorFunctionDefault"
+    }, {
+      "name" : "ModelFieldsEditorModelID"
+    }, {
+      "name" : "ModelFieldsEditorModelName"
+    }, {
+      "name" : "ModelFieldsEditorName"
+    }, {
+      "name" : "ModelFieldsEditorRequired"
+    }, {
+      "name" : "ModelFieldsEditorStepID"
+    }, {
+      "name" : "ModelFieldsEditorUpdateable"
+    }, {
+      "name" : "ModelFieldsEditorValueDefault"
+    } ]
+  } ]
+}
