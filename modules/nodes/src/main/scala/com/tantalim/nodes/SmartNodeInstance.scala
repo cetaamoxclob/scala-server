@@ -35,6 +35,14 @@ case class SmartNodeInstance(
                                * map of SmartNodeInstances representing the children of this node
                                */
                               children: mutable.HashMap[String, SmartNodeSet] = mutable.HashMap.empty) {
+
+  def foreach(childSet: String)(f: (SmartNodeInstance) => Unit) = {
+    if (getChild(childSet).isDefined) {
+      getChild(childSet).get.foreach(i => f(i))
+    }
+  }
+
+
   def isRoot = nodeSet.parentInstance.isEmpty
 
   def delete() = {
