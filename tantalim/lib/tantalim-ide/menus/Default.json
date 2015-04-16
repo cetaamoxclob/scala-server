@@ -47,6 +47,8 @@
     "title" : "Enum",
     "items" : [ {
       "page" : "ViewModeEnum"
+    }, {
+      "page" : "DataTypeEnum"
     } ]
   }, {
     "title" : "Manage",

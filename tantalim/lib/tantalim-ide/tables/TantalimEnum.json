@@ -15,6 +15,7 @@
     "required" : true
   }, {
     "name" : "Code",
+    "updateable" : false,
     "visible" : true,
     "dbName" : "code",
     "length" : 10,
