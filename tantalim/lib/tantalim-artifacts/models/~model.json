@@ -199,6 +199,10 @@
   }, {
     "name" : "preSave",
     "basisColumn" : "PreSave"
+  }, {
+    "name" : "ModelBasisTableID",
+    "basisColumn" : "BasisTableID",
+    "export" : false
   } ],
   "steps" : [ {
     "name" : "BasisTable",
