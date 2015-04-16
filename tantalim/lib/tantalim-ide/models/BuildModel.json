@@ -108,6 +108,16 @@
       "name" : "ModelStepJoinName",
       "step" : "Join",
       "basisColumn" : "Name"
+    }, {
+      "name" : "ModelStepJoinFromTableName",
+      "step" : "JoinFromTable",
+      "basisColumn" : "Name",
+      "fieldDefault" : "ModelBasisTable"
+    }, {
+      "name" : "ModelStepJoinFromTableID",
+      "step" : "Join",
+      "basisColumn" : "FromTableID",
+      "fieldDefault" : "ModelBasisTableID"
     } ],
     "steps" : [ {
       "name" : "Parent",
@@ -119,6 +129,10 @@
       "parent" : "Join",
       "name" : "JoinToTable",
       "join" : "ToTable"
+    }, {
+      "parent" : "Join",
+      "name" : "JoinFromTable",
+      "join" : "FromTable"
     } ]
   }, {
     "name" : "ChildModel",

@@ -54,21 +54,31 @@
       "model" : "ModelSteps",
       "title" : "Steps",
       "fields" : [ {
-        "name" : "ModelStepName",
-        "label" : "Step Name",
-        "showInNavigation" : true
+        "name" : "ModelStepJoinFromTableName",
+        "selectTargetID" : "ModelStepJoinFromTableID",
+        "label" : "From Table",
+        "selectModel" : "ListTables",
+        "selectSourceField" : "TableName",
+        "links" : [ {
+          "page" : "BuildTable",
+          "filter" : "TableTableID Equals ${ModelStepJoinFromTableID}"
+        } ]
       }, {
         "name" : "ModelStepJoinName",
         "selectTargetID" : "ModelStepJoinID",
-        "label" : "Table Join",
+        "label" : "Join Name",
         "selectModel" : "ListTableJoins",
-        "selectFilter" : "TableJoinFromTableName = '${ModelBasisTable}'",
+        "selectFilter" : "TableJoinFromTableName = '${ModelStepJoinFromTableName}'",
         "selectSourceField" : "TableJoinName",
         "fieldType" : "select",
         "links" : [ {
           "page" : "BuildTable",
           "filter" : "TableTableID Equals ${ModelStepJoinToTableID}"
         } ]
+      }, {
+        "name" : "ModelStepName",
+        "label" : "Step Name",
+        "showInNavigation" : true
       }, {
         "name" : "ModelStepParentName",
         "selectTargetID" : "ModelStepParentID",
