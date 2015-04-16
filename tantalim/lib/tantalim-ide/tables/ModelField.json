@@ -84,6 +84,11 @@
     "dataType" : "String",
     "required" : false
   }, {
+    "name" : "BasisTable",
+    "dbName" : "basisTable",
+    "dataType" : "String",
+    "required" : false
+  }, {
     "name" : "BasisColumn",
     "dbName" : "basisColumn",
     "dataType" : "String",

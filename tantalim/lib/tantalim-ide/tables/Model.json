@@ -8,6 +8,14 @@
       "to" : "ModelID",
       "from" : "ParentID"
     } ]
+  }, {
+    "name" : "BasisTable",
+    "required" : true,
+    "table" : "Table",
+    "columns" : [ {
+      "to" : "TableID",
+      "from" : "BasisTableID"
+    } ]
   } ],
   "columns" : [ {
     "name" : "ModelID",
@@ -24,6 +32,11 @@
     "name" : "BasisTable",
     "dbName" : "basisTable",
     "label" : "Basis Table",
+    "required" : true
+  }, {
+    "name" : "BasisTableID",
+    "dbName" : "basisTableID",
+    "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "Module",
@@ -78,5 +91,16 @@
     "dbName" : "customUrlSource",
     "label" : "URL Source",
     "help" : "Identifies an alternative source URL for backend data"
+  } ],
+  "indexes" : [ {
+    "columns" : [ {
+      "name" : "ModelID"
+    } ]
+  }, {
+    "columns" : [ {
+      "name" : "Name"
+    }, {
+      "name" : "ParentID"
+    } ]
   } ]
 }

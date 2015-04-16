@@ -13,12 +13,17 @@
     "basisColumn" : "ParentID"
   }, {
     "name" : "ModelBasisTable",
-    "basisColumn" : "BasisTable"
+    "step" : "BasisTable",
+    "basisColumn" : "Name"
   }, {
     "name" : "ModelModule",
     "basisColumn" : "Module"
   } ],
   "orderBy" : [ {
     "fieldName" : "ModelName"
+  } ],
+  "steps" : [ {
+    "name" : "BasisTable",
+    "join" : "BasisTable"
   } ]
 }

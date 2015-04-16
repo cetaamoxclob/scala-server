@@ -163,7 +163,8 @@
     "export" : false
   }, {
     "name" : "basisTable",
-    "basisColumn" : "BasisTable"
+    "step" : "BasisTable",
+    "basisColumn" : "Name"
   }, {
     "name" : "ModelParentID",
     "basisColumn" : "ParentID",
@@ -198,5 +199,9 @@
   }, {
     "name" : "preSave",
     "basisColumn" : "PreSave"
+  } ],
+  "steps" : [ {
+    "name" : "BasisTable",
+    "join" : "BasisTable"
   } ]
 }

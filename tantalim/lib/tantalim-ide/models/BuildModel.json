@@ -122,7 +122,8 @@
       "basisColumn" : "ParentID"
     }, {
       "name" : "ChildModelBasisTable",
-      "basisColumn" : "BasisTable"
+      "step" : "BasisTable",
+      "basisColumn" : "Name"
     }, {
       "name" : "ChildModelParentField",
       "basisColumn" : "ParentField"
@@ -134,6 +135,18 @@
       "basisColumn" : "Module",
       "fieldDefault" : "ModelModule",
       "alwaysDefault" : true
+    }, {
+      "name" : "ChildModelBasisTableID",
+      "basisColumn" : "BasisTableID"
+    }, {
+      "name" : "ChildModelBasisTableCopy",
+      "basisColumn" : "BasisTable",
+      "fieldDefault" : "ChildModelBasisTable",
+      "alwaysDefault" : true
+    } ],
+    "steps" : [ {
+      "name" : "BasisTable",
+      "join" : "BasisTable"
     } ]
   }, {
     "name" : "ModelSort",
@@ -188,7 +201,8 @@
     "required" : false
   }, {
     "name" : "ModelBasisTable",
-    "basisColumn" : "BasisTable"
+    "step" : "BasisTable",
+    "basisColumn" : "Name"
   }, {
     "name" : "ModelModule",
     "basisColumn" : "Module"
@@ -222,9 +236,20 @@
   }, {
     "name" : "ModelExtends",
     "basisColumn" : "Extends"
+  }, {
+    "name" : "ModelBasisTableCopy",
+    "basisColumn" : "BasisTable",
+    "fieldDefault" : "ModelBasisTable",
+    "alwaysDefault" : true
+  }, {
+    "name" : "ModelBasisTableID",
+    "basisColumn" : "BasisTableID"
   } ],
   "steps" : [ {
     "name" : "Parent",
     "join" : "Parent"
+  }, {
+    "name" : "BasisTable",
+    "join" : "BasisTable"
   } ]
 }

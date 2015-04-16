@@ -12,6 +12,7 @@
       } ]
     }, {
       "name" : "ModelBasisTable",
+      "selectTargetID" : "ModelBasisTableID",
       "selectModel" : "ListTables",
       "selectSourceField" : "TableName",
       "fieldType" : "select",
