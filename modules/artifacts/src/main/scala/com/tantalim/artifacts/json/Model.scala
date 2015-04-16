@@ -86,7 +86,7 @@ object ModelJson {
     (JsPath \ "name").read[String] and
       (JsPath \ "join").read[String] and
       (JsPath \ "required").readNullable[Boolean] and
-      (JsPath \ "stepJson").readNullable[String]
+      (JsPath \ "parent").readNullable[String]
     ).apply(ModelStepJson.apply _)
 
   implicit def orderByReads: Reads[ModelOrderBy] = (

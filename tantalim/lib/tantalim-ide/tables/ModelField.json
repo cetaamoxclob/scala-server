@@ -23,9 +23,6 @@
     "columns" : [ {
       "to" : "ColumnID",
       "from" : "BasisColumnID"
-    }, {
-      "to" : "TableName",
-      "from" : "BasisTable"
     } ]
   } ],
   "columns" : [ {

@@ -16,9 +16,6 @@
       "name" : "ModelFieldName",
       "basisColumn" : "Name"
     }, {
-      "name" : "ModelFieldBasisColumn",
-      "basisColumn" : "BasisColumn"
-    }, {
       "name" : "ModelFieldStepID",
       "basisColumn" : "StepID"
     }, {
@@ -48,14 +45,31 @@
       "name" : "ModelFieldFunctionDefault",
       "basisColumn" : "FunctionDefault"
     }, {
-      "name" : "ModelFieldBasisTable",
-      "basisColumn" : "BasisTable",
-      "fieldDefault" : "ModelBasisTable",
-      "alwaysDefault" : false
+      "name" : "ModelFieldBasisColumnTableID",
+      "step" : "Column",
+      "basisColumn" : "TableID"
+    }, {
+      "name" : "ModelFieldBasisColumnName",
+      "step" : "Column",
+      "basisColumn" : "Name"
+    }, {
+      "name" : "ModelFieldBasisColumnID",
+      "basisColumn" : "BasisColumnID"
+    }, {
+      "name" : "ModelFieldBasisColumnTableName",
+      "step" : "ColumnToTable",
+      "basisColumn" : "Name"
     } ],
     "steps" : [ {
       "name" : "Step",
       "join" : "Step"
+    }, {
+      "name" : "Column",
+      "join" : "Column"
+    }, {
+      "parent" : "Column",
+      "name" : "ColumnToTable",
+      "join" : "Table"
     } ]
   }, {
     "name" : "ModelSteps",
@@ -103,8 +117,8 @@
       "join" : "Join"
     }, {
       "parent" : "Join",
-      "name" : "JoinTable",
-      "join" : "Join"
+      "name" : "JoinToTable",
+      "join" : "ToTable"
     } ]
   }, {
     "name" : "ChildModel",

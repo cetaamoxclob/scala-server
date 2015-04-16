@@ -64,7 +64,11 @@
         "selectModel" : "ListTableJoins",
         "selectFilter" : "TableJoinFromTableName = '${ModelBasisTable}'",
         "selectSourceField" : "TableJoinName",
-        "fieldType" : "select"
+        "fieldType" : "select",
+        "links" : [ {
+          "page" : "BuildTable",
+          "filter" : "TableTableID Equals ${ModelStepJoinToTableID}"
+        } ]
       }, {
         "name" : "ModelStepParentName",
         "selectTargetID" : "ModelStepParentID",
@@ -72,12 +76,6 @@
         "selectModel" : "ListModelSteps",
         "selectFilter" : "ModelStepModelID Equals ${ModelID}",
         "selectSourceField" : "ModelStepName"
-      }, {
-        "name" : "ModelStepJoinID"
-      }, {
-        "name" : "ModelStepJoinToTableID"
-      }, {
-        "name" : "ModelStepParentID"
       } ]
     }, {
       "viewMode" : "form",
@@ -85,13 +83,17 @@
       "model" : "ModelFields",
       "title" : "Fields",
       "fields" : [ {
-        "name" : "ModelFieldBasisTable",
+        "name" : "ModelFieldBasisColumnTableName",
+        "selectTargetID" : "ModelFieldBasisColumnTableID",
+        "label" : "Basis Table",
         "selectModel" : "ListTables",
         "selectSourceField" : "TableName"
       }, {
-        "name" : "ModelFieldBasisColumn",
+        "name" : "ModelFieldBasisColumnName",
+        "selectTargetID" : "ModelFieldBasisColumnID",
+        "label" : "Basis Column",
         "selectModel" : "ListTableColumns",
-        "selectFilter" : "ColumnTableName Equals '${ModelFieldBasisTable}'",
+        "selectFilter" : "ColumnTableID Equals ${ModelFieldBasisColumnTableID}",
         "selectSourceField" : "ColumnName",
         "fieldType" : "select"
       }, {
@@ -153,6 +155,7 @@
         } ]
       }, {
         "name" : "ChildModelBasisTable",
+        "selectTargetID" : "ChildModelBasisTableID",
         "selectModel" : "ListTables",
         "selectSourceField" : "TableName",
         "fieldType" : "select",

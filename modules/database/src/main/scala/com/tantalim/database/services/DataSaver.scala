@@ -161,7 +161,11 @@ trait DataSaver extends DataReader {
             val fakeModelForTable = ModelCompiler.compileModel(step.join.table.toDeep)
             val filter = valueMap.map { case (column, _) =>
               val value = column.dataType match {
-                case DataType.Integer => valueMap.get(column).get.asInstanceOf[TntInt].value
+                case DataType.Integer => valueMap.get(column).get match {
+                  case tntValue: TntInt => tntValue.value
+                  case tntValue: TntDecimal => tntValue.value
+                  case _ => Integer.parseInt(valueMap.get(column).get.rawString)
+                }
                 case _ => s"'${valueMap.get(column).get.rawString}'"
               }
               s"${column.name} = $value"

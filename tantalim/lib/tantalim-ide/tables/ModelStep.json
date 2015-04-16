@@ -52,12 +52,6 @@
     "dbName" : "joinID",
     "dataType" : "Integer",
     "required" : true
-  }, {
-    "name" : "ToTableName",
-    "dbName" : "toTableName",
-    "help" : "A copy of the Join's ToTableName. This violates rules of normalization to make it easier to join between Steps and Tables.",
-    "dataType" : "String",
-    "required" : false
   } ],
   "indexes" : [ {
     "columns" : [ {
