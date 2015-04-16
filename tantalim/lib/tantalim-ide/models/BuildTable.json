@@ -109,11 +109,29 @@
       "basisColumn" : "FromTableID"
     }, {
       "name" : "TableJoinToTableName",
-      "basisColumn" : "ToTableName"
+      "step" : "ToTable",
+      "basisColumn" : "Name"
     }, {
       "name" : "TableJoinRequired",
       "basisColumn" : "Required",
-      "valueDefault" : "true"
+      "valueDefault" : "true",
+      "required" : true
+    }, {
+      "name" : "TableJoinToTableID",
+      "basisColumn" : "ToTableID"
+    }, {
+      "name" : "TableJoinToTableNameCopy",
+      "basisColumn" : "ToTableName",
+      "fieldDefault" : "TableJoinToTableName",
+      "alwaysDefault" : true
+    } ],
+    "orderBy" : [ {
+      "direction" : true,
+      "fieldName" : "TableJoinName"
+    } ],
+    "steps" : [ {
+      "name" : "ToTable",
+      "join" : "ToTable"
     } ]
   }, {
     "name" : "TableIndex",

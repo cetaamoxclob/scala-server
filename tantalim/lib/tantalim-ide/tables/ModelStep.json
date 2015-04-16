@@ -15,6 +15,14 @@
       "to" : "ModelID",
       "from" : "ModelID"
     } ]
+  }, {
+    "name" : "Join",
+    "required" : true,
+    "table" : "Join",
+    "columns" : [ {
+      "to" : "JoinID",
+      "from" : "JoinID"
+    } ]
   } ],
   "columns" : [ {
     "name" : "StepID",
@@ -39,6 +47,11 @@
     "name" : "ParentID",
     "dbName" : "parentID",
     "dataType" : "Integer"
+  }, {
+    "name" : "JoinID",
+    "dbName" : "joinID",
+    "dataType" : "Integer",
+    "required" : true
   }, {
     "name" : "ToTableName",
     "dbName" : "toTableName",

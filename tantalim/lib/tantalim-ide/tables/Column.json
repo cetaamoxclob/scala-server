@@ -91,7 +91,7 @@
     "name" : "Description",
     "dbName" : "description",
     "help" : "Description and other notes about this column",
-    "length" : 100,
+    "length" : 1000,
     "dataType" : "String",
     "required" : false
   }, {

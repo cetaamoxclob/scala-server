@@ -9,6 +9,14 @@
       "to" : "TableID",
       "from" : "FromTableID"
     } ]
+  }, {
+    "name" : "ToTable",
+    "required" : true,
+    "table" : "Table",
+    "columns" : [ {
+      "to" : "TableID",
+      "from" : "ToTableID"
+    } ]
   } ],
   "columns" : [ {
     "name" : "JoinID",
@@ -20,6 +28,7 @@
     "name" : "Name",
     "dbName" : "name",
     "label" : "Join Name",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "FromTableID",
@@ -28,12 +37,34 @@
     "required" : true
   }, {
     "name" : "ToTableName",
-    "dbName" : "ToTableName",
+    "dbName" : "toTableName",
     "label" : "To Table",
+    "dataType" : "String",
     "required" : true
+  }, {
+    "name" : "ToTableID",
+    "dbName" : "toTableID",
+    "dataType" : "Integer",
+    "required" : false
   }, {
     "name" : "Required",
     "dbName" : "required",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
+  } ],
+  "indexes" : [ {
+    "columns" : [ {
+      "name" : "JoinID"
+    } ]
+  }, {
+    "columns" : [ {
+      "name" : "Name"
+    }, {
+      "name" : "FromTableID"
+    } ]
+  }, {
+    "columns" : [ {
+      "name" : "ToTableID"
+    } ]
   } ]
 }

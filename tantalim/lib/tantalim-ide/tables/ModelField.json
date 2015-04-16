@@ -16,6 +16,17 @@
       "to" : "StepID",
       "from" : "StepID"
     } ]
+  }, {
+    "name" : "Column",
+    "required" : false,
+    "table" : "Column",
+    "columns" : [ {
+      "to" : "ColumnID",
+      "from" : "BasisColumnID"
+    }, {
+      "to" : "TableName",
+      "from" : "BasisTable"
+    } ]
   } ],
   "columns" : [ {
     "name" : "FieldID",
@@ -33,9 +44,10 @@
     "label" : "Field",
     "required" : true
   }, {
-    "name" : "BasisColumn",
-    "dbName" : "basisColumn",
-    "label" : "Basis Column"
+    "name" : "BasisColumnID",
+    "dbName" : "basisColumnID",
+    "dataType" : "Integer",
+    "required" : false
   }, {
     "name" : "StepID",
     "dbName" : "stepID",
@@ -69,6 +81,11 @@
     "dbName" : "functionDefault",
     "label" : "Function Default",
     "length" : 1000,
+    "dataType" : "String",
+    "required" : false
+  }, {
+    "name" : "BasisColumn",
+    "dbName" : "basisColumn",
     "dataType" : "String",
     "required" : false
   } ],

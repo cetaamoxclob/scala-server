@@ -5,31 +5,29 @@
     "name" : "ModelFieldsEditor",
     "model" : "ModelFieldsEditor",
     "fields" : [ {
-      "name" : "ModelFieldsEditorAlwaysDefault"
-    }, {
-      "name" : "ModelFieldsEditorBasisColumn"
-    }, {
-      "name" : "ModelFieldsEditorExport"
-    }, {
-      "name" : "ModelFieldsEditorFieldDefault"
-    }, {
-      "name" : "ModelFieldsEditorFieldID"
-    }, {
-      "name" : "ModelFieldsEditorFunctionDefault"
-    }, {
-      "name" : "ModelFieldsEditorModelID"
-    }, {
-      "name" : "ModelFieldsEditorModelName"
+      "name" : "ModelFieldsEditorModelName",
+      "links" : [ {
+        "page" : "BuildModel",
+        "filter" : "ModelID Equals ${ModelFieldsEditorModelID}"
+      } ]
     }, {
       "name" : "ModelFieldsEditorName"
     }, {
-      "name" : "ModelFieldsEditorRequired"
+      "name" : "ModelFieldsEditorBasisColumn"
     }, {
-      "name" : "ModelFieldsEditorStepID"
+      "name" : "ModelFieldsEditorRequired"
     }, {
       "name" : "ModelFieldsEditorUpdateable"
     }, {
+      "name" : "ModelFieldsEditorExport"
+    }, {
+      "name" : "ModelFieldsEditorAlwaysDefault"
+    }, {
       "name" : "ModelFieldsEditorValueDefault"
+    }, {
+      "name" : "ModelFieldsEditorFieldDefault"
+    }, {
+      "name" : "ModelFieldsEditorFunctionDefault"
     } ]
   } ]
 }

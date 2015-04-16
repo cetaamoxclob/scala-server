@@ -43,11 +43,17 @@
         "name" : "TableColumnDisplayOrder"
       }, {
         "name" : "TableColumnName",
-        "showInNavigation" : true
+        "showInNavigation" : true,
+        "links" : [ {
+          "page" : "ModelFieldsEditor",
+          "filter" : "ModelFieldsEditorBasisColumn Equals '${TableColumnName}'"
+        } ]
       }, {
         "name" : "TableColumnSQL"
       }, {
         "name" : "TableColumnRequired"
+      }, {
+        "name" : "TableColumnVisible"
       }, {
         "name" : "TableColumnUpdateable",
         "showInTableView" : false
@@ -61,20 +67,14 @@
         "name" : "TableColumnFieldType",
         "showInTableView" : false
       }, {
-        "name" : "TableColumnColumnDefault",
+        "name" : "TableColumnPlaceholder",
         "showInTableView" : false
       }, {
         "name" : "TableColumnHelp",
         "showInTableView" : false
       }, {
-        "name" : "TableColumnPlaceholder",
+        "name" : "TableColumnDescription",
         "showInTableView" : false
-      }, {
-        "name" : "TableColumnDescription"
-      }, {
-        "name" : "TableColumnTableName"
-      }, {
-        "name" : "TableColumnVisible"
       } ],
       "buttons" : [ {
         "label" : "Reorder",
@@ -89,6 +89,7 @@
         "showInNavigation" : true
       }, {
         "name" : "TableJoinToTableName",
+        "selectTargetID" : "TableJoinToTableID",
         "selectModel" : "ListTables",
         "selectSourceField" : "TableName",
         "fieldType" : "select",
