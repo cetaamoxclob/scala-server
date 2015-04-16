@@ -29,7 +29,8 @@
     "name" : "FieldID",
     "updateable" : false,
     "dbName" : "fieldID",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : false
   }, {
     "name" : "ModelID",
     "dbName" : "modelID",
@@ -39,6 +40,7 @@
     "name" : "Name",
     "dbName" : "name",
     "label" : "Field",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "BasisColumnID",
@@ -48,31 +50,40 @@
   }, {
     "name" : "StepID",
     "dbName" : "stepID",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : false
   }, {
     "name" : "Updateable",
     "dbName" : "updateable",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   }, {
     "name" : "Required",
     "dbName" : "required",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   }, {
     "name" : "Export",
     "dbName" : "export",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   }, {
     "name" : "AlwaysDefault",
     "dbName" : "alwaysDefault",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   }, {
     "name" : "FieldDefault",
     "dbName" : "fieldDefault",
-    "label" : "Field Default"
+    "label" : "Field Default",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "ValueDefault",
     "dbName" : "valueDefault",
-    "label" : "Value Default"
+    "label" : "Value Default",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "FunctionDefault",
     "dbName" : "functionDefault",

@@ -4,19 +4,27 @@
   "columns" : [ {
     "name" : "ApplicationID",
     "updateable" : false,
+    "visible" : false,
     "dbName" : "appID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "Code",
+    "visible" : true,
     "dbName" : "appCode",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "Name",
+    "visible" : true,
     "dbName" : "name",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "Description",
-    "dbName" : "description"
+    "visible" : true,
+    "dbName" : "description",
+    "dataType" : "String",
+    "required" : false
   } ]
 }

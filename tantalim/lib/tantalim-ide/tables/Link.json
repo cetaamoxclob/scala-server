@@ -31,10 +31,13 @@
   }, {
     "name" : "Page",
     "dbName" : "page",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "Filter",
-    "dbName" : "filter"
+    "dbName" : "filter",
+    "dataType" : "String",
+    "required" : false
   } ],
   "indexes" : [ {
     "columns" : [ {

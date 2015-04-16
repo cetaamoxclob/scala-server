@@ -27,11 +27,13 @@
     "name" : "Name",
     "dbName" : "name",
     "label" : "Model Name",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "BasisTable",
     "dbName" : "basisTable",
     "label" : "Basis Table",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "BasisTableID",
@@ -40,57 +42,75 @@
     "required" : true
   }, {
     "name" : "Module",
-    "dbName" : "module"
+    "dbName" : "module",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "ParentID",
     "dbName" : "parentID",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : false
   }, {
     "name" : "Extends",
-    "dbName" : "extends"
+    "dbName" : "extends",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "Limit",
     "dbName" : "maxRows",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : false
   }, {
     "name" : "ParentField",
     "dbName" : "parentField",
-    "label" : "Parent Field"
+    "label" : "Parent Field",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "ChildField",
     "dbName" : "childField",
-    "label" : "Child Field"
+    "label" : "Child Field",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "PreSave",
     "dbName" : "preSave",
-    "length" : 1000
+    "length" : 1000,
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "Filter",
     "dbName" : "filter",
-    "dataType" : "String"
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "AllowInsert",
     "dbName" : "allowInsert",
     "label" : "Allow Insert",
     "fieldType" : "checkbox",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   }, {
     "name" : "AllowUpdate",
     "dbName" : "allowUpdate",
     "label" : "Allow Update",
     "fieldType" : "checkbox",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   }, {
     "name" : "AllowDelete",
     "dbName" : "allowDelete",
     "label" : "Allow Delete",
     "fieldType" : "checkbox",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   }, {
     "name" : "CustomUrlSource",
     "dbName" : "customUrlSource",
     "label" : "URL Source",
-    "help" : "Identifies an alternative source URL for backend data"
+    "help" : "Identifies an alternative source URL for backend data",
+    "dataType" : "String",
+    "required" : false
   } ],
   "indexes" : [ {
     "columns" : [ {

@@ -5,7 +5,8 @@
     "name" : "ItemID",
     "updateable" : false,
     "dbName" : "itemID",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : false
   }, {
     "name" : "ContentID",
     "dbName" : "contentID",
@@ -15,18 +16,27 @@
     "name" : "DisplayOrder",
     "dbName" : "displayOrder",
     "label" : "Order",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : false
   }, {
     "name" : "Page",
-    "dbName" : "page"
+    "dbName" : "page",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "Title",
-    "dbName" : "title"
+    "dbName" : "title",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "Link",
-    "dbName" : "href"
+    "dbName" : "href",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "Icon",
-    "dbName" : "icon"
+    "dbName" : "icon",
+    "dataType" : "String",
+    "required" : false
   } ]
 }

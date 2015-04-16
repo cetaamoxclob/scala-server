@@ -33,76 +33,103 @@
     "name" : "Name",
     "dbName" : "name",
     "label" : "Field",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "DisplayOrder",
     "dbName" : "displayOrder",
     "label" : "Order",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : false
   }, {
     "name" : "ShowInFormView",
     "dbName" : "showInFormView",
     "label" : "In Form",
     "fieldType" : "checkbox",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   }, {
     "name" : "ShowInTableView",
     "dbName" : "showInTableView",
     "label" : "In Table",
     "fieldType" : "checkbox",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   }, {
     "name" : "ShowInNavigation",
     "dbName" : "showInNavigation",
     "label" : "In Navigation",
     "fieldType" : "checkbox",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   }, {
     "name" : "Label",
-    "dbName" : "label"
+    "dbName" : "label",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "FieldType",
     "dbName" : "fieldType",
-    "label" : "Field Type"
+    "label" : "Field Type",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "Help",
-    "dbName" : "help"
+    "dbName" : "help",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "Placeholder",
-    "dbName" : "placeholder"
+    "dbName" : "placeholder",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "Filter",
-    "dbName" : "filter"
+    "dbName" : "filter",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "BlurFunction",
     "dbName" : "blurFunction",
-    "label" : "Blur Function"
+    "label" : "Blur Function",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "Disabled",
     "dbName" : "disabled",
     "fieldType" : "checkbox",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   }, {
     "name" : "Searchable",
     "dbName" : "searchable",
     "fieldType" : "checkbox",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   }, {
     "name" : "SelectModel",
     "dbName" : "selectModel",
-    "label" : "Select - Model"
+    "label" : "Select - Model",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "SelectSourceField",
     "dbName" : "selectSourceField",
-    "label" : "Select - Source Field"
+    "label" : "Select - Source Field",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "SelectTargetID",
     "dbName" : "selectTargetID",
-    "label" : "Select - Target ID"
+    "label" : "Select - Target ID",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "SelectFilter",
     "dbName" : "selectFilter",
-    "label" : "Select - Filter"
+    "label" : "Select - Filter",
+    "dataType" : "String",
+    "required" : false
   } ],
   "indexes" : [ {
     "columns" : [ {

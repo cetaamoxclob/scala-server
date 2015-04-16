@@ -9,10 +9,13 @@
   }, {
     "name" : "Name",
     "dbName" : "name",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "Database",
-    "dbName" : "database"
+    "dbName" : "database",
+    "dataType" : "String",
+    "required" : false
   } ],
   "indexes" : [ {
     "columns" : [ {

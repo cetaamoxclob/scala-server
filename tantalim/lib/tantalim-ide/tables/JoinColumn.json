@@ -23,14 +23,19 @@
     "required" : true
   }, {
     "name" : "FromColumn",
-    "dbName" : "fromColumn"
+    "dbName" : "fromColumn",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "FromText",
     "dbName" : "fromText",
-    "label" : "From Text"
+    "label" : "From Text",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "ToColumn",
     "dbName" : "toColumn",
+    "dataType" : "String",
     "required" : true
   } ]
 }

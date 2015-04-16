@@ -27,6 +27,7 @@
     "name" : "Name",
     "dbName" : "name",
     "label" : "Section Name",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "PageID",
@@ -36,16 +37,23 @@
     "required" : true
   }, {
     "name" : "Title",
-    "dbName" : "title"
+    "dbName" : "title",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "Model",
-    "dbName" : "model"
+    "dbName" : "model",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "ViewMode",
-    "dbName" : "viewMode"
+    "dbName" : "viewMode",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "ParentID",
     "dbName" : "parentID",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : false
   } ]
 }

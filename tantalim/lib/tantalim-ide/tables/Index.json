@@ -32,7 +32,8 @@
     "name" : "Unique",
     "dbName" : "uniqueIndex",
     "help" : "Is this a unique index? Default No.",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   } ],
   "indexes" : [ {
     "columns" : [ {

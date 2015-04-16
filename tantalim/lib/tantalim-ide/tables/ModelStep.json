@@ -28,7 +28,8 @@
     "name" : "StepID",
     "updateable" : false,
     "dbName" : "stepID",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : false
   }, {
     "name" : "ModelID",
     "dbName" : "modelID",
@@ -38,15 +39,18 @@
     "name" : "Name",
     "dbName" : "name",
     "label" : "Step",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "Join",
     "dbName" : "joinName",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "ParentID",
     "dbName" : "parentID",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : false
   }, {
     "name" : "JoinID",
     "dbName" : "joinID",

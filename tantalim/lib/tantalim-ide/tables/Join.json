@@ -21,33 +21,39 @@
   "columns" : [ {
     "name" : "JoinID",
     "updateable" : false,
+    "visible" : false,
     "dbName" : "joinID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "Name",
+    "visible" : true,
     "dbName" : "name",
     "label" : "Join Name",
     "dataType" : "String",
     "required" : true
   }, {
     "name" : "FromTableID",
+    "visible" : false,
     "dbName" : "fromTableID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "ToTableName",
+    "visible" : false,
     "dbName" : "toTableName",
     "label" : "To Table",
     "dataType" : "String",
     "required" : true
   }, {
     "name" : "ToTableID",
+    "visible" : false,
     "dbName" : "toTableID",
     "dataType" : "Integer",
     "required" : false
   }, {
     "name" : "Required",
+    "visible" : true,
     "dbName" : "required",
     "dataType" : "Boolean",
     "required" : false

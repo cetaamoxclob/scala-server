@@ -6,13 +6,17 @@
     "updateable" : false,
     "dbName" : "databaseID",
     "dataType" : "Integer",
+    "required" : false,
     "columnDefault" : "GUID"
   }, {
     "name" : "Name",
-    "dbName" : "name"
+    "dbName" : "name",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "AppID",
     "dbName" : "appID",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : false
   } ]
 }

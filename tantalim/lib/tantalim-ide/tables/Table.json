@@ -5,44 +5,54 @@
     "name" : "TableID",
     "updateable" : false,
     "dbName" : "tableID",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : false
   }, {
     "name" : "Name",
     "dbName" : "name",
     "label" : "Table Name",
     "placeholder" : "Enter a table name",
     "help" : "Enter the name of the table",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "SQL",
     "dbName" : "dbName",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "Module",
-    "dbName" : "module"
+    "dbName" : "module",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "PrimaryKey",
-    "dbName" : "primaryKey"
+    "dbName" : "primaryKey",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "AllowInsert",
     "dbName" : "allowInsert",
     "label" : "Allow Insert",
     "help" : "If true, models based on this table will allow inserts. Can be overridden at the model level. Defaults to true if not set.",
     "fieldType" : "checkbox",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   }, {
     "name" : "AllowUpdate",
     "dbName" : "allowUpdate",
     "label" : "Allow Update",
     "help" : "If true, models based on this table will allow changes. Can be overridden at the model level. Defaults to true if not set.",
     "fieldType" : "checkbox",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   }, {
     "name" : "AllowDelete",
     "dbName" : "allowDelete",
     "label" : "Allow Delete",
     "help" : "If true, models based on this table will allow inserts. Can be overridden at the model level. Defaults to true if not set.",
     "fieldType" : "checkbox",
-    "dataType" : "Boolean"
+    "dataType" : "Boolean",
+    "required" : false
   } ]
 }

@@ -5,19 +5,23 @@
     "name" : "ContentID",
     "updateable" : false,
     "dbName" : "contentID",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : false
   }, {
     "name" : "MenuID",
     "dbName" : "menuID",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : false
   }, {
     "name" : "DisplayOrder",
     "dbName" : "displayOrder",
     "label" : "Order",
-    "dataType" : "Integer"
+    "dataType" : "Integer",
+    "required" : false
   }, {
     "name" : "Title",
     "dbName" : "title",
+    "dataType" : "String",
     "required" : true
   } ]
 }

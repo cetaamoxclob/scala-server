@@ -11,20 +11,27 @@
     "name" : "Name",
     "dbName" : "name",
     "label" : "Page Name",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "Module",
     "dbName" : "module",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "Title",
     "dbName" : "title",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "Icon",
-    "dbName" : "icon"
+    "dbName" : "icon",
+    "dataType" : "String",
+    "required" : false
   }, {
     "name" : "Css",
-    "dbName" : "css"
+    "dbName" : "css",
+    "dataType" : "String",
+    "required" : false
   } ]
 }

@@ -9,15 +9,18 @@
   }, {
     "name" : "Type",
     "dbName" : "type",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "Code",
     "dbName" : "code",
     "length" : 10,
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "Meaning",
     "dbName" : "meaning",
+    "dataType" : "String",
     "required" : true
   }, {
     "name" : "Active",
