@@ -55,7 +55,8 @@
       "basisColumn" : "Name"
     }, {
       "name" : "basisColumn",
-      "basisColumn" : "BasisColumn"
+      "step" : "Column",
+      "basisColumn" : "Name"
     }, {
       "name" : "updateable",
       "basisColumn" : "Updateable"
@@ -96,6 +97,9 @@
     "steps" : [ {
       "name" : "Step",
       "join" : "Step"
+    }, {
+      "name" : "Column",
+      "join" : "Column"
     } ]
   }, {
     "name" : "orderBy",
