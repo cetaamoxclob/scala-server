@@ -51,6 +51,9 @@
     }, {
       "name" : "columnDefault",
       "basisColumn" : "ColumnDefault"
+    }, {
+      "name" : "visible",
+      "basisColumn" : "Visible"
     } ],
     "orderBy" : [ {
       "fieldName" : "DisplayOrder"
