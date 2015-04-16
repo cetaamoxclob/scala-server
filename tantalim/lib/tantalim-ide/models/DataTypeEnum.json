@@ -1,0 +1,22 @@
+{
+  "filter" : "DataTypeEnumType Equals \"DataType\"",
+  "basisTable" : "TantalimEnum",
+  "fields" : [ {
+    "name" : "DataTypeEnumID",
+    "basisColumn" : "ID"
+  }, {
+    "name" : "DataTypeEnumType",
+    "basisColumn" : "Type",
+    "valueDefault" : "DataType"
+  }, {
+    "name" : "DataTypeEnumCode",
+    "basisColumn" : "Code"
+  }, {
+    "name" : "DataTypeEnumMeaning",
+    "basisColumn" : "Meaning"
+  }, {
+    "name" : "DataTypeEnumActive",
+    "basisColumn" : "Active",
+    "valueDefault" : "true"
+  } ]
+}

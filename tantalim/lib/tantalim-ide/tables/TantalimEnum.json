@@ -3,27 +3,32 @@
   "primaryKey" : "ID",
   "columns" : [ {
     "name" : "ID",
+    "visible" : false,
     "dbName" : "id",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "Type",
+    "visible" : false,
     "dbName" : "type",
     "dataType" : "String",
     "required" : true
   }, {
     "name" : "Code",
+    "visible" : true,
     "dbName" : "code",
     "length" : 10,
     "dataType" : "String",
     "required" : true
   }, {
     "name" : "Meaning",
+    "visible" : true,
     "dbName" : "meaning",
     "dataType" : "String",
     "required" : true
   }, {
     "name" : "Active",
+    "visible" : true,
     "dbName" : "active",
     "dataType" : "Boolean",
     "required" : true

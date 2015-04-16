@@ -58,7 +58,9 @@
         "name" : "TableColumnUpdateable",
         "showInTableView" : false
       }, {
-        "name" : "TableColumnDataType"
+        "name" : "TableColumnDataType",
+        "selectModel" : "DataTypeEnum",
+        "selectSourceField" : "DataTypeEnumCode"
       }, {
         "name" : "TableColumnLength"
       }, {

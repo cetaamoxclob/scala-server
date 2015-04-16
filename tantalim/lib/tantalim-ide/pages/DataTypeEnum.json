@@ -1,0 +1,15 @@
+{
+  "title" : "Data Types",
+  "sections" : [ {
+    "viewMode" : "table",
+    "name" : "DataTypeEnum",
+    "model" : "DataTypeEnum",
+    "fields" : [ {
+      "name" : "DataTypeEnumCode"
+    }, {
+      "name" : "DataTypeEnumMeaning"
+    }, {
+      "name" : "DataTypeEnumActive"
+    } ]
+  } ]
+}
