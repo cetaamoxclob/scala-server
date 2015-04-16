@@ -222,13 +222,15 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
   }
 
   private def compileModelField(field: ModelFieldJson, basisColumn: TableColumn, step: Option[ModelStep]): ModelField = {
+    val alwaysDefault = field.alwaysDefault.getOrElse(false)
     new ModelField(
       name = field.name,
       basisColumn = basisColumn,
       step = step,
       required = field.required.getOrElse(basisColumn.required),
-      updateable = field.updateable.getOrElse(basisColumn.updateable),
-      alwaysDefault = field.alwaysDefault.getOrElse(false),
+      updateable = if (alwaysDefault) false
+      else field.updateable.getOrElse(basisColumn.updateable),
+      alwaysDefault = alwaysDefault,
       fieldDefault = field.fieldDefault,
       functionDefault = field.functionDefault,
       valueDefault = field.valueDefault,
