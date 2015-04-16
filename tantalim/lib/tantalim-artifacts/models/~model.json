@@ -19,7 +19,8 @@
       "basisColumn" : "Name"
     }, {
       "name" : "join",
-      "basisColumn" : "Join"
+      "step" : "Join",
+      "basisColumn" : "Name"
     }, {
       "name" : "ModelStepParentID",
       "basisColumn" : "ParentID",
@@ -32,6 +33,9 @@
     "steps" : [ {
       "name" : "Parent",
       "join" : "Parent"
+    }, {
+      "name" : "Join",
+      "join" : "Join"
     } ]
   }, {
     "name" : "fields",
