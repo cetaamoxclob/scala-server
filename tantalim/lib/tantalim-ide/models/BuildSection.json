@@ -155,33 +155,32 @@
     "name" : "SectionViewMode",
     "basisColumn" : "ViewMode"
   }, {
-    "name" : "SectionPage",
-    "step" : "Page",
-    "basisColumn" : "Name",
-    "required" : false
-  }, {
-    "name" : "SectionParent",
-    "step" : "Parent",
-    "basisColumn" : "Name",
-    "required" : false
-  }, {
     "name" : "SectionPageID",
     "basisColumn" : "PageID"
   }, {
     "name" : "SectionParentID",
     "basisColumn" : "ParentID"
-  }, {
-    "name" : "SectionPageModule",
-    "step" : "Page",
-    "updateable" : false,
-    "basisColumn" : "Module",
-    "required" : false
   } ],
   "steps" : [ {
     "name" : "Parent",
-    "join" : "Parent"
+    "join" : "Parent",
+    "fields" : [ {
+      "name" : "SectionParent",
+      "basisColumn" : "Name",
+      "required" : false
+    } ]
   }, {
     "name" : "Page",
-    "join" : "Page"
+    "join" : "Page",
+    "fields" : [ {
+      "name" : "SectionPage",
+      "basisColumn" : "Name",
+      "required" : false
+    }, {
+      "name" : "SectionPageModule",
+      "updateable" : false,
+      "basisColumn" : "Module",
+      "required" : false
+    } ]
   } ]
 }

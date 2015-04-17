@@ -8,10 +8,6 @@
     "name" : "TableJoinFromTableID",
     "basisColumn" : "FromTableID"
   }, {
-    "name" : "TableJoinFromTableName",
-    "step" : "FromTable",
-    "basisColumn" : "Name"
-  }, {
     "name" : "TableJoinName",
     "basisColumn" : "Name"
   }, {
@@ -26,6 +22,10 @@
   } ],
   "steps" : [ {
     "name" : "FromTable",
-    "join" : "FromTable"
+    "join" : "FromTable",
+    "fields" : [ {
+      "name" : "TableJoinFromTableName",
+      "basisColumn" : "Name"
+    } ]
   } ]
 }

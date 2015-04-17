@@ -39,10 +39,6 @@
     "name" : "ModelFieldsEditorFunctionDefault",
     "basisColumn" : "FunctionDefault"
   }, {
-    "name" : "ModelFieldsEditorModelName",
-    "step" : "Model",
-    "basisColumn" : "Name"
-  }, {
     "name" : "ModelFieldsEditorBasisTable",
     "basisColumn" : "BasisTable"
   } ],
@@ -55,6 +51,10 @@
   } ],
   "steps" : [ {
     "name" : "Model",
-    "join" : "Model"
+    "join" : "Model",
+    "fields" : [ {
+      "name" : "ModelFieldsEditorModelName",
+      "basisColumn" : "Name"
+    } ]
   } ]
 }

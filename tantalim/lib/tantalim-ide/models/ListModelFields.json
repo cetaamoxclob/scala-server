@@ -11,30 +11,6 @@
   }, {
     "name" : "FieldName",
     "basisColumn" : "Name"
-  }, {
-    "name" : "FieldModelName",
-    "step" : "Model",
-    "basisColumn" : "Name"
-  }, {
-    "name" : "FieldBasisColumn",
-    "step" : "BasisColumn",
-    "basisColumn" : "Name"
-  }, {
-    "name" : "FieldStepTable",
-    "step" : "Step",
-    "basisColumn" : "Name"
-  }, {
-    "name" : "FieldBasisColumnTableName",
-    "step" : "BasisColumnToTable",
-    "basisColumn" : "Name"
-  }, {
-    "name" : "FieldBasisColumnDisplayOrder",
-    "step" : "BasisColumn",
-    "basisColumn" : "DisplayOrder"
-  }, {
-    "name" : "FieldBasisColumnVisible",
-    "step" : "BasisColumn",
-    "basisColumn" : "Visible"
   } ],
   "orderBy" : [ {
     "direction" : true,
@@ -47,16 +23,38 @@
   } ],
   "steps" : [ {
     "name" : "Model",
-    "join" : "Model"
+    "join" : "Model",
+    "fields" : [ {
+      "name" : "FieldModelName",
+      "basisColumn" : "Name"
+    } ]
   }, {
     "name" : "Step",
-    "join" : "Step"
+    "join" : "Step",
+    "fields" : [ {
+      "name" : "FieldStepTable",
+      "basisColumn" : "Name"
+    } ]
   }, {
     "name" : "BasisColumn",
-    "join" : "Column"
+    "join" : "Column",
+    "fields" : [ {
+      "name" : "FieldBasisColumn",
+      "basisColumn" : "Name"
+    }, {
+      "name" : "FieldBasisColumnDisplayOrder",
+      "basisColumn" : "DisplayOrder"
+    }, {
+      "name" : "FieldBasisColumnVisible",
+      "basisColumn" : "Visible"
+    } ]
   }, {
     "parent" : "BasisColumn",
     "name" : "BasisColumnToTable",
-    "join" : "Table"
+    "join" : "Table",
+    "fields" : [ {
+      "name" : "FieldBasisColumnTableName",
+      "basisColumn" : "Name"
+    } ]
   } ]
 }

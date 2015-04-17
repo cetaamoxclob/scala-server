@@ -17,10 +17,6 @@
   }, {
     "name" : "ColumnTableID",
     "basisColumn" : "TableID"
-  }, {
-    "name" : "ColumnTableName",
-    "step" : "t",
-    "basisColumn" : "Name"
   } ],
   "orderBy" : [ {
     "fieldName" : "ColumnDisplayOrder"
@@ -31,6 +27,10 @@
   } ],
   "steps" : [ {
     "name" : "t",
-    "join" : "Table"
+    "join" : "Table",
+    "fields" : [ {
+      "name" : "ColumnTableName",
+      "basisColumn" : "Name"
+    } ]
   } ]
 }

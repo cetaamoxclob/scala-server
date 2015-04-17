@@ -25,14 +25,6 @@
     "name" : "PageFieldDisabled",
     "basisColumn" : "Disabled"
   }, {
-    "name" : "PageFieldSectionName",
-    "step" : "Section",
-    "basisColumn" : "Name"
-  }, {
-    "name" : "PageFieldSectionModel",
-    "step" : "Section",
-    "basisColumn" : "Model"
-  }, {
     "name" : "PageFieldsEditorDisplayOrder",
     "basisColumn" : "DisplayOrder"
   }, {
@@ -68,6 +60,13 @@
   } ],
   "steps" : [ {
     "name" : "Section",
-    "join" : "Section"
+    "join" : "Section",
+    "fields" : [ {
+      "name" : "PageFieldSectionName",
+      "basisColumn" : "Name"
+    }, {
+      "name" : "PageFieldSectionModel",
+      "basisColumn" : "Model"
+    } ]
   } ]
 }

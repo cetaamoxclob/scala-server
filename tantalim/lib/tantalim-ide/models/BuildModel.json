@@ -19,11 +19,6 @@
       "name" : "ModelFieldStepID",
       "basisColumn" : "StepID"
     }, {
-      "name" : "ModelFieldStepName",
-      "step" : "Step",
-      "basisColumn" : "Name",
-      "required" : false
-    }, {
       "name" : "ModelFieldUpdateable",
       "basisColumn" : "Updateable"
     }, {
@@ -45,31 +40,35 @@
       "name" : "ModelFieldFunctionDefault",
       "basisColumn" : "FunctionDefault"
     }, {
-      "name" : "ModelFieldBasisColumnTableID",
-      "step" : "Column",
-      "basisColumn" : "TableID"
-    }, {
-      "name" : "ModelFieldBasisColumnName",
-      "step" : "Column",
-      "basisColumn" : "Name"
-    }, {
       "name" : "ModelFieldBasisColumnID",
       "basisColumn" : "BasisColumnID"
-    }, {
-      "name" : "ModelFieldBasisColumnTableName",
-      "step" : "ColumnToTable",
-      "basisColumn" : "Name"
     } ],
     "steps" : [ {
       "name" : "Step",
-      "join" : "Step"
+      "join" : "Step",
+      "fields" : [ {
+        "name" : "ModelFieldStepName",
+        "basisColumn" : "Name",
+        "required" : false
+      } ]
     }, {
       "name" : "Column",
-      "join" : "Column"
+      "join" : "Column",
+      "fields" : [ {
+        "name" : "ModelFieldBasisColumnTableID",
+        "basisColumn" : "TableID"
+      }, {
+        "name" : "ModelFieldBasisColumnName",
+        "basisColumn" : "Name"
+      } ]
     }, {
       "parent" : "Column",
       "name" : "ColumnToTable",
-      "join" : "Table"
+      "join" : "Table",
+      "fields" : [ {
+        "name" : "ModelFieldBasisColumnTableName",
+        "basisColumn" : "Name"
+      } ]
     } ]
   }, {
     "name" : "ModelSteps",
@@ -93,38 +92,31 @@
       "name" : "ModelStepParentID",
       "basisColumn" : "ParentID"
     }, {
-      "name" : "ModelStepParentName",
-      "step" : "Parent",
-      "basisColumn" : "Name",
-      "required" : false
-    }, {
-      "name" : "ModelStepJoinToTableID",
-      "step" : "Join",
-      "basisColumn" : "ToTableID"
-    }, {
       "name" : "ModelStepJoinID",
       "basisColumn" : "JoinID"
-    }, {
-      "name" : "ModelStepJoinName",
-      "step" : "Join",
-      "basisColumn" : "Name"
-    }, {
-      "name" : "ModelStepJoinFromTableName",
-      "step" : "JoinFromTable",
-      "basisColumn" : "Name",
-      "fieldDefault" : "ModelBasisTable"
-    }, {
-      "name" : "ModelStepJoinFromTableID",
-      "step" : "Join",
-      "basisColumn" : "FromTableID",
-      "fieldDefault" : "ModelBasisTableID"
     } ],
     "steps" : [ {
       "name" : "Parent",
-      "join" : "Parent"
+      "join" : "Parent",
+      "fields" : [ {
+        "name" : "ModelStepParentName",
+        "basisColumn" : "Name",
+        "required" : false
+      } ]
     }, {
       "name" : "Join",
-      "join" : "Join"
+      "join" : "Join",
+      "fields" : [ {
+        "name" : "ModelStepJoinToTableID",
+        "basisColumn" : "ToTableID"
+      }, {
+        "name" : "ModelStepJoinName",
+        "basisColumn" : "Name"
+      }, {
+        "name" : "ModelStepJoinFromTableID",
+        "basisColumn" : "FromTableID",
+        "fieldDefault" : "ModelBasisTableID"
+      } ]
     }, {
       "parent" : "Join",
       "name" : "JoinToTable",
@@ -132,7 +124,12 @@
     }, {
       "parent" : "Join",
       "name" : "JoinFromTable",
-      "join" : "FromTable"
+      "join" : "FromTable",
+      "fields" : [ {
+        "name" : "ModelStepJoinFromTableName",
+        "basisColumn" : "Name",
+        "fieldDefault" : "ModelBasisTable"
+      } ]
     } ]
   }, {
     "name" : "ChildModel",
@@ -148,10 +145,6 @@
     }, {
       "name" : "ChildModelParentID",
       "basisColumn" : "ParentID"
-    }, {
-      "name" : "ChildModelBasisTable",
-      "step" : "BasisTable",
-      "basisColumn" : "Name"
     }, {
       "name" : "ChildModelParentField",
       "basisColumn" : "ParentField"
@@ -174,7 +167,11 @@
     } ],
     "steps" : [ {
       "name" : "BasisTable",
-      "join" : "BasisTable"
+      "join" : "BasisTable",
+      "fields" : [ {
+        "name" : "ChildModelBasisTable",
+        "basisColumn" : "Name"
+      } ]
     } ]
   }, {
     "name" : "ModelSort",
@@ -194,10 +191,6 @@
       "basisColumn" : "FieldID",
       "export" : false
     }, {
-      "name" : "ModelSortFieldName",
-      "step" : "Field",
-      "basisColumn" : "Name"
-    }, {
       "name" : "ModelSortAscending",
       "basisColumn" : "Ascending",
       "valueDefault" : "true",
@@ -209,7 +202,11 @@
     } ],
     "steps" : [ {
       "name" : "Field",
-      "join" : "Field"
+      "join" : "Field",
+      "fields" : [ {
+        "name" : "ModelSortFieldName",
+        "basisColumn" : "Name"
+      } ]
     } ]
   } ],
   "fields" : [ {
@@ -221,16 +218,6 @@
   }, {
     "name" : "ModelParentID",
     "basisColumn" : "ParentID"
-  }, {
-    "name" : "ModelParentName",
-    "step" : "Parent",
-    "updateable" : false,
-    "basisColumn" : "Name",
-    "required" : false
-  }, {
-    "name" : "ModelBasisTable",
-    "step" : "BasisTable",
-    "basisColumn" : "Name"
   }, {
     "name" : "ModelModule",
     "basisColumn" : "Module"
@@ -275,9 +262,19 @@
   } ],
   "steps" : [ {
     "name" : "Parent",
-    "join" : "Parent"
+    "join" : "Parent",
+    "fields" : [ {
+      "name" : "ModelParentName",
+      "updateable" : false,
+      "basisColumn" : "Name",
+      "required" : false
+    } ]
   }, {
     "name" : "BasisTable",
-    "join" : "BasisTable"
+    "join" : "BasisTable",
+    "fields" : [ {
+      "name" : "ModelBasisTable",
+      "basisColumn" : "Name"
+    } ]
   } ]
 }
