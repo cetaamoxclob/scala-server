@@ -1,0 +1,15 @@
+{
+  "title" : "Field Types",
+  "sections" : [ {
+    "viewMode" : "table",
+    "name" : "FieldTypeEnum",
+    "model" : "FieldTypeEnum",
+    "fields" : [ {
+      "name" : "FieldTypeEnumCode"
+    }, {
+      "name" : "FieldTypeEnumMeaning"
+    }, {
+      "name" : "FieldTypeEnumActive"
+    } ]
+  } ]
+}

@@ -49,6 +49,8 @@
       "page" : "ViewModeEnum"
     }, {
       "page" : "DataTypeEnum"
+    }, {
+      "page" : "FieldTypeEnum"
     } ]
   }, {
     "title" : "Manage",
