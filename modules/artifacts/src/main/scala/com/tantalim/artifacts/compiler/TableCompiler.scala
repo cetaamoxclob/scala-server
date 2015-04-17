@@ -29,7 +29,7 @@ trait TableCompiler extends ArtifactService with TableCache {
   }
 
   def compileTable(name: String): DeepTable = {
-    println("Compiling table " + name)
+//    println("Compiling table " + name)
     val json = getArtifactContentAndParseJson(ArtifactType.Table, name)
     json.validate[TableJson] match {
       case JsSuccess(table, _) =>
@@ -40,7 +40,7 @@ trait TableCompiler extends ArtifactService with TableCache {
   }
 
   private def compileShallowTable(name: String): ShallowTable = {
-    println("Compiling shallow table " + name)
+//    println("Compiling shallow table " + name)
     val json = getArtifactContentAndParseJson(ArtifactType.Table, name)
     json.validate[TableJson] match {
       case JsSuccess(table, _) =>

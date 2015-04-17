@@ -71,14 +71,8 @@ trait DatabaseConnection {
       stmt.getGeneratedKeys
     } else {
       val stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
-      println("Executing Prepared Insert: " + sql)
-      //      if (stmt.getParameterMetaData.getParameterCount > 0) {
-      //        println(" with " + stmt.getParameterMetaData.getParameterType(1))
-      //      }
-
-      if (numberedParameters.nonEmpty) {
-        setParameters(stmt, numberedParameters)
-      }
+      println("Executing Prepared Insert: " + sql + " with " + numberedParameters)
+      setParameters(stmt, numberedParameters)
       stmt.executeUpdate
       stmt.getGeneratedKeys
     }

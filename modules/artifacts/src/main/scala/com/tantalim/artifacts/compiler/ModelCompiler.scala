@@ -11,7 +11,7 @@ import scala.collection.{Map, Seq}
 trait ModelCompiler extends ArtifactService with TableCompiler {
 
   def compileModel(name: String): Model = {
-    println("Compiling model set " + name)
+//    println("Compiling model set " + name)
     val json = getArtifactContentAndParseJson(ArtifactType.Model, name)
     json.validate[ModelJson] match {
       case JsSuccess(modelJson, _) =>
@@ -22,7 +22,7 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
   }
 
   private def extendModel(model: ModelJson, parent: Option[Model]): Model = {
-    println("Extending model " + model.extendModel.get)
+//    println("Extending model " + model.extendModel.get)
     val superModel = parent.get
     val modelFields = superModel.fields ++
       convertJsonFieldsToModelFieldMap(
@@ -46,7 +46,7 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
     if (model.name.isEmpty) {
       throw new TantalimException("Model Name is missing", "Add name to " + model)
     }
-    println("Compiling model " + model.name.get)
+//    println("Compiling model " + model.name.get)
     val basisTable = getBasisTable(model)
     val steps = buildModelSteps(model, basisTable)
     val modelFields = convertJsonFieldsToModelFieldMap(model.fields, basisTable, steps)

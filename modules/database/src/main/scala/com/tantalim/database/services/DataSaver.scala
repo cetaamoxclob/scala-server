@@ -58,7 +58,7 @@ trait DataSaver extends DataReader {
     row.state = DataState.Done
   }
 
-  def findFullUniqueIndex(indexes: Seq[TableIndex], valueMap: mutable.Map[TableColumn, TntValue]): Option[TableIndex] = {
+  def findFullUniqueIndex(indexes: Seq[TableIndex], valueMap: Map[TableColumn, TntValue]): Option[TableIndex] = {
     indexes.find { index =>
       index.columns.forall(c => valueMap.get(c).nonEmpty)
     }
@@ -137,82 +137,22 @@ trait DataSaver extends DataReader {
 
     val (sql, params) = {
       val model = row.nodeSet.model
-      val rootValueMap = getValuesForTable(row, None)
+      val finalValueMap = {
+        val rootValueMap = getValuesForTable(row, None)
 
-      model.steps.values.foreach { step =>
-        val valueMap = getValuesForTable(row, Some(step))
-
-        if (valueMap.nonEmpty) {
-          println(s"Has values for step ${step.join.table.name} with $valueMap")
-          step.join.table.columns.values.foreach { column =>
-            val matchingField = model.fields.values.find { matchingField =>
-              matchingField.basisColumn == column
-            }
-            if (matchingField.isDefined) {
-              column
-            }
-          }
-
-          val topIndex = findFullUniqueIndex(step.join.table.indexes, valueMap)
-          if (topIndex.isEmpty) {
-            println(s"Warn: Table ${step.join.table.name} is missing unique index")
-            //            throw new TantalimException(s"Table ${step.join.table.name} is missing unique index", "")
-          } else {
-            val fakeModelForTable = ModelCompiler.compileModel(step.join.table.toDeep)
-            val filter = valueMap.map { case (column, _) =>
-              val value = column.dataType match {
-                case DataType.Integer => valueMap.get(column).get match {
-                  case tntValue: TntInt => tntValue.value
-                  case tntValue: TntDecimal => tntValue.value
-                  case _ => Integer.parseInt(valueMap.get(column).get.rawString)
-                }
-                case _ => s"'${valueMap.get(column).get.rawString}'"
-              }
-              s"${column.name} = $value"
-            }.mkString(" AND ")
-            println("filter = " + filter)
-            val results = queryModelData(fakeModelForTable, filter = Some(filter), dbConnection = Some(dbConnection))
-
-            val existingForeignKeyRow: Map[TableColumn, TntValue] = if (results.isEmpty) {
-              if (step.allowInsert) {
-                // TODO Insert new row
-                Map.empty
-              } else {
-                //                throw new TantalimException("Foreign key doesn't exist and step doesn't allow insert", "")
-                Map.empty
-              }
-            } else {
-              if (results.rows.length > 1) {
-                throw new TantalimException("Found more than one matching row", filter)
-              }
-              val row = results.rows.head
-              if (step.allowUpdate) {
-                // TODO Update existing row
-              }
-              step.join.table.columns.values.map { column =>
-                column -> row.get(column.name).get
-              }.toMap
-            }
-
-            step.join.columns.foreach { joinColumn =>
-              if (joinColumn.from.isDefined) {
-                val fieldNameOnSourceTable = joinColumn.to
-                val valueFromSourceTable = existingForeignKeyRow.get(fieldNameOnSourceTable).get
-                val fieldNameOnDestinationTable = joinColumn.from.get
-                rootValueMap += fieldNameOnDestinationTable -> valueFromSourceTable
-              }
-            }
-          }
-        }
+        val newValues: Map[TableColumn, TntValue] = model.steps.values.flatMap { step =>
+          processStepValues(row, model.fields.values, step, 0, dbConnection)
+        }.toMap
+        rootValueMap ++ newValues
       }
 
-      val fieldList = rootValueMap.keys.toList
+      val fieldList = finalValueMap.keys.toList
       val setColumnPhrase = fieldList.map(fieldName => f"`${fieldName.dbName}`").mkString(", ")
-      val boundVars = List.fill(rootValueMap.size)("?").mkString(",")
+      val boundVars = List.fill(finalValueMap.size)("?").mkString(",")
 
       (f"INSERT INTO ${SqlBuilder.getTableSql(model.basisTable)} " +
         f"($setColumnPhrase) " +
-        f"VALUES ($boundVars)", rootValueMap.values.toList)
+        f"VALUES ($boundVars)", finalValueMap.values.toList)
     }
 
     val rsKeys = insert(sql, params, dbConnection)
@@ -223,7 +163,83 @@ trait DataSaver extends DataReader {
     row.state = DataState.Done
   }
 
-  private def getValuesForTable(row: SmartNodeInstance, step: Option[ModelStep]): collection.mutable.Map[TableColumn, TntValue] = {
+  private def processStepValues(row: SmartNodeInstance,
+                                modelFields: Iterable[ModelField],
+                                step: ModelStep,
+                                parentStep: Int,
+                                dbConnection: Connection): Map[TableColumn, TntValue] = {
+    // This method is still a mess and is largely incomplete.
+
+    if (step.parentAlias != parentStep) return Map.empty
+
+    // TODO process this step's children(s)
+    //    processStepValues(row, modelFields, st)
+
+    val valueMap = getValuesForTable(row, Some(step))
+    if (valueMap.isEmpty) return Map.empty
+
+    println(s"Has values for step ${step.join.table.name} with $valueMap")
+    step.join.table.columns.values.foreach { column =>
+      val matchingField = modelFields.find { matchingField =>
+        matchingField.basisColumn == column
+      }
+      if (matchingField.isDefined) {
+        column
+      }
+    }
+
+    val topIndex = findFullUniqueIndex(step.join.table.indexes, valueMap)
+    if (topIndex.isEmpty) {
+      println(s"Warn: Table ${step.join.table.name} is missing values to match a unique index: $valueMap")
+      return Map.empty
+    }
+
+    val fakeModelForTable = ModelCompiler.compileModel(step.join.table.toDeep)
+    val filter = valueMap.map { case (column, _) =>
+      val value = column.dataType match {
+        case DataType.Integer => valueMap.get(column).get match {
+          case tntValue: TntInt => tntValue.value
+          case tntValue: TntDecimal => tntValue.value
+          case _ => Integer.parseInt(valueMap.get(column).get.rawString)
+        }
+        case _ => s"'${valueMap.get(column).get.rawString}'"
+      }
+      s"${column.name} = $value"
+    }.mkString(" AND ")
+    println("filter = " + filter)
+    val results = queryModelData(fakeModelForTable, filter = Some(filter), dbConnection = Some(dbConnection))
+
+    val existingForeignKeyRow: Map[TableColumn, TntValue] = if (results.isEmpty) {
+      if (step.allowInsert) {
+        // TODO Insert new row
+        Map.empty
+      } else {
+        //                throw new TantalimException("Foreign key doesn't exist and step doesn't allow insert", "")
+        Map.empty
+      }
+    } else {
+      if (results.rows.length > 1) {
+        throw new TantalimException("Found more than one matching row", filter)
+      }
+      val row = results.rows.head
+      if (step.allowUpdate) {
+        // TODO Update existing row
+      }
+      step.join.table.columns.values.map { column =>
+        column -> row.get(column.name).get
+      }.toMap
+    }
+
+    val newValues: Map[TableColumn, TntValue] = step.join.columns.filter(joinColumn => joinColumn.from.isDefined).map { joinColumn =>
+      val fieldNameOnSourceTable = joinColumn.to
+      val valueFromSourceTable = existingForeignKeyRow.get(fieldNameOnSourceTable).get
+      val fieldNameOnDestinationTable = joinColumn.from.get
+      fieldNameOnDestinationTable -> valueFromSourceTable
+    }.toMap
+    newValues
+  }
+
+  private def getValuesForTable(row: SmartNodeInstance, step: Option[ModelStep]): Map[TableColumn, TntValue] = {
     val model = row.nodeSet.model
     val valueMap = Map.newBuilder[TableColumn, TntValue]
     model.fields.values.foreach { field =>
@@ -234,7 +250,7 @@ trait DataSaver extends DataReader {
         }
       }
     }
-    collection.mutable.Map.empty ++ valueMap.result()
+    valueMap.result()
   }
 
   private def getValueForInsert(row: SmartNodeInstance, field: ModelField): Option[TntValue] = {
