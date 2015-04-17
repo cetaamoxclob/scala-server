@@ -14,35 +14,37 @@ import org.specs2.runner._
 @RunWith(classOf[JUnitRunner])
 class DataReaderSpec extends Specification with Mockito with FakeArtifacts {
   "DataReader" should {
-    val personID = fakeModelFieldMap("PersonID", "person_id", DataType.Integer, updateable = false)
-    val model = new Model(
-      "PersonTest",
-      basisTable = new DeepTable("Person", "person", fakeModule()),
-      limit = 100,
-      instanceID = Option(personID._2),
-      fields = Map(
-        personID,
-        fakeModelFieldMap("PersonName", "name", required = true)
+
+    val model = {
+      val personID = fakeModelFieldMap("PersonID", "person_id", DataType.Integer, updateable = false)
+      val model = new Model(
+        "PersonTest",
+        basisTable = new DeepTable("Person", "person", fakeModule()),
+        limit = 100,
+        instanceID = Option(personID._2),
+        fields = Map(
+          personID,
+          fakeModelFieldMap("PersonName", "name", required = true)
+        ),
+        steps = Map.empty
       )
-    )
-    val personPhoneID = fakeModelFieldMap("PersonPhoneID", "phone_id", DataType.Integer, updateable = false)
-    model.addChild(new Model(
-      "PersonPhone",
-      basisTable = new DeepTable(
-        "Phone", "phone", fakeModule()
-      ),
-      limit = 100,
-      instanceID = Option(personPhoneID._2),
-      parentField = Some("PersonID"),
-      childField = Some("PersonPhonePersonID"),
-      fields = Map(
-        personPhoneID,
-        fakeModelFieldMap("PersonPhonePersonID", "person_id", DataType.Integer, updateable = false),
-        fakeModelFieldMap("PersonPhoneNumber", "phone_number", required = true)
-      ),
-      steps = Map.empty,
-      orderBy = Seq.empty
-    ))
+      val personPhoneID = fakeModelFieldMap("PersonPhoneID", "phone_id", DataType.Integer, updateable = false)
+      model.addChild(new Model(
+        "PersonPhone",
+        basisTable = new DeepTable(
+          "Phone", "phone", fakeModule()
+        ),
+        instanceID = Option(personPhoneID._2),
+        parentField = Some("PersonID"),
+        childField = Some("PersonPhonePersonID"),
+        fields = Map(
+          personPhoneID,
+          fakeModelFieldMap("PersonPhonePersonID", "person_id", DataType.Integer, updateable = false),
+          fakeModelFieldMap("PersonPhoneNumber", "phone_number", required = true)
+        )
+      ))
+      model
+    }
 
     "no results" in {
       val mockConnection = mock[Connection]

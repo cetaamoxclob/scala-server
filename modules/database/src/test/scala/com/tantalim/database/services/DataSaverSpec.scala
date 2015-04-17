@@ -16,35 +16,39 @@ import play.api.libs.json.Json
 @RunWith(classOf[JUnitRunner])
 class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
   "DataSaver" should {
-    val personID = fakeModelFieldMap("PersonID", "person_id", DataType.Integer, updateable = false)
-    val model = new Model(
-      "PersonTest",
-      basisTable = new DeepTable("Person", "person", fakeModule()),
-      limit = 100,
-      instanceID = Option(personID._2),
-      fields = Map(
-        personID,
-        fakeModelFieldMap("PersonName", "name", required = true)
+    val model = {
+      val personID = fakeModelFieldMap("PersonID", "person_id", DataType.Integer, updateable = false)
+      val model = new Model(
+        "PersonTest",
+        basisTable = new DeepTable("Person", "person", fakeModule()),
+        limit = 100,
+        instanceID = Option(personID._2),
+        fields = Map(
+          personID,
+          fakeModelFieldMap("PersonName", "name", required = true)
+        )
       )
-    )
-    val personPhoneID = fakeModelFieldMap("PersonPhoneID", "phone_id", DataType.Integer, updateable = false)
-    model.addChild(new Model(
-      "PersonPhone",
-      basisTable = new DeepTable(
-        "Phone", "phone", fakeModule()
-      ),
-      limit = 100,
-      instanceID = Option(personPhoneID._2),
-      parentField = Some("PersonID"),
-      childField = Some("PersonPhonePersonID"),
-      fields = Map(
-        personPhoneID,
-        fakeModelFieldMap("PersonPhonePersonID", "person_id", DataType.Integer, updateable = false),
-        fakeModelFieldMap("PersonPhoneNumber", "phone_number", required = true)
-      ),
-      steps = Map.empty,
-      orderBy = Seq.empty
-    ))
+      val personPhoneID = fakeModelFieldMap("PersonPhoneID", "phone_id", DataType.Integer, updateable = false)
+      model.addChild(new Model(
+        "PersonPhone",
+        basisTable = new DeepTable(
+          "Phone", "phone", fakeModule()
+        ),
+        limit = 100,
+        instanceID = Option(personPhoneID._2),
+        parentField = Some("PersonID"),
+        childField = Some("PersonPhonePersonID"),
+        fields = Map(
+          personPhoneID,
+          fakeModelFieldMap("PersonPhonePersonID", "person_id", DataType.Integer, updateable = false),
+          fakeModelFieldMap("PersonPhoneNumber", "phone_number", required = true)
+        ),
+        steps = Map.empty,
+        orderBy = Seq.empty
+      ))
+
+      model
+    }
 
     "do nothing" in {
       val saver = new DataSaver with DatabaseConnection {
@@ -83,8 +87,10 @@ class DataSaverSpec extends Specification with Mockito with FakeArtifacts {
         override def getConnection: Connection = new FakeConnection
 
         override def update(sql: String, numberedParameters: List[Any], connection: Connection): Int = {
-          sql must be equalTo "UPDATE `person` SET `name` = ? WHERE `person_id` = ?"
-          numberedParameters must be equalTo List(TntString("Foo"), TntInt(12))
+          // TODO How should we handle non-updateable fields
+//          sql must be equalTo "UPDATE `person` SET `name` = ? WHERE `person_id` = ?"
+          sql must be equalTo "UPDATE `person` SET `person_id` = ?, `name` = ? WHERE `person_id` = ?"
+          numberedParameters must be equalTo List(TntInt(12), TntString("Foo"), TntInt(12))
           1
         }
       }
