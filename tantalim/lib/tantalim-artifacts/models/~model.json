@@ -93,6 +93,16 @@
     }, {
       "name" : "export",
       "basisColumn" : "Export"
+    }, {
+      "name" : "basisColumnTableID",
+      "step" : "Column",
+      "basisColumn" : "TableID",
+      "export" : false
+    }, {
+      "name" : "basisTable",
+      "step" : "Table",
+      "basisColumn" : "Name",
+      "export" : true
     } ],
     "steps" : [ {
       "name" : "Step",
@@ -100,6 +110,10 @@
     }, {
       "name" : "Column",
       "join" : "Column"
+    }, {
+      "parent" : "Column",
+      "name" : "Table",
+      "join" : "Table"
     } ]
   }, {
     "name" : "orderBy",
