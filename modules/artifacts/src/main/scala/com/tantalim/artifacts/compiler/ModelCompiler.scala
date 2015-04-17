@@ -1,7 +1,7 @@
 package com.tantalim.artifacts.compiler
 
 import com.tantalim.artifacts.ArtifactService
-import com.tantalim.artifacts.json.{ModelFieldJson, ModelJson}
+import com.tantalim.artifacts.json.{ModelStepJson, ModelFieldJson, ModelJson}
 import com.tantalim.models._
 import com.tantalim.util.TantalimException
 import play.api.libs.json.{JsError, JsSuccess}
@@ -11,7 +11,7 @@ import scala.collection.{Map, Seq}
 trait ModelCompiler extends ArtifactService with TableCompiler {
 
   def compileModel(name: String): Model = {
-//    println("Compiling model set " + name)
+    //    println("Compiling model set " + name)
     val json = getArtifactContentAndParseJson(ArtifactType.Model, name)
     json.validate[ModelJson] match {
       case JsSuccess(modelJson, _) =>
@@ -22,14 +22,14 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
   }
 
   private def extendModel(model: ModelJson, parent: Option[Model]): Model = {
-//    println("Extending model " + model.extendModel.get)
+    //    println("Extending model " + model.extendModel.get)
     val superModel = parent.get
     val modelFields = superModel.fields ++
       convertJsonFieldsToModelFieldMap(
         model.fields,
         superModel.basisTable,
         buildModelSteps(model, superModel.basisTable)
-      )
+      ) ++ convertJsonFieldsFromStep(model.steps, superModel.steps.values.toSeq)
 
     superModel.copy(
       name = model.name.get,
@@ -46,12 +46,13 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
     if (model.name.isEmpty) {
       throw new TantalimException("Model Name is missing", "Add name to " + model)
     }
-//    println("Compiling model " + model.name.get)
+    //    println("Compiling model " + model.name.get)
     val basisTable = getBasisTable(model)
     val steps = buildModelSteps(model, basisTable)
     val modelFields = convertJsonFieldsToModelFieldMap(model.fields, basisTable, steps)
+    val fieldsFromSteps = convertJsonFieldsFromStep(model.steps, steps)
 
-    val newModel = createModel(model, basisTable, modelFields, parent, steps)
+    val newModel = createModel(model, basisTable, modelFields ++ fieldsFromSteps, parent, steps)
     if (newModel.parent.isDefined && !newModel.basisTable.isMock) checkChildModel(newModel)
     if (model.children.isDefined) {
       model.children.get.foreach { childJson =>
@@ -95,6 +96,7 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
     if (modelFields.isEmpty) Map.empty
     else modelFields.get.map(f => {
       if (f.step.isDefined) {
+        @deprecated
         val fieldStep = ModelCompiler.findStepByName(f.step.get, steps)
         val tableJoin = fieldStep.join
 
@@ -106,6 +108,26 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
         f.name -> compileModelField(f, basisTable.getColumn(f.basisColumn), None)
       }
     }).toMap
+  }
+
+  private def convertJsonFieldsFromStep(modelStepsJson: Option[Seq[ModelStepJson]], steps: Seq[ModelStep]): Map[String, ModelField] = {
+    if (modelStepsJson.isEmpty) Map.empty
+    else {
+      modelStepsJson.get.flatMap { step =>
+        if (step.fields.isEmpty) Map.empty
+        else {
+          val fieldStep = ModelCompiler.findStepByName(step.name, steps)
+          val tableJoin = fieldStep.join
+          step.fields.get.map { field =>
+            field.name -> compileModelField(field,
+              tableJoin.table.getColumn(field.basisColumn),
+              Some(fieldStep)
+            )
+          }
+        }
+      }.toMap
+    }
+
   }
 
   private def getBasisTable(model: ModelJson): DeepTable = {

@@ -30,11 +30,13 @@ case class ModelJson(basisTable: String,
 case class ModelStepJson(name: String,
                          join: String,
                          required: Option[Boolean],
-                         parent: Option[String]
+                         parent: Option[String],
+                         fields: Option[Seq[ModelFieldJson]]
                           )
 
 case class ModelFieldJson(name: String,
                           basisColumn: String,
+                          @deprecated
                           step: Option[String],
                           required: Option[Boolean],
                           updateable: Option[Boolean],
@@ -86,7 +88,8 @@ object ModelJson {
     (JsPath \ "name").read[String] and
       (JsPath \ "join").read[String] and
       (JsPath \ "required").readNullable[Boolean] and
-      (JsPath \ "parent").readNullable[String]
+      (JsPath \ "parent").readNullable[String] and
+      (JsPath \ "fields").readNullable[Seq[ModelFieldJson]]
     ).apply(ModelStepJson.apply _)
 
   implicit def orderByReads: Reads[ModelOrderBy] = (

@@ -108,10 +108,6 @@
       "name" : "TableJoinFromTableID",
       "basisColumn" : "FromTableID"
     }, {
-      "name" : "TableJoinToTableName",
-      "step" : "ToTable",
-      "basisColumn" : "Name"
-    }, {
       "name" : "TableJoinRequired",
       "basisColumn" : "Required",
       "valueDefault" : "true",
@@ -131,7 +127,11 @@
     } ],
     "steps" : [ {
       "name" : "ToTable",
-      "join" : "ToTable"
+      "join" : "ToTable",
+      "fields" : [ {
+        "name" : "TableJoinToTableName",
+        "basisColumn" : "Name"
+      } ]
     } ]
   }, {
     "name" : "TableIndex",
@@ -156,21 +156,20 @@
       }, {
         "name" : "TableIndexColumnColumnID",
         "basisColumn" : "ColumnID"
-      }, {
-        "name" : "TableIndexColumnColumnTableID",
-        "step" : "Column",
-        "basisColumn" : "TableID"
-      }, {
-        "name" : "TableIndexColumnColumnName",
-        "step" : "Column",
-        "basisColumn" : "Name"
       } ],
       "orderBy" : [ {
         "fieldName" : "TableIndexColumnOrder"
       } ],
       "steps" : [ {
         "name" : "Column",
-        "join" : "Column"
+        "join" : "Column",
+        "fields" : [ {
+          "name" : "TableIndexColumnColumnTableID",
+          "basisColumn" : "TableID"
+        }, {
+          "name" : "TableIndexColumnColumnName",
+          "basisColumn" : "Name"
+        } ]
       } ]
     } ],
     "fields" : [ {
