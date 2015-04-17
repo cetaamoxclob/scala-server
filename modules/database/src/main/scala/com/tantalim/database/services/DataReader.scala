@@ -14,7 +14,7 @@ trait DataReader extends DatabaseConnection {
     if (model.limit == 0) return 1
     var sqlBuilder = new SqlBuilder(
       from = model.basisTable,
-      steps = model.steps,
+      steps = model.steps.values.toSeq,
       fields = model.fields,
       limit = model.limit)
     sqlBuilder = parseFilterForSql(sqlBuilder, model.fields, filter)
@@ -33,7 +33,7 @@ trait DataReader extends DatabaseConnection {
 
     var sqlBuilder = new SqlBuilder(
       from = model.basisTable,
-      steps = model.steps,
+      steps = model.steps.values.toSeq,
       fields = model.fields,
       page = page,
       orderBy = orderBy,

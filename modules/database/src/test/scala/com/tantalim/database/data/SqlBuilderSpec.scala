@@ -89,10 +89,113 @@ class SqlBuilderSpec extends Specification with FakeArtifacts {
       )
       val sql = new SqlBuilder(table,
         fields = Map(fakeModelFieldMap("OtherName", "name", step = Some(step))),
-        steps = Map(step.tableAlias -> step)
+        steps = Seq(step)
       )
       Util.stripExtraWhitespace(sql.toPreparedStatement) must be equalTo
         "SELECT `t1`.`name` AS `OtherName` FROM `test_table` AS `t0` LEFT JOIN `test_other` AS `t1` ON `t1`.`personID` = `t0`.`parentID`"
+    }
+
+    "optional then required step" in {
+      val sql = {
+        val personTable = DeepTable("Person", "person", module)
+
+        val departmentStep = ModelStep(
+          name = "OptionalDepartment",
+          tableAlias = 1,
+          join = TableJoin(
+            name = "Department",
+            table = ShallowTable("Department", "department", module),
+            required = false,
+            columns = Seq(TableJoinColumn(
+              to = TableColumn("DepartmentID", "department_id"),
+              from = Some(TableColumn("DepartmentID", "optional_department_id"))
+            ))
+          ),
+          required = false,
+          parentAlias = 0
+        )
+        val departmentChairStep: ModelStep = ModelStep(
+          name = "RequiredDepartmentChair",
+          tableAlias = 2,
+          join = TableJoin(
+            name = "ChairPerson",
+            table = ShallowTable("Person", "person", module),
+            required = true,
+            columns = Seq(TableJoinColumn(
+              to = TableColumn("PersonID", "person_id"),
+              from = Some(TableColumn("ChairPerson", "chairperson_id"))
+            ))
+          ),
+          required = true,
+          parentAlias = departmentStep.tableAlias
+        )
+        new SqlBuilder(personTable,
+          fields = Map(
+            fakeModelFieldMap("PersonName", "name"),
+            fakeModelFieldMap("DepartmentName", "name", step = Some(departmentStep)),
+            fakeModelFieldMap("ChairPerson", "name", step = Some(departmentChairStep))
+          ),
+          steps = Seq(departmentStep, departmentChairStep)
+        )
+      }
+
+      Util.stripExtraWhitespace(sql.toPreparedStatement) must be equalTo
+        "SELECT `t0`.`name` AS `PersonName`, `t1`.`DepartmentName`, `t1`.`ChairPerson` FROM `person` AS `t0` " +
+          "LEFT JOIN (SELECT `t0`.`department_id` AS `department_id`, `t0`.`name` AS `DepartmentName`, `t2`.`name` AS `ChairPerson` " +
+          "FROM `department` AS `t0` INNER JOIN `person` AS `t2` ON `t2`.`person_id` = `t0`.`chairperson_id`" +
+          ") AS `t1` ON `t1`.`department_id` = `t0`.`optional_department_id`"
+    }
+
+    "two required steps away" in {
+      val sql = {
+        val personTable = DeepTable("Person", "person", module)
+
+        val departmentStep = ModelStep(
+          name = "RequiredDepartment",
+          tableAlias = 1,
+          join = TableJoin(
+            name = "Department",
+            table = ShallowTable("Department", "department", module),
+            required = true,
+            columns = Seq(TableJoinColumn(
+              to = TableColumn("DepartmentID", "department_id"),
+              from = Some(TableColumn("DepartmentID", "required_department_id"))
+            ))
+          ),
+          required = true,
+          parentAlias = 0
+        )
+        val departmentChairStep: ModelStep = ModelStep(
+          name = "RequiredDepartmentChair",
+          tableAlias = 2,
+          join = TableJoin(
+            name = "ChairPerson",
+            table = ShallowTable("Person", "person", module),
+            required = true,
+            columns = Seq(TableJoinColumn(
+              to = TableColumn("PersonID", "person_id"),
+              from = Some(TableColumn("ChairPerson", "chairperson_id"))
+            ))
+          ),
+          required = true,
+          parentAlias = departmentStep.tableAlias
+        )
+        new SqlBuilder(personTable,
+          fields = Map(
+            fakeModelFieldMap("PersonName", "name"),
+            fakeModelFieldMap("DepartmentName", "name", step = Some(departmentStep)),
+            fakeModelFieldMap("ChairPerson", "name", step = Some(departmentChairStep))
+          ),
+          steps = Seq(departmentStep, departmentChairStep)
+        )
+      }
+
+      val result = "SELECT `t0`.`name` AS `PersonName`, `t1`.`name` AS `DepartmentName`, `t2`.`name` AS `ChairPerson` FROM `person` AS `t0` " +
+        "INNER JOIN `department` AS `t1` ON `t1`.`department_id` = `t0`.`required_department_id` " +
+        "INNER JOIN `person` AS `t2` ON `t2`.`person_id` = `t1`.`chairperson_id`"
+      Util.stripExtraWhitespace(sql.toPreparedStatement) must be equalTo result
+      // Make sure there is no "residual" effect from previous run
+      Util.stripExtraWhitespace(sql.toPreparedStatement) must be equalTo result
     }
   }
 }

@@ -4,9 +4,7 @@ import java.sql._
 
 import com.tantalim.database.data.DatabaseConnection
 import com.tantalim.models._
-import com.tantalim.nodes.{SmartNodeSet, TntString}
 import org.junit.runner.RunWith
-import org.mockito.Matchers
 import org.specs2.mock._
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -14,33 +12,30 @@ import org.specs2.runner._
 @RunWith(classOf[JUnitRunner])
 class DataReaderSpec extends Specification with Mockito with FakeArtifacts {
   "DataReader" should {
-
     val model = {
-      val personID = fakeModelFieldMap("PersonID", "person_id", DataType.Integer, updateable = false)
+      val module = fakeModule()
+      val personID = fakeModelFieldMap("PersonID", "person_id", DataType.Integer)
       val model = new Model(
         "PersonTest",
-        basisTable = new DeepTable("Person", "person", fakeModule()),
+        basisTable = new DeepTable("Person", "person", module),
         limit = 100,
         instanceID = Option(personID._2),
         fields = Map(
           personID,
-          fakeModelFieldMap("PersonName", "name", required = true)
-        ),
-        steps = Map.empty
+          fakeModelFieldMap("PersonName", "name")
+        )
       )
-      val personPhoneID = fakeModelFieldMap("PersonPhoneID", "phone_id", DataType.Integer, updateable = false)
+      val personPhoneID = fakeModelFieldMap("PersonPhoneID", "phone_id", DataType.Integer)
       model.addChild(new Model(
         "PersonPhone",
-        basisTable = new DeepTable(
-          "Phone", "phone", fakeModule()
-        ),
+        basisTable = new DeepTable("Phone", "phone", module),
         instanceID = Option(personPhoneID._2),
         parentField = Some("PersonID"),
         childField = Some("PersonPhonePersonID"),
         fields = Map(
           personPhoneID,
-          fakeModelFieldMap("PersonPhonePersonID", "person_id", DataType.Integer, updateable = false),
-          fakeModelFieldMap("PersonPhoneNumber", "phone_number", required = true)
+          fakeModelFieldMap("PersonPhonePersonID", "person_id", DataType.Integer),
+          fakeModelFieldMap("PersonPhoneNumber", "phone_number")
         )
       ))
       model

@@ -72,7 +72,7 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
       parentField = model.parentField,
       childField = model.childField,
       parent = parent,
-      steps = convertStepsToMap(steps),
+      steps = ModelCompiler.convertStepsToMap(steps),
       orderBy = compileOrderBy(model.orderBy),
       allowInsert = model.allowInsert.getOrElse(basisTable.allowInsert),
       allowUpdate = model.allowUpdate.getOrElse(basisTable.allowUpdate),
@@ -95,7 +95,7 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
     if (modelFields.isEmpty) Map.empty
     else modelFields.get.map(f => {
       if (f.step.isDefined) {
-        val fieldStep = findStepByName(f.step.get, steps)
+        val fieldStep = ModelCompiler.findStepByName(f.step.get, steps)
         val tableJoin = fieldStep.join
 
         f.name -> compileModelField(f,
@@ -144,22 +144,10 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
 
   }
 
-  private def findStepByName(stepName: String, steps: Seq[ModelStep]): ModelStep = {
-    steps.find(step => step.name == stepName).getOrElse(
-      throw new TantalimException(s"Can't find step `$stepName`", s"Existing steps are: ${steps.mkString(", ")}")
-    )
-  }
-
-  private def convertStepsToMap(steps: Seq[ModelStep]): Map[Int, ModelStep] = {
-    steps.map { step =>
-      step.tableAlias -> step
-    }.toMap
-  }
-
   private def buildModelSteps(model: ModelJson, basisTable: DeepTable): Seq[ModelStep] = {
     buildTempModelSteps(model, basisTable).map { step =>
       val join = step.tableJoin.getOrElse(throw new TantalimException(s"tableJoin for $step is still missing", "Add or rename the step"))
-      new ModelStep(
+      ModelStep(
         name = step.name,
         tableAlias = step.tableAlias.get,
         join = join,
@@ -237,6 +225,22 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
       export = field.export.getOrElse(true)
     )
   }
+}
+
+object ModelCompiler {
+  def findStepByName(stepName: String, steps: Seq[ModelStep]): ModelStep = {
+    steps.find(step => step.name == stepName).getOrElse(
+      throw new TantalimException(s"Can't find step `$stepName`", s"Existing steps are: ${steps.mkString(", ")}")
+    )
+  }
+
+  def convertStepsToMap(steps: Seq[ModelStep]): Map[Int, ModelStep] = {
+    steps.map { step =>
+      step.tableAlias -> step
+    }.toMap
+  }
+
+
 }
 
 case class TempModelStep(name: String,
