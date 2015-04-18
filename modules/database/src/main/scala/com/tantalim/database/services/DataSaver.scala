@@ -163,12 +163,15 @@ trait DataSaver extends DataReader {
     row.state = DataState.Done
   }
 
+  /**
+   *
+   * This method is still a mess and is largely incomplete.
+   */
   private def processStepValues(row: SmartNodeInstance,
                                 modelFields: Iterable[ModelField],
                                 step: ModelStep,
                                 parentStep: Int,
                                 dbConnection: Connection): Map[TableColumn, TntValue] = {
-    // This method is still a mess and is largely incomplete.
 
     if (step.parentAlias != parentStep) return Map.empty
 
@@ -194,20 +197,26 @@ trait DataSaver extends DataReader {
       return Map.empty
     }
 
-    val fakeModelForTable = ModelCompiler.compileModel(step.join.table.toDeep)
-    val filter = valueMap.map { case (column, _) =>
-      val value = column.dataType match {
-        case DataType.Integer => valueMap.get(column).get match {
-          case tntValue: TntInt => tntValue.value
-          case tntValue: TntDecimal => tntValue.value
-          case _ => Integer.parseInt(valueMap.get(column).get.rawString)
+    val results = {
+      val fakeModelForTable = ModelCompiler.compileModel(step.join.table.toDeep)
+      val filter = valueMap.map { case (column, _) =>
+        val value = column.dataType match {
+          case DataType.Integer => valueMap.get(column).get match {
+            case tntValue: TntInt => tntValue.value
+            case tntValue: TntDecimal => tntValue.value
+            case _ => Integer.parseInt(valueMap.get(column).get.rawString)
+          }
+          case _ => s"'${valueMap.get(column).get.rawString}'"
         }
-        case _ => s"'${valueMap.get(column).get.rawString}'"
+        s"${column.name} = $value"
+      }.mkString(" AND ")
+      println("filter = " + filter)
+      val results = queryModelData(fakeModelForTable, filter = Some(filter), dbConnection = Some(dbConnection))
+      if (results.rows.length > 1) {
+        throw new TantalimException("Found more than one matching row", filter)
       }
-      s"${column.name} = $value"
-    }.mkString(" AND ")
-    println("filter = " + filter)
-    val results = queryModelData(fakeModelForTable, filter = Some(filter), dbConnection = Some(dbConnection))
+      results
+    }
 
     val existingForeignKeyRow: Map[TableColumn, TntValue] = if (results.isEmpty) {
       if (step.allowInsert) {
@@ -218,9 +227,6 @@ trait DataSaver extends DataReader {
         Map.empty
       }
     } else {
-      if (results.rows.length > 1) {
-        throw new TantalimException("Found more than one matching row", filter)
-      }
       val row = results.rows.head
       if (step.allowUpdate) {
         // TODO Update existing row
@@ -234,6 +240,13 @@ trait DataSaver extends DataReader {
       val fieldNameOnSourceTable = joinColumn.to
       val valueFromSourceTable = existingForeignKeyRow.get(fieldNameOnSourceTable).get
       val fieldNameOnDestinationTable = joinColumn.from.get
+
+      val matchingFieldName: String = row.model.fields.values.find { field =>
+        val fieldTableAlias = if (field.step.isDefined) field.step.get.tableAlias else 0
+        field.basisColumn == fieldNameOnDestinationTable && parentStep == fieldTableAlias
+      }.get.name
+      row.set(matchingFieldName, valueFromSourceTable)
+
       fieldNameOnDestinationTable -> valueFromSourceTable
     }.toMap
     newValues
