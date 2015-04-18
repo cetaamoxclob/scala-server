@@ -1,0 +1,30 @@
+{
+  "title": "PQF Workflow",
+  "hasRequirements": false,
+  "states": [
+    {
+      "status": "Complete",
+      "hasRequirements": false,
+      "contractorCanEdit": false,
+      "operatorCanEdit": false
+    },
+    {
+      "status": "Incomplete",
+      "hasRequirements": false,
+      "contractorCanEdit": false,
+      "operatorCanEdit": false
+    }
+  ],
+  "steps": [
+    {
+      "newStatus": "Pending",
+      "emailTemplateID": 12,
+      "noteRequired": false
+    },
+    {
+      "oldStatus": "Pending",
+      "newStatus": "Submitted",
+      "noteRequired": true
+    }
+  ]
+}
