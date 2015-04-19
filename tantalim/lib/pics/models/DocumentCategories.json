@@ -16,11 +16,6 @@
       "basisColumn": "DocumentTypeID"
     },
     {
-      "name": "DocumentTypeSlug",
-      "basisColumn": "Slug",
-      "step": "DocumentType"
-    },
-    {
       "name": "ParentID",
       "basisColumn": "ParentID"
     },
@@ -40,7 +35,14 @@
   "steps": [
     {
       "name": "DocumentType",
-      "join": "DocumentType"
+      "join": "DocumentType",
+      "fields": [
+        {
+          "name": "DocumentTypeSlug",
+          "basisColumn": "Slug",
+          "step": "DocumentType"
+        }
+      ]
     }
   ],
   "children": [

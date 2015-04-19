@@ -32,11 +32,6 @@
       "basisColumn": "WorkflowID"
     },
     {
-      "name": "DocumentTypeWorkflowName",
-      "basisColumn": "Name",
-      "step": "Workflow"
-    },
-    {
       "name": "DocumentTypeHasMultiple",
       "basisColumn": "HasMultiple"
     },
@@ -48,7 +43,13 @@
   "steps": [
     {
       "name": "Workflow",
-      "join": "Workflow"
+      "join": "Workflow",
+      "fields": [
+        {
+          "name": "DocumentTypeWorkflowName",
+          "basisColumn": "Name"
+        }
+      ]
     }
   ],
   "children": [
