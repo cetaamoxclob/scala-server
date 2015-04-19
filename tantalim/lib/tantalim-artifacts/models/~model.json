@@ -63,20 +63,19 @@
         "name" : "functionDefault",
         "basisColumn" : "FunctionDefault",
         "export" : true
-      }, {
-        "name" : "StepFieldBasisColumnTableID",
-        "step" : "Column",
-        "basisColumn" : "TableID",
-        "export" : false
-      }, {
-        "name" : "basisColumn",
-        "step" : "Column",
-        "basisColumn" : "Name",
-        "export" : true
       } ],
       "steps" : [ {
         "name" : "Column",
-        "join" : "Column"
+        "join" : "Column",
+        "fields" : [ {
+          "name" : "StepFieldBasisColumnTableID",
+          "basisColumn" : "TableID",
+          "export" : false
+        }, {
+          "name" : "basisColumn",
+          "basisColumn" : "Name",
+          "export" : true
+        } ]
       } ]
     } ],
     "fields" : [ {
@@ -91,24 +90,29 @@
       "name" : "name",
       "basisColumn" : "Name"
     }, {
-      "name" : "join",
-      "step" : "Join",
-      "basisColumn" : "Name"
-    }, {
       "name" : "ModelStepParentID",
       "basisColumn" : "ParentID",
       "export" : false
-    }, {
-      "name" : "parent",
-      "step" : "Parent",
-      "basisColumn" : "Name"
     } ],
     "steps" : [ {
       "name" : "Parent",
-      "join" : "Parent"
+      "join" : "Parent",
+      "fields" : [ {
+        "name" : "parent",
+        "basisColumn" : "Name"
+      } ]
     }, {
       "name" : "Join",
-      "join" : "Join"
+      "join" : "Join",
+      "fields" : [ {
+        "name" : "join",
+        "basisColumn" : "Name"
+      }, {
+        "name" : "ModelStepJoinFromTableID",
+        "basisColumn" : "FromTableID",
+        "fieldDefault" : "ModelBasisTableID",
+        "alwaysDefault" : true
+      } ]
     } ]
   }, {
     "name" : "fields",
@@ -126,10 +130,6 @@
       "export" : false
     }, {
       "name" : "name",
-      "basisColumn" : "Name"
-    }, {
-      "name" : "basisColumn",
-      "step" : "Column",
       "basisColumn" : "Name"
     }, {
       "name" : "updateable",
@@ -157,20 +157,23 @@
       "name" : "export",
       "basisColumn" : "Export"
     }, {
-      "name" : "basisColumnTableID",
-      "step" : "Column",
-      "basisColumn" : "TableID",
-      "export" : false,
-      "fieldDefault" : "ModelBasisTableID",
-      "alwaysDefault" : true
-    }, {
       "name" : "ModelFieldBasisColumnID",
       "basisColumn" : "BasisColumnID",
       "export" : false
     } ],
     "steps" : [ {
       "name" : "Column",
-      "join" : "Column"
+      "join" : "Column",
+      "fields" : [ {
+        "name" : "basisColumn",
+        "basisColumn" : "Name"
+      }, {
+        "name" : "basisColumnTableID",
+        "basisColumn" : "TableID",
+        "export" : false,
+        "fieldDefault" : "ModelBasisTableID",
+        "alwaysDefault" : true
+      } ]
     } ]
   }, {
     "name" : "orderBy",
@@ -190,17 +193,6 @@
       "basisColumn" : "FieldID",
       "export" : false
     }, {
-      "name" : "fieldName",
-      "step" : "Field",
-      "basisColumn" : "Name"
-    }, {
-      "name" : "ModelSortFieldModelID",
-      "step" : "Field",
-      "basisColumn" : "ModelID",
-      "export" : false,
-      "fieldDefault" : "ModelID",
-      "alwaysDefault" : true
-    }, {
       "name" : "direction",
       "basisColumn" : "Ascending"
     }, {
@@ -215,7 +207,17 @@
     } ],
     "steps" : [ {
       "name" : "Field",
-      "join" : "Field"
+      "join" : "Field",
+      "fields" : [ {
+        "name" : "fieldName",
+        "basisColumn" : "Name"
+      }, {
+        "name" : "ModelSortFieldModelID",
+        "basisColumn" : "ModelID",
+        "export" : false,
+        "fieldDefault" : "ModelID",
+        "alwaysDefault" : true
+      } ]
     } ]
   }, {
     "name" : "children",
@@ -240,10 +242,6 @@
     "name" : "name",
     "basisColumn" : "Name",
     "export" : false
-  }, {
-    "name" : "basisTable",
-    "step" : "BasisTable",
-    "basisColumn" : "Name"
   }, {
     "name" : "ModelParentID",
     "basisColumn" : "ParentID",
@@ -285,6 +283,10 @@
   } ],
   "steps" : [ {
     "name" : "BasisTable",
-    "join" : "BasisTable"
+    "join" : "BasisTable",
+    "fields" : [ {
+      "name" : "basisTable",
+      "basisColumn" : "Name"
+    } ]
   } ]
 }
