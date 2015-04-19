@@ -17,6 +17,22 @@
       "to" : "UserID",
       "from" : "GroupID"
     } ]
+  }, {
+    "name" : "Group",
+    "required" : true,
+    "table" : "PicsUser",
+    "columns" : [ {
+      "to" : "UserID",
+      "from" : "GroupID"
+    } ]
+  }, {
+    "name" : "User",
+    "required" : true,
+    "table" : "PicsUser",
+    "columns" : [ {
+      "to" : "UserID",
+      "from" : "UserID"
+    } ]
   } ],
   "columns" : [ {
     "name" : "UserGroupID",
@@ -31,5 +47,16 @@
     "name" : "GroupID",
     "updateable" : false,
     "dataType" : "Integer"
+  } ],
+  "indexes" : [ {
+    "columns" : [ {
+      "name" : "UserGroupID"
+    } ]
+  }, {
+    "columns" : [ {
+      "name" : "UserID"
+    }, {
+      "name" : "GroupID"
+    } ]
   } ]
 }

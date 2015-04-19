@@ -44,5 +44,14 @@
     "fieldType" : "checkbox",
     "dataType" : "Boolean",
     "required" : true
+  } ],
+  "indexes" : [ {
+    "columns" : [ {
+      "name" : "DocumentTypeID"
+    } ]
+  }, {
+    "columns" : [ {
+      "name" : "Slug"
+    } ]
   } ]
 }

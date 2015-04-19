@@ -35,5 +35,10 @@
   }, {
     "name" : "NumQuestions",
     "dataType" : "Integer"
+  } ],
+  "indexes" : [ {
+    "columns" : [ {
+      "name" : "CategoryID"
+    } ]
   } ]
 }

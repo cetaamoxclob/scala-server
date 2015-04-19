@@ -34,5 +34,10 @@
     "fieldType" : "checkbox",
     "dataType" : "Boolean",
     "required" : true
+  } ],
+  "indexes" : [ {
+    "columns" : [ {
+      "name" : "StateID"
+    } ]
   } ]
 }

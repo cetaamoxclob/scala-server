@@ -44,5 +44,10 @@
     "name" : "LastLogin",
     "dbName" : "lastLogin",
     "label" : "Last Login"
+  } ],
+  "indexes" : [ {
+    "columns" : [ {
+      "name" : "UserID"
+    } ]
   } ]
 }
