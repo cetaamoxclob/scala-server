@@ -1,46 +1,35 @@
 {
-  "dbName": "usergroup",
-  "primaryKey": "UserGroupID",
-  "columns": [
-    {
-      "name": "UserGroupID",
-      "dbName": "id",
-      "dataType": "Integer",
-      "updateable": false
-    },
-    {
-      "name": "UserID",
-      "dataType": "Integer",
-      "updateable": false
-    },
-    {
-      "name": "GroupID",
-      "dataType": "Integer",
-      "updateable": false
-    }
-  ],
-  "joins": [
-    {
-      "name": "User",
-      "table": "PicsUser",
-      "required": true,
-      "columns": [
-        {
-          "from": "UserID",
-          "to": "UserID"
-        }
-      ]
-    },
-    {
-      "name": "Group",
-      "table": "PicsUser",
-      "required": true,
-      "columns": [
-        {
-          "from": "GroupID",
-          "to": "UserID"
-        }
-      ]
-    }
-  ]
+  "dbName" : "usergroup",
+  "primaryKey" : "UserGroupID",
+  "joins" : [ {
+    "name" : "User",
+    "required" : true,
+    "table" : "PicsUser",
+    "columns" : [ {
+      "to" : "UserID",
+      "from" : "UserID"
+    } ]
+  }, {
+    "name" : "Group",
+    "required" : true,
+    "table" : "PicsUser",
+    "columns" : [ {
+      "to" : "UserID",
+      "from" : "GroupID"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "UserGroupID",
+    "updateable" : false,
+    "dbName" : "id",
+    "dataType" : "Integer"
+  }, {
+    "name" : "UserID",
+    "updateable" : false,
+    "dataType" : "Integer"
+  }, {
+    "name" : "GroupID",
+    "updateable" : false,
+    "dataType" : "Integer"
+  } ]
 }

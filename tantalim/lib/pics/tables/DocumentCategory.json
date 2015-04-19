@@ -1,50 +1,39 @@
 {
-  "dbName": "audit_category",
-  "primaryKey": "CategoryID",
-  "columns": [
-    {
-      "name": "CategoryID",
-      "dbName": "id",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "DocumentTypeID",
-      "dbName": "auditTypeID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "ParentID",
-      "dataType": "Integer",
-      "updateable": false
-    },
-    {
-      "name": "Number",
-      "dataType": "Integer"
-    },
-    {
-      "name": "NumRequired",
-      "dataType": "Integer"
-    },
-    {
-      "name": "NumQuestions",
-      "dataType": "Integer"
-    }
-  ],
-  "joins": [
-    {
-      "name": "DocumentType",
-      "table": "DocumentType",
-      "required": false,
-      "columns": [
-        {
-          "from": "DocumentTypeID",
-          "to": "DocumentTypeID"
-        }
-      ]
-    }
-  ]
+  "dbName" : "audit_category",
+  "primaryKey" : "CategoryID",
+  "joins" : [ {
+    "name" : "DocumentType",
+    "required" : false,
+    "table" : "DocumentType",
+    "columns" : [ {
+      "to" : "DocumentTypeID",
+      "from" : "DocumentTypeID"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "CategoryID",
+    "updateable" : false,
+    "dbName" : "id",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "DocumentTypeID",
+    "updateable" : false,
+    "dbName" : "auditTypeID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "ParentID",
+    "updateable" : false,
+    "dataType" : "Integer"
+  }, {
+    "name" : "Number",
+    "dataType" : "Integer"
+  }, {
+    "name" : "NumRequired",
+    "dataType" : "Integer"
+  }, {
+    "name" : "NumQuestions",
+    "dataType" : "Integer"
+  } ]
 }

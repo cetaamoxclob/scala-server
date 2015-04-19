@@ -1,41 +1,34 @@
 {
-  "dbName": "workflow_step",
-  "primaryKey": "StepID",
-  "columns": [
-    {
-      "name": "StepID",
-      "dbName": "id",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "WorkflowID",
-      "dbName": "workflowID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "OldStatus",
-      "label": "Old Status"
-    },
-    {
-      "name": "NewStatus",
-      "label": "New Status",
-      "required": true
-    },
-    {
-      "name": "EmailTemplateID",
-      "dataType": "Boolean",
-      "required": true,
-      "fieldType": "checkbox"
-    },
-    {
-      "name": "NoteRequired",
-      "dataType": "Boolean",
-      "required": true,
-      "fieldType": "checkbox"
-    }
-  ]
+  "dbName" : "workflow_step",
+  "primaryKey" : "StepID",
+  "columns" : [ {
+    "name" : "StepID",
+    "updateable" : false,
+    "dbName" : "id",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "WorkflowID",
+    "updateable" : false,
+    "dbName" : "workflowID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "OldStatus",
+    "label" : "Old Status"
+  }, {
+    "name" : "NewStatus",
+    "label" : "New Status",
+    "required" : true
+  }, {
+    "name" : "EmailTemplateID",
+    "fieldType" : "checkbox",
+    "dataType" : "Boolean",
+    "required" : true
+  }, {
+    "name" : "NoteRequired",
+    "fieldType" : "checkbox",
+    "dataType" : "Boolean",
+    "required" : true
+  } ]
 }

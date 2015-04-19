@@ -1,61 +1,48 @@
 {
-  "dbName": "audit_type",
-  "primaryKey": "DocumentTypeID",
-  "columns": [
-    {
-      "name": "DocumentTypeID",
-      "dbName": "id",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "Slug",
-      "dbName": "slug",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "ClassType",
-      "required": true
-    },
-    {
-      "name": "DisplayOrder",
-      "dataType": "Integer",
-      "required": true
-    },
-    {
-      "name": "Description"
-    },
-    {
-      "name": "WorkflowID",
-      "dataType": "Integer",
-      "required": true
-    },
-    {
-      "name": "HasMultiple",
-      "dataType": "Boolean",
-      "required": true,
-      "fieldType": "checkbox"
-    },
-    {
-      "name": "IsScheduled",
-      "dataType": "Boolean",
-      "required": true,
-      "fieldType": "checkbox"
-    }
-  ],
-  "joins": [
-    {
-      "name": "Workflow",
-      "table": "Workflow",
-      "required": false,
-      "columns": [
-        {
-          "from": "WorkflowID",
-          "to": "WorkflowID"
-        }
-      ]
-    }
-  ]
+  "dbName" : "audit_type",
+  "primaryKey" : "DocumentTypeID",
+  "joins" : [ {
+    "name" : "Workflow",
+    "required" : false,
+    "table" : "Workflow",
+    "columns" : [ {
+      "to" : "WorkflowID",
+      "from" : "WorkflowID"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "DocumentTypeID",
+    "updateable" : false,
+    "dbName" : "id",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Slug",
+    "updateable" : false,
+    "dbName" : "slug",
+    "required" : true
+  }, {
+    "name" : "ClassType",
+    "required" : true
+  }, {
+    "name" : "DisplayOrder",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Description"
+  }, {
+    "name" : "WorkflowID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "HasMultiple",
+    "fieldType" : "checkbox",
+    "dataType" : "Boolean",
+    "required" : true
+  }, {
+    "name" : "IsScheduled",
+    "fieldType" : "checkbox",
+    "dataType" : "Boolean",
+    "required" : true
+  } ]
 }

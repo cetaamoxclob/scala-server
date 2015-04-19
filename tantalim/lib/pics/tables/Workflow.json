@@ -1,24 +1,20 @@
 {
-  "dbName": "workflow",
-  "primaryKey": "WorkflowID",
-  "columns": [
-    {
-      "name": "WorkflowID",
-      "dbName": "id",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "Name",
-      "dbName": "name",
-      "required": true
-    },
-    {
-      "name": "HasRequirements",
-      "dataType": "Boolean",
-      "required": true,
-      "fieldType": "checkbox"
-    }
-  ]
+  "dbName" : "workflow",
+  "primaryKey" : "WorkflowID",
+  "columns" : [ {
+    "name" : "WorkflowID",
+    "updateable" : false,
+    "dbName" : "id",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Name",
+    "dbName" : "name",
+    "required" : true
+  }, {
+    "name" : "HasRequirements",
+    "fieldType" : "checkbox",
+    "dataType" : "Boolean",
+    "required" : true
+  } ]
 }

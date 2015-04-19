@@ -1,31 +1,25 @@
 {
-  "dbName": "app_user",
-  "primaryKey": "UserID",
-  "columns": [
-    {
-      "name": "UserID",
-      "dbName": "userID",
-      "updateable": false
-    },
-    {
-      "name": "Username",
-      "dbName": "username",
-      "required": true
-    },
-    {
-      "name": "Name",
-      "dbName": "name",
-      "label": "Display Name",
-      "required": true
-    },
-    {
-      "name": "Registered",
-      "dbName": "registered"
-    },
-    {
-      "name": "LastLogin",
-      "dbName": "lastLogin",
-      "label": "Last Login"
-    }
-  ]
+  "dbName" : "app_user",
+  "primaryKey" : "UserID",
+  "columns" : [ {
+    "name" : "UserID",
+    "updateable" : false,
+    "dbName" : "userID"
+  }, {
+    "name" : "Username",
+    "dbName" : "username",
+    "required" : true
+  }, {
+    "name" : "Name",
+    "dbName" : "name",
+    "label" : "Display Name",
+    "required" : true
+  }, {
+    "name" : "Registered",
+    "dbName" : "registered"
+  }, {
+    "name" : "LastLogin",
+    "dbName" : "lastLogin",
+    "label" : "Last Login"
+  } ]
 }
