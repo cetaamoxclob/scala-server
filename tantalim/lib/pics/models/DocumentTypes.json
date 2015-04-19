@@ -1,87 +1,63 @@
 {
-  "basisTable": "DocumentType",
-  "limit": 10,
-  "orderBy": [
-    {
-      "fieldName": "DocumentTypeID"
-    }
-  ],
-  "fields": [
-    {
-      "name": "DocumentTypeID",
-      "basisColumn": "DocumentTypeID"
-    },
-    {
-      "name": "DocumentTypeSlug",
-      "basisColumn": "Slug"
-    },
-    {
-      "name": "DocumentTypeClassType",
-      "basisColumn": "ClassType"
-    },
-    {
-      "name": "DocumentTypeDisplayOrder",
-      "basisColumn": "DisplayOrder"
-    },
-    {
-      "name": "DocumentTypeDescription",
-      "basisColumn": "Description"
-    },
-    {
-      "name": "DocumentTypeWorkflowID",
-      "basisColumn": "WorkflowID"
-    },
-    {
-      "name": "DocumentTypeHasMultiple",
-      "basisColumn": "HasMultiple"
-    },
-    {
-      "name": "DocumentTypeIsScheduled",
-      "basisColumn": "IsScheduled"
-    }
-  ],
-  "steps": [
-    {
-      "name": "Workflow",
-      "join": "Workflow",
-      "fields": [
-        {
-          "name": "DocumentTypeWorkflowName",
-          "basisColumn": "Name"
-        }
-      ]
-    }
-  ],
-  "children": [
-    {
-      "name": "Categories",
-      "basisTable": "DocumentCategory",
-      "orderBy": [
-        {
-          "fieldName": "DocumentCategoryNumber"
-        }
-      ],
-      "filter": "DocumentCategoryParentID IsEmpty",
-      "parentField": "DocumentTypeID",
-      "childField": "DocumentCategoryDocumentTypeID",
-      "fields": [
-        {
-          "name": "DocumentCategoryID",
-          "basisColumn": "CategoryID"
-        },
-        {
-          "name": "DocumentCategoryDocumentTypeID",
-          "basisColumn": "DocumentTypeID"
-        },
-        {
-          "name": "DocumentCategoryParentID",
-          "basisColumn": "ParentID"
-        },
-        {
-          "name": "DocumentCategoryNumber",
-          "basisColumn": "Number"
-        }
-      ]
-    }
-  ]
+  "basisTable" : "DocumentType",
+  "limit" : 10,
+  "children" : [ {
+    "name" : "Categories",
+    "parentField" : "DocumentTypeID",
+    "filter" : "DocumentCategoryParentID IsEmpty",
+    "basisTable" : "DocumentCategory",
+    "childField" : "DocumentCategoryDocumentTypeID",
+    "fields" : [ {
+      "name" : "DocumentCategoryID",
+      "basisColumn" : "CategoryID"
+    }, {
+      "name" : "DocumentCategoryDocumentTypeID",
+      "basisColumn" : "DocumentTypeID"
+    }, {
+      "name" : "DocumentCategoryParentID",
+      "basisColumn" : "ParentID"
+    }, {
+      "name" : "DocumentCategoryNumber",
+      "basisColumn" : "Number"
+    } ],
+    "orderBy" : [ {
+      "fieldName" : "DocumentCategoryNumber"
+    } ]
+  } ],
+  "fields" : [ {
+    "name" : "DocumentTypeID",
+    "basisColumn" : "DocumentTypeID"
+  }, {
+    "name" : "DocumentTypeSlug",
+    "basisColumn" : "Slug"
+  }, {
+    "name" : "DocumentTypeClassType",
+    "basisColumn" : "ClassType"
+  }, {
+    "name" : "DocumentTypeDisplayOrder",
+    "basisColumn" : "DisplayOrder"
+  }, {
+    "name" : "DocumentTypeDescription",
+    "basisColumn" : "Description"
+  }, {
+    "name" : "DocumentTypeWorkflowID",
+    "basisColumn" : "WorkflowID"
+  }, {
+    "name" : "DocumentTypeHasMultiple",
+    "basisColumn" : "HasMultiple"
+  }, {
+    "name" : "DocumentTypeIsScheduled",
+    "basisColumn" : "IsScheduled"
+  } ],
+  "orderBy" : [ {
+    "fieldName" : "DocumentTypeID"
+  } ],
+  "steps" : [ {
+    "name" : "Workflow",
+    "join" : "Workflow",
+    "fields" : [ {
+      "name" : "DocumentTypeWorkflowName",
+      "basisColumn" : "Name"
+    } ]
+  } ]
 }
