@@ -88,10 +88,15 @@
       "export" : false
     }, {
       "name" : "name",
-      "basisColumn" : "Name"
+      "basisColumn" : "Name",
+      "export" : true
     }, {
       "name" : "ModelStepParentID",
       "basisColumn" : "ParentID",
+      "export" : false
+    }, {
+      "name" : "ModelStepJoinID",
+      "basisColumn" : "JoinID",
       "export" : false
     } ],
     "steps" : [ {
@@ -99,17 +104,20 @@
       "join" : "Parent",
       "fields" : [ {
         "name" : "parent",
-        "basisColumn" : "Name"
+        "basisColumn" : "Name",
+        "export" : true
       } ]
     }, {
       "name" : "Join",
       "join" : "Join",
       "fields" : [ {
         "name" : "join",
-        "basisColumn" : "Name"
+        "basisColumn" : "Name",
+        "export" : true
       }, {
         "name" : "ModelStepJoinFromTableID",
         "basisColumn" : "FromTableID",
+        "export" : false,
         "fieldDefault" : "ModelBasisTableID",
         "alwaysDefault" : true
       } ]

@@ -244,7 +244,11 @@ trait DataSaver extends DataReader {
       val matchingFieldName: String = row.model.fields.values.find { field =>
         val fieldTableAlias = if (field.step.isDefined) field.step.get.tableAlias else 0
         field.basisColumn == fieldNameOnDestinationTable && parentStep == fieldTableAlias
-      }.get.name
+      }.getOrElse(
+          throw new TantalimException(
+            s"Unable to find any field based on ${fieldNameOnDestinationTable.name} in Model ${row.model.name}",
+            s"Found matching for parent record in ${step.join.table.name} but can't update FK field. Found these fields though: ${row.model.fields.keys.mkString(", ")}")
+        ).name
       row.set(matchingFieldName, valueFromSourceTable)
 
       fieldNameOnDestinationTable -> valueFromSourceTable
