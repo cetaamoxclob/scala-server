@@ -34,23 +34,23 @@
     {
       "name": "UserAccountID",
       "basisColumn": "AccountID"
-    },
-    {
-      "name": "UserAccountName",
-      "basisColumn": "Name",
-      "step": "Account"
-    },
-    {
-      "name": "UserAccountStatus",
-      "basisColumn": "Status",
-      "step": "Account"
     }
   ],
   "filter": "UserIsGroup Equals 'No' AND UserAccountStatus Equals 'Active' AND UserIsActive Equals 'Yes' AND UserAccountID = 1100 AND UserLastName GreaterThan ''",
   "steps": [
     {
       "name": "Account",
-      "join": "Account"
+      "join": "Account",
+      "fields": [
+        {
+          "name": "UserAccountName",
+          "basisColumn": "Name"
+        },
+        {
+          "name": "UserAccountStatus",
+          "basisColumn": "Status"
+        }
+      ]
     }
   ],
   "children": [
@@ -76,20 +76,20 @@
         {
           "name": "UserGroupIDGroupID",
           "basisColumn": "GroupID"
-        },
-        {
-          "name": "UserGroupIDGroupName",
-          "basisColumn": "DisplayName",
-          "step": "Group"
         }
       ],
       "steps": [
         {
           "name": "Group",
-          "join": "Group"
+          "join": "Group",
+          "fields": [
+            {
+              "name": "UserGroupIDGroupName",
+              "basisColumn": "DisplayName"
+            }
+          ]
         }
       ]
     }
-
   ]
 }
