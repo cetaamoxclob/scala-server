@@ -1,95 +1,68 @@
 {
-  "basisTable": "PicsUser",
-  "limit": 20,
-  "orderBy": [
-    {
-      "fieldName": "UserLastName"
-    }
-  ],
-  "fields": [
-    {
-      "name": "UserID",
-      "basisColumn": "UserID"
-    },
-    {
-      "name": "UserIsActive",
-      "basisColumn": "IsActive"
-    },
-    {
-      "name": "UserIsGroup",
-      "basisColumn": "IsGroup"
-    },
-    {
-      "name": "UserDisplayName",
-      "basisColumn": "DisplayName"
-    },
-    {
-      "name": "UserFirstName",
-      "basisColumn": "FirstName"
-    },
-    {
-      "name": "UserLastName",
-      "basisColumn": "LastName"
-    },
-    {
-      "name": "UserAccountID",
-      "basisColumn": "AccountID"
-    }
-  ],
-  "filter": "UserIsGroup Equals 'No' AND UserAccountStatus Equals 'Active' AND UserIsActive Equals 'Yes' AND UserAccountID = 1100 AND UserLastName GreaterThan ''",
-  "steps": [
-    {
-      "name": "Account",
-      "join": "Account",
-      "fields": [
-        {
-          "name": "UserAccountName",
-          "basisColumn": "Name"
-        },
-        {
-          "name": "UserAccountStatus",
-          "basisColumn": "Status"
-        }
-      ]
-    }
-  ],
-  "children": [
-    {
-      "name": "Groups",
-      "basisTable": "PicsUserGroup",
-      "parentField": "UserID",
-      "childField": "UserGroupIDUserID",
-      "orderBy": [
-        {
-          "fieldName": "UserGroupIDGroupName"
-        }
-      ],
-      "fields": [
-        {
-          "name": "UserGroupID",
-          "basisColumn": "UserGroupID"
-        },
-        {
-          "name": "UserGroupIDUserID",
-          "basisColumn": "UserID"
-        },
-        {
-          "name": "UserGroupIDGroupID",
-          "basisColumn": "GroupID"
-        }
-      ],
-      "steps": [
-        {
-          "name": "Group",
-          "join": "Group",
-          "fields": [
-            {
-              "name": "UserGroupIDGroupName",
-              "basisColumn": "DisplayName"
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  "filter" : "UserIsGroup Equals 'No' AND UserAccountStatus Equals 'Active' AND UserIsActive Equals 'Yes' AND UserAccountID = 1100 AND UserLastName GreaterThan ''",
+  "basisTable" : "PicsUser",
+  "limit" : 20,
+  "children" : [ {
+    "name" : "Groups",
+    "parentField" : "UserID",
+    "basisTable" : "PicsUserGroup",
+    "childField" : "UserGroupIDUserID",
+    "fields" : [ {
+      "name" : "UserGroupID",
+      "basisColumn" : "UserGroupID"
+    }, {
+      "name" : "UserGroupIDUserID",
+      "basisColumn" : "UserID"
+    }, {
+      "name" : "UserGroupIDGroupID",
+      "basisColumn" : "GroupID"
+    } ],
+    "orderBy" : [ {
+      "fieldName" : "UserGroupIDGroupName"
+    } ],
+    "steps" : [ {
+      "name" : "Group",
+      "join" : "Group",
+      "fields" : [ {
+        "name" : "UserGroupIDGroupName",
+        "basisColumn": "DisplayName"
+      } ]
+    } ]
+  } ],
+  "fields" : [ {
+    "name" : "UserID",
+    "basisColumn" : "UserID"
+  }, {
+    "name" : "UserIsActive",
+    "basisColumn" : "IsActive"
+  }, {
+    "name" : "UserIsGroup",
+    "basisColumn" : "IsGroup"
+  }, {
+    "name" : "UserDisplayName",
+    "basisColumn" : "DisplayName"
+  }, {
+    "name" : "UserFirstName",
+    "basisColumn" : "FirstName"
+  }, {
+    "name" : "UserLastName",
+    "basisColumn" : "LastName"
+  }, {
+    "name" : "UserAccountID",
+    "basisColumn" : "AccountID"
+  } ],
+  "orderBy" : [ {
+    "fieldName" : "UserLastName"
+  } ],
+  "steps" : [ {
+    "name" : "Account",
+    "join" : "Account",
+    "fields" : [ {
+      "name" : "UserAccountName",
+      "basisColumn": "Name"
+    }, {
+      "name" : "UserAccountStatus",
+      "basisColumn": "Status"
+    } ]
+  } ]
 }
