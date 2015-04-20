@@ -25,7 +25,7 @@
       "join" : "Group",
       "fields" : [ {
         "name" : "UserGroupIDGroupName",
-        "basisColumn": "DisplayName"
+        "basisColumn" : "DisplayName"
       } ]
     } ]
   } ],
@@ -59,10 +59,10 @@
     "join" : "Account",
     "fields" : [ {
       "name" : "UserAccountName",
-      "basisColumn": "Name"
+      "basisColumn" : "Name"
     }, {
       "name" : "UserAccountStatus",
-      "basisColumn": "Status"
+      "basisColumn" : "Status"
     } ]
   } ]
 }
