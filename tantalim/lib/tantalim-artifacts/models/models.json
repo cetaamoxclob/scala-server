@@ -219,7 +219,8 @@
       "export" : false
     }, {
       "name" : "direction",
-      "basisColumn" : "Ascending"
+      "basisColumn" : "Ascending",
+      "export" : true
     }, {
       "name" : "ModelSortSortOrder",
       "basisColumn" : "SortOrder",
@@ -235,7 +236,8 @@
       "join" : "Field",
       "fields" : [ {
         "name" : "fieldName",
-        "basisColumn" : "Name"
+        "basisColumn" : "Name",
+        "export" : true
       }, {
         "name" : "ModelSortFieldModelID",
         "basisColumn" : "ModelID",
@@ -252,7 +254,8 @@
     "childField" : "ModelParentID",
     "fields" : [ {
       "name" : "name",
-      "basisColumn" : "Name"
+      "basisColumn" : "Name",
+      "export" : true
     } ]
   } ],
   "fields" : [ {
@@ -273,34 +276,44 @@
     "export" : false
   }, {
     "name" : "limit",
-    "basisColumn" : "Limit"
+    "basisColumn" : "Limit",
+    "export" : true
   }, {
     "name" : "filter",
-    "basisColumn" : "Filter"
+    "basisColumn" : "Filter",
+    "export" : true
   }, {
     "name" : "allowInsert",
-    "basisColumn" : "AllowInsert"
+    "basisColumn" : "AllowInsert",
+    "export" : true
   }, {
     "name" : "allowUpdate",
-    "basisColumn" : "AllowUpdate"
+    "basisColumn" : "AllowUpdate",
+    "export" : true
   }, {
     "name" : "allowDelete",
-    "basisColumn" : "AllowDelete"
+    "basisColumn" : "AllowDelete",
+    "export" : true
   }, {
     "name" : "parentField",
-    "basisColumn" : "ParentField"
+    "basisColumn" : "ParentField",
+    "export" : true
   }, {
     "name" : "childField",
-    "basisColumn" : "ChildField"
+    "basisColumn" : "ChildField",
+    "export" : true
   }, {
     "name" : "customUrlSource",
-    "basisColumn" : "CustomUrlSource"
+    "basisColumn" : "CustomUrlSource",
+    "export" : true
   }, {
     "name" : "extends",
-    "basisColumn" : "Extends"
+    "basisColumn" : "Extends",
+    "export" : true
   }, {
     "name" : "preSave",
-    "basisColumn" : "PreSave"
+    "basisColumn" : "PreSave",
+    "export" : true
   }, {
     "name" : "ModelBasisTableID",
     "basisColumn" : "BasisTableID",
@@ -311,7 +324,8 @@
     "join" : "BasisTable",
     "fields" : [ {
       "name" : "basisTable",
-      "basisColumn" : "Name"
+      "basisColumn" : "Name",
+      "export" : true
     } ]
   } ]
 }

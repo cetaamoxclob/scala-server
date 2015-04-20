@@ -84,7 +84,7 @@ case class ModelField(name: String,
                       fieldDefault: Option[String] = None,
                       functionDefault: Option[String] = None,
                       valueDefault: Option[String] = None,
-                      export: Boolean = true
+                      export: Boolean = false
                        ) {
   def dataType: DataType = basisColumn.dataType
 }
