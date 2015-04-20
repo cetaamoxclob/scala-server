@@ -4,12 +4,12 @@ import com.tantalim.nodes.{TntString, SmartNodeSet, SmartNodeInstance}
 import controllers.core.{PlayableDatabaseConnection, DataConverters}
 import com.tantalim.artifacts.compiler.ModelCompiler
 import com.tantalim.database.services.{DataSaver, DataReader}
-import com.tantalim.models.{ArtifactType, Model, ModelField}
+import com.tantalim.models.{Model, ModelField}
 import play.api.libs.json._
 
-class ArtifactImport(artifactType: ArtifactType) extends DataReader with DataSaver with ModelCompiler with PlayableDatabaseConnection {
+class ArtifactImport(artifactType: String) extends DataReader with DataSaver with ModelCompiler with PlayableDatabaseConnection {
 
-  val artifactWriter = compileModel("~" + artifactType.toString.toLowerCase)
+  val artifactWriter = compileModel(artifactType)
 
   def readFromSourceAndWriteToDatabase(module: String, artifactName: String) = {
     deleteExistingArtifactFromDatabase(artifactName)

@@ -4,11 +4,16 @@ import com.tantalim.artifacts.ArtifactService
 import com.tantalim.artifacts.json._
 import com.tantalim.models._
 import com.tantalim.util.TantalimException
-import play.api.libs.json.{JsError, JsSuccess}
+import play.api.libs.json.{JsResult, JsError, JsSuccess}
 
 import scala.collection.Seq
 
 trait PageCompiler extends ArtifactService with ModelCompiler {
+
+  private def getPage(name: String): JsResult[PageJson] = {
+    val artifactJson = getArtifactContentAndParseJson(PageCompiler.artifactName, name)
+    artifactJson.validate[PageJson]
+  }
 
   def compilePage(name: String): Page = {
     println("Compiling page " + name)
@@ -40,7 +45,7 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
 
   def compileShallowPage(name: String): ShallowPage = {
     println("Compiling shallow page " + name)
-    val json = getArtifactContentAndParseJson(ArtifactType.Page, name)
+    val json = getArtifactContentAndParseJson(PageCompiler.artifactName, name)
     json.validate[PageJson] match {
       case JsSuccess(pageJson, _) =>
         new ShallowPage(
@@ -195,4 +200,8 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
     )
   }
 
+}
+
+object PageCompiler {
+  val artifactName = "pages"
 }

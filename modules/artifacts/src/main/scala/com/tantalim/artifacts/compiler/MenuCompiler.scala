@@ -1,12 +1,18 @@
 package com.tantalim.artifacts.compiler
 
-import com.tantalim.artifacts.json.{MenuContentJson, MenuItemJson}
+import com.tantalim.artifacts.json.{MenuJson, MenuContentJson, MenuItemJson}
 import com.tantalim.artifacts.{ArtifactService, MissingArtifactException}
 import com.tantalim.models._
 import com.tantalim.util.TantalimException
-import play.api.libs.json.{JsError, JsSuccess}
+import play.api.libs.json.{JsResult, JsError, JsSuccess}
 
 trait MenuCompiler extends ArtifactService with PageCompiler {
+
+  private def getMenu(name: String): JsResult[MenuJson] = {
+    val artifactJson = getArtifactContentAndParseJson(MenuCompiler.artifactName, name)
+    artifactJson.validate[MenuJson]
+  }
+
   def compileMenu(name: String): Menu = {
     println("Compiling menu " + name)
 
@@ -57,4 +63,8 @@ trait MenuCompiler extends ArtifactService with PageCompiler {
   }
 
 
+}
+
+object MenuCompiler {
+  val artifactName = "menus"
 }

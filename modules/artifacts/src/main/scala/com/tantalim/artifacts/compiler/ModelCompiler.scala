@@ -12,7 +12,7 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
 
   def compileModel(name: String): Model = {
     //    println("Compiling model set " + name)
-    val json = getArtifactContentAndParseJson(ArtifactType.Model, name)
+    val json = getArtifactContentAndParseJson(ModelCompiler.artifactName, name)
     json.validate[ModelJson] match {
       case JsSuccess(modelJson, _) =>
         compileModelView(modelJson.copy(name = Option(name)), None)
@@ -250,6 +250,8 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
 }
 
 object ModelCompiler {
+  val artifactName = "models"
+
   def findStepByName(stepName: String, steps: Seq[ModelStep]): ModelStep = {
     steps.find(step => step.name == stepName).getOrElse(
       throw new TantalimException(s"Can't find step `$stepName`", s"Existing steps are: ${steps.mkString(", ")}")

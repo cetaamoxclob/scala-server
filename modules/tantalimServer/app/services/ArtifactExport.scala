@@ -6,14 +6,14 @@ import java.nio.file.{FileSystems, Files, StandardOpenOption}
 import com.tantalim.artifacts.ArtifactService
 import com.tantalim.artifacts.compiler.ModelCompiler
 import com.tantalim.database.services.{DataReader, DataSaver}
-import com.tantalim.models.{ArtifactType, Module}
+import com.tantalim.models.Module
 import com.tantalim.nodes._
 import com.tantalim.util.TantalimException
 import controllers.core.PlayableDatabaseConnection
 import play.api.libs.json._
 
-class ArtifactExport(artifactType: ArtifactType) extends DataReader with DataSaver with ModelCompiler with PlayableDatabaseConnection {
-  val artifactReader = compileModel("~" + artifactType.toString.toLowerCase)
+class ArtifactExport(artifactType: String) extends DataReader with DataSaver with ModelCompiler with PlayableDatabaseConnection {
+  val artifactReader = compileModel(artifactType)
 
   def readFromDatabaseAndWriteToSource(module: String, artifactName: String) = {
     val artifactInstance = getArtifactInstanceFromDatabase(artifactName)
@@ -47,7 +47,7 @@ class ArtifactExport(artifactType: ArtifactType) extends DataReader with DataSav
         "Create it in " + new File(moduleDirLocation).getAbsolutePath)
     }
 
-    val artifactTypeLocation = moduleDirLocation + "/" + artifactType.getDirectory
+    val artifactTypeLocation = moduleDirLocation + "/" + artifactType
     val artifactTypeFile = new File(artifactTypeLocation)
     if (!artifactTypeFile.exists()) {
       artifactTypeFile.mkdir()

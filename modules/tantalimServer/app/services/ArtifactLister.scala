@@ -3,8 +3,9 @@ package services
 import java.io.File
 
 import com.tantalim.artifacts.ArtifactService
-import com.tantalim.models.{Module, ArtifactType}
-import play.api.libs.json.{JsObject, JsNumber, Json}
+import com.tantalim.artifacts.compiler.{MenuCompiler, ModelCompiler, PageCompiler, TableCompiler}
+import com.tantalim.models.Module
+import play.api.libs.json.{JsNumber, JsObject, Json}
 
 import scala.collection.immutable.TreeMap
 
@@ -35,8 +36,12 @@ trait ArtifactLister {
   }
 
   private def getArtifactsByDir(moduleDir: File): Map[String, List[String]] = {
-    ArtifactType.values().map { artifactType: ArtifactType =>
-      val typeDir = new File(moduleDir.getAbsolutePath + "/" + artifactType.getDirectory)
+    // Maybe we should just read the directory for the list??
+    val artifactTypes = Seq(TableCompiler.artifactName, ModelCompiler.artifactName,
+      PageCompiler.artifactName, MenuCompiler.artifactName)
+
+    artifactTypes.map { artifactType: String =>
+      val typeDir = new File(moduleDir.getAbsolutePath + "/" + artifactType)
       val artifacts: List[String] = if (typeDir.isDirectory) {
         typeDir.listFiles().map { file =>
           file.getName.replace(".json", "")

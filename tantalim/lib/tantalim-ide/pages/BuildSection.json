@@ -142,7 +142,7 @@
     } ],
     "buttons" : [ {
       "label" : "Export Page",
-      "fxn" : "var row = section.getCurrentSet().getInstance();\nvar page = row.getValue('SectionPage');\nvar moduleName = row.getValue('SectionPageModule');\n$scope.Logger.log('Exporting...');\n$scope.$http.post('/export/' + moduleName + '/Page/' + page).success(function(data) {\n  $scope.Logger.log(data.message)\n});"
+      "fxn" : "var row = section.getCurrentSet().getInstance();\nvar page = row.getValue('SectionPage');\nvar moduleName = row.getValue('SectionPageModule');\n$scope.Logger.log('Exporting...');\n$scope.$http.post('/export/' + moduleName + '/pages/' + page).success(function(data) {\n  $scope.Logger.log(data.message)\n});"
     }, {
       "label" : "Test",
       "fxn" : "var row = section.getCurrentSet().getInstance();\nvar page = row.getValue('SectionPage');\nvar url = \"/page/\" + page + '/';\nwindow.open(url);"

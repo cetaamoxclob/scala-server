@@ -1,0 +1,78 @@
+{
+  "basisTable" : "Workflow",
+  "limit" : 10,
+  "children" : [ {
+    "name" : "WorkflowState",
+    "parentField" : "WorkflowID",
+    "basisTable" : "WorkflowState",
+    "childField" : "WorkflowStateWorkflowID",
+    "fields" : [ {
+      "name" : "WorkflowStateStateID",
+      "basisColumn" : "StateID"
+    }, {
+      "name" : "WorkflowStateWorkflowID",
+      "basisColumn" : "WorkflowID"
+    }, {
+      "name" : "WorkflowStateStatus",
+      "basisColumn" : "Status"
+    }, {
+      "name" : "WorkflowStateHasRequirements",
+      "basisColumn" : "HasRequirements"
+    }, {
+      "name" : "WorkflowStateContractorCanEdit",
+      "basisColumn" : "ContractorCanEdit"
+    }, {
+      "name" : "WorkflowStateOperatorCanEdit",
+      "basisColumn" : "OperatorCanEdit"
+    } ]
+  }, {
+    "name" : "WorkflowStep",
+    "parentField" : "WorkflowID",
+    "basisTable" : "WorkflowStep",
+    "childField" : "WorkflowStepWorkflowID",
+    "fields" : [ {
+      "name" : "WorkflowStepStepID",
+      "basisColumn" : "StepID"
+    }, {
+      "name" : "WorkflowStepWorkflowID",
+      "basisColumn" : "WorkflowID"
+    }, {
+      "name" : "WorkflowStepOldStatus",
+      "basisColumn" : "OldStatus"
+    }, {
+      "name" : "WorkflowStepNewStatus",
+      "basisColumn" : "NewStatus"
+    }, {
+      "name" : "WorkflowStepEmailTemplateID",
+      "basisColumn" : "EmailTemplateID"
+    }, {
+      "name" : "WorkflowStepNoteRequired",
+      "basisColumn" : "NoteRequired"
+    } ]
+  }, {
+    "name" : "DocumentType",
+    "parentField" : "WorkflowID",
+    "basisTable" : "DocumentType",
+    "childField" : "DocumentTypeWorkflowID",
+    "fields" : [ {
+      "name" : "DocumentTypeID",
+      "basisColumn" : "DocumentTypeID"
+    }, {
+      "name" : "DocumentTypeWorkflowID",
+      "basisColumn" : "WorkflowID"
+    }, {
+      "name" : "DocumentTypeSlug",
+      "basisColumn" : "Slug"
+    } ]
+  } ],
+  "fields" : [ {
+    "name" : "WorkflowID",
+    "basisColumn" : "WorkflowID"
+  }, {
+    "name" : "WorkflowName",
+    "basisColumn" : "Name"
+  }, {
+    "name" : "WorkflowHasRequirements",
+    "basisColumn" : "HasRequirements"
+  } ]
+}

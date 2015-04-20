@@ -5,8 +5,7 @@ import java.nio.charset.StandardCharsets
 
 import com.google.common.base.Charsets
 import com.google.common.io.Files
-import com.tantalim.artifacts.json.{MenuJson, ModelJson, PageJson, TableJson}
-import com.tantalim.models.{ArtifactStub, ArtifactType, Module}
+import com.tantalim.models.Module
 import com.tantalim.util.TantalimException
 import play.api.Play
 import play.api.Play.current
@@ -16,8 +15,8 @@ trait ArtifactService {
 
   case class SourceLocation(filePath: String, module: String)
 
-  private def getSourceLocation(artifactType: ArtifactType, name: String): SourceLocation = {
-    val fileNameAndPartialDirLocation = artifactType.getDirectory + "/" + name + ".json"
+  private def getSourceLocation(artifactType: String, name: String): SourceLocation = {
+    val fileNameAndPartialDirLocation = artifactType + "/" + name + ".json"
     val srcDir = ArtifactService.tantalimRoot + "/src/" + fileNameAndPartialDirLocation
     if (fileExists(srcDir)) SourceLocation(srcDir, Module.default)
     else {
@@ -46,7 +45,7 @@ trait ArtifactService {
     f.exists() && f.isFile
   }
 
-  def getArtifactContentAndParseJson(artifactType: ArtifactType, name: String): JsValue = {
+  def getArtifactContentAndParseJson(artifactType: String, name: String): JsValue = {
     val sourceLocation = getSourceLocation(artifactType, name)
     val artifactContent = Files.toString(Play.getFile(sourceLocation.filePath), Charsets.UTF_8)
 
@@ -63,54 +62,6 @@ trait ArtifactService {
       )
     }
   }
-
-  def getMenu(name: String): JsResult[MenuJson] = {
-    val artifactJson = getArtifactContentAndParseJson(ArtifactType.Menu, name)
-    artifactJson.validate[MenuJson]
-  }
-
-  def getPage(name: String): JsResult[PageJson] = {
-    val artifactJson = getArtifactContentAndParseJson(ArtifactType.Page, name)
-    artifactJson.validate[PageJson]
-  }
-
-  def getModel(name: String): JsResult[ModelJson] = {
-    val artifactJson = getArtifactContentAndParseJson(ArtifactType.Model, name)
-    artifactJson.validate[ModelJson]
-  }
-
-  def getTable(name: String): JsResult[TableJson] = {
-    val artifactJson = getArtifactContentAndParseJson(ArtifactType.Table, name)
-    artifactJson.validate[TableJson]
-  }
-
-  @deprecated
-  def findArtifacts: Seq[ArtifactStub] = {
-    def artifactName(rootPath: String, filePath: String): String = {
-      filePath.replace(rootPath, "").replace(".json", "").replace("/", "")
-    }
-
-    def getArtifactsFromDir(moduleLocation: String, artifactType: ArtifactType, moduleName: Option[String]): Seq[ArtifactStub] = {
-      val artifactDir = new File(moduleLocation + "/" + artifactType.getDirectory)
-      if (artifactDir.isDirectory) {
-        artifactDir.listFiles().map(f =>
-          ArtifactStub(artifactType, artifactName(artifactDir.getAbsolutePath, f.getCanonicalPath), moduleName.getOrElse(Module.default))
-        )
-      } else Seq.empty
-    }
-
-    ArtifactType.values().flatMap { artifactType: ArtifactType =>
-      val localFiles = getArtifactsFromDir(ArtifactService.tantalimRoot + "/src", artifactType, None)
-
-      new File(ArtifactService.tantalimRoot + "/lib/").listFiles().foldLeft(localFiles) { (acc, libDir) =>
-        if (libDir.isDirectory) {
-          val localFiles = getArtifactsFromDir(libDir.getCanonicalPath, artifactType, Some(libDir.getName))
-          acc ++ localFiles
-        } else acc
-      }
-    }.toSeq
-  }
-
 }
 
 object ArtifactService {

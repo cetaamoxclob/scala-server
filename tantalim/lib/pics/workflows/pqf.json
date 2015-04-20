@@ -6,13 +6,13 @@
       "status": "Complete",
       "hasRequirements": false,
       "contractorCanEdit": false,
-      "operatorCanEdit": false
-    },
-    {
-      "status": "Incomplete",
-      "hasRequirements": false,
-      "contractorCanEdit": false,
-      "operatorCanEdit": false
+      "operatorCanEdit": false,
+      "name": [
+        {
+          "locale": "en",
+          "value": "Complete"
+        }
+      ]
     }
   ],
   "steps": [
@@ -20,11 +20,6 @@
       "newStatus": "Pending",
       "emailTemplateID": 12,
       "noteRequired": false
-    },
-    {
-      "oldStatus": "Pending",
-      "newStatus": "Submitted",
-      "noteRequired": true
     }
   ]
 }

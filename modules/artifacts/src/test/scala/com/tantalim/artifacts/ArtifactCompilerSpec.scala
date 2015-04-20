@@ -1,6 +1,6 @@
 package com.tantalim.artifacts
 
-import com.tantalim.artifacts.compiler.{MenuCompiler, ModelCompiler}
+import com.tantalim.artifacts.compiler.{TableCompiler, MenuCompiler, ModelCompiler}
 import com.tantalim.models._
 import org.junit.runner._
 import org.specs2.mutable._
@@ -18,7 +18,7 @@ class ArtifactCompilerSpec extends Specification with FakeArtifacts {
   "ArtifactCompiler" should {
     "compile the Default menu" in {
       trait ArtifactServiceMock extends ArtifactService {
-        override def getArtifactContentAndParseJson(artifactType: ArtifactType, name: String): JsValue =
+        override def getArtifactContentAndParseJson(artifactType: String, name: String): JsValue =
           Json.parse( """
 {
   "appTitle": "Test App",
@@ -34,18 +34,16 @@ class ArtifactCompilerSpec extends Specification with FakeArtifacts {
 
     "compile the simple model" in {
       trait ArtifactServiceMock extends ArtifactService {
-        override def getArtifactContentAndParseJson(artifactType: ArtifactType, name: String): JsValue = {
+        override def getArtifactContentAndParseJson(artifactType: String, name: String): JsValue = {
           artifactType match {
-            case ArtifactType.Menu => Json.parse("{}")
-            case ArtifactType.Page => Json.parse("{}")
-            case ArtifactType.Table => Json.parse( """
+            case TableCompiler.artifactName => Json.parse( """
 {
   "dbName": "tbl_person",
   "columns": [{
     "name": "PersonID", "dbName": "person_id"
   }]
 }""")
-            case ArtifactType.Model => Json.parse( """
+            case ModelCompiler.artifactName => Json.parse( """
 {
   "basisTable": "Person",
   "fields": [{
@@ -53,7 +51,7 @@ class ArtifactCompilerSpec extends Specification with FakeArtifacts {
     "basisColumn": "PersonID"
   }]
 }""")
-
+            case _ => Json.parse("{}")
           }
         }
       }

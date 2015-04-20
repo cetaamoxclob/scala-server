@@ -189,7 +189,7 @@
     } ],
     "buttons" : [ {
       "label" : "Export",
-      "fxn" : "var row = section.getCurrentSet().getInstance();\nvar model = row.getValue('ModelName');\nvar moduleName = row.getValue('ModelModule');\n$scope.Logger.info('Exporting...');\n$scope.$http.post('/export/' + moduleName + '/Model/' + model).success(function(data) { $scope.Logger.info(data.message) });"
+      "fxn" : "var row = section.getCurrentSet().getInstance();\nvar model = row.getValue('ModelName');\nvar moduleName = row.getValue('ModelModule');\n$scope.Logger.info('Exporting...');\n$scope.$http.post('/export/' + moduleName + '/models/' + model).success(function(data) { $scope.Logger.info(data.message) });"
     }, {
       "label" : "Test",
       "fxn" : "var row = section.getCurrentSet().getInstance();\nvar model = row.getValue('ModelName');\nvar url = \"/data/\" + model;\nwindow.open(url);"

@@ -50,6 +50,10 @@
           "filter" : "DocumentTypeSlug Equals \"${DocumentTypeSlug}\""
         } ]
       } ]
+    } ],
+    "buttons" : [ {
+      "label" : "Export",
+      "fxn" : "var row = section.getCurrentSet().getInstance();\nvar id = row.getValue('WorkflowID');\n$scope.Logger.info('Exporting Workflow ID = ' + id + ' ...');\n$scope.$http.post('/export/pics/workflows/' + id).success(function(data) { $scope.Logger.info(data.message) });"
     } ]
   } ]
 }

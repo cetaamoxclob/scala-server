@@ -2,7 +2,6 @@ package controllers
 
 import com.tantalim.artifacts.compiler.TableCompiler
 import com.tantalim.database.data.SqlBuilder
-import com.tantalim.models.ArtifactType
 import com.tantalim.nodes.DataState
 import com.tantalim.util.{LoginStrategyType, TantalimException, Timer}
 import play.api.libs.json._
@@ -42,7 +41,7 @@ object Application extends Controller with Timer {
   def importArtifact(module: String, artifactType: String, name: String) = Action {
     timer("importArtifact") {
       try {
-        val tableImport = new ArtifactImport(ArtifactType.valueOf(artifactType))
+        val tableImport = new ArtifactImport(artifactType)
         val result = tableImport.readFromSourceAndWriteToDatabase(module, name)
         val message = if (result.state == DataState.Done) {
           Json.obj(
@@ -77,7 +76,7 @@ object Application extends Controller with Timer {
 
   def exportArtifact(module: String, artifactType: String, name: String) = Action {
     try {
-      val tableExport = new ArtifactExport(ArtifactType.valueOf(artifactType))
+      val tableExport = new ArtifactExport(artifactType)
       tableExport.readFromDatabaseAndWriteToSource(module, name)
       Ok(Json.obj(
         "status" -> "success",
