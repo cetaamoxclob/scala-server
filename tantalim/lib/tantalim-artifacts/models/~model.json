@@ -70,7 +70,9 @@
         "fields" : [ {
           "name" : "StepFieldBasisColumnTableID",
           "basisColumn" : "TableID",
-          "export" : false
+          "export" : false,
+          "fieldDefault" : "ModelStepJoinToTableID",
+          "alwaysDefault" : true
         }, {
           "name" : "basisColumn",
           "basisColumn" : "Name",
@@ -120,6 +122,10 @@
         "export" : false,
         "fieldDefault" : "ModelBasisTableID",
         "alwaysDefault" : true
+      }, {
+        "name" : "ModelStepJoinToTableID",
+        "basisColumn" : "ToTableID",
+        "export" : false
       } ]
     } ]
   }, {
@@ -135,35 +141,45 @@
     }, {
       "name" : "ModelFieldModelID",
       "basisColumn" : "ModelID",
-      "export" : false
+      "export" : false,
+      "fieldDefault" : "ModelID",
+      "alwaysDefault" : true
     }, {
       "name" : "name",
-      "basisColumn" : "Name"
+      "basisColumn" : "Name",
+      "export" : true
     }, {
       "name" : "updateable",
-      "basisColumn" : "Updateable"
+      "basisColumn" : "Updateable",
+      "export" : true
     }, {
       "name" : "ModelFieldStepID",
       "basisColumn" : "StepID",
       "export" : false
     }, {
       "name" : "required",
-      "basisColumn" : "Required"
+      "basisColumn" : "Required",
+      "export" : true
     }, {
       "name" : "alwaysDefault",
-      "basisColumn" : "AlwaysDefault"
+      "basisColumn" : "AlwaysDefault",
+      "export" : true
     }, {
       "name" : "fieldDefault",
-      "basisColumn" : "FieldDefault"
+      "basisColumn" : "FieldDefault",
+      "export" : true
     }, {
       "name" : "valueDefault",
-      "basisColumn" : "ValueDefault"
+      "basisColumn" : "ValueDefault",
+      "export" : true
     }, {
       "name" : "functionDefault",
-      "basisColumn" : "FunctionDefault"
+      "basisColumn" : "FunctionDefault",
+      "export" : true
     }, {
       "name" : "export",
-      "basisColumn" : "Export"
+      "basisColumn" : "Export",
+      "export" : true
     }, {
       "name" : "ModelFieldBasisColumnID",
       "basisColumn" : "BasisColumnID",
@@ -174,7 +190,8 @@
       "join" : "Column",
       "fields" : [ {
         "name" : "basisColumn",
-        "basisColumn" : "Name"
+        "basisColumn" : "Name",
+        "export" : true
       }, {
         "name" : "basisColumnTableID",
         "basisColumn" : "TableID",
