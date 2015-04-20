@@ -16,44 +16,56 @@
       "export" : false
     }, {
       "name" : "name",
-      "basisColumn" : "Name"
+      "basisColumn" : "Name",
+      "export" : true
     }, {
       "name" : "required",
-      "basisColumn" : "Required"
+      "basisColumn" : "Required",
+      "export" : true
     }, {
       "name" : "dataType",
-      "basisColumn" : "DataType"
+      "basisColumn" : "DataType",
+      "export" : true
     }, {
       "name" : "DisplayOrder",
       "basisColumn" : "DisplayOrder",
       "export" : false
     }, {
       "name" : "dbName",
-      "basisColumn" : "SQL"
+      "basisColumn" : "SQL",
+      "export" : true
     }, {
       "name" : "updateable",
-      "basisColumn" : "Updateable"
+      "basisColumn" : "Updateable",
+      "export" : true
     }, {
       "name" : "label",
-      "basisColumn" : "Label"
+      "basisColumn" : "Label",
+      "export" : true
     }, {
       "name" : "fieldType",
-      "basisColumn" : "FieldType"
+      "basisColumn" : "FieldType",
+      "export" : true
     }, {
       "name" : "help",
-      "basisColumn" : "Help"
+      "basisColumn" : "Help",
+      "export" : true
     }, {
       "name" : "placeholder",
-      "basisColumn" : "Placeholder"
+      "basisColumn" : "Placeholder",
+      "export" : true
     }, {
       "name" : "length",
-      "basisColumn" : "Length"
+      "basisColumn" : "Length",
+      "export" : true
     }, {
       "name" : "columnDefault",
-      "basisColumn" : "ColumnDefault"
+      "basisColumn" : "ColumnDefault",
+      "export" : true
     }, {
       "name" : "visible",
-      "basisColumn" : "Visible"
+      "basisColumn" : "Visible",
+      "export" : true
     } ],
     "orderBy" : [ {
       "fieldName" : "DisplayOrder"
@@ -80,13 +92,16 @@
         "export" : false
       }, {
         "name" : "from",
-        "basisColumn" : "FromColumn"
+        "basisColumn" : "FromColumn",
+        "export" : true
       }, {
         "name" : "to",
-        "basisColumn" : "ToColumn"
+        "basisColumn" : "ToColumn",
+        "export" : true
       }, {
         "name" : "fromText",
-        "basisColumn" : "FromText"
+        "basisColumn" : "FromText",
+        "export" : true
       } ]
     } ],
     "fields" : [ {
@@ -99,13 +114,16 @@
       "export" : false
     }, {
       "name" : "table",
-      "basisColumn" : "ToTableName"
+      "basisColumn" : "ToTableName",
+      "export" : true
     }, {
       "name" : "name",
-      "basisColumn" : "Name"
+      "basisColumn" : "Name",
+      "export" : true
     }, {
       "name" : "required",
-      "basisColumn" : "Required"
+      "basisColumn" : "Required",
+      "export" : true
     } ]
   }, {
     "name" : "indexes",
@@ -133,24 +151,24 @@
         "name" : "IndexColumnColumnID",
         "basisColumn" : "ColumnID",
         "export" : false
-      }, {
-        "name" : "IndexColumnColumnTableID",
-        "step" : "Column",
-        "basisColumn" : "TableID",
-        "export" : false,
-        "fieldDefault" : "TableID",
-        "alwaysDefault" : true
-      }, {
-        "name" : "name",
-        "step" : "Column",
-        "basisColumn" : "Name"
       } ],
       "orderBy" : [ {
         "fieldName" : "IndexColumnOrder"
       } ],
       "steps" : [ {
         "name" : "Column",
-        "join" : "Column"
+        "join" : "Column",
+        "fields" : [ {
+          "name" : "IndexColumnColumnTableID",
+          "basisColumn" : "TableID",
+          "export" : false,
+          "fieldDefault" : "TableID",
+          "alwaysDefault" : true
+        }, {
+          "name" : "name",
+          "basisColumn" : "Name",
+          "export" : true
+        } ]
       } ]
     } ],
     "fields" : [ {
@@ -184,9 +202,11 @@
     "export" : false
   }, {
     "name" : "dbName",
-    "basisColumn" : "SQL"
+    "basisColumn" : "SQL",
+    "export" : true
   }, {
     "name" : "primaryKey",
-    "basisColumn" : "PrimaryKey"
+    "basisColumn" : "PrimaryKey",
+    "export" : true
   } ]
 }
