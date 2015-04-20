@@ -1,61 +1,41 @@
 {
-  "title": "Manage Document Types",
-  "sections": [
-    {
-      "name": "DocumentTypes",
-      "title": "Document Types",
-      "fields": [
-        {
-          "name": "DocumentTypeID"
-        },
-        {
-          "name": "DocumentTypeSlug"
-        },
-        {
-          "name": "DocumentTypeClassType"
-        },
-        {
-          "name": "DocumentTypeDisplayOrder"
-        },
-        {
-          "name": "DocumentTypeDescription"
-        },
-        {
-          "name": "DocumentTypeWorkflowName",
-          "label": "Workflow",
-          "links": [
-            {
-              "page": "ManageWorkflows",
-              "filter": "WorkflowID Equals ${DocumentTypeWorkflowID}"
-            }
-          ]
-        },
-        {
-          "name": "DocumentTypeHasMultiple"
-        },
-        {
-          "name": "DocumentTypeIsScheduled"
-        }
-      ],
-      "sections": [
-        {
-          "name": "Categories",
-          "viewMode": "table",
-          "title": "Categories",
-          "fields": [
-            {
-              "name": "DocumentCategoryNumber",
-              "links": [
-                {
-                  "page": "ManageCategories",
-                  "filter": "CategoryID Equals ${DocumentCategoryID}"
-                }
-              ]
-            }
-          ]
-        }
-
-      ]
-    }
-  ]
+  "title" : "Manage Document Types",
+  "sections" : [ {
+    "name" : "DocumentTypes",
+    "title" : "Document Types",
+    "fields" : [ {
+      "name" : "DocumentTypeID"
+    }, {
+      "name" : "DocumentTypeSlug"
+    }, {
+      "name" : "DocumentTypeClassType"
+    }, {
+      "name" : "DocumentTypeDisplayOrder"
+    }, {
+      "name" : "DocumentTypeDescription"
+    }, {
+      "name" : "DocumentTypeWorkflowName",
+      "label" : "Workflow",
+      "links" : [ {
+        "page" : "ManageWorkflows",
+        "filter" : "WorkflowID Equals ${DocumentTypeWorkflowID}"
+      } ]
+    }, {
+      "name" : "DocumentTypeHasMultiple"
+    }, {
+      "name" : "DocumentTypeIsScheduled"
+    } ],
+    "sections" : [ {
+      "viewMode" : "table",
+      "name" : "Categories",
+      "title" : "Categories",
+      "fields" : [ {
+        "name" : "DocumentCategoryNumber",
+        "links" : [ {
+          "page" : "ManageCategories",
+          "filter" : "CategoryID Equals ${DocumentCategoryID}"
+        } ]
+      } ]
+    } ]
+  } ]
 }

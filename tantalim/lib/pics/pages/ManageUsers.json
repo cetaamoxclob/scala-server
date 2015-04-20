@@ -1,47 +1,34 @@
 {
-  "title": "Manage Users",
-  "sections": [
-    {
-      "name": "ManageUsers",
-      "viewMode": "form",
-      "title": "Users",
-      "fields": [
-        {
-          "name": "UserLastName",
-          "showInNavigation": true
-        },
-        {
-          "name": "UserFirstName",
-          "showInNavigation": true
-        },
-        {
-          "name": "UserDisplayName",
-          "showInTableMode": false,
-          "disabled": true
-        },
-        {
-          "name": "UserAccountName",
-          "label": "Account Name",
-          "disabled": true
-        },
-        {
-          "name": "UserIsActive"
-        }
-      ],
-      "sections": [
-        {
-          "name": "Groups",
-          "viewMode": "table",
-          "title": "Roles",
-          "fields": [
-            {
-              "name": "UserGroupIDGroupName",
-              "label": "Role Name",
-              "disabled": true
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  "title" : "Manage Users",
+  "sections" : [ {
+    "viewMode" : "form",
+    "name" : "ManageUsers",
+    "title" : "Users",
+    "fields" : [ {
+      "name" : "UserLastName",
+      "showInNavigation" : true
+    }, {
+      "name" : "UserFirstName",
+      "showInNavigation" : true
+    }, {
+      "name" : "UserDisplayName",
+      "disabled" : true
+    }, {
+      "name" : "UserAccountName",
+      "label" : "Account Name",
+      "disabled" : true
+    }, {
+      "name" : "UserIsActive"
+    } ],
+    "sections" : [ {
+      "viewMode" : "table",
+      "name" : "Groups",
+      "title" : "Roles",
+      "fields" : [ {
+        "name" : "UserGroupIDGroupName",
+        "label" : "Role Name",
+        "disabled" : true
+      } ]
+    } ]
+  } ]
 }
