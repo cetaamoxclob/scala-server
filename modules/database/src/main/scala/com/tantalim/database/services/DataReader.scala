@@ -92,10 +92,7 @@ trait DataReader extends DatabaseConnection {
 
   private def convertResultSetToDataRows(model: Model, rs: ResultSet) = {
     val resultBuilder = new SmartNodeSet(model)
-    var done = 0
-    while (rs.next() && done < 10000) {
-      println("convertResultSetToDataRows")
-      done = done + 1
+    while (rs.next()) {
       val newInstance = resultBuilder.insert
       model.fields.foreach {
         case (fieldName, f) =>
