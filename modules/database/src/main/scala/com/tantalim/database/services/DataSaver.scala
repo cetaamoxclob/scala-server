@@ -172,6 +172,7 @@ trait DataSaver extends DataReader {
                                 step: ModelStep,
                                 parentStep: Int,
                                 dbConnection: Connection): Map[TableColumn, TntValue] = {
+    println("Starting processStepValues for " + row.model.name + " " + row.data)
 
     if (step.parentAlias != parentStep) return Map.empty
 
@@ -181,7 +182,9 @@ trait DataSaver extends DataReader {
     val valueMap = getValuesForTable(row, Some(step))
     if (valueMap.isEmpty) return Map.empty
 
-    println(s"Has values for step ${step.join.table.name} with $valueMap")
+    println(s"Has values for step ${step.join.table.name} with ${valueMap.map(v => v._1.name -> v._2)}")
+
+    // I'm not sure what this next section is for??
     step.join.table.columns.values.foreach { column =>
       val matchingField = modelFields.find { matchingField =>
         matchingField.basisColumn == column
@@ -218,23 +221,49 @@ trait DataSaver extends DataReader {
       results
     }
 
-    val existingForeignKeyRow: Map[TableColumn, TntValue] = if (results.isEmpty) {
-      if (step.allowInsert) {
-        // TODO Insert new row
-        Map.empty
+    val existingForeignKeyRow: Map[TableColumn, TntValue] = {
+      if (results.isEmpty) {
+        if (step.allowInsert) {
+          // TODO Insert new row
+          Map.empty
+        } else {
+          //                throw new TantalimException("Foreign key doesn't exist and step doesn't allow insert", "")
+          Map.empty
+        }
       } else {
-        //                throw new TantalimException("Foreign key doesn't exist and step doesn't allow insert", "")
-        Map.empty
+        val fkRow = results.rows.head
+        if (step.allowUpdate) {
+          // TODO Update existing row
+        }
+        step.join.table.columns.values.map { column =>
+          column -> fkRow.get(column.name).get
+        }.toMap
       }
-    } else {
-      val row = results.rows.head
-      if (step.allowUpdate) {
-        // TODO Update existing row
-      }
-      step.join.table.columns.values.map { column =>
-        column -> row.get(column.name).get
-      }.toMap
     }
+
+    if (existingForeignKeyRow.isEmpty) {
+      // TODO see if we need to throw exception every time
+      throw new TantalimException("Failed to find matching parent row", "Not sure if this is important all the time...")
+    }
+
+    existingForeignKeyRow.foreach { case (fkColumn, fkValue) =>
+//      println("Found ForeignKey value for " + fkColumn)
+      val matchingField = modelFields.find { matchingField =>
+//        println("    " + matchingField)
+        matchingField.basisColumn == fkColumn
+      }
+
+      if (matchingField.isDefined) {
+        println(s"  Updating ${matchingField.get.name} with $fkValue")
+        row.set(matchingField.get.name, fkValue)
+
+        val allMatches = modelFields.filter(f => f.basisColumn == fkColumn)
+        if (allMatches.size > 1) {
+          println("WARN - Found more than 1 " + allMatches)
+        }
+      }
+    }
+
 
     val newValues: Map[TableColumn, TntValue] = step.join.columns.filter(joinColumn => joinColumn.from.isDefined).map { joinColumn =>
       val fieldNameOnSourceTable = joinColumn.to
@@ -253,6 +282,8 @@ trait DataSaver extends DataReader {
 
       fieldNameOnDestinationTable -> valueFromSourceTable
     }.toMap
+
+    println("Finished processStepValues for " + row.model.name + " " + row.data)
     newValues
   }
 
@@ -297,7 +328,7 @@ trait DataSaver extends DataReader {
       val defaultValue = field.fieldDefault.get
       val valueFromDefaultField = row.get(defaultValue)
       if (valueFromDefaultField.isEmpty) {
-        println("row has no value for " + defaultValue)
+        println("WARNING: row has no value for field " + defaultValue)
       }
       valueFromDefaultField
     } else if (field.valueDefault.isDefined) {
