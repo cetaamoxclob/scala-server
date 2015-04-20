@@ -26,16 +26,20 @@
         "export" : false
       }, {
         "name" : "page",
-        "basisColumn" : "Page"
+        "basisColumn" : "Page",
+        "export" : true
       }, {
         "name" : "title",
-        "basisColumn" : "Title"
+        "basisColumn" : "Title",
+        "export" : true
       }, {
         "name" : "href",
-        "basisColumn" : "Link"
+        "basisColumn" : "Link",
+        "export" : true
       }, {
         "name" : "icon",
-        "basisColumn" : "Icon"
+        "basisColumn" : "Icon",
+        "export" : true
       } ],
       "orderBy" : [ {
         "fieldName" : "MenuItemDisplayOrder"
@@ -57,7 +61,8 @@
       "export" : false
     }, {
       "name" : "title",
-      "basisColumn" : "Title"
+      "basisColumn" : "Title",
+      "export" : true
     } ],
     "orderBy" : [ {
       "fieldName" : "MenuContentDisplayOrder"
@@ -79,6 +84,7 @@
     "export" : false
   }, {
     "name" : "appTitle",
-    "basisColumn" : "Title"
+    "basisColumn" : "Title",
+    "export" : true
   } ]
 }
