@@ -47,7 +47,7 @@
     "join" : "DocumentType",
     "fields" : [ {
       "name" : "DocumentTypeSlug",
-      "basisColumn": "Slug"
+      "basisColumn" : "Slug"
     } ]
   } ]
 }
