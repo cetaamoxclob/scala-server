@@ -3,6 +3,7 @@
   "sections" : [ {
     "viewMode" : "table",
     "name" : "Workflows",
+    "model" : "ManageWorkflows",
     "title" : "Workflows",
     "fields" : [ {
       "name" : "WorkflowName",
