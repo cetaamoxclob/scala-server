@@ -74,16 +74,20 @@ trait DataReader extends DatabaseConnection {
 
   private def parseFilterForSql(sqlBuilder: SqlBuilder, modelFields: Map[String, ModelField], filter: Option[String]): SqlBuilder = {
     if (filter.isDefined && filter.get.trim.nonEmpty) {
-      val compiler = new com.tantalim.filter.compiler.CompileFilter(filter.get, modelFields)
-      compiler.parse() match {
-        case CompiledFilter(where: String, params: List[Any]) =>
-          sqlBuilder.copy(
-            where =
-              if (sqlBuilder.where.isEmpty) Some(where)
-              else if (where.isEmpty) sqlBuilder.where
-              else Some(s"(${sqlBuilder.where.get}) AND ($where)"),
-            parameters = sqlBuilder.parameters ++ params
-          )
+      try {
+        val compiler = new com.tantalim.filter.compiler.CompileFilter(filter.get, modelFields)
+        compiler.parse() match {
+          case CompiledFilter(where: String, params: List[Any]) =>
+            sqlBuilder.copy(
+              where =
+                if (sqlBuilder.where.isEmpty) Some(where)
+                else if (where.isEmpty) sqlBuilder.where
+                else Some(s"(${sqlBuilder.where.get}) AND ($where)"),
+              parameters = sqlBuilder.parameters ++ params
+            )
+        }
+      } catch {
+        case e: Exception => throw new TantalimException(s"Failed to compile filter: " + filter.get, e.getMessage)
       }
     } else {
       sqlBuilder

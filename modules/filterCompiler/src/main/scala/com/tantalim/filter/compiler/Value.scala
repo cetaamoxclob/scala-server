@@ -7,7 +7,10 @@ case class Value(sql: Option[String] = None, values: List[Any] = List.empty) {
 
   def getBoolean: Boolean = values.head.asInstanceOf[Boolean]
 
-  def getInteger: Integer = values.head.asInstanceOf[Int]
+  def getInteger: Integer = values.head match {
+    case v: Int => v
+    case _ => values.head.toString.toInt
+  }
 
   def getFloat: Float = values.head.asInstanceOf[Float]
 
