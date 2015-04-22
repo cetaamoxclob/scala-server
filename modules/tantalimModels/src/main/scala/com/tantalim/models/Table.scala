@@ -16,11 +16,6 @@ abstract class Table {
   def columns: Map[String, TableColumn]
 
   def indexes: Seq[TableIndex]
-
-  def getColumn(name: String) = columns.getOrElse(
-    name,
-    throw new TantalimException(f"failed to find column named `$name` in table `${this.name}`", s"found: ${this.columns.keys}")
-  )
 }
 
 case class ShallowTable(

@@ -87,7 +87,9 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
   private def findInstanceIdField(primaryKey: Option[TableColumn], modelFields: Iterable[ModelField]): Option[ModelField] = {
     if (primaryKey.isDefined) {
       modelFields.find(f =>
-        f.basisColumn.name == primaryKey.get.name && f.step.isEmpty
+        f.basisColumn.isDefined
+          && f.basisColumn.get.name == primaryKey.get.name
+          && f.step.isEmpty
       )
     } else None
   }
@@ -101,11 +103,11 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
         val tableJoin = fieldStep.join
 
         f.name -> compileModelField(f,
-          tableJoin.table.getColumn(f.basisColumn),
+          ModelCompiler.findColumn(tableJoin.table, f.basisColumn),
           Some(fieldStep)
         )
       } else {
-        f.name -> compileModelField(f, basisTable.getColumn(f.basisColumn), None)
+        f.name -> compileModelField(f, ModelCompiler.findColumn(basisTable, f.basisColumn), None)
       }
     }).toMap
   }
@@ -120,7 +122,7 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
           val tableJoin = fieldStep.join
           step.fields.get.map { field =>
             field.name -> compileModelField(field,
-              tableJoin.table.getColumn(field.basisColumn),
+              ModelCompiler.findColumn(tableJoin.table, field.basisColumn),
               Some(fieldStep)
             )
           }
@@ -231,15 +233,20 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
     }
   }
 
-  private def compileModelField(field: ModelFieldJson, basisColumn: TableColumn, step: Option[ModelStep]): ModelField = {
+  private def compileModelField(field: ModelFieldJson, basisColumn: Option[TableColumn], step: Option[ModelStep]): ModelField = {
     val alwaysDefault = field.alwaysDefault.getOrElse(false)
     new ModelField(
       name = field.name,
       basisColumn = basisColumn,
+      dataType = {
+        if (field.dataType.isDefined) TableCompiler.compileDataType(field.dataType)
+        else if (basisColumn.isDefined) basisColumn.get.dataType
+        else TableCompiler.compileDataType(field.dataType)
+      },
       step = step,
-      required = field.required.getOrElse(basisColumn.required),
+      required = field.required.getOrElse(if (basisColumn.isDefined) basisColumn.get.required else false),
       updateable = if (alwaysDefault) false
-      else field.updateable.getOrElse(basisColumn.updateable),
+      else field.updateable.getOrElse(if (basisColumn.isDefined) basisColumn.get.updateable else false),
       alwaysDefault = alwaysDefault,
       fieldDefault = field.fieldDefault,
       functionDefault = field.functionDefault,
@@ -251,6 +258,14 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
 
 object ModelCompiler {
   val artifactName = "models"
+
+  def findColumn(table: Table, name: Option[String]): Option[TableColumn] = {
+    if (name.isEmpty) None
+    else Some(table.columns.getOrElse(
+      name.get,
+      throw new TantalimException(f"failed to find column named `$name` in table `${table.name}`", s"found: ${table.columns.keys}")
+    ))
+  }
 
   def findStepByName(stepName: String, steps: Seq[ModelStep]): ModelStep = {
     steps.find(step => step.name == stepName).getOrElse(

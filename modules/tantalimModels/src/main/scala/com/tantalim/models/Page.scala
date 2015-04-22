@@ -82,7 +82,7 @@ case class PageField(
     }
   }
 
-  private def dataType = modelField.basisColumn.dataType
+  private def dataType = modelField.dataType
 
   def alignRight = isNumericType
 

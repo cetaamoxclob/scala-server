@@ -35,7 +35,8 @@ case class ModelStepJson(name: String,
                           )
 
 case class ModelFieldJson(name: String,
-                          basisColumn: String,
+                          basisColumn: Option[String],
+                          dataType: Option[String],
                           @deprecated
                           step: Option[String],
                           required: Option[Boolean],
@@ -73,7 +74,8 @@ object ModelJson {
 
   implicit def modelFieldReads: Reads[ModelFieldJson] = (
     (JsPath \ "name").read[String] and
-      (JsPath \ "basisColumn").read[String] and
+      (JsPath \ "basisColumn").readNullable[String] and
+      (JsPath \ "dataType").readNullable[String] and
       (JsPath \ "step").readNullable[String] and
       (JsPath \ "required").readNullable[Boolean] and
       (JsPath \ "updateable").readNullable[Boolean] and

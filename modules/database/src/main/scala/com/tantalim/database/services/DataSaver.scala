@@ -101,8 +101,8 @@ trait DataSaver extends DataReader {
         model.fields.values.foreach { field =>
           val value = getValueForInsert(row, field)
           // TODO How should we handle non-updateable fields
-          if (field.step.isEmpty) {
-            valueMap += field.basisColumn.dbName -> value.getOrElse(
+          if (field.step.isEmpty && field.basisColumn.isDefined) {
+            valueMap += field.basisColumn.get.dbName -> value.getOrElse(
               TntNull()
             )
           }
@@ -116,7 +116,7 @@ trait DataSaver extends DataReader {
 
       (f"UPDATE ${SqlBuilder.getTableSql(model.basisTable)} " +
         f"SET $setColumnPhrase " +
-        f"WHERE `${primaryKey.basisColumn.dbName}` = ?", fieldList.map(fieldName => valueMap.get(fieldName).get).toList :+ primaryKeyValue)
+        f"WHERE `${primaryKey.basisColumn.get.dbName}` = ?", fieldList.map(fieldName => valueMap.get(fieldName).get).toList :+ primaryKeyValue)
     }
 
     val rowCountModified = update(sql, params, dbConnection)
@@ -185,14 +185,14 @@ trait DataSaver extends DataReader {
     println(s"Has values for step ${step.join.table.name} with ${valueMap.map(v => v._1.name -> v._2)}")
 
     // I'm not sure what this next section is for??
-    step.join.table.columns.values.foreach { column =>
-      val matchingField = modelFields.find { matchingField =>
-        matchingField.basisColumn == column
-      }
-      if (matchingField.isDefined) {
-        column
-      }
-    }
+//    step.join.table.columns.values.foreach { column =>
+//      val matchingField = modelFields.find { matchingField =>
+//        matchingField.basisColumn == column
+//      }
+//      if (matchingField.isDefined) {
+//        column
+//      }
+//    }
 
     val topIndex = findFullUniqueIndex(step.join.table.indexes, valueMap)
     if (topIndex.isEmpty) {
@@ -291,10 +291,10 @@ trait DataSaver extends DataReader {
     val model = row.nodeSet.model
     val valueMap = Map.newBuilder[TableColumn, TntValue]
     model.fields.values.foreach { field =>
-      if (step == field.step) {
+      if (step == field.step && field.basisColumn.isDefined) {
         val value = getValueForInsert(row, field)
         if (value.isDefined) {
-          valueMap += field.basisColumn -> value.get
+          valueMap += field.basisColumn.get -> value.get
         }
       }
     }
@@ -333,7 +333,7 @@ trait DataSaver extends DataReader {
       valueFromDefaultField
     } else if (field.valueDefault.isDefined) {
       val defaultValue = field.valueDefault.get
-      field.basisColumn.dataType match {
+      field.dataType match {
         case DataType.Boolean => Some(TntBoolean(defaultValue == "true"))
         case _ => Some(TntString(defaultValue))
       }
@@ -356,7 +356,7 @@ trait DataSaver extends DataReader {
     val primaryKeyValue = getPrimaryKeyValue(primaryKey.name, row)
 
     (f"DELETE FROM ${SqlBuilder.getTableSql(model.basisTable)} " +
-      f"WHERE `${primaryKey.basisColumn.dbName}` = ?", List(primaryKeyValue))
+      f"WHERE `${primaryKey.basisColumn.get.dbName}` = ?", List(primaryKeyValue))
   }
 
   private def getPrimaryKeyValue(primaryKeyName: String, row: SmartNodeInstance) = {
@@ -379,7 +379,8 @@ object ModelCompiler {
     def compileField(column: TableColumn): ModelField = {
       new ModelField(
         column.name,
-        column,
+        Some(column),
+        column.dataType,
         updateable = column.updateable,
         required = column.required
       )

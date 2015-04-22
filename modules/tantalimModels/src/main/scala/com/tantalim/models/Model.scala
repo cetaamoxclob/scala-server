@@ -73,10 +73,13 @@ case class Model(name: String,
     }
     field.get
   }
+
+  val basisFields: Map[String, ModelField] = fields.filter(f => f._2.isBasisField)
 }
 
 case class ModelField(name: String,
-                      basisColumn: TableColumn,
+                      basisColumn: Option[TableColumn],
+                      dataType: DataType,
                       step: Option[ModelStep] = None,
                       updateable: Boolean = true,
                       required: Boolean = false,
@@ -86,7 +89,7 @@ case class ModelField(name: String,
                       valueDefault: Option[String] = None,
                       export: Boolean = false
                        ) {
-  def dataType: DataType = basisColumn.dataType
+  val isBasisField = basisColumn.isDefined
 }
 
 case class ModelStep(name: String,

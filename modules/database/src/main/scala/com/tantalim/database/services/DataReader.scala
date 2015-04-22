@@ -34,18 +34,21 @@ trait DataReader extends DatabaseConnection {
     var sqlBuilder = new SqlBuilder(
       from = model.basisTable,
       steps = model.steps.values.toSeq,
-      fields = model.fields,
+      fields = model.basisFields,
       page = page,
       orderBy = orderBy,
       limit = model.limit)
 
-    sqlBuilder = parseFilterForSql(sqlBuilder, model.fields, model.filter)
-    sqlBuilder = parseFilterForSql(sqlBuilder, model.fields, filter)
+    sqlBuilder = parseFilterForSql(sqlBuilder, model.basisFields, model.filter)
+    sqlBuilder = parseFilterForSql(sqlBuilder, model.basisFields, filter)
 
     try {
       val rs = if (dbConnection.isDefined) query(sqlBuilder.toPreparedStatement, sqlBuilder.parameters, dbConnection.get)
       else query(sqlBuilder.toPreparedStatement, sqlBuilder.parameters)
       val resultSet = convertResultSetToDataRows(model, rs)
+      if (fieldDefaultsExist(model.fields.values)) {
+        applyFieldDefaultsToResultSet(model.fields.values, resultSet)
+      }
       resultSet.sql = sqlBuilder.toPreparedStatement
 
       if (resultSet.rows.length > 0 && model.children.size > 0) {
@@ -98,10 +101,10 @@ trait DataReader extends DatabaseConnection {
     val resultBuilder = new SmartNodeSet(model)
     while (rs.next()) {
       val newInstance = resultBuilder.insert
-      model.fields.foreach {
+      model.basisFields.foreach {
         case (fieldName, f) =>
           newInstance.set(fieldName, {
-            f.basisColumn.dataType match {
+            f.dataType match {
               case DataType.Integer =>
                 val rsValue = rs.getInt(fieldName)
                 if (rs.wasNull()) TntNull()
@@ -123,7 +126,7 @@ trait DataReader extends DatabaseConnection {
                 val rsValue = rs.getDate(fieldName)
                 if (rs.wasNull()) TntNull()
                 else TntDate(new DateTime(rsValue.getTime))
-              case _ => throw new MatchError(f"field.dataType of `${f.basisColumn.dataType}` is not String or Integer")
+              case _ => throw new MatchError(f"field.dataType of `${f.dataType}` is not String or Integer")
             }
           })
       }
@@ -153,6 +156,21 @@ trait DataReader extends DatabaseConnection {
         "Check datatypes of $parentField and $childField")
     }
 
+  }
+
+  private def fieldDefaultsExist(fields: Iterable[ModelField]): Boolean = {
+    fields.exists(_.alwaysDefault)
+  }
+
+  private def applyFieldDefaultsToResultSet(fields: Iterable[ModelField], set: SmartNodeSet): Unit = {
+    fields.filter(_.alwaysDefault).foreach { field =>
+      val valueDefault: Option[TntString] = if (field.valueDefault.isDefined) Some(TntString(field.valueDefault.get)) else None
+      set.foreach { row =>
+        if (valueDefault.isDefined) row.set(field.name, valueDefault.get)
+        else if (field.fieldDefault.isDefined) row.set(field.name, row.get(field.fieldDefault.get).get)
+        // TODO Implement functionDefault
+      }
+    }
   }
 
 }

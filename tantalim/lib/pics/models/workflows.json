@@ -79,7 +79,6 @@
     "export" : true
   }, {
     "name" : "module",
-    "basisColumn" : "__MOCK_STRING__",
     "valueDefault" : "pics-config",
     "alwaysDefault" : true
   } ]

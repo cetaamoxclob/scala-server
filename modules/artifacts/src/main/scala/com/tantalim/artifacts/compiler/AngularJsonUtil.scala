@@ -62,7 +62,7 @@ object AngularJsonUtil {
 
   private def toJson(field: ModelField): JsObject = JsObject(Seq(
     "name" -> JsString(field.name),
-    "dataType" -> JsString(field.basisColumn.dataType.toString),
+    "dataType" -> JsString(field.dataType.toString),
     "updateable" -> JsBoolean(field.updateable),
     "alwaysDefault" -> JsBoolean(field.alwaysDefault),
     "fieldDefault" -> toJson(field.fieldDefault),

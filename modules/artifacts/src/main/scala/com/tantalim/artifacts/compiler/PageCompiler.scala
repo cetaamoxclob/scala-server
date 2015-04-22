@@ -87,7 +87,7 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
         val childModelName = childView.model.getOrElse(childView.name)
         val childModel = model.children.getOrElse(childModelName,
           throw new TantalimException(s"Model ${model.name} doesn't have child named $childModelName",
-          s"Model has children: ${model.children.keys.mkString(", ")}. <a href='/page/BuildModel/?filter=ModelName%20Equals%20%22${model.name}%22'>Build Model</a>"))
+            s"Model has children: ${model.children.keys.mkString(", ")}. <a href='/page/BuildModel/?filter=ModelName%20Equals%20%22${model.name}%22'>Build Model</a>"))
         compilePageSection(childView, childModel, Some(pageSection))
       }
       case None => Seq.empty
@@ -130,7 +130,10 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
     val column = modelField.basisColumn
     val fieldType = {
       if (field.selectModel.isDefined) FieldDisplay.Select
-      else if (field.fieldType.isEmpty) column.fieldType
+      else if (field.fieldType.isEmpty) {
+        if (column.isDefined) column.get.fieldType
+        else FieldDisplay.Text
+      }
       else {
         val compiled = TableCompiler.compileFieldDisplay(field.fieldType.get)
         if (compiled == FieldDisplay.Select) {
@@ -146,13 +149,13 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
       fieldType = fieldType,
       required = modelField.required,
       disabled = field.disabled.getOrElse(!modelField.updateable),
-      label = field.label.getOrElse(column.label),
+      label = if (field.label.isDefined) field.label.get else if (column.isDefined) column.get.label else field.name,
       searchable = true,
       showInFormView = field.showInFormView.getOrElse(true),
       showInTableView = field.showInTableView.getOrElse(true),
       showInNavigation = field.showInNavigation.getOrElse(false),
-      placeholder = if (field.placeholder.isDefined) field.placeholder else column.placeholder,
-      help = if (field.help.isDefined) field.help else column.help,
+      placeholder = if (field.placeholder.isDefined) field.placeholder else if (column.isDefined) column.get.placeholder else None,
+      help = if (field.help.isDefined) field.help else if (column.isDefined) column.get.help else None,
       filter = if (field.filter.isDefined) field.filter
       else {
         modelField.dataType match {
@@ -177,7 +180,7 @@ trait PageCompiler extends ArtifactService with ModelCompiler {
   private def compileFieldSelect(selectJson: PageFieldJson): PageFieldSelect = {
     new PageFieldSelect(
       model = selectJson.selectModel.get,
-      sourceField = selectJson.selectSourceField.getOrElse{
+      sourceField = selectJson.selectSourceField.getOrElse {
         throw new TantalimException("SourceField is required when using selects", selectJson.toString)
       },
       targetID = selectJson.selectTargetID,

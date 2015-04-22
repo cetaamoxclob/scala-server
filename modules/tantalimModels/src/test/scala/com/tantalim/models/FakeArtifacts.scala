@@ -7,7 +7,7 @@ trait FakeArtifacts {
 
   def fakeModelField(fieldName: String, dbName: String, dataType: DataType, step: Option[ModelStep] = None,
                      updateable: Boolean = true, required: Boolean = false) = new ModelField(
-    fieldName, fakeTableColumn(fieldName, dbName, dataType),
+    fieldName, Some(fakeTableColumn(fieldName, dbName, dataType)), dataType,
     step, updateable, required
   )
 

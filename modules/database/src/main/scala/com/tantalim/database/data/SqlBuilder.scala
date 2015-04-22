@@ -38,12 +38,12 @@ case class SqlBuilder(
   private def getFields: String = {
     if (fields.isEmpty) "*"
     else {
-      fields.map {
+      fields.filter(f => f._2.basisColumn.isDefined).map {
         case (fieldName, f) =>
           if (f.step.isDefined && tableAliasOverride.get(f.step.get.tableAlias).isDefined) {
             val newAlias = tableAliasOverride.get(f.step.get.tableAlias).get
             s"`t$newAlias`.`$fieldName`"
-          } else s"${getAlias(f)}.`${f.basisColumn.dbName}` AS `$fieldName`"
+          } else s"${getAlias(f)}.`${f.basisColumn.get.dbName}` AS `$fieldName`"
       }.toSeq.mkString(", ")
     }
   }
@@ -72,9 +72,10 @@ case class SqlBuilder(
 
       val innerSql = {
         val extraFieldsInDerivedQuery: Map[String, ModelField] = step.join.columns.map { joinColumn =>
-          val field = ModelField(
+          val field: ModelField = ModelField(
             name = joinColumn.to.dbName,
-            basisColumn = joinColumn.to
+            basisColumn = Some(joinColumn.to),
+            dataType = joinColumn.to.dataType
           )
           field.name -> field
         }.toMap

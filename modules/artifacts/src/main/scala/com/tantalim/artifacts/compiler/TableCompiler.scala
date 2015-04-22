@@ -148,7 +148,7 @@ trait TableCompiler extends ArtifactService with TableCache {
 object TableCompiler {
   val artifactName = "tables"
 
-  private def compileDataType(value: Option[String]): DataType = {
+  def compileDataType(value: Option[String]): DataType = {
     if (value.isEmpty || value.get.trim.isEmpty) DataType.String
     else {
       val needle = value.get.toLowerCase

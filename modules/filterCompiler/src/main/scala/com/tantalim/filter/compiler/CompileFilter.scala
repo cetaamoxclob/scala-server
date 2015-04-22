@@ -47,7 +47,7 @@ class CompileFilter(filter: String, fields: Map[String, ModelField]) extends Fil
         Value(sql = Some(sql + " " + right.sql.get), List.empty)
       } else {
         val sqlRight = getSql(comparator, right.values)
-        val params = getParams(leftField.getField.get.basisColumn.dataType, comparator, right)
+        val params = getParams(leftField.getField.get.dataType, comparator, right)
         Value(sql = Some(sql + " " + sqlRight), params)
       }
     }
@@ -92,7 +92,7 @@ class CompileFilter(filter: String, fields: Map[String, ModelField]) extends Fil
       )
     )
     val tableAlias = if(field.step.isDefined) field.step.get.tableAlias else 0
-    Value(Some(s"`t$tableAlias`.`${field.basisColumn.dbName}`"), List(field))
+    Value(Some(s"`t$tableAlias`.`${field.basisColumn.get.dbName}`"), List(field))
   }
 
   override def visitComparators(ctx: FilterParser.ComparatorsContext) = {
