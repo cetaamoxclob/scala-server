@@ -49,21 +49,6 @@
       "name" : "WorkflowStepNoteRequired",
       "basisColumn" : "NoteRequired"
     } ]
-  }, {
-    "name" : "DocumentType",
-    "parentField" : "name",
-    "basisTable" : "DocumentType",
-    "childField" : "DocumentTypeWorkflowID",
-    "fields" : [ {
-      "name" : "DocumentTypeID",
-      "basisColumn" : "DocumentTypeID"
-    }, {
-      "name" : "DocumentTypeWorkflowID",
-      "basisColumn" : "WorkflowID"
-    }, {
-      "name" : "DocumentTypeSlug",
-      "basisColumn" : "Slug"
-    } ]
   } ],
   "fields" : [ {
     "name" : "name",
