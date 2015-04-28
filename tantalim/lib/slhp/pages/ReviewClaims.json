@@ -1,43 +1,31 @@
 {
-  "title": "Review Claims",
-  "icon": "fa-bed",
-  "sections": [
-    {
-      "name": "Patients",
-      "model": "ReviewClaims",
-      "viewMode": "table",
-      "fields": [
-        {
-          "name": "PatientFirstName"
-        },
-        {
-          "name": "PatientLastName"
-        },
-        {
-          "name": "PatientBirthDate"
-        }
-      ],
-      "sections": [
-        {
-          "name": "Claim",
-          "title": "Claims",
-          "viewMode": "table",
-          "fields": [
-            {
-              "name": "ClaimClaimNumber"
-            },
-            {
-              "name": "ClaimServiceDate"
-            },
-            {
-              "name": "ClaimVendorName"
-            },
-            {
-              "name": "ClaimProviderName"
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  "icon" : "fa-bed",
+  "title" : "Review Claims",
+  "sections" : [ {
+    "viewMode" : "table",
+    "name" : "Patients",
+    "title" : "Patients",
+    "model" : "ReviewClaims",
+    "fields" : [ {
+      "name" : "PatientFirstName"
+    }, {
+      "name" : "PatientLastName"
+    }, {
+      "name" : "PatientBirthDate"
+    } ],
+    "sections" : [ {
+      "viewMode" : "table",
+      "name" : "Claim",
+      "title" : "Claims",
+      "fields" : [ {
+        "name" : "ClaimClaimNumber"
+      }, {
+        "name" : "ClaimServiceDate"
+      }, {
+        "name" : "ClaimVendorName"
+      }, {
+        "name" : "ClaimProviderName"
+      } ]
+    } ]
+  } ]
 }
