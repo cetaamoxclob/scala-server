@@ -1,24 +1,20 @@
 {
-  "dbName": "slhpHCC",
-  "primaryKey": "HCCID",
-  "columns": [
-    {
-      "name": "HCCID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "HCCCode",
-      "label": "HCC code",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "HCCDescription",
-      "label": "HCC description",
-      "required": true,
-      "updateable": false
-    }
-  ]
+  "dbName" : "slhpHCC",
+  "primaryKey" : "HCCID",
+  "columns" : [ {
+    "name" : "HCCID",
+    "updateable" : false,
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "HCCCode",
+    "updateable" : false,
+    "label" : "HCC code",
+    "required" : true
+  }, {
+    "name" : "HCCDescription",
+    "updateable" : false,
+    "label" : "HCC description",
+    "required" : true
+  } ]
 }

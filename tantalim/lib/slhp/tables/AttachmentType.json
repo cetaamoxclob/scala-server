@@ -1,41 +1,32 @@
 {
-  "dbName": "slhpAttachmentType",
-  "primaryKey": "AttachmentTypeCode",
-  "columns": [
-    {
-      "name": "AttachmentTypeCode",
-      "label": "Code",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "AttachmentType",
-      "label": "Attachment Type",
-      "required": true
-    },
-    {
-      "name": "ActiveFlag",
-      "label": "Active",
-      "dataType": "Boolean",
-      "columnDefault": "true",
-      "required": true
-    },
-    {
-      "name": "DisplaySequence",
-      "label": "Order",
-      "dataType": "Integer"
-    }
-  ],
-  "joins": [
-    {
-      "name": "AttachmentType",
-      "table": "AttachmentType",
-      "columns": [
-        {
-          "from": "AttachmentTypeCode",
-          "to": "AttachmentTypeCode"
-        }
-      ]
-    }
-  ]
+  "dbName" : "slhpAttachmentType",
+  "primaryKey" : "AttachmentTypeCode",
+  "joins" : [ {
+    "name" : "AttachmentType",
+    "table" : "AttachmentType",
+    "columns" : [ {
+      "to" : "AttachmentTypeCode",
+      "from" : "AttachmentTypeCode"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "AttachmentTypeCode",
+    "updateable" : false,
+    "label" : "Code",
+    "required" : true
+  }, {
+    "name" : "AttachmentType",
+    "label" : "Attachment Type",
+    "required" : true
+  }, {
+    "name" : "ActiveFlag",
+    "label" : "Active",
+    "dataType" : "Boolean",
+    "required" : true,
+    "columnDefault" : "true"
+  }, {
+    "name" : "DisplaySequence",
+    "label" : "Order",
+    "dataType" : "Integer"
+  } ]
 }

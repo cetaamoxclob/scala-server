@@ -1,18 +1,15 @@
 {
-  "dbName": "slhpHealthplan",
-  "primaryKey": "HealthplanID",
-  "columns": [
-    {
-      "name": "HealthplanID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "Healthplan",
-      "label": "Healthplan",
-      "required": true,
-      "updateable": false
-    }
-  ]
+  "dbName" : "slhpHealthplan",
+  "primaryKey" : "HealthplanID",
+  "columns" : [ {
+    "name" : "HealthplanID",
+    "updateable" : false,
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Healthplan",
+    "updateable" : false,
+    "label" : "Healthplan",
+    "required" : true
+  } ]
 }

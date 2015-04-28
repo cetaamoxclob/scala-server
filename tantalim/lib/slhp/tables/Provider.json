@@ -1,25 +1,20 @@
 {
-  "dbName": "slhpProvider",
-  "primaryKey": "ProviderID",
-  "columns": [
-    {
-      "name": "ProviderID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "Name",
-      "label": "Provider",
-      "required": true
-    },
-    {
-      "name": "FirstName",
-      "label": "First Name"
-    },
-    {
-      "name": "LastName",
-      "label": "Last Name"
-    }
-  ]
+  "dbName" : "slhpProvider",
+  "primaryKey" : "ProviderID",
+  "columns" : [ {
+    "name" : "ProviderID",
+    "updateable" : false,
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Name",
+    "label" : "Provider",
+    "required" : true
+  }, {
+    "name" : "FirstName",
+    "label" : "First Name"
+  }, {
+    "name" : "LastName",
+    "label" : "Last Name"
+  } ]
 }

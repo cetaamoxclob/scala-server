@@ -1,31 +1,26 @@
 {
-  "dbName": "slhpReviewType",
-  "primaryKey": "ReviewTypeCode",
-  "columns": [
-    {
-      "name": "ReviewTypeCode",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "ReviewType",
-      "label": "Review Type",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "ActiveFlag",
-      "label": "Active Flag",
-      "dataType": "Boolean",
-      "columnDefault": "true",      
-      "required": true,
-      "updateable": true
-    },
-    {
-      "name": "DisplaySequence",
-      "label": "Display Sequence",
-      "required": false,
-      "updateable": true
-    }
-  ]
+  "dbName" : "slhpReviewType",
+  "primaryKey" : "ReviewTypeCode",
+  "columns" : [ {
+    "name" : "ReviewTypeCode",
+    "updateable" : false,
+    "required" : true
+  }, {
+    "name" : "ReviewType",
+    "updateable" : false,
+    "label" : "Review Type",
+    "required" : true
+  }, {
+    "name" : "ActiveFlag",
+    "updateable" : true,
+    "label" : "Active Flag",
+    "dataType" : "Boolean",
+    "required" : true,
+    "columnDefault" : "true"
+  }, {
+    "name" : "DisplaySequence",
+    "updateable" : true,
+    "label" : "Display Sequence",
+    "required" : false
+  } ]
 }

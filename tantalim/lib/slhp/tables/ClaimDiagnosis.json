@@ -1,51 +1,39 @@
 {
-  "dbName": "slhpClaimDiagnosis",
-  "primaryKey": "ClaimDiagnosisID",
-  "columns": [
-    {
-      "name": "ClaimDiagnosisID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "ClaimID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "DiagnosisID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false    
-    },
-    {
-      "name": "Position",
-      "dataType": "Integer",
-      "label": "Position"
-    }
-  ],
-  "joins": [
-    {
-      "name": "Diagnosis",
-      "table": "Diagnosis",
-      "columns": [
-        {
-          "from": "DiagnosisID",
-          "to": "DiagnosisID"
-        }
-      ]
-    },
-    {
-      "name": "Claim",
-      "table": "Claim",
-      "columns": [
-        {
-          "from": "ClaimID",
-          "to": "ClaimID"
-        }
-      ]
-    }    
-  ]
+  "dbName" : "slhpClaimDiagnosis",
+  "primaryKey" : "ClaimDiagnosisID",
+  "joins" : [ {
+    "name" : "Diagnosis",
+    "table" : "Diagnosis",
+    "columns" : [ {
+      "to" : "DiagnosisID",
+      "from" : "DiagnosisID"
+    } ]
+  }, {
+    "name" : "Claim",
+    "table" : "Claim",
+    "columns" : [ {
+      "to" : "ClaimID",
+      "from" : "ClaimID"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "ClaimDiagnosisID",
+    "updateable" : false,
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "ClaimID",
+    "updateable" : false,
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "DiagnosisID",
+    "updateable" : false,
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Position",
+    "label" : "Position",
+    "dataType" : "Integer"
+  } ]
 }

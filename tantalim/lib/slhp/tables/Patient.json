@@ -1,32 +1,26 @@
 {
-  "dbName": "slhpPatient",
-  "primaryKey": "PatientID",
-  "allowInsert": false,
-  "allowUpdate": false,
-  "allowDelete": false,
-  "columns": [
-    {
-      "name": "PatientID",
-      "dataType": "Integer",
-      "required": true
-    },
-    {
-      "name": "Name",
-      "label": "Patient Name",
-      "required": true
-    },
-    {
-      "name": "FirstName",
-      "label": "First Name"
-    },
-    {
-      "name": "LastName",
-      "label": "Last Name"
-    },
-    {
-      "name": "BirthDate",
-      "dataType": "Date",
-      "label": "DOB"
-    }
-  ]
+  "dbName" : "slhpPatient",
+  "primaryKey" : "PatientID",
+  "allowInsert" : false,
+  "allowUpdate" : false,
+  "allowDelete" : false,
+  "columns" : [ {
+    "name" : "PatientID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Name",
+    "label" : "Patient Name",
+    "required" : true
+  }, {
+    "name" : "FirstName",
+    "label" : "First Name"
+  }, {
+    "name" : "LastName",
+    "label" : "Last Name"
+  }, {
+    "name" : "BirthDate",
+    "label" : "DOB",
+    "dataType" : "Date"
+  } ]
 }

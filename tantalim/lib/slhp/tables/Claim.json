@@ -1,82 +1,62 @@
 {
-  "dbName": "slhpClaim",
-  "primaryKey": "ClaimID",
-  "allowInsert": false,
-  "allowUpdate": false,
-  "allowDelete": true,
-  "columns": [
-    {
-      "name": "ClaimID",
-      "dataType": "Integer",
-      "required": true
-    },
-    {
-      "name": "PatientID",
-      "dataType": "Integer",
-      "required": true
-    },
-    {
-      "name": "ClaimNumber",
-      "label": "Claim #",
-      "required": true
-    },
-    {
-      "name": "ServiceDate",
-      "dataType": "Date",
-      "required": true,
-      "label": "DOS"
-    },
-    {
-      "name": "VendorID",
-      "dataType": "Integer",
-      "required": true
-    },
-    {
-      "name": "ProviderID",
-      "dataType": "Integer",
-      "required": true
-    }
-  ],
-  "joins": [
-    {
-      "name": "Vendor",
-      "table": "Vendor",
-      "columns": [
-        {
-          "from": "VendorID",
-          "to": "VendorID"
-        }
-      ]
-    },
-    {
-      "name": "Provider",
-      "table": "Provider",
-      "columns": [
-        {
-          "from": "ProviderID",
-          "to": "ProviderID"
-        }
-      ]
-    },
-    {
-      "name": "Patient",
-      "table": "Patient",
-      "columns": [
-        {
-          "from": "PatientID",
-          "to": "PatientID"
-        }
-      ]
-    },
-    {
-      "name": "Claim",
-      "table": "Claim",
-      "columns": [
-        {
-          "from": "ClaimID",
-          "to": "ClaimID"
-        }
-      ]
-    }
-  ]
+  "dbName" : "slhpClaim",
+  "primaryKey" : "ClaimID",
+  "allowInsert" : false,
+  "allowUpdate" : false,
+  "allowDelete" : true,
+  "joins" : [ {
+    "name" : "Vendor",
+    "table" : "Vendor",
+    "columns" : [ {
+      "to" : "VendorID",
+      "from" : "VendorID"
+    } ]
+  }, {
+    "name" : "Provider",
+    "table" : "Provider",
+    "columns" : [ {
+      "to" : "ProviderID",
+      "from" : "ProviderID"
+    } ]
+  }, {
+    "name" : "Patient",
+    "table" : "Patient",
+    "columns" : [ {
+      "to" : "PatientID",
+      "from" : "PatientID"
+    } ]
+  }, {
+    "name" : "Claim",
+    "table" : "Claim",
+    "columns" : [ {
+      "to" : "ClaimID",
+      "from" : "ClaimID"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "ClaimID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "PatientID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "ClaimNumber",
+    "label" : "Claim #",
+    "required" : true
+  }, {
+    "name" : "ServiceDate",
+    "label" : "DOS",
+    "dataType" : "Date",
+    "required" : true
+  }, {
+    "name" : "VendorID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "ProviderID",
+    "dataType" : "Integer",
+    "required" : true
+  } ]
 }

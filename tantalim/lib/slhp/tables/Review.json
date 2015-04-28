@@ -1,50 +1,38 @@
 {
-  "dbName": "slhpReview",
-  "primaryKey": "ReviewID",
-  "columns": [
-    {
-      "name": "ReviewID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "ReviewTypeCode",
-      "required": true,
-      "updateable": false    
-    },
-    {
-      "name": "ReviewPassStatusCode",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false    
-    },
-    {
-      "name": "Revenue",
-      "dataType": "Decimal",
-      "updateable": false    
-    }
-  ],
-  "joins": [
-    {
-      "name": "ReviewType",
-      "table": "ReviewType",
-      "columns": [
-        {
-          "from": "ReviewTypeCode",
-          "to": "ReviewTypeCode"
-        }
-      ]
-    },
-    {
-      "name": "ReviewPassStatus",
-      "table": "ReviewPassStatus",
-      "columns": [
-        {
-          "from": "ReviewPassStatusCode",
-          "to": "ReviewPassStatusCode"
-        }
-      ]
-    }    
-  ]
+  "dbName" : "slhpReview",
+  "primaryKey" : "ReviewID",
+  "joins" : [ {
+    "name" : "ReviewType",
+    "table" : "ReviewType",
+    "columns" : [ {
+      "to" : "ReviewTypeCode",
+      "from" : "ReviewTypeCode"
+    } ]
+  }, {
+    "name" : "ReviewPassStatus",
+    "table" : "ReviewPassStatus",
+    "columns" : [ {
+      "to" : "ReviewPassStatusCode",
+      "from" : "ReviewPassStatusCode"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "ReviewID",
+    "updateable" : false,
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "ReviewTypeCode",
+    "updateable" : false,
+    "required" : true
+  }, {
+    "name" : "ReviewPassStatusCode",
+    "updateable" : false,
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Revenue",
+    "updateable" : false,
+    "dataType" : "Decimal"
+  } ]
 }

@@ -1,46 +1,35 @@
 {
-  "dbName": "slhpClaimProcedure",
-  "primaryKey": "ClaimProcedureID",
-  "columns": [
-    {
-      "name": "ClaimProcedureID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "ClaimID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "ProcedureID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false    
-    }
-  ],
-  "joins": [
-    {
-      "name": "Procedure",
-      "table": "Procedure",
-      "columns": [
-        {
-          "from": "ProcedureID",
-          "to": "ProcedureID"
-        }
-      ]
-    },
-    {
-      "name": "Claim",
-      "table": "Claim",
-      "columns": [
-        {
-          "from": "ClaimID",
-          "to": "ClaimID"
-        }
-      ]
-    }    
-  ]
+  "dbName" : "slhpClaimProcedure",
+  "primaryKey" : "ClaimProcedureID",
+  "joins" : [ {
+    "name" : "Procedure",
+    "table" : "Procedure",
+    "columns" : [ {
+      "to" : "ProcedureID",
+      "from" : "ProcedureID"
+    } ]
+  }, {
+    "name" : "Claim",
+    "table" : "Claim",
+    "columns" : [ {
+      "to" : "ClaimID",
+      "from" : "ClaimID"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "ClaimProcedureID",
+    "updateable" : false,
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "ClaimID",
+    "updateable" : false,
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "ProcedureID",
+    "updateable" : false,
+    "dataType" : "Integer",
+    "required" : true
+  } ]
 }

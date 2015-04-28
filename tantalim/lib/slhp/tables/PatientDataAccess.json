@@ -1,49 +1,39 @@
 {
-  "dbName": "slhpPatientDataAccess",
-  "primaryKey": "PatientDataAccessID",
-  "columns": [
-    {
-      "name": "PatientDataAccessID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "PatientID",
-      "label": "Patient ID",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "Page",
-      "label": "Page",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "UserID",
-      "label": "User ID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "QueryCriteria",
-      "label": "Query Criteria",
-      "required": true,
-      "updateable": false
-    }
-  ],
-  "joins": [
-    {
-      "name": "User",
-      "table": "User",
-      "columns": [
-        {
-          "from": "UserID",
-          "to": "UserID"
-        }
-      ]
-    }    
-  ]
+  "dbName" : "slhpPatientDataAccess",
+  "primaryKey" : "PatientDataAccessID",
+  "joins" : [ {
+    "name" : "User",
+    "table" : "User",
+    "columns" : [ {
+      "to" : "UserID",
+      "from" : "UserID"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "PatientDataAccessID",
+    "updateable" : false,
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "PatientID",
+    "updateable" : false,
+    "label" : "Patient ID",
+    "required" : true
+  }, {
+    "name" : "Page",
+    "updateable" : false,
+    "label" : "Page",
+    "required" : true
+  }, {
+    "name" : "UserID",
+    "updateable" : false,
+    "label" : "User ID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "QueryCriteria",
+    "updateable" : false,
+    "label" : "Query Criteria",
+    "required" : true
+  } ]
 }

@@ -1,41 +1,32 @@
 {
-  "dbName": "slhpDiagnosis",
-  "primaryKey": "DiagnosisID",
-  "columns": [
-    {
-      "name": "DiagnosisID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "DiagnosisCode",
-      "label": "Diagnosis code",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "DiagnosisDescription",
-      "label": "Diagnosis description",
-      "required": true,
-      "updateable": false
-    }, 
-    {
-      "name": "HCCID",
-      "dataType": "Integer",
-      "updateable": false
-    }
-  ],
-  "joins": [
-    {
-      "name": "HCC",
-      "table": "HCC",
-      "columns": [
-        {
-          "from": "HCCID",
-          "to": "HCCID"
-        }
-      ]
-    }    
-  ]
-}  
+  "dbName" : "slhpDiagnosis",
+  "primaryKey" : "DiagnosisID",
+  "joins" : [ {
+    "name" : "HCC",
+    "table" : "HCC",
+    "columns" : [ {
+      "to" : "HCCID",
+      "from" : "HCCID"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "DiagnosisID",
+    "updateable" : false,
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "DiagnosisCode",
+    "updateable" : false,
+    "label" : "Diagnosis code",
+    "required" : true
+  }, {
+    "name" : "DiagnosisDescription",
+    "updateable" : false,
+    "label" : "Diagnosis description",
+    "required" : true
+  }, {
+    "name" : "HCCID",
+    "updateable" : false,
+    "dataType" : "Integer"
+  } ]
+}

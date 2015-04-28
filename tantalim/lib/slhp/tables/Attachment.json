@@ -1,65 +1,49 @@
 {
-  "dbName": "slhpAttachment",
-  "primaryKey": "AttachmentID",
-  "columns": [
-    {
-      "name": "AttachmentID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "AttachmentTypeCode",
-      "label": "Attachment Type Code"
-    },
-    {
-      "name": "File",
-      "label": "File",
-      "required": true
-    },
-    {
-      "name": "PatientID",
-      "label": "PatientID",
-      "dataType": "Integer",
-      "updateable": false
-    },
-    {
-      "name": "ClaimID",
-      "label": "Claim ID",
-      "dataType": "Integer",
-      "updateable": false
-    }
-  ],
-  "joins": [
-    {
-      "name": "AttachmentType",
-      "table": "AttachmentType",
-      "columns": [
-        {
-          "from": "AttachmentTypeCode",
-          "to": "AttachmentTypeCode"
-        }
-      ]
-    },
-    {
-      "name": "Claim",
-      "table": "Claim",
-      "columns": [
-        {
-          "from": "ClaimID",
-          "to": "ClaimID"
-        }
-      ]
-    },
-    {
-      "name": "Patient",
-      "table": "Patient",
-      "columns": [
-        {
-          "from": "PatientID",
-          "to": "PatientID"
-        }
-      ]
-    }    
-  ]
+  "dbName" : "slhpAttachment",
+  "primaryKey" : "AttachmentID",
+  "joins" : [ {
+    "name" : "AttachmentType",
+    "table" : "AttachmentType",
+    "columns" : [ {
+      "to" : "AttachmentTypeCode",
+      "from" : "AttachmentTypeCode"
+    } ]
+  }, {
+    "name" : "Claim",
+    "table" : "Claim",
+    "columns" : [ {
+      "to" : "ClaimID",
+      "from" : "ClaimID"
+    } ]
+  }, {
+    "name" : "Patient",
+    "table" : "Patient",
+    "columns" : [ {
+      "to" : "PatientID",
+      "from" : "PatientID"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "AttachmentID",
+    "updateable" : false,
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "AttachmentTypeCode",
+    "label" : "Attachment Type Code"
+  }, {
+    "name" : "File",
+    "label" : "File",
+    "required" : true
+  }, {
+    "name" : "PatientID",
+    "updateable" : false,
+    "label" : "PatientID",
+    "dataType" : "Integer"
+  }, {
+    "name" : "ClaimID",
+    "updateable" : false,
+    "label" : "Claim ID",
+    "dataType" : "Integer"
+  } ]
 }

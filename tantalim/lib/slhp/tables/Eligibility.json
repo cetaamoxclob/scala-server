@@ -1,81 +1,63 @@
 {
-  "dbName": "slhpEligibility",
-  "primaryKey": "EligibilityID",
-  "columns": [
-    {
-      "name": "EligibilityID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "PatientID",
-      "dataType": "Integer",
-      "required": true,      
-      "updateable": false
-    },
-    {
-      "name": "MemberID",
-      "label": "Member ID",
-      "required": true,
-      "updateable": false            
-    },
-    {
-      "name": "StartDate",
-      "dataType": "Date",
-      "required": true,
-      "label": "Start Date",
-      "updateable": false      
-    },
-    {
-      "name": "EndDate",
-      "dataType": "Date",
-      "required": true,
-      "label": "End Date",
-      "updateable": false      
-    },
-    {
-      "name": "HealthplanID",
-      "dataType": "Integer",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "ProviderID",
-      "dataType": "Integer",
-      "updateable": false
-    }
-  ],
-  "joins": [
-    {
-      "name": "Healthplan",
-      "table": "Healthplan",
-      "columns": [
-        {
-          "from": "HealthplanID",
-          "to": "HealthplanID"
-        }
-      ]
-    },
-    {
-      "name": "Provider",
-      "table": "Provider",
-      "columns": [
-        {
-          "from": "ProviderID",
-          "to": "ProviderID"
-        }
-      ]
-    },
-    {
-      "name": "Patient",
-      "table": "Patient",
-      "columns": [
-        {
-          "from": "PatientID",
-          "to": "PatientID"
-        }
-      ]
-    }    
-  ]
+  "dbName" : "slhpEligibility",
+  "primaryKey" : "EligibilityID",
+  "joins" : [ {
+    "name" : "Healthplan",
+    "table" : "Healthplan",
+    "columns" : [ {
+      "to" : "HealthplanID",
+      "from" : "HealthplanID"
+    } ]
+  }, {
+    "name" : "Provider",
+    "table" : "Provider",
+    "columns" : [ {
+      "to" : "ProviderID",
+      "from" : "ProviderID"
+    } ]
+  }, {
+    "name" : "Patient",
+    "table" : "Patient",
+    "columns" : [ {
+      "to" : "PatientID",
+      "from" : "PatientID"
+    } ]
+  } ],
+  "columns" : [ {
+    "name" : "EligibilityID",
+    "updateable" : false,
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "PatientID",
+    "updateable" : false,
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "MemberID",
+    "updateable" : false,
+    "label" : "Member ID",
+    "required" : true
+  }, {
+    "name" : "StartDate",
+    "updateable" : false,
+    "label" : "Start Date",
+    "dataType" : "Date",
+    "required" : true
+  }, {
+    "name" : "EndDate",
+    "updateable" : false,
+    "label" : "End Date",
+    "dataType" : "Date",
+    "required" : true
+  }, {
+    "name" : "HealthplanID",
+    "updateable" : false,
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "ProviderID",
+    "updateable" : false,
+    "dataType" : "Integer"
+  } ]
 }

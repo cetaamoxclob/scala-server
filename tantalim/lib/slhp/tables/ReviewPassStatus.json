@@ -1,31 +1,26 @@
 {
-  "dbName": "slhpReviewPassStatus",
-  "primaryKey": "ReviewPassStatusCode",
-  "columns": [
-    {
-      "name": "ReviewPassStatusCode",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "ReviewPassStatus",
-      "label": "Review Pass Status",
-      "required": true,
-      "updateable": false
-    },
-    {
-      "name": "ActiveFlag",
-      "label": "Active Flag",
-      "dataType": "Boolean",
-      "columnDefault": "true",      
-      "required": true,
-      "updateable": true
-    },
-    {
-      "name": "DisplaySequence",
-      "label": "Display Sequence",
-      "required": false,
-      "updateable": true
-    }
-  ]
+  "dbName" : "slhpReviewPassStatus",
+  "primaryKey" : "ReviewPassStatusCode",
+  "columns" : [ {
+    "name" : "ReviewPassStatusCode",
+    "updateable" : false,
+    "required" : true
+  }, {
+    "name" : "ReviewPassStatus",
+    "updateable" : false,
+    "label" : "Review Pass Status",
+    "required" : true
+  }, {
+    "name" : "ActiveFlag",
+    "updateable" : true,
+    "label" : "Active Flag",
+    "dataType" : "Boolean",
+    "required" : true,
+    "columnDefault" : "true"
+  }, {
+    "name" : "DisplaySequence",
+    "updateable" : true,
+    "label" : "Display Sequence",
+    "required" : false
+  } ]
 }

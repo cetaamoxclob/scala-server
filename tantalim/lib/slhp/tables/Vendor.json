@@ -1,21 +1,17 @@
 {
-  "dbName": "slhpVendor",
-  "primaryKey": "VendorID",
-  "columns": [
-    {
-      "name": "VendorID",
-      "dataType": "Integer",
-      "required": true
-    },
-    {
-      "name": "Name",
-      "label": "Vendor",
-      "required": true
-    },
-    {
-      "name": "TaxID",
-      "label": "Tax ID",
-      "required": true
-    }
-  ]
+  "dbName" : "slhpVendor",
+  "primaryKey" : "VendorID",
+  "columns" : [ {
+    "name" : "VendorID",
+    "dataType" : "Integer",
+    "required" : true
+  }, {
+    "name" : "Name",
+    "label" : "Vendor",
+    "required" : true
+  }, {
+    "name" : "TaxID",
+    "label" : "Tax ID",
+    "required" : true
+  } ]
 }
