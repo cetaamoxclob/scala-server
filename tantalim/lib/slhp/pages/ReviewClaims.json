@@ -4,8 +4,8 @@
   "sections" : [ {
     "viewMode" : "table",
     "name" : "Patients",
-    "title" : "Patients",
     "model" : "ReviewClaims",
+    "title" : "Patients",
     "fields" : [ {
       "name" : "PatientFirstName"
     }, {
