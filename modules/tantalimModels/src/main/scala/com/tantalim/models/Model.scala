@@ -65,6 +65,12 @@ case class Model(name: String,
 
   def hasField(fieldName: String): Boolean = fields.get(fieldName).isDefined
 
+//  def hasFieldHereOrInAncestor(fieldName: String): Boolean = {
+//    if (this.hasField(fieldName)) true
+//    else if (parent.isDefined) parent.get.hasFieldHereOrInAncestor(fieldName)
+//    else false
+//  }
+//
   def getField(fieldName: String): ModelField = {
     val field = fields.get(fieldName)
     if (field.isEmpty) {

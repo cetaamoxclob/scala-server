@@ -31,48 +31,59 @@ trait DataReader extends DatabaseConnection {
       throw new TantalimException(s"Model ${model.name} is based on a Mock Table and cannot query the database.", "Check the calling function.")
     }
 
-    var sqlBuilder = new SqlBuilder(
-      from = model.basisTable,
-      steps = model.steps.values.toSeq,
-      fields = model.basisFields,
-      page = page,
-      orderBy = orderBy,
-      limit = model.limit)
+    val sql = {
+      // Create SqlBuilder without any filters
+      var sqlBuilder = new SqlBuilder(
+        from = model.basisTable,
+        steps = model.steps.values.toSeq,
+        fields = model.basisFields,
+        page = page,
+        orderBy = orderBy,
+        limit = model.limit)
+      // Add in the model-defined filter
+      sqlBuilder = parseFilterForSql(sqlBuilder, model.basisFields, model.filter)
+      // Add in the runtime filter
+      sqlBuilder = parseFilterForSql(sqlBuilder, model.basisFields, filter)
+      sqlBuilder
+    }
 
-    sqlBuilder = parseFilterForSql(sqlBuilder, model.basisFields, model.filter)
-    sqlBuilder = parseFilterForSql(sqlBuilder, model.basisFields, filter)
-
-    try {
-      val rs = if (dbConnection.isDefined) query(sqlBuilder.toPreparedStatement, sqlBuilder.parameters, dbConnection.get)
-      else query(sqlBuilder.toPreparedStatement, sqlBuilder.parameters)
-      val resultSet = convertResultSetToDataRows(model, rs)
-      if (fieldDefaultsExist(model.fields.values)) {
-        applyFieldDefaultsToResultSet(model.fields.values, resultSet)
+    val resultSet = try {
+      val resultSet = {
+        val rs = if (dbConnection.isDefined) query(sql.toPreparedStatement, sql.parameters, dbConnection.get)
+        else query(sql.toPreparedStatement, sql.parameters)
+        val resultSet = convertResultSetToDataRows(model, rs)
+        resultSet.sql = sql.toPreparedStatement
+        resultSet
       }
-      resultSet.sql = sqlBuilder.toPreparedStatement
+      applyFieldDefaultsToResultSet(model.fields.values, resultSet)
+      resultSet
+    } catch {
+      case e: Exception =>
+        println("ERROR" + e.getMessage)
+        val e2 = new TantalimException(e.getMessage, sql.toPreparedStatement)
+        throw e2
+    }
 
-      if (resultSet.rows.length > 0 && model.children.size > 0) {
-        model.children.map {
-          case (childModelName: String, childModel: Model) =>
+    if (resultSet.rows.length > 0 && model.children.size > 0) {
+      model.children.map {
+        case (childModelName: String, childModel: Model) =>
+          val filterForChildModel = {
             val parentFieldName = childModel.parentField.get
             val parentIDs: Seq[Int] = resultSet.rows.map { row =>
+              // TODO support foreignKeys of type other than Int
               row.get(parentFieldName) match {
                 case Some(parentFieldValue) => parentFieldValue.asInstanceOf[TntInt].value.toInt
                 case None => -1
               }
             }
-            val filterForChildModel = childModel.childField.get + " In (" + parentIDs.mkString(",") + ")"
-            val childRows = queryModelData(childModel, 1, Some(filterForChildModel), childModel.orderBy)
-            addChildRowsToParent(resultSet, childRows)
-        }
+            childModel.childField.get + " In (" + parentIDs.mkString(",") + ")"
+          }
+          val childRows = queryModelData(childModel, 1, Some(filterForChildModel), childModel.orderBy, dbConnection = dbConnection)
+          addChildRowsToParent(resultSet, childRows)
       }
-      resultSet
-    } catch {
-      case e: Exception =>
-        println("ERROR" + e.getMessage)
-        val e2 = new TantalimException(e.getMessage, sqlBuilder.toPreparedStatement)
-        throw e2
     }
+    applyFieldDefaultsToResultSet(model.fields.values, resultSet)
+    resultSet
   }
 
   private def parseFilterForSql(sqlBuilder: SqlBuilder, modelFields: Map[String, ModelField], filter: Option[String]): SqlBuilder = {
@@ -158,17 +169,22 @@ trait DataReader extends DatabaseConnection {
 
   }
 
-  private def fieldDefaultsExist(fields: Iterable[ModelField]): Boolean = {
-    fields.exists(_.alwaysDefault)
-  }
-
   private def applyFieldDefaultsToResultSet(fields: Iterable[ModelField], set: SmartNodeSet): Unit = {
     fields.filter(_.alwaysDefault).foreach { field =>
-      val valueDefault: Option[TntString] = if (field.valueDefault.isDefined) Some(TntString(field.valueDefault.get)) else None
-      set.foreach { row =>
-        if (valueDefault.isDefined) row.set(field.name, valueDefault.get)
-        else if (field.fieldDefault.isDefined) row.set(field.name, row.get(field.fieldDefault.get).get)
-        // TODO Implement functionDefault
+      try {
+        println(s"Defaulting ${field.name} $field")
+        val valueDefault: Option[TntString] = if (field.valueDefault.isDefined) Some(TntString(field.valueDefault.get)) else None
+        set.foreach { row =>
+          if (valueDefault.isDefined) row.set(field.name, valueDefault.get)
+          else if (field.fieldDefault.isDefined) {
+            val sourceFieldName = field.fieldDefault.get
+            row.set(field.name, row.get(sourceFieldName).get)
+          } else if (field.functionDefault.isDefined)
+            println("TODO Implement functionDefault: " + field.functionDefault.get)
+        }
+      } catch {
+        case e: Exception => println(s"WARN: Failed to default ${field.name} due to Error: ${e.getMessage}")
+        case e: TantalimException => println(s"WARN: Failed to default ${field.name} due to Error: ${e.getMessage}")
       }
     }
   }
