@@ -208,5 +208,17 @@
     "name" : "primaryKey",
     "basisColumn" : "PrimaryKey",
     "export" : true
+  }, {
+    "name" : "allowInsert",
+    "basisColumn" : "AllowInsert",
+    "export" : true
+  }, {
+    "name" : "allowUpdate",
+    "basisColumn" : "AllowUpdate",
+    "export" : true
+  }, {
+    "name" : "allowDelete",
+    "basisColumn" : "AllowDelete",
+    "export" : true
   } ]
 }

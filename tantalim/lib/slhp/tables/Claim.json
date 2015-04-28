@@ -1,8 +1,8 @@
 {
+  "allowUpdate" : false,
   "dbName" : "slhpClaim",
   "primaryKey" : "ClaimID",
   "allowInsert" : false,
-  "allowUpdate" : false,
   "allowDelete" : true,
   "joins" : [ {
     "name" : "Vendor",

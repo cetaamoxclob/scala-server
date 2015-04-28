@@ -1,8 +1,8 @@
 {
+  "allowUpdate" : false,
   "dbName" : "slhpPatient",
   "primaryKey" : "PatientID",
   "allowInsert" : false,
-  "allowUpdate" : false,
   "allowDelete" : false,
   "columns" : [ {
     "name" : "PatientID",
