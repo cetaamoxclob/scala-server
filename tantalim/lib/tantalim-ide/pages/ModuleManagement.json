@@ -58,7 +58,7 @@
           "fxn" : "_.forEach(section.getSelectedRows(), function (row) {\n    var artifact = row.getValue('ArtifactName');\n    var moduleName = row.getValue('ModuleName');\n    var artifactType = row.getValue('ArtifactType');\n    row.update('ArtifactOutput', 'STARTING EXPORT', true);\n    Http.post('/export/' + moduleName + '/' + artifactType + '/' + artifact).success(function (data) {\n        row.update('ArtifactOutput', data.message || data, true);\n    }).error(function (data) {\n        row.update('ArtifactOutput', data, true);\n    });\n});"
         }, {
           "label" : "Create Table(s)",
-          "fxn" : "_.forEach(section.getSelectedRows(), function (row) {\n    var table = row.getValue('ArtifactName');\n    if (row.getValue('ArtifactType') !== 'Table') {\n        return;\n    }\n    row.update('ArtifactOutput', 'CREATING TABLE', true);\n    Http.post('/ddl/' + table).success(function (data) {\n        row.update('ArtifactOutput', data.message || data, true);\n    }).error(function (data) {\n        row.update('ArtifactOutput', data, true);\n    });\n});"
+          "fxn" : "_.forEach(section.getSelectedRows(), function (row) {\n    var table = row.getValue('ArtifactName');\n    if (row.getValue('ArtifactType') !== 'tables') {\n        row.update('ArtifactOutput', 'ERROR: You can only create Tables', true);\n        return;\n    }\n    row.update('ArtifactOutput', 'CREATING TABLE', true);\n    Http.post('/ddl/' + table).success(function (data) {\n        row.update('ArtifactOutput', data.message || data, true);\n    }).error(function (data) {\n        row.update('ArtifactOutput', data, true);\n    });\n});"
         } ]
       } ]
     } ],

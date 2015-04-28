@@ -241,7 +241,8 @@ trait DataSaver extends DataReader {
 
     if (existingForeignKeyRow.isEmpty) {
       // TODO see if we need to throw exception every time
-      throw new TantalimException("Failed to find matching parent row", "Not sure if this is important all the time...")
+      // 4/28 needed to find column so yes it was required
+      throw new TantalimException(s"Failed to find matching ${step.join.table.name} with values $valueMap", "Not sure if this is important all the time...")
     }
 
     existingForeignKeyRow.foreach { case (fkColumn, fkValue) =>
