@@ -7,8 +7,6 @@ import com.tantalim.nodes._
 import com.tantalim.util.TantalimException
 import com.tantalim.database.data.SqlBuilder
 
-import scala.collection.mutable
-
 trait DataSaver extends DataReader {
   def saveAll(dataToSave: SmartNodeSet): Unit = {
     if (dataToSave.model.basisTable.isMock) {
@@ -250,14 +248,14 @@ trait DataSaver extends DataReader {
 //      println("Found ForeignKey value for " + fkColumn)
       val matchingField = modelFields.find { matchingField =>
 //        println("    " + matchingField)
-        matchingField.basisColumn == fkColumn
+        matchingField.basisColumn == Some(fkColumn)
       }
 
       if (matchingField.isDefined) {
         println(s"  Updating ${matchingField.get.name} with $fkValue")
         row.set(matchingField.get.name, fkValue)
 
-        val allMatches = modelFields.filter(f => f.basisColumn == fkColumn)
+        val allMatches = modelFields.filter(f => f.basisColumn ==  Some(fkColumn))
         if (allMatches.size > 1) {
           println("WARN - Found more than 1 " + allMatches)
         }
@@ -272,7 +270,7 @@ trait DataSaver extends DataReader {
 
       val matchingFieldName: String = row.model.fields.values.find { field =>
         val fieldTableAlias = if (field.step.isDefined) field.step.get.tableAlias else 0
-        field.basisColumn == fieldNameOnDestinationTable && parentStep == fieldTableAlias
+        field.basisColumn == Some(fieldNameOnDestinationTable) && parentStep == fieldTableAlias
       }.getOrElse(
           throw new TantalimException(
             s"Unable to find any field based on ${fieldNameOnDestinationTable.name} in Model ${row.model.name}",
