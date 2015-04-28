@@ -42,11 +42,23 @@
         {
           "name": "ClaimVendor",
           "join": "Vendor",
-          "parent": "ClaimProvider"
+          "parent": "ClaimProvider",
+          "fields": [
+            {
+              "name": "ClaimVendorName",
+              "basisColumn": "Name"
+            }
+          ]
         },
         {
           "name": "ClaimProvider",
-          "join": "Provider"
+          "join": "Provider",
+          "fields": [
+            {
+              "name": "ClaimProviderName",
+              "basisColumn": "Name"
+            }
+          ]
         }
       ],
       "fields": [
@@ -67,18 +79,8 @@
           "basisColumn": "ServiceDate"
         },
         {
-          "name": "ClaimVendorName",
-          "basisColumn": "Name",
-          "step": "ClaimVendor"
-        },
-        {
           "name": "ClaimVendorID",
           "basisColumn": "VendorID"
-        },
-        {
-          "name": "ClaimProviderName",
-          "basisColumn": "Name",
-          "step": "ClaimProvider"
         },
         {
           "name": "ClaimProviderID",
