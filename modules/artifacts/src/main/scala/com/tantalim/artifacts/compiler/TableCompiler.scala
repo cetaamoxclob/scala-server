@@ -22,6 +22,7 @@ trait TableCompiler extends ArtifactService with TableCache {
         moduleName.get,
         Database(moduleName.get,
           if (moduleName.get.toLowerCase.startsWith("tantalim")) Some("tantalim_meta")
+          else if (moduleName.get.toLowerCase.startsWith("slhp")) Some("slhp")
           else None
         )
       )
