@@ -11,7 +11,7 @@
     } ]
   }, {
     "name" : "ToTable",
-    "required" : true,
+    "required" : false,
     "table" : "Table",
     "columns" : [ {
       "to" : "TableID",
