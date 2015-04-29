@@ -96,6 +96,6 @@ object ModelJson {
 
   implicit def orderByReads: Reads[ModelOrderBy] = (
     (JsPath \ "fieldName").read[String] and
-      (JsPath \ "direction").readNullable[Boolean]
+      (JsPath \ "ascending").readNullable[Boolean]
     ).apply(ModelOrderBy.apply _)
 }

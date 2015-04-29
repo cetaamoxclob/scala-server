@@ -218,7 +218,7 @@
       "basisColumn" : "FieldID",
       "export" : false
     }, {
-      "name" : "direction",
+      "name" : "ascending",
       "basisColumn" : "Ascending",
       "export" : true
     }, {
@@ -228,8 +228,8 @@
       "export" : false
     } ],
     "orderBy" : [ {
-      "direction" : true,
-      "fieldName" : "ModelSortSortOrder"
+      "fieldName" : "ModelSortSortOrder",
+      "ascending" : true
     } ],
     "steps" : [ {
       "name" : "Field",
