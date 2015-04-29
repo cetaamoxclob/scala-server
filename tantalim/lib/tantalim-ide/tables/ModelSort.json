@@ -21,27 +21,32 @@
   "columns" : [ {
     "name" : "SortID",
     "updateable" : false,
+    "visible" : false,
     "dbName" : "sortID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "ModelID",
     "updateable" : false,
+    "visible" : false,
     "dbName" : "modelID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "FieldID",
+    "visible" : false,
     "dbName" : "fieldID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "Ascending",
+    "visible" : true,
     "dbName" : "sortAsc",
     "dataType" : "Boolean",
     "required" : false
   }, {
     "name" : "SortOrder",
+    "visible" : true,
     "dbName" : "sortOrder",
     "label" : "Order",
     "dataType" : "Integer",

@@ -20,11 +20,13 @@
   "columns" : [ {
     "name" : "SectionID",
     "updateable" : false,
+    "visible" : false,
     "dbName" : "sectionID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "Name",
+    "visible" : true,
     "dbName" : "name",
     "label" : "Section Name",
     "dataType" : "String",
@@ -32,26 +34,31 @@
   }, {
     "name" : "PageID",
     "updateable" : false,
+    "visible" : false,
     "dbName" : "pageID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "Title",
+    "visible" : true,
     "dbName" : "title",
     "dataType" : "String",
     "required" : false
   }, {
     "name" : "Model",
+    "visible" : true,
     "dbName" : "model",
     "dataType" : "String",
     "required" : false
   }, {
     "name" : "ViewMode",
+    "visible" : true,
     "dbName" : "viewMode",
     "dataType" : "String",
     "required" : false
   }, {
     "name" : "ParentID",
+    "visible" : false,
     "dbName" : "parentID",
     "dataType" : "Integer",
     "required" : false

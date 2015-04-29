@@ -4,37 +4,44 @@
   "columns" : [ {
     "name" : "ItemID",
     "updateable" : false,
+    "visible" : false,
     "dbName" : "itemID",
     "dataType" : "Integer",
     "required" : false
   }, {
     "name" : "ContentID",
+    "visible" : false,
     "dbName" : "contentID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "DisplayOrder",
+    "visible" : true,
     "dbName" : "displayOrder",
     "label" : "Order",
     "dataType" : "Integer",
     "required" : false
   }, {
     "name" : "Page",
+    "visible" : true,
     "dbName" : "page",
     "dataType" : "String",
     "required" : false
   }, {
     "name" : "Title",
+    "visible" : true,
     "dbName" : "title",
     "dataType" : "String",
     "required" : false
   }, {
     "name" : "Link",
+    "visible" : true,
     "dbName" : "href",
     "dataType" : "String",
     "required" : false
   }, {
     "name" : "Icon",
+    "visible" : true,
     "dbName" : "icon",
     "dataType" : "String",
     "required" : false

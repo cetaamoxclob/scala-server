@@ -27,32 +27,38 @@
   "columns" : [ {
     "name" : "StepID",
     "updateable" : false,
+    "visible" : false,
     "dbName" : "stepID",
     "dataType" : "Integer",
     "required" : false
   }, {
     "name" : "ModelID",
+    "visible" : false,
     "dbName" : "modelID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "Name",
+    "visible" : true,
     "dbName" : "name",
     "label" : "Step",
     "dataType" : "String",
     "required" : true
   }, {
     "name" : "Join",
+    "visible" : false,
     "dbName" : "joinName",
     "dataType" : "String",
     "required" : true
   }, {
     "name" : "ParentID",
+    "visible" : false,
     "dbName" : "parentID",
     "dataType" : "Integer",
     "required" : false
   }, {
     "name" : "JoinID",
+    "visible" : false,
     "dbName" : "joinID",
     "dataType" : "Integer",
     "required" : true

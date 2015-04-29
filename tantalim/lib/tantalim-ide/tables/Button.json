@@ -12,21 +12,25 @@
   } ],
   "columns" : [ {
     "name" : "ButtonID",
+    "visible" : false,
     "dbName" : "buttonID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "SectionID",
+    "visible" : false,
     "dbName" : "sectionID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "Label",
+    "visible" : true,
     "dbName" : "label",
     "dataType" : "String",
     "required" : true
   }, {
     "name" : "Function",
+    "visible" : true,
     "dbName" : "functionText",
     "length" : 1000,
     "dataType" : "String",

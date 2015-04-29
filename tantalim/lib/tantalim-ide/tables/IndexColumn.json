@@ -21,23 +21,27 @@
   "columns" : [ {
     "name" : "IndexColumnID",
     "updateable" : false,
+    "visible" : false,
     "dbName" : "indexColumnID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "IndexID",
     "updateable" : false,
+    "visible" : false,
     "dbName" : "indexID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "Order",
+    "visible" : true,
     "dbName" : "columnOrder",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "ColumnID",
     "updateable" : false,
+    "visible" : false,
     "dbName" : "columnID",
     "dataType" : "Integer",
     "required" : true

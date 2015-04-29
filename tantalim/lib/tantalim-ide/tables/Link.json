@@ -20,21 +20,25 @@
   } ],
   "columns" : [ {
     "name" : "LinkID",
+    "visible" : false,
     "dbName" : "linkID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "FieldID",
+    "visible" : false,
     "dbName" : "fieldID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "Page",
+    "visible" : true,
     "dbName" : "page",
     "dataType" : "String",
     "required" : true
   }, {
     "name" : "Filter",
+    "visible" : true,
     "dbName" : "filter",
     "dataType" : "String",
     "required" : false

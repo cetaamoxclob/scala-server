@@ -13,23 +13,27 @@
   "columns" : [ {
     "name" : "IndexID",
     "updateable" : false,
+    "visible" : false,
     "dbName" : "indexID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "TableID",
     "updateable" : false,
+    "visible" : false,
     "dbName" : "tableID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "Priority",
     "updateable" : true,
+    "visible" : true,
     "dbName" : "priority",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "Unique",
+    "visible" : true,
     "dbName" : "uniqueIndex",
     "help" : "Is this a unique index? Default No.",
     "dataType" : "Boolean",

@@ -4,32 +4,38 @@
   "columns" : [ {
     "name" : "PageID",
     "updateable" : false,
+    "visible" : false,
     "dbName" : "pageID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "Name",
+    "visible" : true,
     "dbName" : "name",
     "label" : "Page Name",
     "dataType" : "String",
     "required" : true
   }, {
     "name" : "Module",
+    "visible" : true,
     "dbName" : "module",
     "dataType" : "String",
     "required" : true
   }, {
     "name" : "Title",
+    "visible" : true,
     "dbName" : "title",
     "dataType" : "String",
     "required" : true
   }, {
     "name" : "Icon",
+    "visible" : true,
     "dbName" : "icon",
     "dataType" : "String",
     "required" : false
   }, {
     "name" : "Css",
+    "visible" : true,
     "dbName" : "css",
     "dataType" : "String",
     "required" : false

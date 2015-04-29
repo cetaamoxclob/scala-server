@@ -3,16 +3,19 @@
   "primaryKey" : "ModuleID",
   "columns" : [ {
     "name" : "ModuleID",
+    "visible" : false,
     "dbName" : "moduleID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "Name",
+    "visible" : true,
     "dbName" : "name",
     "dataType" : "String",
     "required" : true
   }, {
     "name" : "Database",
+    "visible" : true,
     "dbName" : "database",
     "dataType" : "String",
     "required" : false
