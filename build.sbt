@@ -1,5 +1,7 @@
 name := "tantalim"
 
+organization := "com.tantalim"
+
 version := "1.0"
 
 lazy val app = (project in file("."))
