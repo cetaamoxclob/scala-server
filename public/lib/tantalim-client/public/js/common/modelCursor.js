@@ -11,7 +11,7 @@ angular.module('tantalim.common')
 
             var clear = function () {
                 rootSet = null;
-                current = []; // {sets: {}, gridSelection: {}, editing: {}}
+                current = {};
                 modelMap = {};
             };
             clear();
@@ -22,6 +22,14 @@ angular.module('tantalim.common')
                 _.forEach(model.children, function (childModel) {
                     fillModelMap(childModel, model.name);
                 });
+            };
+
+            var STATE = {
+                NO_CHANGE: 'NO_CHANGE',
+                DELETED: 'DELETED',
+                INSERTED: 'INSERTED',
+                UPDATED: 'UPDATED',
+                CHILD_UPDATED: 'CHILD_UPDATED'
             };
 
             /**
@@ -50,17 +58,21 @@ angular.module('tantalim.common')
                      * map of SmartNodeInstances representing the children of this node
                      */
                     childModels: {},
-                    /**
-                     * NO_CHANGE, DELETED, INSERTED, UPDATED
-                     */
-                    state: 'NO_CHANGE',
+                    getChild: function(name) {
+                        var childModel = this.childModels[name];
+                        if (childModel === undefined) {
+                            console.warn('Child model ' + name + ' doesn\'t exist.');
+                        }
+                        return childModel;
+                    },
+                    state: STATE.NO_CHANGE,
 
                     delete: function () {
-                        this.state = 'DELETED';
+                        this.state = STATE.DELETED;
                     },
                     isDirty: function() {
                         //console.info("Checking this.state" + this.state + " for " + this.id);
-                        return this.state !== 'NO_CHANGE';
+                        return this.state !== STATE.NO_CHANGE;
                     },
                     toggle: function (fieldName, required) {
                         var currentValue = this.data[fieldName];
@@ -74,11 +86,20 @@ angular.module('tantalim.common')
                         console.info("Setting ", fieldName, newValue);
                         this.update(fieldName, newValue);
                     },
+                    getField: function(fieldName) {
+                        var model = modelMap[this.nodeSet.model.modelName];
+                        return model.fields[fieldName];
+                    },
                     getValue: function (fieldName) {
-                        console.info('finding value for fieldName: ', fieldName, this.data);
+                        //console.info('finding value for fieldName: ', fieldName, this.data);
 
                         if (this.data.hasOwnProperty(fieldName)) {
                             return this.data[fieldName];
+                        }
+
+                        if (this.getField(fieldName)) {
+                            // This model has the field but it's empty
+                            return null;
                         }
 
                         if (this.nodeSet.parentInstance) {
@@ -88,12 +109,14 @@ angular.module('tantalim.common')
                         // We could consider checking child models first before dying
                         throw new Error('Cannot find field called ' + fieldName);
                     },
-                    update: function (fieldName, newValue) {
+                    setValue: function (fieldName, newValue, force) {
+                        console.info('update ' + fieldName + ' to ' + newValue);
+                        force = force || false;
                         var field = modelMap[nodeSet.model.modelName].fields[fieldName];
                         if (!field) {
                             console.error("Failed to find field named " + fieldName + " in ", modelMap[nodeSet.model.modelName].fields);
                         }
-                        if (!field.updateable) {
+                        if (!field.updateable && !force) {
                             return;
                         }
                         // TODO get field defaults to work
@@ -105,16 +128,20 @@ angular.module('tantalim.common')
                                 this.data[fieldName] = newValue;
                             }
                         }
-                        if (this.state === 'NO_CHANGE' || this.state === 'CHILD_UPDATED') {
-                            this.state = 'UPDATED';
+                        if (this.state === STATE.NO_CHANGE || this.state === STATE.CHILD_UPDATED) {
+                            this.state = STATE.UPDATED;
                             this.updateParent();
                         }
+                    },
+                    update: function (fieldName, newValue, force) {
+                        console.warn('update is deprecated. Use setValue');
+                        this.setValue(fieldName, newValue, force);
                     },
                     updateParent: function () {
                         if (!this.nodeSet) return;
                         var parent = this.nodeSet.parentInstance;
-                        if (parent && parent.state === 'NO_CHANGE') {
-                            parent.state = 'CHILD_UPDATED';
+                        if (parent && parent.state === STATE.NO_CHANGE) {
+                            parent.state = STATE.CHILD_UPDATED;
                             parent.updateParent();
                         }
 
@@ -130,42 +157,33 @@ angular.module('tantalim.common')
                 newInstance.nodeSet = nodeSet;
 
                 function setFieldDefault(field, row) {
-                    if (!field.fieldDefault) {
-                        return;
-                    }
-                    $log.debug('Defaulting field ', field);
+                    var defaultValue;
 
-                    var DEFAULT_TYPE = {
-                        CONSTANT: "Constant",
-                        FIELD: "Field",
-                        FXN: "Fxn"
-                    };
+                    if (field.valueDefault !== null) {
+                        console.info(field.name + field.valueDefault);
 
-                    switch (field.fieldDefault.type) {
-                        case DEFAULT_TYPE.FIELD:
-                            row.data[field.name] = row.getValue(field.fieldDefault.value);
-                            break;
-                        case DEFAULT_TYPE.FXN:
-                            row.data[field.name] = eval(field.fieldDefault.value);
-                            break;
-                        case DEFAULT_TYPE.CONSTANT:
-                            var value = field.fieldDefault.value
-                            switch (field.dataType) {
-                                case "Boolean":
-                                    value = (value === 'true');
-                                    break;
-                            }
-                            row.data[field.name] = value;
-                            break;
-                        default:
-                            console.error("Failed to match fieldDefault.type on ", field);
+                        defaultValue = field.valueDefault;
+                        switch (field.dataType) {
+                            case "Boolean":
+                                defaultValue = (defaultValue === 'true');
+                                break;
+                        }
                     }
-                    $log.debug('defaulted ' + field.name + ' to ' + row.data[field.name] + ' of type ' + typeof row.data[field.name]);
+                    if (field.fieldDefault !== null) {
+                        defaultValue = row.getValue(field.fieldDefault);
+                    }
+                    if (field.functionDefault !== null) {
+                        defaultValue = eval(field.functionDefault);
+                    }
+                    if (defaultValue !== undefined) {
+                        $log.debug('defaulted ' + field.name + ' to ' + defaultValue + ' of type ' + typeof defaultValue);
+                        row.data[field.name] = defaultValue;
+                    }
                 }
 
                 if (row.id === null) {
-                    $log.debug('id is null, so assume record is newly inserted', row);
-                    newInstance.state = 'INSERTED';
+                    //$log.debug('id is null, so assume record is newly inserted', row);
+                    newInstance.state = STATE.INSERTED;
                     newInstance.id = GUID();
                     _.forEach(model.fields, function (field) {
                         setFieldDefault(field, row);
@@ -173,15 +191,18 @@ angular.module('tantalim.common')
                 }
 
                 newInstance.addChildModel = function (childModelName, childDataSet) {
+                    //$log.debug('addChildModel ', childModelName, childDataSet);
                     var smartSet = new SmartNodeSet(modelMap[childModelName], childDataSet, newInstance, nodeSet.depth + 1);
                     newInstance.childModels[childModelName] = smartSet;
                 };
 
-                if (row.children) {
-                    _.forEach(model.children, function (childModel) {
+                _.forEach(model.children, function (childModel) {
+                    if (row.children) {
                         newInstance.addChildModel(childModel.name, row.children[childModel.name]);
-                    });
-                }
+                    } else {
+                        newInstance.addChildModel(childModel.name, []);
+                    }
+                });
 
                 //$log.debug('Done creating newInstance');
                 return newInstance;
@@ -269,6 +290,32 @@ angular.module('tantalim.common')
                             return row.id === id;
                         });
                     },
+                    find: function(matcher) {
+                        return _.find(this.rows, matcher);
+                    },
+                    isEmpty: function() {
+                        return !(this.rows.length > 0);
+                    },
+                    max: function(fieldName, lowest) {
+                        if (this.isEmpty()) {
+                            return lowest;
+                        }
+                        var value = _.max(this.rows, function(row) {
+                            return Number(row.data[fieldName]);
+                        });
+                        if (value) return Number(value.data[fieldName]);
+                        else return lowest;
+                    },
+                    min: function(fieldName, highest) {
+                        if (this.isEmpty()) {
+                            return highest;
+                        }
+                        var value = _.min(this.rows, function(row) {
+                            return Number(row.data[fieldName]);
+                        });
+                        if (value) return Number(value.data[fieldName]);
+                        else return highest;
+                    },
                     isDirty: function() {
                         if (this.deleted && this.deleted.length > 0) return true;
 
@@ -278,61 +325,81 @@ angular.module('tantalim.common')
                         return !_.isEmpty(dirtyRow);
                     },
                     delete: function (index) {
+                        // console.info('deleting on set with index =', index);
                         var row = this.rows[index];
-                        if (row.state !== 'INSERTED') {
+                        if (row.state !== STATE.INSERTED) {
                             // Only delete previously saved records
                             this.deleted.push(row);
                             row.updateParent();
                         }
-                        delete this.rows[index];
+                        this.rows.splice(index, 1);
+                        self.clearCurrentChildren(this.model.modelName);
                     },
                     deleteEnabled: function() {
                         return this.getInstance() !== null;
                     },
                     getInstance: function (index) {
                         if (!this.rows || this.rows.length === 0) {
+                            this.index = -1;
                             return null;
+                        }
+                        if (this.index < 0) {
+                            this.index = 0;
                         }
                         index = index || this.index || 0;
                         return this.rows[index];
                     },
                     reloadFromServer: function (newData) {
-                        $log.debug('reloadFromServer');
-                        $log.debug(newData);
-                        $log.debug(this);
+                        $log.debug('reloadFromServer with returned data', newData);
+                        $log.debug('this set', this);
 
                         _.forEach(this.rows, function (row) {
                             var modifiedRow;
                             switch (row.state) {
-                                case 'INSERTED':
-                                    $log.debug(row);
+                                case STATE.INSERTED:
                                     modifiedRow = _.find(newData, function (newRow) {
                                         return newRow.tempID === row.id;
                                     });
+                                    $log.debug('matching inserted row', row, modifiedRow);
                                     if (modifiedRow) {
-                                        row.state = 'NO_CHANGE';
+                                        row.state = STATE.NO_CHANGE;
                                         row.data = modifiedRow.data;
                                         row.id = modifiedRow.id;
                                     } else {
                                         console.error('Failed to find matching inserted row', row);
                                     }
                                     break;
-                                case 'UPDATED':
-                                    $log.debug(row);
+                                case STATE.UPDATED:
+                                case STATE.CHILD_UPDATED:
                                     modifiedRow = _.find(newData, function (newRow) {
                                         return newRow.id === row.id;
                                     });
+                                    $log.debug('matching update or child_updated row', row, modifiedRow);
                                     if (modifiedRow) {
-                                        row.state = 'NO_CHANGE';
-                                        row.data = modifiedRow.data;
+                                        row.state = STATE.NO_CHANGE;
+                                        if (row.state === STATE.UPDATED) {
+                                            // Don't bother replacing the data if it was just the child data updated
+                                            row.data = modifiedRow.data;
+                                        }
                                     } else {
                                         console.error('Failed to find matching updated row', row);
                                     }
                                     break;
                             }
+                            if (row.childModels && modifiedRow && modifiedRow.children) {
+                                //console.info(row.childModels);
+                                //console.info(modifiedRow);
+                                _.forEach(row.childModels, function (child, childName) {
+                                    //console.info(childName);
+                                    var childDataFromServer = modifiedRow.children[childName];
+                                    if (childDataFromServer) {
+                                        row.childModels[childName].reloadFromServer(childDataFromServer);
+                                    }
+                                });
+                            }
                         });
 
-                        this.deleted.length = 0;
+                        this.deleted = [];
                     }
                 };
 
@@ -340,13 +407,13 @@ angular.module('tantalim.common')
                 newSet.model.modelName = model.name;
                 newSet.model.orderBy = model.orderBy;
                 newSet.parentInstance = parentInstance;
-                newSet.insert = function () {
+                newSet.insert = function (values) {
                     $log.debug('Inserting new instance with model');
-                    var smartInstance = new SmartNodeInstance(model, {}, newSet);
+                    var smartInstance = new SmartNodeInstance(model, {data: values || {}}, newSet);
                     newSet.rows.push(smartInstance);
                     newSet.index = newSet.rows.length - 1;
                     smartInstance.updateParent();
-                    //self.resetCurrents(newSet);
+                    self.resetCurrents(newSet);
                     return smartInstance;
                 };
 
@@ -369,6 +436,7 @@ angular.module('tantalim.common')
                     $log.debug(model);
                     $log.debug(data);
                     clear();
+                    self.current = current;
                     if (_.isEmpty(model)) {
                         console.warn("setRoot called with empty model, exiting");
                         return;
@@ -377,20 +445,13 @@ angular.module('tantalim.common')
                     rootSet = new SmartNodeSet(model, data);
                     self.root = rootSet;
                     self.resetCurrents(rootSet);
-                    self.current = current;
                 },
-                getCurrentSet: function (modelName, level) {
-                    //console.info('getCurrentSet', modelName, level);
-                    level = level || 0;
-                    level = 0; // Will probably remove level
-                    if (!current[level]) {
-                        current[level] = {};
+                getCurrentSet: function (modelName) {
+                    if (!_.isEmpty(self.current) && !self.current[modelName]) {
+                        //console.warn('getCurrentSet is empty', modelName);
+                        //console.warn('current = ', self.current);
                     }
-                    var currentLevel = current[level];
-                    if (currentLevel[modelName] === undefined && modelMap[modelName]) {
-                        return undefined;
-                    }
-                    return currentLevel[modelName];
+                    return self.current[modelName];
                 },
                 resetCurrents: function (thisSet) {
                     if (!thisSet || thisSet._type !== 'SmartNodeSet') {
@@ -398,18 +459,11 @@ angular.module('tantalim.common')
                     }
 
                     var modelName = thisSet.model.modelName;
-                    var level = 0; // thisSet.depth will probably remove level
-                    if (!current[level]) {
-                        current[level] = {};
-                    }
 
                     var thisModel = modelMap[modelName];
+                    self.clearCurrentChildren(thisModel);
 
-                    current[level][modelName] = thisSet;
-                    // Remove all child levels below than this one
-                    for(var i = level + 1; i < current.length; i++) {
-                        delete current[i];
-                    }
+                    self.current[modelName] = thisSet;
 
                     var nextInstance = thisSet.getInstance();
 
@@ -423,6 +477,15 @@ angular.module('tantalim.common')
                             }
                         });
                     }
+                },
+                clearCurrentChildren: function (model) {
+                    if (!model.children) {
+                        return;
+                    }
+                    _.forEach(model.children, function (childModel) {
+                        current[childModel.name] = null;
+                        self.clearCurrentChildren(childModel);
+                    });
                 },
                 dirty: function () {
                     if (!rootSet) return false;

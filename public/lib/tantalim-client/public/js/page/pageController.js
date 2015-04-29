@@ -1,10 +1,33 @@
 'use strict';
 /* global _ */
+/* global $ */
 /* global angular */
 
 angular.module('tantalim.desktop')
     .controller('PageController',
-    function ($scope, $log, $location, PageDefinition, PageService, ModelCursor, keyboardManager, ModelSaver, $window, Logger) {
+    function ($scope, $log, $location, PageDefinition, PageService, ModelCursor, keyboardManager, ModelSaver, $window, $http, Logger) {
+
+
+        $scope.buttons = $window.buttons;
+        /**
+         * buttonScope is used in section.scala.html
+         */
+        $scope.buttonScope = {
+            // Deprecated
+            PageService: PageService,
+            // Deprecated
+            $http: $http,
+            Http: $http,
+            Logger: Logger,
+            Server: {
+                read: PageService.readModelData
+            }
+        };
+
+        $scope.showDevelopmentTools = false;
+        keyboardManager.bind('meta+alt+t', function () {
+            $scope.showDevelopmentTools = !$scope.showDevelopmentTools;
+        });
 
         /**
          * You can only edit a single cell in a single section at a time so this is a global var (page level at least)
@@ -29,7 +52,7 @@ angular.module('tantalim.desktop')
                 between: function (value) {
                     return selector.getStart() <= value && value <= selector.getEnd();
                 },
-                length: function() {
+                length: function () {
                     return selector.getEnd() - selector.getStart();
                 }
             };
@@ -61,25 +84,31 @@ angular.module('tantalim.desktop')
                     Logger.info('Loading data...');
                     Logger.error('');
 
+                    function processResults(d) {
+                        Logger.info('');
+                        if (d.status !== 200) {
+                            Logger.error('Failed to reach server. Try refreshing.');
+                            self.loadingFailed = true;
+                            return;
+                        }
+                        if (d.data.error) {
+                            Logger.error('Error reading data from server: ' + d.data.error.message);
+                            self.loadingFailed = true;
+                            return;
+                        }
+                        self.maxPages = d.data.maxPages;
+                        ModelCursor.setRoot(topModel, d.data.rows);
+                        self.turnSearchOff();
+                        self.topSection.fixSelectedRows();
+                        self.showLoadingScreen = false;
+                    }
+
                     var topModel = self.topSection.model;
-                    PageService.readModelData(topModel.name, self.filter(), self.page())
-                        .then(function (d) {
-                            Logger.info('');
-                            if (d.status !== 200) {
-                                Logger.error('Failed to reach server. Try refreshing.');
-                                self.loadingFailed = true;
-                                return;
-                            }
-                            if (d.data.error) {
-                                Logger.error('Error reading data from server: ' + d.data.error.message);
-                                self.loadingFailed = true;
-                                return;
-                            }
-                            self.maxPages = d.data.maxPages;
-                            ModelCursor.setRoot(topModel, d.data.rows);
-                            self.turnSearchOff();
-                            self.showLoadingScreen = false;
-                        });
+                    if (topModel.customUrlSource) {
+                        PageService.readUrl(topModel.customUrlSource).then(processResults);
+                    } else {
+                        PageService.readModelData(topModel.name, self.filter(), self.page()).then(processResults);
+                    }
                 },
 
                 refresh: function () {
@@ -102,7 +131,7 @@ angular.module('tantalim.desktop')
                     self.current = section;
                     section.bindHotKeys();
                 },
-                bind: function () {
+                bindHotKeys: function () {
                     keyboardManager.bind('ctrl+s', function () {
                         self.save();
                     });
@@ -220,6 +249,7 @@ angular.module('tantalim.desktop')
                         self.viewMode = VIEWMODE.TABLE;
                     } else {
                         self.selectedRows.end = self.selectedRows.start;
+                        self.stopEditing();
                         self.viewMode = VIEWMODE.FORM;
                     }
                     self.unbindHotKeys();
@@ -240,6 +270,14 @@ angular.module('tantalim.desktop')
                         });
                         $scope.clipboard.push(rowCopy);
                     });
+
+                    var clipboardToExcel = $scope.clipboard.map(function (row) {
+                        return row.join('\t');
+                    }).join('\n');
+
+                    var clipboardElement = $('#clipboard');
+                    clipboardElement.val(clipboardToExcel);
+                    clipboardElement.select();
                 },
                 paste: function () {
                     if ($scope.clipboard.length > 0) {
@@ -251,9 +289,6 @@ angular.module('tantalim.desktop')
                             clipboardRowLength = $scope.clipboard.length,
                             clipboardColumnLength = $scope.clipboard[0].length;
 
-                        if (clipboardColumnLength > self.selectedColumns.length()) {
-
-                        }
                         angular.forEach(rowsToPaste, function (targetRow) {
                             var sourceRow = $scope.clipboard[rowCounter];
                             var colCounter = 0;
@@ -277,11 +312,20 @@ angular.module('tantalim.desktop')
                     return ModelCursor.getCurrentSet(self.model.name);
                 },
                 unbindHotKeys: function () {
-                    _.forEach(keyboardManager.keyboardEvent, function (key, value) {
-                        keyboardManager.unbind(value);
+                    self.bound = false;
+                    var ctrl = 'meta';
+                    var sectionKeys = ['up', 'down', 'right', 'left', 'shift+tab', 'shift+down', ctrl + '+c', ctrl + '+v', ctrl + '+t', ctrl + '+d', ctrl + '+i'];
+                    angular.forEach(sectionKeys, function (key) {
+                        keyboardManager.unbind(key);
                     });
                 },
                 bindHotKeys: function () {
+                    if (self.bound) {
+                        return;
+                    }
+                    self.bound = true;
+                    // TODO detect if this is windows or mac
+                    var ctrl = 'meta';
                     if (self.viewMode === VIEWMODE.TABLE) {
                         keyboardManager.bind('up', function () {
                             self.moveToPreviousRow();
@@ -307,26 +351,33 @@ angular.module('tantalim.desktop')
                         keyboardManager.bind('shift+down', function () {
                             self.selectDown();
                         });
-                        keyboardManager.bind('meta+c', function () {
+                        keyboardManager.bind(ctrl + '+c', function () {
                             self.copy();
-                        });
-                        keyboardManager.bind('meta+v', function () {
+                        }, {propagate: true});
+                        keyboardManager.bind(ctrl + '+v', function () {
                             self.paste();
-                        });
-                        self.stopEditing();
+                        }, {propagate: true});
                     }
                     keyboardManager.bind('ctrl+t', function () {
                         self.toggleViewMode();
                     });
-                    keyboardManager.bind('ctrl+d', function () {
-                        self.getCurrentSet().delete();
+                    keyboardManager.bind(ctrl + '+d', function () {
+                        self.delete();
                     });
-                    keyboardManager.bind('ctrl+n', function () {
-                        self.getCurrentSet().insert();
+                    keyboardManager.bind(ctrl + '+i', function () {
+                        self.insert();
                     });
                 },
                 selectedRows: new Selector(),
                 selectedColumns: new Selector(),
+                hover: {},
+                selectRow: function (row) {
+                    self.selectedRows.start = self.selectedRows.end = row;
+                    self.fixSelectedRows();
+                },
+                rowIsSelected: function (row) {
+                    return self.selectedRows.between(row);
+                },
                 cellIsSelected: function (row, column) {
                     return self.selectedRows.between(row) && self.selectedColumns.between(column);
                 },
@@ -356,17 +407,23 @@ angular.module('tantalim.desktop')
                     }
                 },
                 mouseover: function (row, column) {
-                    if (event.which === MOUSE.LEFT) {
-                        if (self.cellIsEditing(row, column)) {
-                            return;
-                        }
-                        if (self.selectedRows.selecting) {
-                            self.selectedRows.end = row;
-                            self.selectedColumns.end = column;
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
+                    self.hover = {
+                        row: row,
+                        column: column
+                    };
+
+                    if (self.cellIsEditing(row, column)) {
+                        return;
                     }
+                    if (self.selectedRows.selecting) {
+                        self.selectedRows.end = row;
+                        self.selectedColumns.end = column;
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                },
+                isHoveredOverCell: function (row, column) {
+                    return self.hover.row === row && self.hover.column === column;
                 },
                 mouseup: function () {
                     if (event.which === MOUSE.LEFT) {
@@ -397,6 +454,7 @@ angular.module('tantalim.desktop')
                     });
                     keyboardManager.bind('enter', function () {
                     });
+                    self.unbindHotKeys();
                 },
                 stopEditing: function () {
                     editSection = null;
@@ -404,27 +462,24 @@ angular.module('tantalim.desktop')
                     keyboardManager.bind('enter', function () {
                         self.startEditing();
                     });
+                    self.bindHotKeys();
                 },
 
                 getSelectedRows: function () {
-                    return _.slice(this.rows, this.selectedRows.start, this.selectedRows.end);
+                    return _.slice(self.getCurrentSet().rows, self.selectedRows.start, self.selectedRows.end + 1);
+                },
+                insert: function () {
+                    self.getCurrentSet().insert();
+                    self.selectedRows.start = self.selectedRows.end = self.getCurrentSet().index;
+                    self.fixSelectedRows();
                 },
                 delete: function () {
-                    if (this.rows.length <= 0) {
-                        return;
+                    for (var index = self.selectedRows.start; index <= self.selectedRows.end; index++) {
+                        self.getCurrentSet().delete(self.selectedRows.start);
                     }
 
-                    for (var index = this.selectedRows.start; index <= this.selectedRows.end; index++) {
-                        var row = this.rows[index];
-                        if (row.state !== 'INSERTED') {
-                            // Only delete previously saved records
-                            this.deleted.push(row);
-                            row.updateParent();
-                        }
-                    }
-                    this.rows.splice(this.selectedRows.start, 1 + this.selectedRows.end - this.selectedRows.start);
-
-                    this.fixSelectedRows();
+                    self.selectedRows.end = self.selectedRows.start;
+                    self.fixSelectedRows();
                 },
                 selectUp: function () {
                     self.selectedRows.end--;
@@ -433,7 +488,7 @@ angular.module('tantalim.desktop')
                     self.selectedRows.end++;
                 },
                 moveNextColumn: function () {
-                    if (self.selectedColumns.start >= self.fields.length - 1) {
+                    if (self.selectedColumns.start >= (self.fields.length - 1)) {
                         return;
                     }
                     if (!self.selectedColumns) {
@@ -452,9 +507,9 @@ angular.module('tantalim.desktop')
                     self.selectedRows.end = self.selectedRows.start;
                 },
                 cellIsEditing: function (row, column) {
-                    return editSection === self.name
-                        && self.selectedRows.start === row
-                        && self.selectedColumns.start === column;
+                    return editSection === self.name &&
+                        self.selectedRows.start === row &&
+                        self.selectedColumns.start === column;
                 },
                 focus: function (row, column) {
                     if (self.cellIsEditing(row, column)) {
@@ -485,6 +540,9 @@ angular.module('tantalim.desktop')
             if (!sections) {
                 sections = {};
             }
+            if (sections[self.name]) {
+                console.warn('Duplicate section named ' + self.name);
+            }
             sections[self.name] = self;
 
             _.forEach(pageSection.sections, function (section) {
@@ -496,7 +554,8 @@ angular.module('tantalim.desktop')
          * Global clipboard
          * @type {null}
          */
-        $scope.clipboard = null;
+        $scope.clipboard = [];
+        $scope.clipboardToExcel = '';
 
         function initializeSearchPage() {
             $scope.$watch('SmartPage.filterValues', function (newVal) {
@@ -526,15 +585,25 @@ angular.module('tantalim.desktop')
             setFilterString($scope.SmartPage.filterValues, $scope.SmartPage.filterComparators);
         }
 
-        $scope.link = function (targetPage, filter, modelName) {
-            var data = ModelCursor.getCurrentSet(modelName, 0).getSelectedRows();
-            _.forEach(data.data, function (value, key) {
-                filter = filter.replace('[' + key + ']', data.data[key]);
+        $scope.link = function (targetPage, filter, sectionName) {
+            var row = page.getSection(sectionName).getCurrentSet().getInstance();
+            // TODO link from all selected rows (getSelectedRows)
+            _.forEach(row.data, function (value, key) {
+                // Should drop support for [] in favor of ${} most likely
+                filter = filter.replace('[' + key + ']', row.data[key]);
+                filter = filter.replace('${' + key + '}', row.data[key]);
             });
-            $window.location.href = '/page/' + targetPage + '/?filter=' + filter;
+            var openInNew = true;
+            if (openInNew) {
+                $window.open('/page/' + targetPage + '/?filter=' + filter);
+            } else {
+                // TODO Figure out if the ctrl button is down...maybe in a directive with event
+                $window.location.href = '/page/' + targetPage + '/?filter=' + filter;
+            }
         };
 
         var page = new SmartPage(PageDefinition.page);
+        page.bindHotKeys();
         $scope.SmartPage = page;
         initializeSearchPage();
         $scope.Logger = Logger;

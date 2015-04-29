@@ -49,6 +49,15 @@ div.smart-select {
     z-index: 1;
 }
 
+#clipboard {
+    position: fixed;
+    top: 100px;
+    right: -100px;
+    height: 1px;
+    width: 1px;
+    z-index: -1;
+}
+
 #static-content {
     margin-top: 20px;
 }
@@ -105,7 +114,7 @@ table.tnt-grid td.text-display .text-edit {
     left: 0;
     height: 100%;
     width: 100%;
-    padding: 0px 4px;
+    padding: 0 4px;
     border: 1px solid rgb(143, 181, 224);
     z-index: 10;
 }
@@ -126,6 +135,7 @@ table.tnt-grid tr th {
     cursor: pointer;
     background-color: #EEEEEE;
     padding: 4px;
+    position: relative;
 }
 
 table.tnt-grid tr td {
@@ -157,11 +167,67 @@ body.desktop {
     margin-right: auto
 }
 
+.childSection nav ul .divider {
+    padding-left: 10px;
+    cursor: default;
+}
+
 .sectionContent {
     clear: both;
 }
 
 table.tnt-grid th span.glyphicon {
-    float: right;
     color: #777777;
+    position: relative;
+    float: right;
+}
+
+table.tnt-grid th .help {
+    position: absolute;
+}
+
+.no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.form-group {
+    position: relative;
+    border: 1px dotted #FFF;
+    margin: 0 0 1px 0;
+    padding: 2px 2px 1px 2px;
+    min-height: 63px;
+}
+
+.form-group:hover {
+    border-color: #CCC;
+}
+
+.tnt-links {
+    position: relative;
+    float: right;
+}
+
+.tnt-links .panel {
+    margin: 0;
+    padding: 0;
+    min-width: 260px;
+}
+
+
+
+.tnt-grid {
+    /*background-color: #447fc8;*/
+    /*width: 100px;*/
+    /*height: 100px;*/
+}
+
+textarea.form-control {
+    font-family: monospace;
+}
+
+.checkbox {
+    margin-top: 22px;
+    margin-bottom: 0;
 }

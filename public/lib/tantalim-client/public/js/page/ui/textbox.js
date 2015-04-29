@@ -11,13 +11,13 @@ angular.module('tantalim.desktop')
                 ctrl.value = null;
                 ctrl.label = $attrs.label;
                 ctrl.placeholder = $attrs.placeholder;
-                ctrl.help = $attrs.help;
 
                 var fieldName = $attrs.name;
                 ctrl.id = fieldName;
                 ctrl.name = fieldName;
 
-                ctrl.change = function() {
+                ctrl.change = function () {
+                    console.info('update' + fieldName);
                     $scope.currentInstance.update(fieldName);
                 };
                 ctrl.disabled = function () {
@@ -26,38 +26,31 @@ angular.module('tantalim.desktop')
                     var notUpdateable = $attrs.updateable === 'false';
                     return $scope.state !== 'INSERTED' && notUpdateable;
                 };
-
-                //$scope.$watch('currentInstance', setValue);
+                ctrl.required = function () {
+                    if ($attrs.required === 'true') return true;
+                    return false;
+                };
+                ctrl.blur = function () {
+                    if ($attrs.blurFunction) {
+                        console.info('blur not implemented yet');
+                        //field.blurFunction
+                    }
+                };
             },
 
             scope: {
                 currentInstance: '='
             },
-            template: '<label class="control-label" for="{{$textbox.id}}">{{$textbox.label}}</label>' +
+            transclude: true,
+            template: '<span ng-transclude></span>' +
+            '<label class="control-label" for="{{$textbox.id}}">{{$textbox.label}}</label>' +
             '<input type="text" class="form-control" id="{{$textbox.id}}" name="{{$textbox.name}}"' +
             'data-ng-model="currentInstance.data[$textbox.name]" ng-focus=""' +
             'ng-change="$textbox.change()"' +
+            'ng-blur="$textbox.blur()"' +
             'ng-disabled="$textbox.disabled()"' +
-            'placeholder="{{$textbox.placeholder}}" select-on-click>' +
-            '<span data-ng-show="$textbox.help" class="help-block">{{$textbox.help}}</span>' +
-            '<ul><tntLink ng-repeat="member in collection" member="member"></tntLink></ul>'
-
-            /**
-             ng-change="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance().update('@(field.name)')"
-             @if(field.blurFunction.isDefined) {
-                    ng-blur="@Html(field.blurFunction.get)"
-             }
-             @if(field.required) {
-                    ng-required="SmartPage.getSection('@(page.name)', @depth).getCurrentSet().getInstance()"
-             }
-             >
-             @for(link <- field.links) {
-                    <i class="fa fa-link fa-rotate-90" data-ng-click=""></i>
-                    <a href="" data-ng-click="link('@link.page.name', '@link.filter', '@page.model.name')">@link.page.title</a>
-             }
-             *
-             */
-
+            'ng-required="$textbox.required()"' +
+            'placeholder="{{$textbox.placeholder}}" select-on-click>'
         };
     })
     .directive('selectOnClick', function () {
@@ -68,12 +61,6 @@ angular.module('tantalim.desktop')
                     this.select();
                 });
             }
-        };
-    })
-    .directive('tntLink', function () {
-        return {
-            restrict: 'E',
-            template: 'asdf'
         };
     })
 ;
