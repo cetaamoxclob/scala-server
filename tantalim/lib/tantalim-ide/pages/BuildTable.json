@@ -46,7 +46,10 @@
         "showInNavigation" : true,
         "links" : [ {
           "page" : "ModelFieldsEditor",
-          "filter" : "ModelFieldsEditorBasisColumn Equals '${TableColumnName}'"
+          "filter" : "ModelFieldsEditorBasisColumnID Equals ${TableColumnColumnID}"
+        }, {
+          "page" : "TableColumnEditor",
+          "filter" : "TableColumnEditorColumnID Equals ${TableColumnColumnID}"
         } ]
       }, {
         "name" : "TableColumnSQL"

@@ -85,10 +85,6 @@
       "name" : "ModelStepName",
       "basisColumn" : "Name"
     }, {
-      "name" : "ModelStepJoinCopy",
-      "basisColumn" : "Join",
-      "fieldDefault" : "ModelStepJoinName"
-    }, {
       "name" : "ModelStepParentID",
       "basisColumn" : "ParentID"
     }, {

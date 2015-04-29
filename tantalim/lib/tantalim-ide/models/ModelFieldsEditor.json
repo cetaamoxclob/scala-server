@@ -35,19 +35,29 @@
   }, {
     "name" : "ModelFieldsEditorFunctionDefault",
     "basisColumn" : "FunctionDefault"
+  }, {
+    "name" : "ModelFieldsEditorBasisColumnID",
+    "basisColumn" : "BasisColumnID"
   } ],
   "orderBy" : [ {
-    "ascending" : true,
-    "fieldName" : "ModelFieldsEditorModelName"
+    "fieldName" : "ModelFieldsEditorModelName",
+    "ascending" : true
   }, {
-    "ascending" : true,
-    "fieldName" : "ModelFieldsEditorName"
+    "fieldName" : "ModelFieldsEditorName",
+    "ascending" : true
   } ],
   "steps" : [ {
     "name" : "Model",
     "join" : "Model",
     "fields" : [ {
       "name" : "ModelFieldsEditorModelName",
+      "basisColumn" : "Name"
+    } ]
+  }, {
+    "name" : "Column",
+    "join" : "Column",
+    "fields" : [ {
+      "name" : "ModelFieldsEditorBasisColumnName",
       "basisColumn" : "Name"
     } ]
   } ]
