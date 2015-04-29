@@ -12,7 +12,11 @@
         "filter" : "SectionName Equals '${PageFieldSectionName}'"
       } ]
     }, {
-      "name" : "PageFieldSectionModel"
+      "name" : "PageFieldSectionModel",
+      "links" : [ {
+        "page" : "BuildModel",
+        "filter" : "ModelName Equals '${PageFieldSectionModel}'"
+      } ]
     }, {
       "name" : "PageFieldName"
     }, {

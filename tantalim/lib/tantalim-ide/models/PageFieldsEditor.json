@@ -1,5 +1,6 @@
 {
   "basisTable" : "PageField",
+  "limit" : 50,
   "fields" : [ {
     "name" : "PageFieldFieldID",
     "basisColumn" : "FieldID"

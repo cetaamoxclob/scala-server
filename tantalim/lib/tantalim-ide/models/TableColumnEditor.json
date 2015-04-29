@@ -42,12 +42,14 @@
     }, {
       "name" : "ModelFieldFunctionDefault",
       "basisColumn" : "FunctionDefault"
-    }, {
-      "name" : "ModelFieldBasisTable",
-      "basisColumn" : "BasisTable"
-    }, {
-      "name" : "ModelFieldBasisColumn",
-      "basisColumn" : "BasisColumn"
+    } ],
+    "steps" : [ {
+      "name" : "Model",
+      "join" : "Model",
+      "fields" : [ {
+        "name" : "ModelFieldModelName",
+        "basisColumn" : "Name"
+      } ]
     } ]
   } ],
   "fields" : [ {

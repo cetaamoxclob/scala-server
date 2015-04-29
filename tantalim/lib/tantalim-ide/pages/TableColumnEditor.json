@@ -42,6 +42,12 @@
       "model" : "ModelField",
       "title" : "Fields",
       "fields" : [ {
+        "name" : "ModelFieldModelName",
+        "links" : [ {
+          "page" : "BuildModel",
+          "filter" : "ModelID Equals ${ModelFieldModelID}"
+        } ]
+      }, {
         "name" : "ModelFieldName"
       }, {
         "name" : "ModelFieldUpdateable"
