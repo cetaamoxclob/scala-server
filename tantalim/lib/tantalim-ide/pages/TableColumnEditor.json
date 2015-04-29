@@ -1,0 +1,59 @@
+{
+  "title" : "Table Column Editor",
+  "sections" : [ {
+    "name" : "Column",
+    "model" : "TableColumnEditor",
+    "title" : "Columns",
+    "fields" : [ {
+      "name" : "TableColumnEditorName"
+    }, {
+      "name" : "TableColumnEditorRequired"
+    }, {
+      "name" : "TableColumnEditorDataType"
+    }, {
+      "name" : "TableColumnEditorLength"
+    }, {
+      "name" : "TableColumnEditorFieldType"
+    }, {
+      "name" : "TableColumnEditorDisplayOrder"
+    }, {
+      "name" : "TableColumnEditorSQL"
+    }, {
+      "name" : "TableColumnEditorLabel"
+    }, {
+      "name" : "TableColumnEditorVisible"
+    }, {
+      "name" : "TableColumnEditorUpdateable"
+    }, {
+      "name" : "TableColumnEditorHelp"
+    }, {
+      "name" : "TableColumnEditorDescription"
+    }, {
+      "name" : "TableColumnEditorPlaceholder"
+    }, {
+      "name" : "TableColumnEditorColumnDefault"
+    } ],
+    "sections" : [ {
+      "name" : "ModelField",
+      "model" : "ModelField",
+      "title" : "Fields",
+      "fields" : [ {
+        "name" : "ModelFieldName"
+      }, {
+        "name" : "ModelFieldUpdateable"
+      }, {
+        "name" : "ModelFieldRequired"
+      }, {
+        "name" : "ModelFieldExport"
+      }, {
+        "name" : "ModelFieldAlwaysDefault"
+      }, {
+        "name" : "ModelFieldFieldDefault"
+      }, {
+        "name" : "ModelFieldValueDefault"
+      }, {
+        "name" : "ModelFieldFunctionDefault"
+      } ]
+    } ]
+  } ]
+}
