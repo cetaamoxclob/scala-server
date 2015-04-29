@@ -1,5 +1,6 @@
 {
   "basisTable" : "Column",
+  "limit" : 50,
   "children" : [ {
     "name" : "ModelField",
     "parentField" : "TableColumnEditorColumnID",

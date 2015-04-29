@@ -42,6 +42,8 @@
       "page" : "PageFieldsEditor"
     }, {
       "page" : "ModelFieldsEditor"
+    }, {
+      "page" : "TableColumnEditor"
     } ]
   }, {
     "title" : "Enum",

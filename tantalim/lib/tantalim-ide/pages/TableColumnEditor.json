@@ -1,10 +1,13 @@
 {
   "title" : "Table Column Editor",
   "sections" : [ {
-    "name" : "Column",
+    "viewMode" : "table",
+    "name" : "Columns",
     "model" : "TableColumnEditor",
     "title" : "Columns",
     "fields" : [ {
+      "name" : "TableColumnEditorTableName"
+    }, {
       "name" : "TableColumnEditorName"
     }, {
       "name" : "TableColumnEditorRequired"
@@ -34,6 +37,7 @@
       "name" : "TableColumnEditorColumnDefault"
     } ],
     "sections" : [ {
+      "viewMode" : "table",
       "name" : "ModelField",
       "model" : "ModelField",
       "title" : "Fields",

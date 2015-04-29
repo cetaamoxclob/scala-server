@@ -53,12 +53,6 @@
       "name" : "TableColumnColumnDefault",
       "basisColumn" : "ColumnDefault"
     }, {
-      "name" : "TableColumnTableName",
-      "basisColumn" : "TableName",
-      "fieldDefault" : "TableName",
-      "alwaysDefault" : true,
-      "required" : true
-    }, {
       "name" : "TableColumnVisible",
       "basisColumn" : "Visible",
       "valueDefault" : "true",
