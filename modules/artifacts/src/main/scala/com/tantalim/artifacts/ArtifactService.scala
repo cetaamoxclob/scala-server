@@ -17,11 +17,23 @@ trait ArtifactService {
 
   private def getSourceLocation(artifactType: String, name: String): SourceLocation = {
     val fileNameAndPartialDirLocation = artifactType + "/" + name + ".json"
-    val srcDir = ArtifactService.tantalimRoot + "/src/" + fileNameAndPartialDirLocation
-    if (fileExists(srcDir)) SourceLocation(srcDir, Module.default)
+    val srcDirLocation = ArtifactService.tantalimRoot + "/src/"
+    val srcDir = new File(srcDirLocation)
+    if (!srcDir.exists()) {
+      println("Creating Tantalim Lib Directory")
+      srcDir.mkdir()
+    }
+
+    val srcFileLocation = srcDirLocation + fileNameAndPartialDirLocation
+
+    if (fileExists(srcFileLocation)) SourceLocation(srcFileLocation, Module.default)
     else {
       val libDirLocation = ArtifactService.tantalimRoot + "/lib/"
       val libDir = new File(libDirLocation)
+      if (!libDir.exists()) {
+        println("Creating Tantalim Lib Directory")
+        libDir.mkdir()
+      }
       val libList: Array[SourceLocation] = libDir.listFiles.flatMap(d => {
         val libSrcDir = d.toString + "/" + fileNameAndPartialDirLocation
         val moduleName = d.toString.substring(libDirLocation.length)
