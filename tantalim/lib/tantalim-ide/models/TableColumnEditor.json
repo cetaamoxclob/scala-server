@@ -102,7 +102,7 @@
     "basisColumn" : "ColumnDefault"
   } ],
   "orderBy" : [ {
-    "direction" : true,
+    "ascending" : true,
     "fieldName" : "TableColumnEditorTableName"
   } ],
   "steps" : [ {

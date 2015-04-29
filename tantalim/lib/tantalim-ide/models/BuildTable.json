@@ -116,7 +116,7 @@
       "alwaysDefault" : true
     } ],
     "orderBy" : [ {
-      "direction" : true,
+      "ascending" : true,
       "fieldName" : "TableJoinName"
     } ],
     "steps" : [ {

@@ -28,77 +28,79 @@
   "columns" : [ {
     "name" : "FieldID",
     "updateable" : false,
+    "visible" : false,
     "dbName" : "fieldID",
     "dataType" : "Integer",
     "required" : false
   }, {
     "name" : "ModelID",
+    "visible" : false,
     "dbName" : "modelID",
     "dataType" : "Integer",
     "required" : true
   }, {
     "name" : "Name",
+    "visible" : true,
     "dbName" : "name",
     "label" : "Field",
     "dataType" : "String",
     "required" : true
   }, {
     "name" : "BasisColumnID",
+    "visible" : false,
     "dbName" : "basisColumnID",
     "dataType" : "Integer",
     "required" : false
   }, {
     "name" : "StepID",
+    "visible" : false,
     "dbName" : "stepID",
     "dataType" : "Integer",
     "required" : false
   }, {
     "name" : "Updateable",
+    "visible" : true,
     "dbName" : "updateable",
     "dataType" : "Boolean",
     "required" : false
   }, {
     "name" : "Required",
+    "visible" : true,
     "dbName" : "required",
     "dataType" : "Boolean",
     "required" : false
   }, {
     "name" : "Export",
+    "visible" : true,
     "dbName" : "export",
     "dataType" : "Boolean",
     "required" : false
   }, {
     "name" : "AlwaysDefault",
+    "visible" : true,
     "dbName" : "alwaysDefault",
     "dataType" : "Boolean",
     "required" : false
   }, {
     "name" : "FieldDefault",
+    "visible" : true,
     "dbName" : "fieldDefault",
     "label" : "Field Default",
     "dataType" : "String",
     "required" : false
   }, {
     "name" : "ValueDefault",
+    "visible" : true,
     "dbName" : "valueDefault",
     "label" : "Value Default",
     "dataType" : "String",
     "required" : false
   }, {
     "name" : "FunctionDefault",
+    "visible" : true,
     "dbName" : "functionDefault",
     "label" : "Function Default",
     "length" : 1000,
-    "dataType" : "String",
-    "required" : false
-  }, {
-    "name" : "BasisTable",
-    "dbName" : "basisTable",
-    "dataType" : "String",
-    "required" : false
-  }, {
-    "name" : "BasisColumn",
-    "dbName" : "basisColumn",
     "dataType" : "String",
     "required" : false
   } ],

@@ -6,7 +6,11 @@
     "model" : "TableColumnEditor",
     "title" : "Columns",
     "fields" : [ {
-      "name" : "TableColumnEditorTableName"
+      "name" : "TableColumnEditorTableName",
+      "links" : [ {
+        "page" : "BuildTable",
+        "filter" : "TableTableID Equals ${TableColumnEditorTableID}"
+      } ]
     }, {
       "name" : "TableColumnEditorName"
     }, {

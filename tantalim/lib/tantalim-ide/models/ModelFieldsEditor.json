@@ -12,9 +12,6 @@
     "name" : "ModelFieldsEditorName",
     "basisColumn" : "Name"
   }, {
-    "name" : "ModelFieldsEditorBasisColumn",
-    "basisColumn" : "BasisColumn"
-  }, {
     "name" : "ModelFieldsEditorStepID",
     "basisColumn" : "StepID"
   }, {
@@ -38,15 +35,12 @@
   }, {
     "name" : "ModelFieldsEditorFunctionDefault",
     "basisColumn" : "FunctionDefault"
-  }, {
-    "name" : "ModelFieldsEditorBasisTable",
-    "basisColumn" : "BasisTable"
   } ],
   "orderBy" : [ {
-    "direction" : true,
+    "ascending" : true,
     "fieldName" : "ModelFieldsEditorModelName"
   }, {
-    "direction" : true,
+    "ascending" : true,
     "fieldName" : "ModelFieldsEditorName"
   } ],
   "steps" : [ {

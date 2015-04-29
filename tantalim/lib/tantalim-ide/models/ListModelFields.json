@@ -13,10 +13,10 @@
     "basisColumn" : "Name"
   } ],
   "orderBy" : [ {
-    "direction" : true,
+    "ascending" : true,
     "fieldName" : "FieldModelName"
   }, {
-    "direction" : true,
+    "ascending" : true,
     "fieldName" : "FieldBasisColumnDisplayOrder"
   }, {
     "fieldName" : "FieldName"
