@@ -98,6 +98,7 @@
     "name" : "Description",
     "visible" : true,
     "dbName" : "description",
+    "label" : "Comments",
     "help" : "Description and other notes about this column",
     "length" : 1000,
     "dataType" : "String",
