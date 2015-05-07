@@ -31,3 +31,7 @@ echo ${DIVIDER}
 echo "Copying Libraries"
 rm -Rf ${TARGET_LIB}/lib
 cp -R tantalim-1.0/lib ${TARGET_LIB}/
+
+echo ${DIVIDER}
+echo "Removing Select Libraries"
+rm ${TARGET_LIB}/lib/ch.qos.logback.logback-classic-1.1.1.jar

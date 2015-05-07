@@ -9,3 +9,10 @@ sleep 1
 docker logs tantalim
 sleep 5
 docker logs tantalim
+
+
+
+OR
+
+cd /root/slhp/scala-server
+./activator/activator run -Dconfig.file=../application.conf
