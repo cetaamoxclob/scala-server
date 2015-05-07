@@ -8,7 +8,6 @@ import com.google.common.io.Files
 import com.tantalim.models.Module
 import com.tantalim.util.TantalimException
 import play.api.Play
-import play.api.Play.current
 import play.api.libs.json._
 
 trait ArtifactService {
@@ -59,7 +58,7 @@ trait ArtifactService {
 
   def getArtifactContentAndParseJson(artifactType: String, name: String): JsValue = {
     val sourceLocation = getSourceLocation(artifactType, name)
-    val artifactContent = Files.toString(Play.getFile(sourceLocation.filePath), Charsets.UTF_8)
+    val artifactContent = Files.toString(new File(sourceLocation.filePath), Charsets.UTF_8)
 
     if (artifactContent.isEmpty)
       throw new TantalimException(s"Artifact $artifactType named `$name` is empty", "Edit the file: " + sourceLocation.filePath + artifactContent)
@@ -78,5 +77,8 @@ trait ArtifactService {
 
 object ArtifactService {
   val charSet = StandardCharsets.UTF_8
-  val tantalimRoot = "tantalim"
+  val tantalimRoot = {
+    val config = Play.current.configuration.getString("tantalim.source")
+    if (config.isDefined) config.get else "tantalim"
+  }
 }

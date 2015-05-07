@@ -28,22 +28,18 @@ class ArtifactExport(artifactType: String) extends DataReader with DataSaver wit
   }
 
   private def writeToSource(moduleName: Option[TntValue], artifactName: String, artifactContent: String) = {
-    val fileLocation = getArtifactDirectory(moduleName) + "/" + artifactName + ".json"
+    val fileLocation = getArtifactDirectory + "/" + artifactName + ".json"
 
-    val artifactPath = FileSystems.getDefault.getPath(".", fileLocation)
+    val artifactPath = FileSystems.getDefault.getPath(fileLocation)
 
     Files.write(artifactPath, artifactContent.getBytes(ArtifactService.charSet),
       StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
   }
 
-  private def getArtifactDirectory(moduleName: Option[TntValue]): String = {
-    val module = if (moduleName.isDefined) moduleName.get.rawString
-    else Module.default
-
-    val moduleDirLocation = ArtifactService.tantalimRoot +
-      (if (moduleName.isDefined) "/lib/" + moduleName.get.rawString else "/src")
+  private def getArtifactDirectory: String = {
+    val moduleDirLocation = ArtifactService.tantalimRoot + "/src"
     if (!new File(moduleDirLocation).isDirectory) {
-      throw new TantalimException(s"Directory for Module `$module` does not exist" + moduleDirLocation,
+      throw new TantalimException(s"Source Directory does not exist: " + moduleDirLocation,
         "Create it in " + new File(moduleDirLocation).getAbsolutePath)
     }
 
