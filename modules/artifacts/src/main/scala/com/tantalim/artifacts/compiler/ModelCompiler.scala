@@ -11,76 +11,78 @@ import scala.collection.{Map, Seq}
 trait ModelCompiler extends ArtifactService with TableCompiler {
 
   def compileModel(name: String): Model = {
-    //    println("Compiling model set " + name)
+    //    println("Compiling modelJson set " + name)
+    compileModelView(getModelJson(name))
+  }
+
+  def getModelJson(name: String): ModelJson = {
     val json = getArtifactContentAndParseJson(ModelCompiler.artifactName, name)
     json.validate[ModelJson] match {
       case JsSuccess(modelJson, _) =>
-        compileModelView(modelJson.copy(name = Option(name)), None)
+        modelJson.copy(name = Option(name))
       case JsError(err) =>
-        throw new TantalimException("Failed to compile model " + name, "See the following error:" + err.toString)
+        throw new TantalimException("Failed to compile modelJson " + name, "See the following error:" + err.toString)
     }
   }
 
-  private def extendModel(model: ModelJson, parent: Option[Model]): Model = {
-    //    println("Extending model " + model.extendModel.get)
-    val superModel = parent.get
-    val modelFields = superModel.fields ++
-      convertJsonFieldsToModelFieldMap(
-        model.fields,
-        superModel.basisTable,
-        buildModelSteps(model, superModel.basisTable)
-      ) ++ convertJsonFieldsFromStep(model.steps, superModel.steps.values.toSeq)
-
-    superModel.copy(
-      name = model.name.get,
-      parentField = model.parentField,
-      childField = model.childField,
-      fields = modelFields,
-      parent = parent,
-      filter = if (model.filter.isDefined) model.filter else superModel.filter,
-      preSave = model.preSave
-    )
-  }
-
-  private def compileModelView(model: ModelJson, parent: Option[Model]): Model = {
-    if (model.name.isEmpty) {
-      throw new TantalimException("Model Name is missing", "Add name to " + model)
+  // TODO This class does 2 things! split getModelJson and compileModelView after we finish logic for getting from the database
+  def compileModelView(modelJson: ModelJson, parent: Option[Model] = None): Model = {
+    if (modelJson.name.isEmpty) {
+      throw new TantalimException("Model Name is missing", "Add name to " + modelJson)
     }
-    //    println("Compiling model " + model.name.get)
-    val basisTable = getBasisTable(model)
-    val steps = buildModelSteps(model, basisTable)
-    val modelFields = convertJsonFieldsToModelFieldMap(model.fields, basisTable, steps)
-    val fieldsFromSteps = convertJsonFieldsFromStep(model.steps, steps)
+    //    println("Compiling modelJson " + modelJson.name.get)
+    val basisTable = getBasisTable(modelJson.basisTable)
+    val steps = buildModelSteps(modelJson, basisTable)
+    val fieldsFromSteps = convertJsonFieldsFromStep(modelJson.steps, steps)
+    val modelFields = convertJsonFieldsToModelFieldMap(modelJson.fields, basisTable, None)
 
-    val newModel = createModel(model, basisTable, modelFields ++ fieldsFromSteps, parent, steps)
+    val newModel = createModel(modelJson, basisTable, modelFields ++ fieldsFromSteps, parent, steps)
     if (newModel.parent.isDefined && !newModel.basisTable.isMock) checkChildModel(newModel)
-    if (model.children.isDefined) {
-      model.children.get.foreach { childJson =>
+    if (modelJson.children.isDefined) {
+      modelJson.children.get.foreach { childJson =>
         addChildModelToParentModel(childJson, newModel)
       }
     }
     newModel
   }
 
-  private def createModel(model: ModelJson, basisTable: DeepTable, modelFields: Map[String, ModelField], parent: Option[Model], steps: Seq[ModelStep]): Model = {
-    println("Creating new Model " + model.name.get)
+  private def extendModel(modelJson: ModelJson, parent: Option[Model]): Model = {
+    //    println("Extending modelJson " + modelJson.extendModel.get)
+    val superModel = parent.get
+    val modelFields = superModel.fields ++
+      convertJsonFieldsToModelFieldMap(modelJson.fields, superModel.basisTable, None) ++
+      convertJsonFieldsFromStep(modelJson.steps, superModel.steps.values.toSeq)
+
+    superModel.copy(
+      name = modelJson.name.get,
+      parentField = modelJson.parentField,
+      childField = modelJson.childField,
+      fields = modelFields,
+      parent = parent,
+      filter = if (modelJson.filter.isDefined) modelJson.filter else superModel.filter,
+      preSave = modelJson.preSave
+    )
+  }
+
+  private def createModel(modelJson: ModelJson, basisTable: DeepTable, modelFields: Map[String, ModelField], parent: Option[Model], steps: Seq[ModelStep]): Model = {
+    //    println("Creating new Model " + modelJson.name.get)
     new Model(
-      model.name.get,
+      modelJson.name.get,
       basisTable,
-      model.limit.getOrElse(0),
+      modelJson.limit.getOrElse(0),
       fields = modelFields.toMap,
       instanceID = findInstanceIdField(basisTable.primaryKey, modelFields.values),
-      parentField = model.parentField,
-      childField = model.childField,
+      parentField = modelJson.parentField,
+      childField = modelJson.childField,
       parent = parent,
       steps = ModelCompiler.convertStepsToMap(steps),
-      orderBy = compileOrderBy(model.orderBy),
-      allowInsert = model.allowInsert.getOrElse(basisTable.allowInsert),
-      allowUpdate = model.allowUpdate.getOrElse(basisTable.allowUpdate),
-      allowDelete = model.allowDelete.getOrElse(basisTable.allowDelete),
-      preSave = model.preSave,
-      filter = model.filter,
-      customUrlSource = model.customUrlSource
+      orderBy = compileOrderBy(modelJson.orderBy),
+      allowInsert = modelJson.allowInsert.getOrElse(basisTable.allowInsert),
+      allowUpdate = modelJson.allowUpdate.getOrElse(basisTable.allowUpdate),
+      allowDelete = modelJson.allowDelete.getOrElse(basisTable.allowDelete),
+      preSave = modelJson.preSave,
+      filter = modelJson.filter,
+      customUrlSource = modelJson.customUrlSource
     )
   }
 
@@ -94,51 +96,13 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
     } else None
   }
 
-  private def convertJsonFieldsToModelFieldMap(modelFields: Option[Seq[ModelFieldJson]], basisTable: Table, steps: Seq[ModelStep]): Map[String, ModelField] = {
-    if (modelFields.isEmpty) Map.empty
-    else modelFields.get.map(f => {
-      if (f.step.isDefined) {
-        @deprecated
-        val fieldStep = ModelCompiler.findStepByName(f.step.get, steps)
-        val tableJoin = fieldStep.join
-
-        f.name -> compileModelField(f,
-          ModelCompiler.findColumn(tableJoin.table, f.basisColumn),
-          Some(fieldStep)
-        )
-      } else {
-        f.name -> compileModelField(f, ModelCompiler.findColumn(basisTable, f.basisColumn), None)
-      }
-    }).toMap
-  }
-
-  private def convertJsonFieldsFromStep(modelStepsJson: Option[Seq[ModelStepJson]], steps: Seq[ModelStep]): Map[String, ModelField] = {
-    if (modelStepsJson.isEmpty) Map.empty
-    else {
-      modelStepsJson.get.flatMap { step =>
-        if (step.fields.isEmpty) Map.empty
-        else {
-          val fieldStep = ModelCompiler.findStepByName(step.name, steps)
-          val tableJoin = fieldStep.join
-          step.fields.get.map { field =>
-            field.name -> compileModelField(field,
-              ModelCompiler.findColumn(tableJoin.table, field.basisColumn),
-              Some(fieldStep)
-            )
-          }
-        }
-      }.toMap
-    }
-
-  }
-
-  private def getBasisTable(model: ModelJson): DeepTable = {
-    if (Table.isMock(model.basisTable)) {
+  private def getBasisTable(tableName: String): DeepTable = {
+    if (Table.isMock(tableName)) {
       Table.createMock
     } else {
-      getTableFromCache(model.basisTable).getOrElse {
-        val newTable = compileTable(model.basisTable)
-        addTableToCache(model.name.get, newTable)
+      getTableFromCache(tableName).getOrElse {
+        val newTable = compileTable(tableName)
+        addTableToCache(newTable.name, newTable)
         newTable
       }
     }
@@ -146,7 +110,7 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
 
   private def checkChildModel(childModel: Model): Unit = {
     if (childModel.parentField.isEmpty) {
-      // We could try to guess based on the parent model's identifier field ???
+      // We could try to guess based on the parent modelJson's identifier field ???
       throw new TantalimException(s"Model named ${childModel.name} is missing parentField", "")
     }
     if (childModel.childField.isEmpty) {
@@ -168,62 +132,75 @@ trait ModelCompiler extends ArtifactService with TableCompiler {
 
   }
 
-  private def buildModelSteps(model: ModelJson, basisTable: DeepTable): Seq[ModelStep] = {
-    buildTempModelSteps(model, basisTable).map { step =>
-      val join = step.tableJoin.getOrElse(throw new TantalimException(s"tableJoin for $step is still missing", "Add or rename the step"))
-      ModelStep(
-        name = step.name,
-        tableAlias = step.tableAlias.get,
-        join = join,
-        required = step.required.get,
-        parentAlias = step.parent match {
-          case Some(p) => p.tableAlias.get
-          case _ => 0
-        }
-      )
-    }
-  }
+  private def buildModelSteps(modelJson: ModelJson, basisTable: DeepTable): Seq[ModelStep] = {
+    if (modelJson.steps.isEmpty || modelJson.steps.get.isEmpty) return Seq.empty
 
-  private def buildTempModelSteps(model: ModelJson, basisTable: DeepTable): Seq[TempModelStep] = {
-    if (model.steps.isDefined) {
-      val tempSteps = model.steps.get.map(stepJson => {
-        new TempModelStep(
-          name = stepJson.name,
-          join = stepJson.join,
-          required = stepJson.required,
-          parentName = stepJson.parent
+    case class TempModelStep(json: ModelStepJson,
+                             tableJoin: TableJoin,
+                             var steps: Seq[TempModelStep])
+
+    def buildTempModelSteps(stepsJson: Seq[ModelStepJson],
+                            fromTable: DeepTable,
+                            parentStepJson: Option[TempModelStep]): Seq[TempModelStep] = {
+      val tempSteps = stepsJson.map(stepJson => {
+        val tableJoin = fromTable.joins.getOrElse(stepJson.join,
+          throw new TantalimException(
+            s"Could not find join named `${stepJson.join}` in `${fromTable.name}`",
+            s"Found the following joins: ${fromTable.joins.keys}")
         )
+        val thisStep = new TempModelStep(stepJson, tableJoin, steps = Seq.empty)
+        if (stepJson.steps.isDefined && stepJson.steps.get.nonEmpty) {
+          val deepTable = getBasisTable(tableJoin.table.name)
+          new TempModelStep(stepJson, tableJoin,
+            steps = buildTempModelSteps(stepJson.steps.get, deepTable, Some(thisStep))
+          )
+        } else new TempModelStep(stepJson, tableJoin, Seq.empty)
       })
-
-      tempSteps.zipWithIndex.foreach { case (step, counter) =>
-        step.tableAlias = Some(counter + 1)
-      }
-      addTableJoinsToSteps(tempSteps, None, basisTable)
       tempSteps
-    } else {
-      Seq.empty
     }
+
+    val tempSteps = buildTempModelSteps(modelJson.steps.get, basisTable, None)
+
+    val stepBuilder = Seq.newBuilder[ModelStep]
+    def addSteps(steps: Seq[TempModelStep], parentAlias: Int): Unit = {
+      var tableAlias = stepBuilder.result().size
+      steps.foreach(step => {
+        tableAlias = tableAlias + 1
+        stepBuilder += new ModelStep(
+          name = step.json.name,
+          tableAlias = tableAlias,
+          join = step.tableJoin,
+          required = step.json.required.getOrElse(step.tableJoin.required),
+          parentAlias = parentAlias
+        )
+        addSteps(step.steps, tableAlias)
+      })
+    }
+    addSteps(tempSteps, 0)
+    stepBuilder.result()
   }
 
-  private def addTableJoinsToSteps(tempSteps: Seq[TempModelStep], parentStep: Option[TempModelStep], fromTable: DeepTable): Unit = {
-    tempSteps.foreach { step =>
-      if (step.tableJoin.isEmpty && parentStepMatches(step.parentName, parentStep)) {
-        step.parent = parentStep
-        step.tableJoin = fromTable.joins.get(step.join)
-        val tableJoin = step.tableJoin.getOrElse(throw new TantalimException(s"Could not find join named `${step.join}` in `${fromTable.name}`", s"Found the following joins: ${fromTable.joins.keys}"))
-        if (step.required.isEmpty) step.required = Some(tableJoin.required)
-        val deepTable = compileTable(tableJoin.table.name)
-        addTableJoinsToSteps(tempSteps, Some(step), deepTable)
-      }
-    }
+  private def convertJsonFieldsToModelFieldMap(modelFields: Option[Seq[ModelFieldJson]], basisTable: Table, fieldStep: Option[ModelStep]): Map[String, ModelField] = {
+    if (modelFields.isEmpty) return Map.empty
+
+    modelFields.get.map(f =>
+      f.name -> compileModelField(f, ModelCompiler.findColumn(basisTable, f.basisColumn), fieldStep)
+    ).toMap
   }
 
-  private def parentStepMatches(parentName: Option[String], parentStep: Option[TempModelStep]): Boolean = {
-    (parentName, parentStep) match {
-      case (None, None) => true
-      case (Some(_), Some(_)) => parentName.get == parentStep.get.name
-      case _ => false
+  private def convertJsonFieldsFromStep(modelStepsJson: Option[Seq[ModelStepJson]], steps: Seq[ModelStep]): Map[String, ModelField] = {
+    if (modelStepsJson.isEmpty) return Map.empty
+
+    modelStepsJson.get.flatMap(step => {
+      val fieldStep = Some(ModelCompiler.findStepByName(step.name, steps))
+      val basisTable = fieldStep.get.join.table
+
+      val fieldsOnThisStep = convertJsonFieldsToModelFieldMap(step.fields, basisTable, fieldStep)
+      val fieldsOnChildSteps = convertJsonFieldsFromStep(step.steps, steps)
+
+      fieldsOnThisStep ++ fieldsOnChildSteps
     }
+    ).toMap
   }
 
   private def compileOrderBy(orderBy: Option[Seq[ModelOrderBy]]): Seq[ModelOrderBy] = {
@@ -282,11 +259,3 @@ object ModelCompiler {
 
 }
 
-case class TempModelStep(name: String,
-                         join: String,
-                         parentName: Option[String],
-                         var required: Option[Boolean],
-                         var parent: Option[TempModelStep] = None,
-                         var tableAlias: Option[Int] = None,
-                         var tableJoin: Option[TableJoin] = None
-                          )

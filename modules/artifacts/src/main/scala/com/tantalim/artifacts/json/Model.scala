@@ -7,20 +7,20 @@ import play.api.libs.json._
 
 case class ModelJson(basisTable: String,
                      fields: Option[Seq[ModelFieldJson]],
-                     limit: Option[Int],
+                     limit: Option[Int] = None,
                      name: Option[String],
-                     extendModel: Option[String],
-                     children: Option[Seq[ModelJson]],
-                     orderBy: Option[Seq[ModelOrderBy]],
-                     parentField: Option[String],
-                     childField: Option[String],
-                     steps: Option[Seq[ModelStepJson]],
-                     allowInsert: Option[Boolean],
-                     allowUpdate: Option[Boolean],
-                     allowDelete: Option[Boolean],
-                     preSave: Option[String],
-                     filter: Option[String],
-                     customUrlSource: Option[String]
+                     extendModel: Option[String] = None,
+                     children: Option[Seq[ModelJson]] = None,
+                     orderBy: Option[Seq[ModelOrderBy]] = None,
+                     parentField: Option[String] = None,
+                     childField: Option[String] = None,
+                     steps: Option[Seq[ModelStepJson]] = None,
+                     allowInsert: Option[Boolean] = None,
+                     allowUpdate: Option[Boolean] = None,
+                     allowDelete: Option[Boolean] = None,
+                     preSave: Option[String] = None,
+                     filter: Option[String] = None,
+                     customUrlSource: Option[String] = None
                       ) {
   override def toString = {
     s"Model ($name on $basisTable) Fields ($fields) "
@@ -29,23 +29,21 @@ case class ModelJson(basisTable: String,
 
 case class ModelStepJson(name: String,
                          join: String,
-                         required: Option[Boolean],
-                         parent: Option[String],
-                         fields: Option[Seq[ModelFieldJson]]
+                         required: Option[Boolean] = None,
+                         steps: Option[Seq[ModelStepJson]] = None,
+                         fields: Option[Seq[ModelFieldJson]] = None
                           )
 
 case class ModelFieldJson(name: String,
                           basisColumn: Option[String],
-                          dataType: Option[String],
-                          @deprecated
-                          step: Option[String],
-                          required: Option[Boolean],
-                          updateable: Option[Boolean],
-                          alwaysDefault: Option[Boolean],
-                          fieldDefault: Option[String],
-                          valueDefault: Option[String],
-                          functionDefault: Option[String],
-                          export: Option[Boolean]
+                          dataType: Option[String] = None,
+                          required: Option[Boolean] = None,
+                          updateable: Option[Boolean] = None,
+                          alwaysDefault: Option[Boolean] = None,
+                          fieldDefault: Option[String] = None,
+                          valueDefault: Option[String] = None,
+                          functionDefault: Option[String] = None,
+                          export: Option[Boolean] = None
                            ) {
   override def toString = {
     s"$basisColumn AS $name"
@@ -76,7 +74,6 @@ object ModelJson {
     (JsPath \ "name").read[String] and
       (JsPath \ "basisColumn").readNullable[String] and
       (JsPath \ "dataType").readNullable[String] and
-      (JsPath \ "step").readNullable[String] and
       (JsPath \ "required").readNullable[Boolean] and
       (JsPath \ "updateable").readNullable[Boolean] and
       (JsPath \ "alwaysDefault").readNullable[Boolean] and
@@ -90,7 +87,7 @@ object ModelJson {
     (JsPath \ "name").read[String] and
       (JsPath \ "join").read[String] and
       (JsPath \ "required").readNullable[Boolean] and
-      (JsPath \ "parent").readNullable[String] and
+      (JsPath \ "steps").lazyReadNullable(Reads.seq[ModelStepJson](stepReads)) and
       (JsPath \ "fields").readNullable[Seq[ModelFieldJson]]
     ).apply(ModelStepJson.apply _)
 
