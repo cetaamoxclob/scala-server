@@ -6,7 +6,6 @@ import java.nio.file.{FileSystems, Files, StandardOpenOption}
 import com.tantalim.artifacts.ArtifactService
 import com.tantalim.artifacts.compiler.ModelCompiler
 import com.tantalim.database.services.{DataReader, DataSaver}
-import com.tantalim.models.Module
 import com.tantalim.nodes._
 import com.tantalim.util.TantalimException
 import controllers.core.PlayableDatabaseConnection
@@ -15,11 +14,10 @@ import play.api.libs.json._
 class ArtifactExport(artifactType: String) extends DataReader with DataSaver with ModelCompiler with PlayableDatabaseConnection {
   val artifactReader = compileModel(artifactType)
 
-  def readFromDatabaseAndWriteToSource(module: String, artifactName: String) = {
+  def readFromDatabaseAndWriteToSource(artifactName: String) = {
     val artifactInstance = getArtifactInstanceFromDatabase(artifactName)
-    val moduleName = artifactInstance.get("module")
     val jsObject = convertSmartNodeInstanceToJsObject(artifactInstance)
-    writeToSource(moduleName, artifactName, Json.prettyPrint(jsObject))
+    writeToSource(artifactName, Json.prettyPrint(jsObject))
   }
 
   private def getArtifactInstanceFromDatabase(artifactName: String): SmartNodeInstance = {
@@ -27,7 +25,7 @@ class ArtifactExport(artifactType: String) extends DataReader with DataSaver wit
     artifact.rows.headOption.getOrElse(throw new Exception("Failed to find exactly one row matching = " + artifactName))
   }
 
-  private def writeToSource(moduleName: Option[TntValue], artifactName: String, artifactContent: String) = {
+  private def writeToSource(artifactName: String, artifactContent: String) = {
     val fileLocation = getArtifactDirectory + "/" + artifactName + ".json"
 
     val artifactPath = FileSystems.getDefault.getPath(fileLocation)

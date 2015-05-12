@@ -38,20 +38,20 @@ object Application extends Controller with Timer {
     Ok(artifactList)
   }
 
-  def importArtifact(module: String, artifactType: String, name: String) = Action {
+  def importArtifact(artifactType: String, name: String) = Action {
     timer("importArtifact") {
       try {
         val tableImport = new ArtifactImport(artifactType)
-        val result = tableImport.readFromSourceAndWriteToDatabase(module, name)
+        val result = tableImport.readFromSourceAndWriteToDatabase(name)
         val message = if (result.state == DataState.Done) {
           Json.obj(
             "status" -> "success",
-            "message" -> s"$artifactType($module.$name) was imported"
+            "message" -> s"$artifactType($name) was imported"
           )
         } else {
           Json.obj(
             "status" -> "failure",
-            "message" -> s"$artifactType($module.$name) failed to import"
+            "message" -> s"$artifactType($name) failed to import"
           )
         }
         Ok(message)
@@ -74,13 +74,13 @@ object Application extends Controller with Timer {
     }
   }
 
-  def exportArtifact(module: String, artifactType: String, name: String) = Action {
+  def exportArtifact(artifactType: String, name: String) = Action {
     try {
       val tableExport = new ArtifactExport(artifactType)
-      tableExport.readFromDatabaseAndWriteToSource(module, name)
+      tableExport.readFromDatabaseAndWriteToSource(name)
       Ok(Json.obj(
         "status" -> "success",
-        "message" -> s"$artifactType($module.$name) was exported"
+        "message" -> s"$artifactType($name) was exported"
       ))
     } catch {
       case e: Exception => Ok(Json.obj(

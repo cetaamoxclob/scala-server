@@ -43,7 +43,7 @@ trait ArtifactLister {
     artifactTypes.map { artifactType: String =>
       val typeDir = new File(moduleDir.getAbsolutePath + "/" + artifactType)
       val artifacts: List[String] = if (typeDir.isDirectory) {
-        typeDir.listFiles().map { file =>
+        typeDir.listFiles().filter(_.getName.endsWith(".json")).map { file =>
           file.getName.replace(".json", "")
         }.toList
       } else List.empty[String]

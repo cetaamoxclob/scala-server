@@ -11,9 +11,9 @@ class ArtifactImport(artifactType: String) extends DataReader with DataSaver wit
 
   val artifactWriter = compileModel(artifactType)
 
-  def readFromSourceAndWriteToDatabase(module: String, artifactName: String) = {
+  def readFromSourceAndWriteToDatabase(artifactName: String) = {
     deleteExistingArtifactFromDatabase(artifactName)
-    insertArtifactIntoDatabase(module, artifactName)
+    insertArtifactIntoDatabase(artifactName)
   }
 
   private def deleteExistingArtifactFromDatabase(artifactName: String) {
@@ -24,7 +24,7 @@ class ArtifactImport(artifactType: String) extends DataReader with DataSaver wit
     }
   }
 
-  private def insertArtifactIntoDatabase(module: String, artifactName: String): SmartNodeInstance = {
+  private def insertArtifactIntoDatabase(artifactName: String): SmartNodeInstance = {
     val smartNodeSet = new SmartNodeSet(artifactWriter.copy(name = artifactName))
     val smartInstance = smartNodeSet.insert
 
@@ -32,7 +32,6 @@ class ArtifactImport(artifactType: String) extends DataReader with DataSaver wit
     convertJsObjectToSmartNodeInstance(smartInstance, artifactSource)
 
     smartInstance.set("name", TntString(artifactName))
-    smartInstance.set("module", TntString(module))
 
     saveAll(smartNodeSet)
     smartInstance
